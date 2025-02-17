@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+@import url('./theme.css');
+@import url('./font.css');
+
+:root {
+	--color-negative: #ff0005;
+
+	--color-primary-900: #c00c0b;
+	--color-primary-800: #c00c0be5;
+	--color-primary-700: #c00c0bb2;
+	--color-primary-300: #c00c0b4d;
+	--color-primary-200: #c00c0b33;
+	--color-primary-100: #c00c0b0d;
+	--color-secondary: #890f0e;
+
+	--color-black-900: #000000;
+	--color-black-800: #363636;
+	--color-black-700: #676767;
+	--color-black-600: #8f8f8f;
+	--color-black-500: #afafaf;
+	--color-black-300: #dcdcdc;
+	--color-black-200: #f0f0f0;
+	--color-black-100: #f8f8f8;
+	--color-black-000: #ffffff;
+}
+
+body {
+	background-color: var(--color-black-100);
+	color: var(--color-black-900);
+}

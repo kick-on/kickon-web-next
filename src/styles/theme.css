@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+
+/* 배경색 유틸리티 클래스 */
+.bg-primary-900 {
+	background-color: var(--color-primary-900);
+}
+.bg-primary-800 {
+	background-color: var(--color-primary-800);
+}
+.bg-primary-700 {
+	background-color: var(--color-primary-700);
+}
+.bg-primary-300 {
+	background-color: var(--color-primary-300);
+}
+.bg-primary-200 {
+	background-color: var(--color-primary-200);
+}
+.bg-primary-100 {
+	background-color: var(--color-primary-100);
+}
+.bg-black-900 {
+	background-color: var(--color-black-900);
+}
+.bg-black-800 {
+	background-color: var(--color-black-800);
+}
+.bg-black-700 {
+	background-color: var(--color-black-700);
+}
+.bg-black-600 {
+	background-color: var(--color-black-600);
+}
+.bg-black-500 {
+	background-color: var(--color-black-500);
+}
+.bg-black-300 {
+	background-color: var(--color-black-300);
+}
+.bg-black-200 {
+	background-color: var(--color-black-200);
+}
+.bg-black-100 {
+	background-color: var(--color-black-100);
+}
+.bg-black-000 {
+	background-color: var(--color-black-000);
+}
+
+/* 텍스트 색상 유틸리티 클래스 */
+.text-negative {
+	color: var(--color-negative);
+}
+.text-primary-900 {
+	color: var(--color-primary-900);
+}
+.text-black-900 {
+	color: var(--color-black-900);
+}
+.text-black-800 {
+	color: var(--color-black-800);
+}
+.text-black-700 {
+	color: var(--color-black-700);
+}
+.text-black-600 {
+	color: var(--color-black-600);
+}
+.text-black-500 {
+	color: var(--color-black-500);
+}
+.text-black-300 {
+	color: var(--color-black-300);
+}
+.text-black-200 {
+	color: var(--color-black-200);
+}
+.text-black-100 {
+	color: var(--color-black-100);
+}
+.text-black-000 {
+	color: var(--color-black-000);
+}
+
+/* 테두리 색상 유틸리티 클래스 */
+.border-negative {
+	border-color: var(--color-negative);
+}
+.border-black-900 {
+	border-color: var(--color-black-900);
+}
+.border-black-800 {
+	border-color: var(--color-black-800);
+}
+.border-black-700 {
+	border-color: var(--color-black-700);
+}
+.border-black-600 {
+	border-color: var(--color-black-600);
+}
+.border-black-500 {
+	border-color: var(--color-black-500);
+}
+.border-black-300 {
+	border-color: var(--color-black-300);
+}
+.border-black-200 {
+	border-color: var(--color-black-200);
+}
+.border-black-100 {
+	border-color: var(--color-black-100);
+}
+.border-black-000 {
+	border-color: var(--color-black-000);
+}
+
+/* 그림자 유틸리티 클래스 */
+.shadow-login-button {
+	box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+}
+.shadow-floating-button {
+	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
+}
+.shadow-select-button {
+	box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
+}
+.shadow-predict-button {
+	box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+}
+.shadow-predict-button-active {
+	box-shadow: 0px 2px 10px 0px rgba(217, 25, 32, 0.4);
+}
+.shadow-kick-button {
+	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+}
+.shadow-kick-button-active {
+	box-shadow: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);
+}
