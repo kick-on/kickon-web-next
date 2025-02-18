@@ -1,0 +1,285 @@
+@import 'tailwindcss';
+
+:root {
+	--font-pretendard: 'Pretendard', sans-serif;
+
+	/* font sizes */
+	--fs-10: 10px;
+	--fs-12: 12px;
+	--fs-13: 13px;
+	--fs-14: 14px;
+	--fs-15: 15px;
+	--fs-16: 16px;
+	--fs-18: 18px;
+	--fs-20: 20px;
+	--fs-24: 24px;
+	--fs-28: 28px;
+
+	/* font weights */
+	--fw-regular: 400;
+	--fw-medium: 500;
+	--fw-semibold: 600;
+	--fw-bold: 700;
+	--fw-black: 900;
+
+	/* line heights */
+	--lh-normal: normal;
+	--lh-16: 16px;
+	--lh-18: 18px;
+	--lh-20: 20px;
+	--lh-24: 24px;
+	--lh-26: 26px;
+	--lh-28: 28px;
+	--lh-36: 36px;
+}
+
+/* Base Typography */
+[class*='-'] {
+	font-family: var(--font-pretendard);
+}
+
+/* Headers */
+.header-semibold,
+.header-medium,
+.header-regular {
+	font-size: var(--fs-15);
+	line-height: var(--lh-16);
+}
+
+.header-semibold {
+	font-weight: var(--fw-semibold);
+}
+.header-medium {
+	font-weight: var(--fw-medium);
+}
+.header-regular {
+	font-weight: var(--fw-regular);
+}
+
+/* Display */
+.display-semibold {
+	font-size: var(--fs-24);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-36);
+}
+
+/* Titles */
+.title1-bold {
+	font-size: var(--fs-28);
+	font-weight: var(--fw-bold);
+	line-height: var(--lh-36);
+}
+
+.title2-semibold {
+	font-size: var(--fs-24);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-26);
+}
+
+.title3-semibold {
+	font-size: var(--fs-20);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-normal);
+}
+
+.title4-semibold {
+	font-size: var(--fs-18);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-20);
+}
+
+.title5-semibold {
+	font-size: var(--fs-16);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-16);
+}
+
+/* Subtitles */
+.subtitle1-semibold,
+.subtitle1-medium {
+	font-size: var(--fs-14);
+	line-height: var(--lh-16);
+}
+
+.subtitle1-semibold {
+	font-weight: var(--fw-semibold);
+}
+.subtitle1-medium {
+	font-weight: var(--fw-medium);
+}
+
+.subtitle2-medium {
+	font-size: var(--fs-13);
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-18);
+}
+
+/* Bodies */
+.body1-bold {
+	font-size: var(--fs-24);
+	font-weight: var(--fw-black);
+	line-height: var(--lh-24);
+}
+
+.body2-semibold,
+.body2-regular {
+	font-size: var(--fs-20);
+	line-height: var(--lh-24);
+}
+
+.body2-semibold {
+	font-weight: var(--fw-semibold);
+}
+.body2-regular {
+	font-weight: var(--fw-regular);
+}
+
+.body3-regular {
+	font-size: var(--fs-16);
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-24);
+}
+
+.body4-semibold {
+	font-size: var(--fs-15);
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-16);
+}
+
+.body5-medium,
+.body5-regular {
+	font-size: var(--fs-14);
+	line-height: var(--lh-16);
+}
+
+.body5-medium {
+	font-weight: var(--fw-medium);
+}
+.body5-regular {
+	font-weight: var(--fw-regular);
+}
+
+.body6-medium,
+.body6-regular {
+	font-size: var(--fs-13);
+}
+
+.body6-medium {
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-18);
+}
+
+.body6-regular {
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-16);
+}
+
+.body7-medium {
+	font-size: var(--fs-12);
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-16);
+}
+
+.body8-regular {
+	font-size: var(--fs-10);
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-16);
+}
+
+/* Buttons */
+.button1-medium {
+	font-size: var(--fs-18);
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-24);
+}
+
+.button2-semibold,
+.button2-medium {
+	font-size: var(--fs-16);
+}
+
+.button2-semibold {
+	font-weight: var(--fw-semibold);
+	line-height: var(--lh-28);
+}
+
+.button2-medium {
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-24);
+}
+
+.button3-semibold,
+.button3-regular {
+	font-size: var(--fs-15);
+	line-height: var(--lh-16);
+}
+
+.button3-semibold {
+	font-weight: var(--fw-semibold);
+}
+.button3-regular {
+	font-weight: var(--fw-regular);
+}
+
+.button4-medium {
+	font-size: var(--fs-14);
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-16);
+}
+
+.button5-medium,
+.button5-regular {
+	font-size: var(--fs-12);
+	line-height: var(--lh-16);
+}
+
+.button5-medium {
+	font-weight: var(--fw-medium);
+}
+.button5-regular {
+	font-weight: var(--fw-regular);
+}
+
+.button6-regular {
+	font-size: var(--fs-10);
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-16);
+}
+
+/* Captions */
+.caption1-medium,
+.caption1-regular {
+	font-size: var(--fs-12);
+}
+
+.caption1-medium {
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-normal);
+}
+
+.caption1-regular {
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-16);
+}
+
+.caption2-medium,
+.caption2-regular {
+	font-size: var(--fs-10);
+}
+
+.caption2-medium {
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-16);
+}
+
+.caption2-regular {
+	font-weight: var(--fw-regular);
+	line-height: var(--lh-normal);
+}
+
+/* Navigation */
+.nav1-medium {
+	font-size: var(--fs-18);
+	font-weight: var(--fw-medium);
+	line-height: var(--lh-24);
+}
