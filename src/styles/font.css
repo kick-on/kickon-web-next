@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 :root {
-	--font-primary: 'Pretendard', sans-serif;
+	--font-pretendard: 'Pretendard', sans-serif;
 
 	/* font sizes */
 	--fs-10: 10px;
@@ -35,7 +35,7 @@
 
 /* Base Typography */
 [class*='-'] {
-	font-family: var(--font-primary);
+	font-family: var(--font-pretendard);
 }
 
 /* Headers */
