@@ -19,14 +19,14 @@ export default function Navbar() {
 	};
 
 	return (
-		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky`}>
+		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky transition-colors ease-out`}>
 			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] m-auto">
 				<nav className="flex items-center">
 					<Image
 						width={216}
 						height={48}
 						onClick={onClickLogo}
-						className="ml-[2.5rem] mr-[5.625rem] cursor-pointer"
+						className="px-6 py-4 ml-[1rem] mr-[4.125rem] cursor-pointer"
 						src={`${isHome ? '/logo-black.svg' : '/logo-white.svg'}`}
 						alt="킥온"
 					/>
