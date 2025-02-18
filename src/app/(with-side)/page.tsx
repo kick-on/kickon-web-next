@@ -1,3 +1,15 @@
+'use client';
+
+import { useEffect } from 'react';
+
 export default function Home() {
+	useEffect(() => {
+		document.body.style.backgroundColor = 'var(--color-black-800)';
+
+		return () => {
+			document.body.style.backgroundColor = 'var(--color-black-100)';
+		};
+	}, []);
+
 	return <div>홈 페이지</div>;
 }
