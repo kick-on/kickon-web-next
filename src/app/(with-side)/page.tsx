@@ -1,3 +1,3 @@
 export default function Home() {
-	return <div>홈 페이지</div>;
+	return <div className="title2-semibold">The quick brown fox jumps over the lazy dog.</div>;
 }

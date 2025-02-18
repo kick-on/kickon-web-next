@@ -6,14 +6,13 @@ export const metadata: Metadata = {
 	description: '',
 };
 
-export default function RootLayout({
-	children,
-}: Readonly<{
-	children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
-			<body className={`antialiased`}>{children}</body>
+		<html lang="ko">
+			<head>
+				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
+			</head>
+			<body>{children}</body>
 		</html>
 	);
 }
