@@ -26,7 +26,7 @@ export default function Navbar() {
 						width={216}
 						height={48}
 						onClick={onClickLogo}
-						className="px-6 py-4 ml-[1rem] mr-[4.125rem] cursor-pointer"
+						className="px-6 py-3 ml-[1rem] mr-[4.125rem] box-content cursor-pointer"
 						src={isHome ? '/logo-black.svg' : '/logo-white.svg'}
 						alt="킥온"
 					/>
@@ -34,8 +34,8 @@ export default function Navbar() {
 						<NavButton key={props.href} {...props} />
 					))}
 				</nav>
-				<button className="w-[5.5rem] h-[2.25rem] mr-[0.3438rem] border border-black-300 bg-black-000 text-black-700 rounded-3xl text-[16px]">
-					로그아웃
+				<button className="w-[5.5rem] h-[2.25rem] mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900 button1-medium">
+					로그인
 				</button>
 			</div>
 		</header>
