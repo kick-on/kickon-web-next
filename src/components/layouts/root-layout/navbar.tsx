@@ -19,7 +19,7 @@ export default function Navbar() {
 	};
 
 	return (
-		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'}`}>
+		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky`}>
 			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] m-auto">
 				<nav className="flex items-center">
 					<Image
