@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import localFont from 'next/font/local';
 import '@/styles/globals.css';
 
 export const metadata: Metadata = {
@@ -6,12 +7,17 @@ export const metadata: Metadata = {
 	description: '',
 };
 
+const pretendard = localFont({
+	src: '../fonts/PretendardVariable.woff2',
+	display: 'swap',
+	weight: '100 900',
+	style: 'normal',
+	variable: '--font-pretendard', // CSS 변수 설정
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="ko">
-			<head>
-				<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard/dist/web/static/pretendard.css" />
-			</head>
+		<html lang="ko" className={pretendard.className}>
 			<body>{children}</body>
 		</html>
 	);
