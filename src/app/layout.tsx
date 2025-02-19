@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
+import Navbar from '@/components/layouts/root-layout/navbar';
+import Footer from '@/components/layouts/root-layout/footer';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -17,8 +19,12 @@ const pretendard = localFont({
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="ko" className={pretendard.className}>
-			<body>{children}</body>
+		<html lang="ko" className={`antialiased ${pretendard.className}`}>
+			<body>
+				<Navbar />
+				{children}
+				<Footer />
+			</body>
 		</html>
 	);
 }

@@ -1,3 +1,15 @@
+'use client';
+
+import { useEffect } from 'react';
+
 export default function Home() {
-	return <div className="title2-semibold">The quick brown fox jumps over the lazy dog.</div>;
+	useEffect(() => {
+		document.body.style.backgroundColor = 'var(--color-black-800)';
+
+		return () => {
+			document.body.style.backgroundColor = 'var(--color-black-100)';
+		};
+	}, []);
+
+	return <div>홈 페이지</div>;
 }
