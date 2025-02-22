@@ -1,3 +1,5 @@
+import WhiteBox from '@/components/layouts/box-layout';
+
 export default function Page() {
-	return <div>회원가입 페이지</div>;
+	return <WhiteBox>회원가입 페이지</WhiteBox>;
 }
