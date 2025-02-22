@@ -4,8 +4,9 @@ import { usePathname } from 'next/navigation';
 
 export default function Footer() {
 	const pathname = usePathname();
+	const bgColor = pathname === '/' ? 'bg-black-000' : 'bg-black-800';
 
 	if (pathname === '/' || pathname === '/signup') {
-		return <footer className="h-[28.5rem] bg-black-300">푸터</footer>;
+		return <div className={`${bgColor} h-[13.125rem]`}>푸터</div>;
 	}
 }
