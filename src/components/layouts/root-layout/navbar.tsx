@@ -27,7 +27,7 @@ export default function Navbar() {
 						height={48}
 						onClick={onClickLogo}
 						className="px-6 py-3 ml-[1rem] mr-[4.125rem] box-content cursor-pointer"
-						src={isHome ? '/logo-black.svg' : '/logo-white.svg'}
+						src={isHome ? '/logo/kick-on-black.svg' : '/logo/kick-on-white.svg'}
 						alt="킥온"
 					/>
 					{navButtonProps.map((props) => (
