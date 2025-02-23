@@ -53,7 +53,7 @@ export default function SelectBox() {
 		<div className="relative">
 			<button onClick={onClickSelectBox} className="flex gap-2 items-center ml-2">
 				<div className="button4-medium">{league}</div>
-				<Image width={16} height={16} src="/chevron-down.svg" alt="리그 선택" />
+				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
 			{isVisibleOptions && (
 				<div className="absolute w-[12.5rem] top-6 shadow-select-options border border-black-200 rounded-[0.625rem]">
