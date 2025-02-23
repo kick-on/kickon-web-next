@@ -1,4 +1,4 @@
-import MostReadNewsList from '@/components/layouts/with-side-layout/most-read-news-list';
+import MostReadNewsList from '@/components/layouts/with-side-layout/most-read-news-list/most-read-news-list';
 import Profile from '@/components/layouts/with-side-layout/profile';
 import RankingList from '@/components/layouts/with-side-layout/ranking-list/ranking-list';
 import { ReactNode } from 'react';
@@ -10,7 +10,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 				<RankingList mode="season" />
 				<RankingList mode="predict" />
 			</aside>
-			<main>{children}</main>
+			<main className="flex flex-col gap-4">{children}</main>
 			<aside className="flex flex-col gap-4">
 				<Profile />
 				<MostReadNewsList />
