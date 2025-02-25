@@ -1,13 +1,14 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import OptionItem from './option-item';
 import clsx from 'clsx';
 
 export default function SelectBox() {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const [league, setLeague] = useState('K리그 1');
+	const dropboxRef = useRef<HTMLDivElement | null>(null);
 
 	const leagues = [
 		{
@@ -49,23 +50,22 @@ export default function SelectBox() {
 		setIsVisibleOptions(false);
 	};
 
-	// 드롭박스 외부 클릭 시 닫음
-	const handleOutsideClick = (event: MouseEvent) => {
-		const target = event.target as HTMLElement;
-		if (!target.closest('.relative')) {
-			setIsVisibleOptions(false);
-		}
-	};
-
 	useEffect(() => {
+		// 드롭박스 외부 클릭 시 닫음
+		const handleOutsideClick = (e: MouseEvent) => {
+			if (isVisibleOptions && !dropboxRef.current.contains(e.target as Node)) {
+				setIsVisibleOptions(false);
+			}
+		};
+
 		document.addEventListener('mousedown', handleOutsideClick);
 		return () => {
 			document.removeEventListener('mousedown', handleOutsideClick);
 		};
-	}, []);
+	}, [isVisibleOptions]);
 
 	return (
-		<div className="relative w-fit">
+		<div ref={dropboxRef} className="relative w-fit">
 			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
 				<div className="button4-medium">{league}</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
