@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import OptionItem from './option-item';
 import clsx from 'clsx';
 
@@ -40,18 +40,33 @@ export default function SelectBox() {
 		},
 	];
 
-	const onClickSelectBox = () => {
+	const handleSelectBoxClick = () => {
 		setIsVisibleOptions(!isVisibleOptions);
 	};
 
-	const handleOptionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-		setLeague(e.currentTarget.value);
-		setIsVisibleOptions(!isVisibleOptions);
+	const handleOptionClick = (selectedLeague: string) => {
+		setLeague(selectedLeague);
+		setIsVisibleOptions(false);
 	};
+
+	// 드롭박스 외부 클릭 시 닫음
+	const handleOutsideClick = (event: MouseEvent) => {
+		const target = event.target as HTMLElement;
+		if (!target.closest('.relative')) {
+			setIsVisibleOptions(false);
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener('mousedown', handleOutsideClick);
+		return () => {
+			document.removeEventListener('mousedown', handleOutsideClick);
+		};
+	}, []);
 
 	return (
-		<div className="relative">
-			<button onClick={onClickSelectBox} className="flex gap-2 items-center ml-2">
+		<div className="relative w-fit">
+			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
 				<div className="button4-medium">{league}</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
