@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import Navbar from '@/components/layouts/root-layout/navbar';
 import Footer from '@/components/layouts/root-layout/footer';
+import Banner from '@/components/layouts/root-layout/banner';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -22,7 +23,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
 				<Navbar />
-				{children}
+				<Banner />
+				<div className="pb-[9.375rem]">{children}</div>
 				<Footer />
 			</body>
 		</html>
