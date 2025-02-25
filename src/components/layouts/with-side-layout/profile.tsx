@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Profile() {
-	const [isLogined, setIsLogined] = useState(true);
+	const [isLoggedin, setIsLoggedin] = useState(false);
 	return (
 		<ComponentFrame>
-			{isLogined ? (
+			{isLoggedin ? (
 				<div>
 					<div className="flex p-4 justify-between border-b border-black-200">
 						<div className="flex gap-3">
