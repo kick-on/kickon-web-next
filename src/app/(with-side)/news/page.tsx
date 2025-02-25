@@ -1,3 +1,9 @@
+import BoardTab from '@/components/common/board-tab/board-tab';
+
 export default function Page() {
-	return <div>뉴스 페이지</div>;
+	return (
+		<div>
+			<BoardTab mode="news" />
+		</div>
+	);
 }
