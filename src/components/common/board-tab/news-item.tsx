@@ -14,10 +14,10 @@ export default function NewsItem({
 	comment,
 }) {
 	return (
-		<div className="flex flex-col my-6">
+		<div className="flex flex-col py-6 px-4 cursor-pointer">
 			<div className="flex gap-7">
 				<div className="flex flex-col w-md">
-					<div className="flex gap-2 mb-2.5">
+					<div className="flex gap-2 mb-2.5 items-center">
 						<Image width={24} height={24} src={teamLogo} alt={team} />
 						<div className="h-5 px-2.5 py-0.5 rounded-full bg-black-200 text-black-800 caption1-medium">{tag}</div>
 					</div>

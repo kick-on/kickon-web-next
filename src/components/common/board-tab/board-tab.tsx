@@ -205,12 +205,12 @@ export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 					)}
 				</div>
 			</div>
-			<div className="flex flex-col px-4">
+			<div className="flex flex-col">
 				{allNews.map((news, index) => (
-					<>
-						<NewsItem key={news.id} {...news} />
-						{index !== allNews.length - 1 && <hr className="border-black-300" />}
-					</>
+					<div key={news.id}>
+						<NewsItem {...news} />
+						{index !== allNews.length - 1 && <hr className="border-black-300 px-4" />}
+					</div>
 				))}
 			</div>
 			<div className="flex mt-[3.75rem] mb-10 mx-auto">
