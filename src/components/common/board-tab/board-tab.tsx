@@ -173,7 +173,7 @@ const allNews = [
 const allCommunities = [
 	{
 		id: 1,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
+		title: '(속보) 손흥민 다리 부상 ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
 		hasImage: true,
 		comment: 20,
 		nickname: '닉네임최대여덟자',
