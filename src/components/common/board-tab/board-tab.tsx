@@ -4,6 +4,8 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import NewsItem from './news-item';
 import PagenationBar from '../pagenation-bar.tsx/pagenation-bar';
+import CommunityItem from './community-item';
+import Image from 'next/image';
 
 const allNews = [
 	{
@@ -168,6 +170,109 @@ const allNews = [
 	},
 ];
 
+const allCommunities = [
+	{
+		id: 1,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 2,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 3,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 4,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 5,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 6,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 7,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 8,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 9,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+	{
+		id: 10,
+		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
+		hasImage: true,
+		comment: 20,
+		nickname: '닉네임최대여덟자',
+		createdAt: '2025.02.26',
+		views: '1,023',
+		kick: 22,
+	},
+];
+
 export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 	const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -179,7 +284,7 @@ export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 	};
 
 	return (
-		<div className="flex flex-col w-fit">
+		<div className="flex flex-col w-full">
 			<div className="flex flex-col w-full">
 				<div className="flex pt-[1.875rem] pl-4 header-medium border-b border-black-300">
 					{tabs.map((tab, index) => (
@@ -205,14 +310,38 @@ export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 					)}
 				</div>
 			</div>
-			<div className="flex flex-col">
-				{allNews.map((news, index) => (
-					<div key={news.id}>
-						<NewsItem {...news} />
-						{index !== allNews.length - 1 && <hr className="border-black-300 px-4" />}
+			{isNews ? (
+				<div className="flex flex-col">
+					{allNews.map((news, index) => (
+						<div key={news.id}>
+							<NewsItem {...news} />
+							{index !== allNews.length - 1 && <hr className="border-black-300 mx-4" />}
+						</div>
+					))}
+				</div>
+			) : (
+				<div>
+					<div className="flex py-[0.9375rem] mx-4 justify-between subtitle2-medium text-center border-b border-black-300">
+						<div className="ml-[5.625rem]">제목</div>
+						<div className="flex gap-4">
+							<div className="w-[7.25rem]">글쓴이</div>
+							<div className="w-[4.0625rem]">날짜</div>
+							<div className="w-[2.625rem]">조회</div>
+							<div className="w-[2.6875rem] flex gap-1">
+								<Image width={16} height={16} src="/kick/black.svg" alt="킥" />킥
+							</div>
+						</div>
 					</div>
-				))}
-			</div>
+					<div>
+						{allCommunities.map((community, index) => (
+							<div key={community.id}>
+								<CommunityItem {...community} />
+								{index !== allCommunities.length - 1 && <hr className="border-black-300 mx-4" />}
+							</div>
+						))}
+					</div>
+				</div>
+			)}
 			<div className="flex mt-[3.75rem] mb-10 mx-auto">
 				<PagenationBar />
 			</div>

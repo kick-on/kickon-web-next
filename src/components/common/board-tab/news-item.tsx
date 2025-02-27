@@ -46,7 +46,7 @@ export default function NewsItem({
 			</div>
 			<div className="flex gap-3 ml-auto body5-regular text-black-600">
 				<div className="flex items-center gap-1.5">
-					<Image width={18} height={18} src="/kick-gray.svg" alt="킥" />
+					<Image width={18} height={18} src="/kick/gray.svg" alt="킥" />
 					{kick}
 				</div>
 				<div className="flex items-center gap-1.5">
