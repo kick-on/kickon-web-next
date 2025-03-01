@@ -1,6 +1,6 @@
 'use client';
 
-import ComponentFrame from '@/components/common/componentFrame';
+import PredictButton from '@/components/features/home/predict-button';
 import { useEffect } from 'react';
 
 export default function Home() {
@@ -13,23 +13,8 @@ export default function Home() {
 	}, []);
 
 	return (
-		<ComponentFrame isMain={true}>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-			<div>홈페이지</div>
-		</ComponentFrame>
+		<>
+			<PredictButton />
+		</>
 	);
 }
