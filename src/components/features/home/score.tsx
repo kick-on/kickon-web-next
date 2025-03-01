@@ -1,0 +1,75 @@
+'use client';
+
+import clsx from 'clsx';
+import { useEffect, useRef } from 'react';
+import Image from 'next/image';
+
+export default function Score({
+	side,
+	score,
+	isActive,
+	onClickUpButton,
+	onClickDownButton,
+}: {
+	side: 'left' | 'right';
+	score: number;
+	isActive: boolean;
+	onClickUpButton: () => void;
+	onClickDownButton: () => void;
+}) {
+	const downButtonRef = useRef<HTMLButtonElement | null>(null);
+
+	useEffect(() => {
+		if (!downButtonRef) return;
+		if (score === 0) {
+			downButtonRef.current.disabled = true;
+		} else {
+			downButtonRef.current.disabled = false;
+		}
+	}, [score]);
+
+	return (
+		<div
+			className={clsx('absolute z-20 flex gap-2 items-center', {
+				'-left-10': side === 'left',
+				'flex-row-reverse -right-10': side === 'right',
+			})}
+		>
+			<div className={clsx('flex flex-col gap-1.5')}>
+				<button
+					onClick={onClickUpButton}
+					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
+				>
+					<Image
+						width={16}
+						height={16}
+						src={'/chevron/score-up.svg'}
+						alt={'증가'}
+						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
+					/>
+				</button>
+				<button
+					ref={downButtonRef}
+					onClick={onClickDownButton}
+					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
+				>
+					<Image
+						width={16}
+						height={16}
+						src={'/chevron/score-down.svg'}
+						alt={'감소'}
+						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
+					/>
+				</button>
+			</div>
+			<div
+				className={clsx('w-8 h-8 flex justify-center items-center rounded-lg body1-bold text-black-000', {
+					'bg-primary-900': isActive,
+					'bg-black-500': !isActive,
+				})}
+			>
+				{score}
+			</div>
+		</div>
+	);
+}
