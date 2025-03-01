@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import OptionItem from './option-item';
+import OptionItem from '../../../common/option-item';
 import clsx from 'clsx';
 import { leagues } from '@/lib/constants/leagues';
 
 export default function SelectBox() {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
-	const [league, setLeague] = useState('K리그 1');
+	const [league, setLeague] = useState('프리미어 리그');
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 
 	const handleSelectBoxClick = () => {
@@ -37,7 +37,7 @@ export default function SelectBox() {
 	return (
 		<div ref={dropboxRef} className="relative w-fit">
 			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
-				<div className="button4-medium">{league}</div>
+				<div>{league}</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
 			{isVisibleOptions && (
@@ -46,8 +46,8 @@ export default function SelectBox() {
 						<div
 							key={league.league}
 							className={clsx('bg-black-000 hover:bg-black-200 transition-colors', {
-								'rounded-t-[0.625rem]': index === 0,
-								'rounded-b-[0.625rem]': index === leagues.length - 1,
+								'rounded-t-[0.5625rem]': index === 0,
+								'rounded-b-[0.5625rem]': index === leagues.length - 1,
 							})}
 						>
 							<OptionItem onClick={handleOptionClick} {...league} />
