@@ -4,7 +4,7 @@ import BoardTab from '@/components/common/board-tab/board-tab';
 export default function Page() {
 	return (
 		<ComponentFrame isMain={true}>
-			<BoardTab mode="news" />
+			<BoardTab />
 		</ComponentFrame>
 	);
 }

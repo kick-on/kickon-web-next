@@ -7,6 +7,7 @@ import PagenationBar from '../pagenation-bar.tsx/pagenation-bar';
 import CommunityItem from './community-item';
 import Image from 'next/image';
 import SelectBox from './select-box';
+import { usePathname } from 'next/navigation';
 
 const allNews = [
 	{
@@ -274,11 +275,12 @@ const allCommunities = [
 	},
 ];
 
-export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
+export default function BoardTab() {
 	const [selectedIndex, setSelectedIndex] = useState(0);
+	const pathname = usePathname();
 
 	const tabs = ['전체', '인기', 'FC서울'];
-	const isNews = mode === 'news';
+	const isNews = pathname === '/news';
 
 	const handleTabClick = (index = tabs.length) => {
 		setSelectedIndex(index);

@@ -4,7 +4,7 @@ import ComponentFrame from '@/components/common/componentFrame';
 export default function Page() {
 	return (
 		<ComponentFrame isMain={true}>
-			<BoardTab mode="community" />
+			<BoardTab />
 		</ComponentFrame>
 	);
 }
