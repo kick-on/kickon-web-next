@@ -4,7 +4,7 @@ export default function CommunityItem({ title, hasImage, comment, nickname, crea
 	return (
 		<div className="p-4 flex justify-between cursor-pointer">
 			<div className="flex gap-1 items-center">
-				<div className="subtitle1-medium max-w-3xs truncate">{title}</div>
+				<h2 className="subtitle1-medium max-w-3xs truncate">{title}</h2>
 				{hasImage && <Image width={14} height={14} src="/image.svg" alt="사진" />}
 				<div className="body5-regular">({comment})</div>
 			</div>
