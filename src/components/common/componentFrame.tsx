@@ -1,19 +1,8 @@
-import clsx from 'clsx';
 import { ReactNode } from 'react';
 
-export default function ComponentFrame({
-	isMain = false,
-	hasBorder = true,
-	children,
-}: {
-	isMain?: boolean;
-	hasBorder?: boolean;
-	children: ReactNode;
-}) {
-	const width = isMain ? 'w-[678px]' : 'w-[322px]';
+export default function ComponentFrame({ isMain = false, children }: { isMain?: boolean; children: ReactNode }) {
+	const width = isMain ? 'w-[41.75rem]' : 'w-[20.125rem]';
 	return (
-		<div className={clsx('flex flex-col bg-black-000 rounded-[10px]', width, { 'border border-black-300': hasBorder })}>
-			{children}
-		</div>
+		<div className={`flex flex-col ${width} bg-black-000 border border-black-300 rounded-[0.625rem]`}>{children}</div>
 	);
 }

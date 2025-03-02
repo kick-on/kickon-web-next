@@ -127,7 +127,7 @@ export default function InProgress() {
 				{/* 왼쪽 팀 */}
 				<div
 					onClick={() => handleTeamButtonClick('left')}
-					className={clsx('pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]')}
+					className="pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]"
 				>
 					<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
 					<div>
@@ -139,7 +139,7 @@ export default function InProgress() {
 				{/* 중앙 (무승부) */}
 				<div
 					onClick={() => handleTeamButtonClick('center')}
-					className={clsx('relative h-full flex flex-col justify-center items-center border-x border-black-200')}
+					className="relative h-full flex flex-col justify-center items-center border-x border-black-200"
 				>
 					{(isClicked || isCompleted) && (
 						<>
@@ -168,7 +168,7 @@ export default function InProgress() {
 				{/* 오른쪽 팀 */}
 				<div
 					onClick={() => handleTeamButtonClick('right')}
-					className={clsx('pr-4 h-full flex gap-2 justify-end items-center text-right rounded-r-[0.5625rem]')}
+					className="pr-4 h-full flex gap-2 justify-end items-center text-right rounded-r-[0.5625rem]"
 				>
 					<div>
 						<div className="relative z-20">FC 서울</div>
