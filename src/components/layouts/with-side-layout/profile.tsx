@@ -53,7 +53,7 @@ export default function Profile() {
 					<Image width={40} height={32} src="/logo/icon-black.svg" alt="킥온" />
 					<button className="flex gap-2.5 items-center w-fit px-[1.125rem] py-2.5 bg-primary-900 rounded-3xl shadow-login-button">
 						<div className="text-black-000 button1-medium">간편 로그인 하기</div>
-						<Image width={18} height={18} src="/chevron/right.svg" alt="바로가기" />
+						<Image width={18} height={18} src="/chevron/right-white.svg" alt="바로가기" />
 					</button>
 				</div>
 			)}
