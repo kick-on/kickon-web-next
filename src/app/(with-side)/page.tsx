@@ -1,6 +1,7 @@
 'use client';
 
-import PredictButton from '@/components/features/home/predict-button';
+import ComponentFrame from '@/components/common/componentFrame';
+import InProgress from '@/components/features/home/in-progress';
 import { useEffect } from 'react';
 
 export default function Home() {
@@ -13,8 +14,8 @@ export default function Home() {
 	}, []);
 
 	return (
-		<>
-			<PredictButton />
-		</>
+		<ComponentFrame isMain={true} hasBorder={false}>
+			<InProgress />
+		</ComponentFrame>
 	);
 }

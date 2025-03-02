@@ -8,35 +8,46 @@ export default function Score({
 	side,
 	score,
 	isActive,
+	isCompleted,
 	onClickUpButton,
 	onClickDownButton,
 }: {
 	side: 'left' | 'right';
 	score: number;
 	isActive: boolean;
+	isCompleted: boolean;
 	onClickUpButton: () => void;
 	onClickDownButton: () => void;
 }) {
 	const downButtonRef = useRef<HTMLButtonElement | null>(null);
+	const upButtonRef = useRef<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
-		if (!downButtonRef) return;
+		if (!downButtonRef.current) return;
 		if (score === 0) {
 			downButtonRef.current.disabled = true;
 		} else {
 			downButtonRef.current.disabled = false;
 		}
+		if (!upButtonRef.current) return;
+		if (score === 20) {
+			upButtonRef.current.disabled = true;
+		} else {
+			upButtonRef.current.disabled = false;
+		}
 	}, [score]);
 
 	return (
 		<div
+			onClick={(e) => e.stopPropagation()}
 			className={clsx('absolute z-20 flex gap-2 items-center', {
 				'-left-10': side === 'left',
 				'flex-row-reverse -right-10': side === 'right',
 			})}
 		>
-			<div className={clsx('flex flex-col gap-1.5')}>
+			<div className={clsx('flex flex-col gap-1.5', { invisible: isCompleted })}>
 				<button
+					ref={upButtonRef}
 					onClick={onClickUpButton}
 					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
 				>
@@ -62,6 +73,7 @@ export default function Score({
 					/>
 				</button>
 			</div>
+
 			<div
 				className={clsx('w-8 h-8 flex justify-center items-center rounded-lg body1-bold text-black-000', {
 					'bg-primary-900': isActive,

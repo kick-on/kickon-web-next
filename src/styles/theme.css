@@ -48,6 +48,24 @@
 }
 
 /* hover 시 배경색 */
+.hover\:bg-primary-900:hover {
+	background-color: var(--color-primary-900); /* hover 시 bg-primary-900 */
+}
+.hover\:bg-primary-800:hover {
+	background-color: var(--color-primary-800); /* hover 시 bg-primary-800 */
+}
+.hover\:bg-primary-700:hover {
+	background-color: var(--color-primary-700); /* hover 시 bg-primary-700 */
+}
+.hover\:bg-primary-300:hover {
+	background-color: var(--color-primary-300); /* hover 시 bg-primary-300 */
+}
+.hover\:bg-primary-200:hover {
+	background-color: var(--color-primary-200); /* hover 시 bg-primary-200 */
+}
+.hover\:bg-primary-100:hover {
+	background-color: var(--color-primary-100); /* hover 시 bg-primary-100 */
+}
 .hover\:bg-black-900:hover {
 	background-color: var(--color-black-900); /* hover 시 bg-black-900 */
 }
@@ -77,6 +95,24 @@
 }
 
 /* active 시 배경색 */
+.active\:bg-primary-900:active {
+	background-color: var(--color-primary-900); /* active 시 bg-primary-900 */
+}
+.active\:bg-primary-800:active {
+	background-color: var(--color-primary-800); /* active 시 bg-primary-800 */
+}
+.active\:bg-primary-700:active {
+	background-color: var(--color-primary-700); /* active 시 bg-primary-700 */
+}
+.active\:bg-primary-300:active {
+	background-color: var(--color-primary-300); /* active 시 bg-primary-300 */
+}
+.active\:bg-primary-200:active {
+	background-color: var(--color-primary-200); /* active 시 bg-primary-200 */
+}
+.active\:bg-primary-100:active {
+	background-color: var(--color-primary-100); /* active 시 bg-primary-100 */
+}
 .active\:bg-black-900:active {
 	background-color: var(--color-black-900); /* active 시 bg-black-900 */
 }
