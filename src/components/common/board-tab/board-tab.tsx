@@ -1,13 +1,13 @@
 'use client';
 
 import clsx from 'clsx';
-import { useState } from 'react';
 import NewsItem from './news-item';
 import PagenationBar from '../pagenation-bar.tsx/pagenation-bar';
 import CommunityItem from './community-item';
 import Image from 'next/image';
 import SelectBox from './select-box';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 
 const allNews = [
 	{
@@ -276,39 +276,34 @@ const allCommunities = [
 ];
 
 export default function BoardTab() {
-	const [selectedIndex, setSelectedIndex] = useState(0);
 	const pathname = usePathname();
+	const q = useSearchParams().get('q');
 
 	const tabs = ['전체', '인기', 'FC서울'];
 	const isNews = pathname === '/news';
-
-	const handleTabClick = (index = tabs.length) => {
-		setSelectedIndex(index);
-	};
 
 	return (
 		<div className="flex flex-col w-full">
 			<div className="flex flex-col w-full">
 				<div className="flex gap-4 pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
-					{tabs.map((tab, index) => (
-						<button
-							onClick={() => handleTabClick(index)}
+					{tabs.map((tab) => (
+						<Link
+							href={`${pathname}?q=${tab}`}
 							key={tab}
 							className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
-								'border-primary-900 text-primary-900 header-semibold': selectedIndex === index,
+								'border-primary-900 text-primary-900 header-semibold': q === tab,
 							})}
 						>
 							{tab}
-						</button>
+						</Link>
 					))}
 					{isNews && (
 						<div
-							onClick={() => handleTabClick()}
 							className={clsx('border-b-2 border-transparent', {
-								'border-primary-900 text-primary-900 header-semibold': selectedIndex === tabs.length,
+								'border-primary-900 text-primary-900 header-semibold': !tabs.includes(q),
 							})}
 						>
-							<SelectBox isClickedOtherTab={selectedIndex !== 3} />
+							<SelectBox isClickedOtherTab={tabs.includes(q)} />
 						</div>
 					)}
 				</div>

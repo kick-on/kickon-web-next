@@ -5,11 +5,13 @@ import { useEffect, useRef, useState } from 'react';
 import OptionItem from '../option-item';
 import clsx from 'clsx';
 import { leagues } from '@/lib/constants/leagues';
+import { useRouter } from 'next/navigation';
 
 export default function SelectBox({ isClickedOtherTab = false }: { isClickedOtherTab: boolean }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const [league, setLeague] = useState('리그 선택');
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
+	const route = useRouter();
 
 	const handleSelectBoxClick = () => {
 		setIsVisibleOptions(!isVisibleOptions);
@@ -18,6 +20,7 @@ export default function SelectBox({ isClickedOtherTab = false }: { isClickedOthe
 	const handleOptionClick = (selectedLeague: string) => {
 		setLeague(selectedLeague);
 		setIsVisibleOptions(false);
+		route.push(`/news?q=${selectedLeague}`);
 	};
 
 	useEffect(() => {
