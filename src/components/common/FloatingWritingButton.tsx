@@ -5,45 +5,41 @@ import Image from 'next/image';
 import Icon from '../../../public/edit.svg';
 
 const FloatingWritingButton = () => {
-	const initialTopPosition = 856; // 처음 페이지 로드 시의 버튼 위치
-	const [buttonTop, setButtonTop] = useState(initialTopPosition);
+	const [buttonTop, setButtonTop] = useState(856);
 	const lastScrollY = useRef(0);
 	const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
-	const isScrolling = useRef(false);
-	const [isVisible, setIsVisible] = useState(true);
-	const isVisibleRef = useRef(isVisible);
-
-	// 최신 isVisible 값 추적
-	useEffect(() => {
-		isVisibleRef.current = isVisible;
-	}, [isVisible]);
+	const isHidden = useRef(false); // 버튼이 화면 밖으로 나갔는지 여부
 
 	useEffect(() => {
 		const handleScroll = () => {
 			const scrollY = window.scrollY;
 			const scrollDiff = scrollY - lastScrollY.current;
-			isScrolling.current = true;
 
-			// 스크롤할 때 버튼이 위로 이동
+			// 버튼이 화면 안에 있을 때만 이동
 			setButtonTop((prevTop) => {
 				const newTop = prevTop - scrollDiff;
 
-				// 버튼이 화면 밖으로 완전히 사라졌다면 숨김 처리
-				if (newTop < -50 && isVisibleRef.current) {
-					setIsVisible(false);
+				// 버튼이 화면 위로 완전히 사라지면 숨김 상태로 설정
+				if (newTop < -50) {
+					isHidden.current = true;
+				} else {
+					isHidden.current = false;
 				}
 
 				return newTop;
 			});
 
-			// 스크롤이 멈추면 버튼 복귀
+			// 스크롤 멈춤 감지 (디바운싱)
 			if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
 			scrollTimeout.current = setTimeout(() => {
-				isScrolling.current = false;
-
-				// 스크롤이 맨 위일 때는 856px, 아닐 때는 656px (임시...)
-				setIsVisible(true);
-				setButtonTop(window.scrollY === 0 ? 856 : 656);
+				if (window.scrollY === 0) {
+					// 맨 위에 있을 경우 원래 위치 유지
+					setButtonTop(856);
+				} else if (isHidden.current) {
+					// 화면 밖으로 사라진 경우 -> 50px로 이동
+					setButtonTop(50);
+				}
+				// 화면 안에 있을 경우 -> 기존 위치 유지 (변경 X)
 			}, 300);
 
 			lastScrollY.current = scrollY;
@@ -58,16 +54,15 @@ const FloatingWritingButton = () => {
 
 	return (
 		<button
-			className={`z-50 flex items-center h-12 w-12 bg-black-700 text-white
+			className="z-50 flex items-center h-12 w-12 bg-black-700 text-white
                 rounded-full shadow-lg overflow-hidden group transition-all duration-300 ease-in-out
-                hover:w-[322px] hover:rounded-[50px] hover:justify-center relative
-                ${!isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+                hover:w-[322px] hover:rounded-[50px] hover:justify-center relative"
 			style={{
 				position: 'fixed',
 				top: `${buttonTop}px`,
 				left: '71.2vw',
 				width: '48px',
-				transition: 'width 0.3s ease-in-out, top 0.5s ease-out, opacity 0.3s ease-out',
+				transition: 'width 0.3s ease-in-out, top 0.5s ease-out',
 			}}
 			onMouseEnter={(e) => (e.currentTarget.style.width = '322px')}
 			onMouseLeave={(e) => (e.currentTarget.style.width = '48px')}
