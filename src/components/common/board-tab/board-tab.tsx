@@ -300,14 +300,14 @@ export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 						</button>
 					))}
 					{isNews && (
-						<button
+						<div
 							onClick={() => handleTabClick()}
 							className={clsx('border-b-2 border-transparent', {
 								'border-primary-900 text-primary-900 header-semibold': selectedIndex === tabs.length,
 							})}
 						>
 							<SelectBox isClickedOtherTab={selectedIndex !== 3} />
-						</button>
+						</div>
 					)}
 				</div>
 			</div>
