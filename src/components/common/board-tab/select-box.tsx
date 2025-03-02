@@ -42,12 +42,12 @@ export default function SelectBox({ isClickedOtherTab = false }: { isClickedOthe
 
 	return (
 		<div ref={dropboxRef} className="relative w-fit">
-			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
+			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center px-[0.5625rem] py-[0.9375rem]">
 				<div>{league}</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
 			{isVisibleOptions && (
-				<div className="absolute w-[12.5rem] top-6 shadow-select-options border border-black-200 rounded-[0.625rem]">
+				<div className="absolute w-[12.5rem] top-[2.4rem] shadow-select-options border border-black-200 rounded-[0.625rem]">
 					{leagues.map((league, index) => (
 						<div
 							key={league.league}

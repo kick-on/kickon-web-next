@@ -287,12 +287,12 @@ export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 	return (
 		<div className="flex flex-col w-full">
 			<div className="flex flex-col w-full">
-				<div className="flex pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
+				<div className="flex gap-4 pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
 					{tabs.map((tab, index) => (
 						<button
 							onClick={() => handleTabClick(index)}
 							key={tab}
-							className={clsx('px-[0.5625rem] py-[0.9375rem] border-b-2 border-transparent', {
+							className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
 								'border-primary-900 text-primary-900 header-semibold': selectedIndex === index,
 							})}
 						>
@@ -302,7 +302,7 @@ export default function BoardTab({ mode }: { mode: 'news' | 'community' }) {
 					{isNews && (
 						<button
 							onClick={() => handleTabClick()}
-							className={clsx('px-[0.5625rem] py-[0.9375rem] border-b-2 border-transparent', {
+							className={clsx('border-b-2 border-transparent', {
 								'border-primary-900 text-primary-900 header-semibold': selectedIndex === tabs.length,
 							})}
 						>
