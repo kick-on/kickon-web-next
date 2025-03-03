@@ -100,7 +100,7 @@ export default function InProgress() {
 	};
 
 	return (
-		<div className="flex flex-col gap-2.5 w-[36rem]">
+		<div className="flex flex-col gap-2.5 w-[36rem] cursor-pointer">
 			{/* 팀 선택 버튼 */}
 			<div className="relative w-full h-[4.625rem] grid grid-cols-3 border border-black-200 rounded-[0.625rem] button3-semibold shadow-predict-button">
 				{/* 선택한 팀 표시 */}
