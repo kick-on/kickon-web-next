@@ -2,7 +2,7 @@
 
 import Score from './score';
 import Image from 'next/image';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import clsx from 'clsx';
 
 type SelectedButton = 'none' | 'left' | 'center' | 'right';
@@ -76,6 +76,23 @@ export default function InProgress() {
 		}
 	};
 
+	const handleScoreChange = (e: ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => {
+		if (isNaN(Number(e.target.value))) return;
+		if (Number(e.target.value) > 20) {
+			if (side === 'left') {
+				setLeftScore(20);
+			} else {
+				setRightScore(20);
+			}
+			return;
+		}
+		if (side === 'left') {
+			setLeftScore(Number(e.target.value));
+		} else {
+			setRightScore(Number(e.target.value));
+		}
+	};
+
 	const handleUpButtonClick = (side: 'left' | 'right') => {
 		if (selectedButton === 'center') {
 			// 무승부 상태에서 버튼 클릭 시 양쪽을 1 증가
@@ -146,6 +163,7 @@ export default function InProgress() {
 							<Score
 								onClickUpButton={() => handleUpButtonClick('left')}
 								onClickDownButton={() => handleDownButtonClick('left')}
+								onChange={handleScoreChange}
 								side="left"
 								score={leftScore}
 								isCompleted={isCompleted}
@@ -154,6 +172,7 @@ export default function InProgress() {
 							<Score
 								onClickUpButton={() => handleUpButtonClick('right')}
 								onClickDownButton={() => handleDownButtonClick('right')}
+								onChange={handleScoreChange}
 								side="right"
 								score={rightScore}
 								isCompleted={isCompleted}

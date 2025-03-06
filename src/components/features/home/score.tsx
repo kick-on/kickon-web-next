@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useRef } from 'react';
+import { ChangeEvent, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 export default function Score({
@@ -11,6 +11,7 @@ export default function Score({
 	isCompleted,
 	onClickUpButton,
 	onClickDownButton,
+	onChange,
 }: {
 	side: 'left' | 'right';
 	score: number;
@@ -18,19 +19,20 @@ export default function Score({
 	isCompleted: boolean;
 	onClickUpButton: () => void;
 	onClickDownButton: () => void;
+	onChange: (e: ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => void;
 }) {
 	const downButtonRef = useRef<HTMLButtonElement | null>(null);
 	const upButtonRef = useRef<HTMLButtonElement | null>(null);
 
 	useEffect(() => {
 		if (!downButtonRef.current) return;
-		if (score === 0) {
+		if (score >= 0) {
 			downButtonRef.current.disabled = true;
 		} else {
 			downButtonRef.current.disabled = false;
 		}
 		if (!upButtonRef.current) return;
-		if (score === 20) {
+		if (score >= 20) {
 			upButtonRef.current.disabled = true;
 		} else {
 			upButtonRef.current.disabled = false;
@@ -74,14 +76,15 @@ export default function Score({
 				</button>
 			</div>
 
-			<div
-				className={clsx('w-8 h-8 flex justify-center items-center rounded-lg body1-bold text-black-000', {
+			<input
+				type="text"
+				value={score}
+				onChange={(e) => onChange(e, side)}
+				className={clsx('w-8 h-8 flex justify-center text-center rounded-lg body1-bold text-black-000', {
 					'bg-primary-900': isActive,
 					'bg-black-500': !isActive,
 				})}
-			>
-				{score}
-			</div>
+			/>
 		</div>
 	);
 }
