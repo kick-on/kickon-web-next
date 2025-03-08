@@ -292,6 +292,7 @@ export default function CategoryTab() {
 
 	const tabs = ['전체', '인기', 'FC서울'];
 	const isNews = pathname === '/news';
+	const items = isNews ? allNews : allCommunities;
 
 	return (
 		<div className="flex flex-col w-full">
@@ -317,13 +318,11 @@ export default function CategoryTab() {
 					</div>
 				)}
 			</div>
-			{isNews ? (
-				renderItems(allNews, NewsItem)
+			{!isNews && <CommunityDivisionBar />}
+			{items.length === 0 ? (
+				<div>아직 작성된 게시글이 없어요</div>
 			) : (
-				<>
-					<CommunityDivisionBar />
-					{renderItems(allCommunities, CommunityItem)}
-				</>
+				renderItems(items, isNews ? NewsItem : CommunityItem)
 			)}
 			<div className="flex mt-[3.75rem] mb-10 mx-auto">
 				<PagenationBar />
