@@ -26,7 +26,7 @@ export default function Score({
 
 	useEffect(() => {
 		if (!downButtonRef.current) return;
-		if (score >= 0) {
+		if (score <= 0) {
 			downButtonRef.current.disabled = true;
 		} else {
 			downButtonRef.current.disabled = false;
