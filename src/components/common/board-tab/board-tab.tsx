@@ -4,10 +4,10 @@ import clsx from 'clsx';
 import NewsItem from './news-item';
 import PagenationBar from '../pagenation-bar.tsx/pagenation-bar';
 import CommunityItem from './community-item';
-import Image from 'next/image';
 import SelectBox from './select-box';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import CommunityDivisionBar from './community-division-bar';
 
 const allNews = [
 	{
@@ -275,6 +275,17 @@ const allCommunities = [
 	},
 ];
 
+const renderItems = (items, ItemComponent) => (
+	<div>
+		{items.map((item, index) => (
+			<div key={item.id}>
+				<ItemComponent {...item} />
+				{index !== items.length - 1 && <hr className="border-black-300 mx-4" />}
+			</div>
+		))}
+	</div>
+);
+
 export default function BoardTab() {
 	const pathname = usePathname();
 	const q = useSearchParams().get('q');
@@ -284,61 +295,35 @@ export default function BoardTab() {
 
 	return (
 		<div className="flex flex-col w-full">
-			<div className="flex flex-col w-full">
-				<div className="flex gap-4 pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
-					{tabs.map((tab) => (
-						<Link
-							href={`${pathname}?q=${tab}`}
-							key={tab}
-							className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
-								'border-primary-900 text-primary-900 header-semibold': q === tab,
-							})}
-						>
-							{tab}
-						</Link>
-					))}
-					{isNews && (
-						<div
-							className={clsx('border-b-2 border-transparent', {
-								'border-primary-900 text-primary-900 header-semibold': !tabs.includes(q),
-							})}
-						>
-							<SelectBox isClickedOtherTab={tabs.includes(q)} />
-						</div>
-					)}
-				</div>
+			<div className="flex gap-4 pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
+				{tabs.map((tab) => (
+					<Link
+						href={`${pathname}?q=${tab}`}
+						key={tab}
+						className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
+							'border-primary-900 text-primary-900 header-semibold': q === tab,
+						})}
+					>
+						{tab}
+					</Link>
+				))}
+				{isNews && (
+					<div
+						className={clsx('border-b-2 border-transparent', {
+							'border-primary-900 text-primary-900 header-semibold': !tabs.includes(q),
+						})}
+					>
+						<SelectBox isClickedOtherTab={tabs.includes(q)} />
+					</div>
+				)}
 			</div>
 			{isNews ? (
-				<div className="flex flex-col">
-					{allNews.map((news, index) => (
-						<div key={news.id}>
-							<NewsItem {...news} />
-							{index !== allNews.length - 1 && <hr className="border-black-300 mx-4" />}
-						</div>
-					))}
-				</div>
+				renderItems(allNews, NewsItem)
 			) : (
-				<div>
-					<div className="flex py-[0.9375rem] mx-4 justify-between subtitle2-medium text-center border-b border-black-300">
-						<div className="ml-[5.625rem]">제목</div>
-						<div className="flex gap-4">
-							<div className="w-[7.25rem]">글쓴이</div>
-							<div className="w-[4.0625rem]">날짜</div>
-							<div className="w-[2.625rem]">조회</div>
-							<div className="w-[2.6875rem] flex gap-1">
-								<Image width={16} height={16} src="/kick/black.svg" alt="킥" />킥
-							</div>
-						</div>
-					</div>
-					<div>
-						{allCommunities.map((community, index) => (
-							<div key={community.id}>
-								<CommunityItem {...community} />
-								{index !== allCommunities.length - 1 && <hr className="border-black-300 mx-4" />}
-							</div>
-						))}
-					</div>
-				</div>
+				<>
+					<CommunityDivisionBar />
+					{renderItems(allCommunities, CommunityItem)}
+				</>
 			)}
 			<div className="flex mt-[3.75rem] mb-10 mx-auto">
 				<PagenationBar />
