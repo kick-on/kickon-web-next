@@ -286,7 +286,7 @@ const renderItems = (items, ItemComponent) => (
 	</div>
 );
 
-export default function BoardTab() {
+export default function CategoryTab() {
 	const pathname = usePathname();
 	const q = useSearchParams().get('q');
 
