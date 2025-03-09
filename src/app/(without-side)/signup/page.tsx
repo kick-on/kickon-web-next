@@ -41,6 +41,8 @@ export default function Page() {
 		},
 	];
 
+	const buttonDisabled = !(agreements.age && agreements.term && agreements.privacy);
+
 	const handleCheckboxChange = (key) => {
 		const prev = agreements[key];
 		if (key === 'all') {
@@ -105,6 +107,13 @@ export default function Page() {
 						onChange={() => handleCheckboxChange(key)}
 					/>
 				))}
+				<button
+					disabled={buttonDisabled}
+					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
+										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
+				>
+					회원가입
+				</button>
 			</div>
 		</div>
 	);
