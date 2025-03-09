@@ -9,7 +9,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import CommunityDivisionBar from './community-division-bar';
 
-const allNews = [
+export const allNews = [
 	{
 		id: 1,
 		teamLogo: '/team-logo/ulsan.svg',
@@ -172,7 +172,7 @@ const allNews = [
 	},
 ];
 
-const allCommunities = [
+export const allCommunities = [
 	{
 		id: 1,
 		title: '(속보) 손흥민 다리 부상 ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
