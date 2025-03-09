@@ -5,7 +5,7 @@ import SelectBox from './select-box';
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	return (
 		<ComponentFrame>
-			<div className="p-4 title5-semibold">이번 시즌 순위</div>
+			<div className="p-4 title5-semibold">{mode === 'season' ? '이번 시즌 순위' : '승부예측 순위'}</div>
 			<div className="p-4 pl-2 border border-black-200 border-x-0 button4-medium">
 				<SelectBox />
 			</div>
