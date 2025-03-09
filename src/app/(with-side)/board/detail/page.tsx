@@ -6,9 +6,9 @@ import { useSearchParams } from 'next/navigation';
 
 export default function Page() {
 	const searchParams = useSearchParams();
-	const newsId = searchParams.get('id');
+	const boardId = searchParams.get('id');
 
-	if (!newsId) return <p>잘못된 접근입니다.</p>; // 임시
+	if (!boardId) return <p>잘못된 접근입니다.</p>; // 임시
 
 	// 이것도 마찬가지로 불필요한 api 호출을 줄이기 위해 캐시된 걸 사용?
 

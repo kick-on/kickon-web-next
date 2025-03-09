@@ -24,11 +24,9 @@ const RecommendedContent = ({ type, data, isMyTeam = false, teamName = '' }) => 
 					{type === 'news' ? '뉴스' : '게시글'}
 				</h2>
 
-				<a href="#" aria-label="더 보기" className="flex gap-2 items-center">
-					<button className="text-black-700 body5-regular flex items-center">
-						<span>더 보기</span>
-						<Image src={moreIcon} alt="오른쪽 화살표" />
-					</button>
+				<a href="#" aria-label="더 보기" className="flex gap-2 items-center text-black-700 body5-regular">
+					<span>더 보기</span>
+					<Image src={moreIcon} alt="오른쪽 화살표" />
 				</a>
 			</header>
 
@@ -36,8 +34,8 @@ const RecommendedContent = ({ type, data, isMyTeam = false, teamName = '' }) => 
 
 			<ul className="flex flex-col">
 				{itemsToRender.map((item, index) => (
-					<li key={item.id} className="list-none">
-						<Component {...item} isMyTeam={type === 'news' && isMyTeam} />
+					<li key={item.id}>
+						<Component {...item} isMyTeam={isMyTeam} />
 						{index !== itemsToRender.length - 1 && <hr className="border-black-300 mx-4" />}
 					</li>
 				))}
