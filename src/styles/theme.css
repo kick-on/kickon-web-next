@@ -147,6 +147,9 @@
 .border-negative {
 	border-color: var(--color-negative);
 }
+.border-primary-900 {
+	border-color: var(--color-primary-900);
+}
 .border-black-900 {
 	border-color: var(--color-black-900);
 }
