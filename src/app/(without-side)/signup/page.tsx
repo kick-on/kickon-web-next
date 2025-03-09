@@ -73,9 +73,12 @@ export default function Page() {
 					<div className="subtitle1-medium">닉네임</div>
 					<input
 						type="text"
-						maxLength={8}
 						placeholder="닉네임은 최대 8글자"
-						className={`px-4 py-3 border border-black-300 rounded-lg body3-regular`}
+						className="px-4 py-3 border border-black-300 rounded-lg body3-regular
+											placeholder:[color:var(--color-black-600)]
+											placeholder:[font-size:var(--fs-16)]
+											placeholder:[font-weight:var(--fw-regular)]
+											placeholder:[line-height:var(--lh-24);]"
 					/>
 					<div className="text-negative caption1-regular">닉네임을 입력해 주세요.</div>
 				</div>
