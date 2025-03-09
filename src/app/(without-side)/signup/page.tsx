@@ -1,10 +1,46 @@
 'use client';
 
 import Checkbox from '@/components/features/signup/checkbox';
+import Selectbox from '@/components/features/signup/selectBox/selectBox';
 import Image from 'next/image';
 import { useState } from 'react';
 
+const leagues = [
+	{
+		league: '프리미어 리그',
+		src: '/league-logo/premier-league.svg',
+	},
+	{
+		league: '라리가',
+		src: '/league-logo/la-liga.svg',
+	},
+	{
+		league: '분데스리가',
+		src: '/league-logo/bundesliga.svg',
+	},
+	{
+		league: '세리에 A',
+		src: '/league-logo/serie-a.svg',
+	},
+	{
+		league: '리그앙',
+		src: '/league-logo/ligue-1.svg',
+	},
+	{
+		league: 'K리그 1',
+		src: '/league-logo/k-league.svg',
+	},
+	{
+		league: 'K리그 2',
+		src: '/league-logo/k-league.svg',
+	},
+];
+
 export default function Page() {
+	const [nickname, setNickname] = useState('');
+	const isInvalidNickname = !nickname || nickname.length > 8;
+	const invalidNicknameAlert = !nickname ? '닉네임을 입력해 주세요.' : '닉네임은 최대 8글자입니다.';
+
 	const [agreements, setAgreements] = useState({
 		all: false,
 		age: false,
@@ -12,7 +48,6 @@ export default function Page() {
 		privacy: false,
 		marketing: false,
 	});
-
 	const checkboxDatas = [
 		{
 			key: 'all',
@@ -42,6 +77,10 @@ export default function Page() {
 	];
 
 	const buttonDisabled = !(agreements.age && agreements.term && agreements.privacy);
+
+	const handleNicknameChange = (e) => {
+		setNickname(e.target.value);
+	};
 
 	const handleCheckboxChange = (key) => {
 		const prev = agreements[key];
@@ -73,31 +112,20 @@ export default function Page() {
 					<div className="subtitle1-medium">닉네임</div>
 					<input
 						type="text"
+						value={nickname}
 						placeholder="닉네임은 최대 8글자"
-						className="px-4 py-3 border border-black-300 rounded-lg body3-regular
+						onChange={handleNicknameChange}
+						className={`px-4 py-3 border rounded-lg body3-regular
+											${isInvalidNickname ? 'border-negative' : 'border-black-300'}
 											placeholder:[color:var(--color-black-600)]
 											placeholder:[font-size:var(--fs-16)]
 											placeholder:[font-weight:var(--fw-regular)]
-											placeholder:[line-height:var(--lh-24);]"
+											placeholder:[line-height:var(--lh-24);]`}
 					/>
-					<div className="text-negative caption1-regular">닉네임을 입력해 주세요.</div>
+					{isInvalidNickname && <div className="text-negative caption1-regular">{invalidNicknameAlert}</div>}
 				</div>
-				<div className="flex flex-col gap-2">
-					<div className="subtitle1-medium">리그</div>
-					<button className="px-4 py-3 flex items-center border border-black-300 rounded-lg body3-regular">
-						<Image width={18} height={18} src="/league-logo/premier-league.svg" alt="프리미어 리그" />
-						<div className="ml-2.5 mr-auto">프리미어 리그</div>
-						<Image width={18} height={18} src="/chevron/down.svg" alt="리그 선택" />
-					</button>
-				</div>
-				<div className="flex flex-col gap-2">
-					<div className="subtitle1-medium">응원팀</div>
-					<button className="px-4 py-3 flex items-center border border-black-300 rounded-lg body3-regular">
-						<Image width={18} height={18} src="/team-logo/liverpool.svg" alt="리버풀" />
-						<div className="ml-2.5 mr-auto">리버풀</div>
-						<Image width={18} height={18} src="/chevron/down.svg" alt="응원팀 선택" />
-					</button>
-				</div>
+				<Selectbox category="리그" options={leagues} />
+				<Selectbox category="응원팀" options={leagues} />
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
