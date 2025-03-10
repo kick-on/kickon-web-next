@@ -10,8 +10,8 @@ export default function Navbar() {
 	const isHome = pathname === '/';
 
 	const navButtonProps: NavButtonProps[] = [
-		{ href: '/news', content: '뉴스' },
-		{ href: '/board', content: '클럽 커뮤니티' },
+		{ href: '/news?q=전체', content: '뉴스' },
+		{ href: '/board?q=전체', content: '클럽 커뮤니티' },
 	];
 
 	const onClickLogo = () => {
