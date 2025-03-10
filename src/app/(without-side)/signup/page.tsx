@@ -4,6 +4,7 @@ import Checkbox from '@/components/features/signup/checkbox';
 import Selectbox from '@/components/features/signup/selectBox/selectBox';
 import Image from 'next/image';
 import { useState } from 'react';
+import Nickname from '@/components/features/signup/nickname';
 
 const leagues = [
 	{
@@ -38,8 +39,6 @@ const leagues = [
 
 export default function Page() {
 	const [nickname, setNickname] = useState('');
-	const isInvalidNickname = !nickname || nickname.length > 8;
-	const invalidNicknameAlert = !nickname ? '닉네임을 입력해 주세요.' : '닉네임은 최대 8글자입니다.';
 
 	const [agreements, setAgreements] = useState({
 		all: false,
@@ -48,6 +47,7 @@ export default function Page() {
 		privacy: false,
 		marketing: false,
 	});
+
 	const checkboxDatas = [
 		{
 			key: 'all',
@@ -76,7 +76,13 @@ export default function Page() {
 		},
 	];
 
-	const buttonDisabled = !(agreements.age && agreements.term && agreements.privacy);
+	const buttonDisabled = !(
+		agreements.age &&
+		agreements.term &&
+		agreements.privacy &&
+		nickname.length > 0 &&
+		nickname.length < 9
+	);
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -108,22 +114,7 @@ export default function Page() {
 			</div>
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
-				<div className="flex flex-col gap-2">
-					<div className="subtitle1-medium">닉네임</div>
-					<input
-						type="text"
-						value={nickname}
-						placeholder="닉네임은 최대 8글자"
-						onChange={handleNicknameChange}
-						className={`px-4 py-3 border rounded-lg body3-regular
-											${isInvalidNickname ? 'border-negative' : 'border-black-300'}
-											placeholder:[color:var(--color-black-600)]
-											placeholder:[font-size:var(--fs-16)]
-											placeholder:[font-weight:var(--fw-regular)]
-											placeholder:[line-height:var(--lh-24);]`}
-					/>
-					{isInvalidNickname && <div className="text-negative caption1-regular">{invalidNicknameAlert}</div>}
-				</div>
+				<Nickname nickname={nickname} onChange={handleNicknameChange} />
 				<Selectbox category="리그" options={leagues} />
 				<Selectbox category="응원팀" options={leagues} />
 			</div>
