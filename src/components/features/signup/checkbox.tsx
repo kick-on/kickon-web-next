@@ -13,7 +13,7 @@ export default function Checkbox({ content, hasTerm, checked, onChange }) {
                   after:bg-[url('/check.svg')] after:bg-center after:bg-no-repeat
                   after:opacity-0 checked:after:opacity-100"
 			/>
-			{content}
+			<span className="cursor-pointer">{content}</span>
 			{hasTerm && <span className="button5-regular text-black-700 underline ml-auto cursor-pointer">약관보기</span>}
 		</label>
 	);
