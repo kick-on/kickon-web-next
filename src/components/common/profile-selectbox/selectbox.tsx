@@ -55,17 +55,17 @@ export default function SelectBox({ category, options, content, onChange }) {
 				</button>
 
 				{isVisibleOptions && (
-					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-200 rounded-[0.625rem]">
+					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]">
 						{options.map((option, index) => (
 							<div
 								key={option.content}
-								className={clsx('bg-black-000 hover:bg-black-200 transition-colors', {
+								className={clsx('bg-black-000 hover:bg-black-150 transition-colors', {
 									'rounded-t-[0.5625rem]': index === 0,
 									'rounded-b-[0.5625rem]': index === leagues.length - 1,
 								})}
 							>
 								<OptionItem onClick={handleOptionClick} {...option} />
-								{index < leagues.length - 1 && <hr className="border-black-200" />}
+								{index < leagues.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
 					</div>
