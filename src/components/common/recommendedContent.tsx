@@ -8,7 +8,8 @@ import ComponentFrame from './componentFrame';
 import moreIcon from '../../../public/chevron/right-gray.svg';
 import clsx from 'clsx';
 
-const RecommendedContent = ({ type, data, isMyTeam = false, teamName = '' }) => {
+const RecommendedContent = ({ type, data, teamName = '' }) => {
+	const isMyTeam = Boolean(teamName);
 	const itemsToRender = type === 'news' ? data.slice(0, 3) : data.slice(0, 10);
 	const Component = type === 'news' ? NewsItem : CommunityItem;
 
@@ -19,10 +20,10 @@ const RecommendedContent = ({ type, data, isMyTeam = false, teamName = '' }) => 
 					'border-b border-black-300 pb-7.5': type === 'board',
 				})}
 			>
-				<h2 className="title4-semibold">
-					함께 볼 만한 {isMyTeam && teamName && <span className="text-primary-900">{teamName} </span>}
+				<h3 className="title4-semibold">
+					함께 볼 만한 {isMyTeam && <span className="text-primary-900">{teamName} </span>}
 					{type === 'news' ? '뉴스' : '게시글'}
-				</h2>
+				</h3>
 
 				<a href="#" aria-label="더 보기" className="flex gap-2 items-center text-black-700 body5-regular">
 					<span>더 보기</span>
