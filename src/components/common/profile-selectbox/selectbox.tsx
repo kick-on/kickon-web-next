@@ -9,6 +9,7 @@ import { leagues } from '@/lib/constants/leagues';
 export default function SelectBox({ category, options, content, onChange }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
+	const isLeagueSelectBox = category === '리그';
 
 	const handleSelectBoxClick = () => {
 		setIsVisibleOptions(!isVisibleOptions);
@@ -37,7 +38,7 @@ export default function SelectBox({ category, options, content, onChange }) {
 		<div className="flex flex-col gap-2">
 			<div className="flex gap-1.5 items-center subtitle1-medium">
 				{category}
-				{category === '리그' && (
+				{isLeagueSelectBox && (
 					<Image width={12} height={12} src="/help-circle.svg" alt="도움말" className="cursor-pointer" />
 				)}
 			</div>
@@ -61,13 +62,21 @@ export default function SelectBox({ category, options, content, onChange }) {
 								key={option.content}
 								className={clsx('bg-black-000 hover:bg-black-150 transition-colors', {
 									'rounded-t-[0.5625rem]': index === 0,
-									'rounded-b-[0.5625rem]': index === leagues.length - 1,
+									'rounded-b-[0.5625rem]': index === leagues.length - 1 && isLeagueSelectBox,
 								})}
 							>
 								<OptionItem onClick={handleOptionClick} {...option} />
 								{index < leagues.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
+						{!isLeagueSelectBox && (
+							<div
+								className="bg-black-000 hover:bg-black-150 transition-colors
+									rounded-b-[0.5625rem] border-t border-black-300"
+							>
+								<OptionItem onClick={handleOptionClick} content="응원팀이 없어요." src="/ban.svg" />
+							</div>
+						)}
 					</div>
 				)}
 			</div>
