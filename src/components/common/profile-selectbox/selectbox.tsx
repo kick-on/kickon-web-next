@@ -58,7 +58,7 @@ export default function SelectBox({ category, options }) {
 					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-200 rounded-[0.625rem]">
 						{options.map((option, index) => (
 							<div
-								key={option.league}
+								key={option.content}
 								className={clsx('bg-black-000 hover:bg-black-200 transition-colors', {
 									'rounded-t-[0.5625rem]': index === 0,
 									'rounded-b-[0.5625rem]': index === leagues.length - 1,
