@@ -20,7 +20,7 @@ const WhiteBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	return (
 		<div
 			className={clsx(
-				'bg-black-100 w-[41.75rem] h-auto border border-black-300 border-solid rounded-[0.625rem] mt-4 m-auto',
+				'bg-black-000 w-[41.75rem] h-auto border border-black-300 border-solid rounded-[0.625rem] mt-4 m-auto',
 				computedPadding,
 			)}
 		>

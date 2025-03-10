@@ -1,7 +1,7 @@
 'use client';
 
 import Checkbox from '@/components/features/signup/checkbox';
-import Selectbox from '@/components/features/signup/selectBox/selectBox';
+import Selectbox from '@/components/common/profile-selectbox/selectbox';
 import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
