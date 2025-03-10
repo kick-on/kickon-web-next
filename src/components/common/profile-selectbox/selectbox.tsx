@@ -6,19 +6,16 @@ import OptionItem from '../option-item';
 import clsx from 'clsx';
 import { leagues } from '@/lib/constants/leagues';
 
-export default function SelectBox({ category, options }) {
-	const defaultContent = '선택해 주세요.';
+export default function SelectBox({ category, options, content, onChange }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
-	const [league, setLeague] = useState(defaultContent);
-	const isDefault = league === defaultContent;
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 
 	const handleSelectBoxClick = () => {
 		setIsVisibleOptions(!isVisibleOptions);
 	};
 
-	const handleOptionClick = (selectedLeague: string) => {
-		setLeague(selectedLeague);
+	const handleOptionClick = (selectedOption: string) => {
+		onChange(selectedOption);
 		setIsVisibleOptions(false);
 	};
 
@@ -48,12 +45,15 @@ export default function SelectBox({ category, options }) {
 			<div ref={dropboxRef} className="w-full flex flex-col gap-1">
 				<button
 					onClick={handleSelectBoxClick}
-					className="flex gap-2.5 items-center px-4 py-3 w-full border border-black-300 rounded-lg bg-black-000 body3-regular"
+					className={`flex gap-2.5 items-center px-4 py-3 w-full
+						border border-black-300 rounded-lg bg-black-000 body3-regular
+						${content ? 'text-black-900' : 'text-black-600'}`}
 				>
-					{!isDefault && <Image width={18} height={18} src="/league-logo/premier-league.svg" alt={league} />}
-					<div className={isDefault ? 'text-black-600' : 'text-black-900'}>{league}</div>
+					{content && <Image width={18} height={18} src="/league-logo/premier-league.svg" alt={content} />}
+					{content || '선택해 주세요.'}
 					<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
 				</button>
+
 				{isVisibleOptions && (
 					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-200 rounded-[0.625rem]">
 						{options.map((option, index) => (

@@ -7,9 +7,38 @@ import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { leagues } from '@/lib/constants/leagues';
 
+const checkboxDatas = [
+	{
+		key: 'all',
+		content: '모두 동의',
+		hasTerm: false,
+	},
+	{
+		key: 'age',
+		content: '만 14세 이상 가입 동의 (필수)',
+		hasTerm: false,
+	},
+	{
+		key: 'term',
+		content: '서비스 이용약관 동의 (필수)',
+		hasTerm: true,
+	},
+	{
+		key: 'privacy',
+		content: '개인정보처리방침 동의 (필수)',
+		hasTerm: true,
+	},
+	{
+		key: 'marketing',
+		content: '마케팅 정보 수신 동의 (선택)',
+		hasTerm: true,
+	},
+];
+
 export default function Page() {
 	const [nickname, setNickname] = useState('');
-
+	const [league, setLeague] = useState('');
+	const [team, setTeam] = useState('');
 	const [agreements, setAgreements] = useState({
 		all: false,
 		age: false,
@@ -18,48 +47,33 @@ export default function Page() {
 		marketing: false,
 	});
 
-	const checkboxDatas = [
-		{
-			key: 'all',
-			content: '모두 동의',
-			hasTerm: false,
-		},
-		{
-			key: 'age',
-			content: '만 14세 이상 가입 동의 (필수)',
-			hasTerm: false,
-		},
-		{
-			key: 'term',
-			content: '서비스 이용약관 동의 (필수)',
-			hasTerm: true,
-		},
-		{
-			key: 'privacy',
-			content: '개인정보처리방침 동의 (필수)',
-			hasTerm: true,
-		},
-		{
-			key: 'marketing',
-			content: '마케팅 정보 수신 동의 (선택)',
-			hasTerm: true,
-		},
-	];
-
-	const buttonDisabled = !(
+	const isButtonDisabled = !(
+		nickname.length > 0 &&
+		nickname.length < 9 &&
 		agreements.age &&
 		agreements.term &&
 		agreements.privacy &&
-		nickname.length > 0 &&
-		nickname.length < 9
+		league &&
+		team
 	);
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
 	};
 
+	const handleLeagueChange = (selectedLeague) => {
+		if (selectedLeague === league) return;
+		setLeague(selectedLeague);
+	};
+
+	const handleTeamChange = (selectedTeam) => {
+		if (selectedTeam === team) return;
+		setTeam(selectedTeam);
+	};
+
 	const handleCheckboxChange = (key) => {
 		const prev = agreements[key];
+
 		if (key === 'all') {
 			setAgreements({
 				all: !prev,
@@ -85,8 +99,8 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<Selectbox category="리그" options={leagues} />
-				<Selectbox category="응원팀" options={leagues} />
+				<Selectbox category="리그" options={leagues} content={league} onChange={handleLeagueChange} />
+				{league && <Selectbox category="응원팀" options={leagues} content={team} onChange={handleTeamChange} />}
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
@@ -100,7 +114,7 @@ export default function Page() {
 					/>
 				))}
 				<button
-					disabled={buttonDisabled}
+					disabled={isButtonDisabled}
 					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
 										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
 				>
