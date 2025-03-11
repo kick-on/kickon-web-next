@@ -10,7 +10,7 @@ import { useState } from 'react';
 export default function Profile() {
 	const searchParams = useSearchParams();
 	const [isLoggedin, setIsLoggedin] = useState(true);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!isLoggedin && !!searchParams.get('q'));
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));
 
 	const handleLoginButtonClick = () => {
 		setIsLoginModalOpen(true);

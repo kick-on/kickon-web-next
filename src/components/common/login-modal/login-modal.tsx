@@ -24,7 +24,7 @@ export default function LoginModal({ onClose }) {
 		<div className="fixed top-0 left-0 w-full h-full bg-black/40">
 			<div
 				ref={modalRef}
-				className="flex flex-col items-center mt-[11.875rem] mx-auto p-6
+				className="flex flex-col items-center mt-[11.875rem] mx-auto p-6 shadow-predict-button
             w-[39.5rem] h-[39.75rem] bg-black-000 rounded-[0.625rem] display-semibold"
 			>
 				<Image
