@@ -2,11 +2,11 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import OptionItem from '../option-item';
+import OptionItem from './option-item';
 import clsx from 'clsx';
 import { leagues } from '@/lib/constants/leagues';
 
-export default function SelectBox({ category, options, content, onChange }) {
+export default function AccountSelectBox({ category, options, content, onChange }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';

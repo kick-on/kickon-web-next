@@ -1,7 +1,7 @@
 'use client';
 
 import Checkbox from '@/components/features/signup/checkbox';
-import Selectbox from '@/components/common/profile-selectbox/selectbox';
+import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
@@ -99,8 +99,8 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<Selectbox category="리그" options={leagues} content={league} onChange={handleLeagueChange} />
-				{league && <Selectbox category="응원팀" options={leagues} content={team} onChange={handleTeamChange} />}
+				<AccountSelectbox category="리그" options={leagues} content={league} onChange={handleLeagueChange} />
+				{league && <AccountSelectbox category="응원팀" options={leagues} content={team} onChange={handleTeamChange} />}
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
