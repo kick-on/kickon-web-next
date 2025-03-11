@@ -4,11 +4,13 @@ import ComponentFrame from '@/components/common/componentFrame';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Profile() {
-	const [isLoggedin, setIsLoggedin] = useState(false);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const searchParams = useSearchParams();
+	const [isLoggedin, setIsLoggedin] = useState(true);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!isLoggedin && !!searchParams.get('q'));
 
 	const handleLoginButtonClick = () => {
 		setIsLoginModalOpen(true);
