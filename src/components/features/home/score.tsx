@@ -1,7 +1,5 @@
-'use client';
-
 import clsx from 'clsx';
-import { ChangeEvent, useEffect, useRef } from 'react';
+import { ChangeEvent } from 'react';
 import Image from 'next/image';
 
 export default function Score({
@@ -21,24 +19,6 @@ export default function Score({
 	onClickDownButton: () => void;
 	onChange: (e: ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => void;
 }) {
-	const downButtonRef = useRef<HTMLButtonElement | null>(null);
-	const upButtonRef = useRef<HTMLButtonElement | null>(null);
-
-	useEffect(() => {
-		if (!downButtonRef.current) return;
-		if (score <= 0) {
-			downButtonRef.current.disabled = true;
-		} else {
-			downButtonRef.current.disabled = false;
-		}
-		if (!upButtonRef.current) return;
-		if (score >= 20) {
-			upButtonRef.current.disabled = true;
-		} else {
-			upButtonRef.current.disabled = false;
-		}
-	}, [score]);
-
 	return (
 		<div
 			onClick={(e) => e.stopPropagation()}
@@ -49,7 +29,8 @@ export default function Score({
 		>
 			<div className={clsx('flex flex-col gap-1.5', { invisible: isCompleted })}>
 				<button
-					ref={upButtonRef}
+					// ref={upButtonRef}
+					disabled={score >= 20}
 					onClick={onClickUpButton}
 					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
 				>
@@ -62,7 +43,8 @@ export default function Score({
 					/>
 				</button>
 				<button
-					ref={downButtonRef}
+					// ref={downButtonRef}
+					disabled={score <= 0}
 					onClick={onClickDownButton}
 					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
 				>
