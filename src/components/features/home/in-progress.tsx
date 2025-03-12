@@ -109,6 +109,24 @@ export default function InProgress() {
 		setIsCompleted(true);
 	};
 
+	// TODO: data 매개변수로 받아서 뿌리기
+	const renderTeamButton = (side: 'left' | 'right') => (
+		<div
+			onClick={() => handleTeamButtonClick(side)}
+			className={
+				side === 'left'
+					? 'pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]'
+					: 'pr-4 h-full flex gap-2 justify-end items-center text-right rounded-r-[0.5625rem]'
+			}
+		>
+			<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
+			<div>
+				<div className="relative z-20">FC 서울</div>
+				{isClicked && <div className="relative z-20 caption2-medium text-black-800">53%</div>}
+			</div>
+		</div>
+	);
+
 	return (
 		<div className="flex flex-col gap-2.5 w-[36rem] cursor-pointer">
 			{/* 팀 선택 버튼 */}
@@ -135,16 +153,7 @@ export default function InProgress() {
 				)}
 
 				{/* 왼쪽 팀 */}
-				<div
-					onClick={() => handleTeamButtonClick('left')}
-					className="pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]"
-				>
-					<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
-					<div>
-						<div className="relative z-20">FC 서울</div>
-						{isClicked && <div className="relative z-20 caption2-medium text-black-800">53%</div>}
-					</div>
-				</div>
+				{renderTeamButton('left')}
 
 				{/* 중앙 (무승부) */}
 				<div
@@ -178,16 +187,7 @@ export default function InProgress() {
 				</div>
 
 				{/* 오른쪽 팀 */}
-				<div
-					onClick={() => handleTeamButtonClick('right')}
-					className="pr-4 h-full flex gap-2 justify-end items-center text-right rounded-r-[0.5625rem]"
-				>
-					<div>
-						<div className="relative z-20">FC 서울</div>
-						{isClicked && <div className="relative z-20 caption2-medium text-black-800">53%</div>}
-					</div>
-					<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
-				</div>
+				{renderTeamButton('right')}
 			</div>
 
 			{/* 선택 완료 버튼 */}
