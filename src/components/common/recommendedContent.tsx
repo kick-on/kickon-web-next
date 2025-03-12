@@ -5,7 +5,6 @@ import CommunityDivisionBar from './category-tab/community-division-bar';
 import CommunityItem from './category-tab/community-item';
 import NewsItem from './category-tab/news-item';
 import ComponentFrame from './componentFrame';
-import moreIcon from '../../../public/chevron/right-gray.svg';
 import clsx from 'clsx';
 
 const RecommendedContent = ({ type, data, teamName = '' }) => {
@@ -27,7 +26,7 @@ const RecommendedContent = ({ type, data, teamName = '' }) => {
 
 				<a href="#" aria-label="더 보기" className="flex gap-2 items-center text-black-700 body5-regular">
 					<span>더 보기</span>
-					<Image src={moreIcon} alt="오른쪽 화살표" />
+					<Image src="/chevron/right-gray.svg" alt="오른쪽 화살표" />
 				</a>
 			</header>
 
