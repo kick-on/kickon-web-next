@@ -6,15 +6,18 @@ import CommunityItem from './category-tab/community-item';
 import NewsItem from './category-tab/news-item';
 import ComponentFrame from './componentFrame';
 import clsx from 'clsx';
+import { usePathname } from 'next/navigation';
 
 const RecommendedContent = ({ mode, data, teamName = '' }) => {
+	const pathname = usePathname();
+
 	const isMyTeam = Boolean(teamName);
 	const isNews = mode === '뉴스';
 
 	const itemsToRender = isNews ? data.slice(0, 3) : data.slice(0, 10);
 	const Component = isNews ? NewsItem : CommunityItem;
 	const displayTitle =
-		mode === '홈 게시글' ? (
+		pathname === '/' && mode === '게시글' ? (
 			'클럽 커뮤니티'
 		) : (
 			<>
