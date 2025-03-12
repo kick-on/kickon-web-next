@@ -22,54 +22,47 @@ export default function InProgress() {
 				: 'right';
 	const selectedButtonClass = 'bg-primary-300 shadow-predict-button-active';
 
-	const increaseScore = {
-		left: () => setLeftScore(leftScore + 1),
-		right: () => setRightScore(rightScore + 1),
-		center: () => {
-			setLeftScore(leftScore + 1);
-			setRightScore(rightScore + 1);
-		},
-	};
+	const updateScore = (side: 'left' | 'center' | 'right', mode: 'increase' | 'decrease') => {
+		const change = mode === 'increase' ? +1 : -1;
 
-	const decreaseScore = {
-		left: () => setLeftScore(leftScore - 1),
-		right: () => setRightScore(rightScore - 1),
-		center: () => {
-			setLeftScore(leftScore - 1);
-			setRightScore(rightScore - 1);
-		},
+		switch (side) {
+			case 'left':
+				setLeftScore(leftScore + change);
+				break;
+			case 'right':
+				setRightScore(rightScore + change);
+				break;
+			case 'center':
+				setLeftScore(leftScore + change);
+				setRightScore(rightScore + change);
+				break;
+		}
 	};
 
 	const handleTeamButtonClick = (button: SelectedButton) => {
+		// 선택이 완료된 상태에서 다시 클릭 시 득점 업다운 버튼 활성화
 		if (isCompleted) {
-			// 선택이 완료된 상태에서 다시 클릭 시 득점 업다운 버튼 활성화
 			setIsCompleted(false);
 			setIsClicked(true);
 		} else {
+			// 동일 버튼 클릭 시 선택 종료
 			if (selectedButton === button) {
-				// 동일 버튼 클릭 시 선택 종료
 				setIsClicked(false);
 				setLeftScore(0);
 				setRightScore(0);
 			} else {
-				if (button === 'center') {
-					// 무승부 버튼 클릭 시 더 큰 값에 동기화
-					if (leftScore > rightScore) {
-						setRightScore(leftScore);
-					} else {
-						setLeftScore(rightScore);
-					}
-				} else if (button === 'right') {
-					// leftScore > rightScore 상태에서 오른쪽 팀 버튼 클릭 시
-					// rightScore = leftScore + 1
-					setRightScore(leftScore + 1);
-				} else if (button === 'left') {
-					// rightScore > leftScore 상태에서 왼쪽 팀 버튼 클릭 시
-					// leftScore = rightScore + 1
-					setLeftScore(rightScore + 1);
-				} else {
-					// 그 외에는 한쪽을 1 증가하거나 양쪽을 1 증가
-					increaseScore[button]();
+				switch (button) {
+					case 'left':
+						setLeftScore(1);
+						setRightScore(0);
+						break;
+					case 'center':
+						setLeftScore(0);
+						setRightScore(0);
+						break;
+					case 'right':
+						setLeftScore(0);
+						setRightScore(1);
 				}
 				setIsClicked(true);
 			}
@@ -96,18 +89,18 @@ export default function InProgress() {
 	const handleUpButtonClick = (side: 'left' | 'right') => {
 		if (selectedButton === 'center') {
 			// 무승부 상태에서 버튼 클릭 시 양쪽을 1 증가
-			increaseScore['center']();
+			updateScore('center', 'increase');
 		} else {
-			increaseScore[side]();
+			updateScore(side, 'increase');
 		}
 	};
 
 	const handleDownButtonClick = (side: 'left' | 'right') => {
 		if (selectedButton === 'center') {
 			// 무승부 상태에서 버튼 클릭 시 양쪽을 1 감소
-			decreaseScore['center']();
+			updateScore('center', 'decrease');
 		} else {
-			decreaseScore[side]();
+			updateScore(side, 'decrease');
 		}
 	};
 
