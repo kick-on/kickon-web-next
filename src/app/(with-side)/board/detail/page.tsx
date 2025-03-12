@@ -14,7 +14,7 @@ export default function Page() {
 	return (
 		<>
 			<ComponentFrame isMain={true}>게시글 상세페이지</ComponentFrame>
-			<RecommendedContent type="board" data={allCommunities} />
+			<RecommendedContent mode="게시글" data={allCommunities} />
 		</>
 	);
 }

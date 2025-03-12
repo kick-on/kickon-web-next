@@ -15,7 +15,7 @@ export default function Page() {
 	return (
 		<>
 			<ComponentFrame isMain={true}>뉴스 상세페이지</ComponentFrame>
-			<RecommendedContent type="news" data={allNews} teamName={myTeamName} />
+			<RecommendedContent mode="뉴스" data={allNews} teamName={myTeamName} />
 		</>
 	);
 }
