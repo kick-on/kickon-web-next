@@ -13,7 +13,8 @@ export default function NavButton({ href, content }: NavButtonProps) {
 	return (
 		<Link
 			href={href}
-			className={`w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium ${isHome ? 'text-black-900' : 'text-black-000'}`}
+			className={`w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium
+				${isHome ? 'text-black-900' : pathname + '?q=전체' === href ? 'text-black-000' : 'text-black-600'}`}
 		>
 			{content}
 		</Link>
