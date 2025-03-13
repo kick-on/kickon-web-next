@@ -34,3 +34,28 @@ body {
 button {
 	cursor: pointer;
 }
+
+.banner-swiper .swiper-pagination {
+	position: absolute;
+	z-index: 20;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+
+	display: flex;
+	width: fit-content;
+	gap: 0.4375rem;
+}
+
+.banner-swiper .swiper-pagination-bullet {
+	width: 0.5rem;
+	height: 0.5rem;
+	background-color: white;
+	border-radius: 4px;
+	opacity: 1;
+	transition: width 0.3s ease;
+}
+
+.banner-swiper .swiper-pagination-bullet-active {
+	width: 3.125rem;
+}
