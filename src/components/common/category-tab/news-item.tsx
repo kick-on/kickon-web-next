@@ -12,11 +12,12 @@ export default function NewsItem({
 	views,
 	kick,
 	comment,
+	isMyTeam = false,
 }) {
 	return (
 		<article className="flex flex-col py-6 px-4 cursor-pointer">
 			<header className="flex gap-2 mb-2.5 items-center">
-				<Image width={24} height={24} src={teamLogo} alt={team} />
+				{!isMyTeam && <Image width={24} height={24} src={teamLogo} alt={team} />}
 				<div className="h-5 px-2.5 py-0.5 rounded-full bg-black-200 text-black-800 caption1-medium">{tag}</div>
 			</header>
 
