@@ -1,4 +1,4 @@
-export default function PagenationBar() {
+export default function PaginationBar() {
 	return (
 		<div className="flex gap-5 items-start">
 			<button>이전</button>
