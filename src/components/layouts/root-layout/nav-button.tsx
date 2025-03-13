@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -8,13 +9,16 @@ export interface NavButtonProps {
 
 export default function NavButton({ href, content }: NavButtonProps) {
 	const pathname = usePathname();
-	const isHome = pathname === '/';
+	const isActive = pathname + '?q=전체' === href;
 
 	return (
 		<Link
 			href={href}
-			className={`w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium
-				${isHome ? 'text-black-900' : pathname + '?q=전체' === href ? 'text-black-000' : 'text-black-600'}`}
+			className={clsx('w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium', {
+				'text-black-900': pathname === '/',
+				'text-black-000': pathname === '/signup' || isActive,
+				'text-black-600': (pathname === '/news' || pathname === '/board') && !isActive,
+			})}
 		>
 			{content}
 		</Link>
