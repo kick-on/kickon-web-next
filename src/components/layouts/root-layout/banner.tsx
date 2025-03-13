@@ -42,7 +42,7 @@ export default function Banner() {
 				{navigationButtons.map((button) => (
 					<Image
 						key={button.alt}
-						className={`absolute z-20 top-1/2 -translate-y-1/2
+						className={`absolute z-20 top-1/2 -translate-y-1/2 cursor-pointer
 							opacity-30 hover:opacity-100 transition-opacity ${button.className}`}
 						width={30}
 						height={56}
