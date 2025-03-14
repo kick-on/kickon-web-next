@@ -127,9 +127,18 @@ const PostEditor = () => {
 		return null;
 	}
 
+	const buttons = [
+		{ text: '취소', color: 'text-black-700', variant: 'bg-black-200', onClick: () => console.log('취소') },
+		{ text: '작성 완료', color: 'text-black-100', variant: 'bg-primary-900', onClick: () => console.log('완료') },
+	];
+
 	return (
 		<div>
 			<div>
+				<input
+					placeholder="제목"
+					className="title2-semibold w-[636px] px-4 py-[15px]  border border-[#D9D9D9] rounded-lg mb-8 focus:outline-none caret-red-500"
+				/>
 				<div className="flex flex-wrap items-center gap-2 pb-4">
 					{/* 제목 스타일 드롭다운 */}
 					<div ref={dropdownRef} className="relative w-fit">
@@ -251,11 +260,21 @@ const PostEditor = () => {
 					</div>
 				)}
 			</div>
-
 			<EditorContent
 				editor={editor}
 				className="rounded-lg overflow-hidden border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
 			/>
+			<div className="flex justify-center gap-4 mt-4">
+				{buttons.map(({ text, color, variant, onClick }) => (
+					<button
+						key={text}
+						onClick={onClick}
+						className={`w-[164px] button2-semibold px-4 py-2 ${color} rounded-lg ${variant}`}
+					>
+						{text}
+					</button>
+				))}
+			</div>
 		</div>
 	);
 };
