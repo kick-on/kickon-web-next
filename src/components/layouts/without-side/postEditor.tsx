@@ -50,6 +50,11 @@ const PostEditor = () => {
 			YouTube.configure({ controls: true }),
 		],
 		content: '',
+		editorProps: {
+			attributes: {
+				class: 'focus:outline-none caret-red-500',
+			},
+		},
 	});
 
 	const handleAlignClick = () => {
@@ -136,7 +141,7 @@ const PostEditor = () => {
 							<ImageIcon width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 						</button>
 						{isVisibleDropdown && (
-							<div className="absolute top-10 w-[63px] bg-white border border-gray-300 rounded-sm shadow-sm">
+							<div className="z-50 absolute top-10 w-[63px] bg-white border border-gray-300 rounded-sm shadow-sm">
 								{headingOptions.map((option, index) => (
 									<div
 										key={option.value}
@@ -199,7 +204,7 @@ const PostEditor = () => {
 						>
 							<BiLinkAlt />
 						</button>
-						<label className="p-[7px] border border-[#D9D9D9] rounded-sm">
+						<label className="cursor-pointer p-[7px] border border-[#D9D9D9] rounded-sm">
 							<BiImageAlt />
 							<input type="file" accept="image/*" className="hidden" onChange={addImage} />
 						</label>
@@ -249,7 +254,7 @@ const PostEditor = () => {
 
 			<EditorContent
 				editor={editor}
-				className="rounded-lg overflow-hidden border border-[#D9D9D9] px-4 py-6 w-[636px] h-[460px] focus:outline-none"
+				className="rounded-lg overflow-hidden border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
 			/>
 		</div>
 	);
