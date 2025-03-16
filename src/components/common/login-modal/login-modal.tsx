@@ -15,8 +15,10 @@ export default function LoginModal({ onClose }) {
 		};
 
 		document.addEventListener('click', handleOutsideClick);
+		document.body.style.overflow = 'hidden';
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
+			document.body.style.overflow = 'unset';
 		};
 	}, [onClose]);
 
