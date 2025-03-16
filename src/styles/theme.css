@@ -16,8 +16,8 @@
 .bg-primary-200 {
 	background-color: var(--color-primary-200);
 }
-.bg-primary-100 {
-	background-color: var(--color-primary-100);
+.bg-primary-50 {
+	background-color: var(--color-primary-50);
 }
 .bg-black-900 {
 	background-color: var(--color-black-900);
@@ -63,8 +63,8 @@
 .hover\:bg-primary-200:hover {
 	background-color: var(--color-primary-200); /* hover 시 bg-primary-200 */
 }
-.hover\:bg-primary-100:hover {
-	background-color: var(--color-primary-100); /* hover 시 bg-primary-100 */
+.hover\:bg-primary-50:hover {
+	background-color: var(--color-primary-50); /* hover 시 bg-primary-50 */
 }
 .hover\:bg-black-900:hover {
 	background-color: var(--color-black-900); /* hover 시 bg-black-900 */
@@ -110,8 +110,8 @@
 .active\:bg-primary-200:active {
 	background-color: var(--color-primary-200); /* active 시 bg-primary-200 */
 }
-.active\:bg-primary-100:active {
-	background-color: var(--color-primary-100); /* active 시 bg-primary-100 */
+.active\:bg-primary-50:active {
+	background-color: var(--color-primary-50); /* active 시 bg-primary-50 */
 }
 .active\:bg-black-900:active {
 	background-color: var(--color-black-900); /* active 시 bg-black-900 */
