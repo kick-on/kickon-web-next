@@ -90,6 +90,9 @@
 .hover\:bg-black-100:hover {
 	background-color: var(--color-black-100); /* hover 시 bg-black-100 */
 }
+.hover\:bg-black-150:hover {
+	background-color: var(--color-black-150); /* hover 시 bg-black-150 */
+}
 .hover\:bg-black-000:hover {
 	background-color: var(--color-black-000); /* hover 시 bg-black-000 */
 }
