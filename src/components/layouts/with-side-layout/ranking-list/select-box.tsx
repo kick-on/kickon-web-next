@@ -21,16 +21,19 @@ export default function SelectBox() {
 	};
 
 	useEffect(() => {
+		// isVisibleOptions가 true일 때만 리스너 등록
+		if (!isVisibleOptions) return;
+
 		// 드롭박스 외부 클릭 시 닫음
 		const handleOutsideClick = (e: MouseEvent) => {
-			if (isVisibleOptions && !dropboxRef.current.contains(e.target as Node)) {
+			if (!dropboxRef.current.contains(e.target as Node)) {
 				setIsVisibleOptions(false);
 			}
 		};
 
-		document.addEventListener('mousedown', handleOutsideClick);
+		document.addEventListener('click', handleOutsideClick);
 		return () => {
-			document.removeEventListener('mousedown', handleOutsideClick);
+			document.removeEventListener('click', handleOutsideClick);
 		};
 	}, [isVisibleOptions]);
 
