@@ -2,7 +2,12 @@ import clsx from 'clsx';
 import InProgress from './in-progress';
 import Closed from './closed';
 
-export default function PredictCard({ status }: { status: 'inProgress' | 'participated' | 'unParticipated' }) {
+export default function PredictCard({ status }: { status: 'inProgress' | 'success' | 'fail' | 'unparticipated' }) {
+	const successBackground =
+		'linear-gradient(262deg, #000 -20.49%, #600606 3.69%, #C00C0B 50.27%, #600606 87.98%, #000 114.36%);';
+	const failBackground =
+		'linear-gradient(84deg, #6D6D6D -12.16%, #888 11.83%, #AFAFAF 49.66%, #888 95.51%, #6D6D6D 113.24%);';
+
 	return (
 		<div
 			className={clsx(
@@ -15,11 +20,20 @@ export default function PredictCard({ status }: { status: 'inProgress' | 'partic
 					K리그 1
 					<div
 						className={clsx('px-2 py-1 rounded-full text-black-000 caption2-regular text-center items-center', {
-							'bg-black-900': status !== 'unParticipated',
-							'bg-black-500': status === 'unParticipated',
+							'bg-black-900': status === 'inProgress',
+							'bg-black-500': status === 'unparticipated',
 						})}
+						style={{
+							background: status === 'success' ? successBackground : status === 'fail' ? failBackground : '',
+						}}
 					>
-						{status === 'inProgress' ? '예측 진행 중' : status === 'participated' ? '참여 완료' : '미참여'}
+						{status === 'inProgress'
+							? '예측 진행 중'
+							: status === 'success'
+								? '예측 성공'
+								: status === 'fail'
+									? '예측 실패 1:0'
+									: '미참여'}
 					</div>
 				</div>
 				{status === 'inProgress' && <div className="caption1-regular text-black-700">마감 50분 전</div>}
@@ -35,7 +49,7 @@ export default function PredictCard({ status }: { status: 'inProgress' | 'partic
 					<div className="button6-regular">01.25 (토)</div>
 					<div className="button6-regular">04:30</div>
 				</div>
-				{status === 'inProgress' ? <InProgress /> : <Closed isParticipated={status === 'participated'} />}
+				{status === 'inProgress' ? <InProgress /> : <Closed isParticipated={status !== 'unparticipated'} />}
 			</div>
 			<div className="caption1-regular text-black-700 text-right">1,204명 참여</div>
 		</div>
