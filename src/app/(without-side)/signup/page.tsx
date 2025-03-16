@@ -47,15 +47,9 @@ export default function Page() {
 		marketing: false,
 	});
 
-	const isButtonDisabled = !(
-		nickname.length > 0 &&
-		nickname.length < 9 &&
-		agreements.age &&
-		agreements.term &&
-		agreements.privacy &&
-		league &&
-		team
-	);
+	const isValidNickname = nickname.length > 0 && nickname.length < 9;
+	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
+	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && team);
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
