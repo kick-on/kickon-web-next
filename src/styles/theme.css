@@ -269,6 +269,10 @@
 	box-shadow: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);
 }
 
+.hover\:shadow-kick-button-active:hover {
+	box-shadow: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);
+}
+
 /* predict-button 가상 요소 클래스 */
 .before\:bg-primary-300 {
 	&::before {

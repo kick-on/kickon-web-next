@@ -29,7 +29,7 @@ export default function InProgress() {
 	const hoveredButtonClass = (
 		side,
 	) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:hover:bg-primary-50 before:hover:shadow-predict-button-active
+		before:hover:bg-primary-50 before:hover:shadow-predict-button-active before:transition-all
 		${side === 'left' && 'before:rounded-l-[0.5625rem]'} ${side === 'right' && 'before:rounded-r-[0.5625rem]'}`;
 
 	const updateScore = (side: 'left' | 'center' | 'right', mode: 'increase' | 'decrease') => {
@@ -188,8 +188,8 @@ export default function InProgress() {
 				<button
 					onClick={handleCompleteButtonClick}
 					className="w-full h-[1.875rem] border border-black-200 rounded-[0.625rem]
-				flex justify-center items-center button5-medium shadow-predict-button
-				hover:bg-primary-700 hover:border-0 active:bg-primary-900 active:text-white"
+						flex justify-center items-center button5-medium shadow-predict-button transition-colors
+						hover:bg-primary-700 hover:border-0 hover:shadow-kick-button-active active:bg-primary-900 active:text-white"
 				>
 					선택 완료
 				</button>
