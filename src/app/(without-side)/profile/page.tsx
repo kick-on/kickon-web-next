@@ -9,10 +9,13 @@ import { leagues } from '@/lib/constants/leagues';
 
 export default function Page() {
 	const [nickname, setNickname] = useState('가나다라');
-	const [league, setLeague] = useState('프리미어 리그');
+	const [league, setLeague] = useState('응원팀이 없어요.');
 	const [team, setTeam] = useState('프리미어 리그');
+
 	const route = useRouter();
+
 	const isEditible = false;
+	const hasTeam = league !== '응원팀이 없어요.';
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -58,13 +61,15 @@ export default function Page() {
 					content={league}
 					onChange={handleLeagueChange}
 				/>
-				<AccountSelectBox
-					isEditible={isEditible}
-					category={'응원팀'}
-					options={leagues}
-					content={league}
-					onChange={handleTeamChange}
-				/>
+				{hasTeam && (
+					<AccountSelectBox
+						isEditible={isEditible}
+						category={'응원팀'}
+						options={leagues}
+						content={team}
+						onChange={handleTeamChange}
+					/>
+				)}
 			</div>
 
 			<div className="flex flex-col gap-2 mt-[4.25rem]">
