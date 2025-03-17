@@ -20,7 +20,17 @@ export default function InProgress() {
 			: leftScore === rightScore
 				? 'center'
 				: 'right';
-	const selectedButtonClass = 'bg-primary-300 shadow-predict-button-active';
+
+	const selectedButtonClass = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:bg-primary-300 before:shadow-predict-button-active
+		${side === 'left' && 'before:rounded-l-[0.5625rem]'} ${side === 'right' && 'before:rounded-r-[0.5625rem]'}`;
+
+	const hoveredButtonClass = (
+		side,
+	) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:hover:bg-primary-50 before:hover:shadow-predict-button-active
+		${side === 'left' && 'before:rounded-l-[0.5625rem]'} ${side === 'right' && 'before:rounded-r-[0.5625rem]'}`;
 
 	const updateScore = (side: 'left' | 'center' | 'right', mode: 'increase' | 'decrease') => {
 		const change = mode === 'increase' ? +1 : -1;
@@ -113,11 +123,13 @@ export default function InProgress() {
 	const renderTeamButton = (side: 'left' | 'right') => (
 		<div
 			onClick={() => handleTeamButtonClick(side)}
-			className={
-				side === 'left'
-					? 'pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]'
-					: 'pr-4 h-full flex gap-2 justify-end items-center text-right rounded-r-[0.5625rem]'
-			}
+			className={clsx('relative h-full flex gap-2 items-center', {
+				'pl-4 rounded-l-[0.5625rem]': side === 'left',
+				'pr-4 justify-end text-right rounded-r-[0.5625rem]': side === 'right',
+				[selectedButtonClass(side)]:
+					(isClicked || isCompleted) && (side === 'left' ? leftScore > rightScore : leftScore < rightScore),
+				[hoveredButtonClass(side)]: !(isClicked || isCompleted),
+			})}
 		>
 			<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
 			<div>
@@ -129,36 +141,17 @@ export default function InProgress() {
 
 	return (
 		<div className="flex flex-col gap-2.5 w-[36rem] cursor-pointer">
-			{/* 팀 선택 버튼 */}
 			<div className="relative w-full h-[4.625rem] grid grid-cols-3 border border-black-200 rounded-[0.625rem] button3-semibold shadow-predict-button">
-				{/* 선택한 팀 표시 */}
-				{(isClicked || isCompleted) && (
-					<div className="absolute pointer-events-none top-1/2 left-1/2 -translate-1/2 z-10 w-full h-[4.625rem] grid grid-cols-[1fr_11.9063rem_1fr]">
-						<div
-							className={clsx('h-full w-full rounded-l-[0.625rem]', {
-								[selectedButtonClass]: leftScore > rightScore,
-							})}
-						></div>
-						<div
-							className={clsx('h-full w-full', {
-								[selectedButtonClass]: leftScore === rightScore,
-							})}
-						></div>
-						<div
-							className={clsx('h-full w-full rounded-r-[0.625rem]', {
-								[selectedButtonClass]: leftScore < rightScore,
-							})}
-						></div>
-					</div>
-				)}
-
 				{/* 왼쪽 팀 */}
 				{renderTeamButton('left')}
 
 				{/* 중앙 (무승부) */}
 				<div
 					onClick={() => handleTeamButtonClick('center')}
-					className="relative h-full flex flex-col justify-center items-center border-x border-black-200"
+					className={clsx('relative h-full flex flex-col justify-center items-center border-x border-black-200', {
+						[selectedButtonClass('center')]: (isClicked || isCompleted) && leftScore === rightScore,
+						[hoveredButtonClass('center')]: !(isClicked || isCompleted),
+					})}
 				>
 					{(isClicked || isCompleted) && (
 						<>
