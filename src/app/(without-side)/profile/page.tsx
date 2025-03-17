@@ -2,9 +2,31 @@
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
+import Nickname from '@/components/features/signup/nickname';
+import { useState } from 'react';
+import AccountSelectBox from '@/components/common/account-selectbox';
+import { leagues } from '@/lib/constants/leagues';
 
 export default function Page() {
+	const [nickname, setNickname] = useState('가나다라');
+	const [league, setLeague] = useState('프리미어 리그');
+	const [team, setTeam] = useState('프리미어 리그');
 	const route = useRouter();
+	const isEditible = false;
+
+	const handleNicknameChange = (e) => {
+		setNickname(e.target.value);
+	};
+
+	const handleLeagueChange = (selectedLeague) => {
+		if (selectedLeague === league) return;
+		setLeague(selectedLeague);
+	};
+
+	const handleTeamChange = (selectedTeam) => {
+		if (selectedTeam === team) return;
+		setTeam(selectedTeam);
+	};
 
 	const handleCancelButtonClick = () => {
 		route.push('/');
@@ -17,7 +39,7 @@ export default function Page() {
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
-			<div className="relative">
+			<div className="relative mb-7">
 				<Image width={68} height={68} src="/default-profile.svg" alt="프로필 이미지" />
 				<button
 					className="absolute z-10 left-11 top-11
@@ -25,6 +47,24 @@ export default function Page() {
 				>
 					<Image width={18} height={18} src="/camera.svg" alt="프로필 사진 변경" />
 				</button>
+			</div>
+
+			<div className="flex flex-col gap-6">
+				<Nickname nickname={nickname} onChange={handleNicknameChange} />
+				<AccountSelectBox
+					isEditible={isEditible}
+					category={'리그'}
+					options={leagues}
+					content={league}
+					onChange={handleLeagueChange}
+				/>
+				<AccountSelectBox
+					isEditible={isEditible}
+					category={'응원팀'}
+					options={leagues}
+					content={league}
+					onChange={handleTeamChange}
+				/>
 			</div>
 
 			<div className="flex flex-col gap-2 mt-[4.25rem]">
