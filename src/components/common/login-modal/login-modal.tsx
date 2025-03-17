@@ -23,7 +23,7 @@ export default function LoginModal({ onClose }) {
 	}, [onClose]);
 
 	return (
-		<div className="fixed flex justify-center items-center top-0 left-0 w-full h-full bg-black/40">
+		<div className="fixed z-50 flex justify-center items-center top-0 left-0 w-full h-full bg-black/40">
 			<div
 				ref={modalRef}
 				className="flex flex-col items-center p-6 shadow-predict-button
