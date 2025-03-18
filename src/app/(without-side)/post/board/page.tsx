@@ -41,7 +41,10 @@ export default function Page() {
 			<div ref={dropdownRef} className="relative w-fit button4-medium">
 				<button
 					onClick={handleDropdownToggle}
-					className="flex mb-[92px] items-center gap-8 px-4 py-[9px] border border-[#D9D9D9] rounded-lg"
+					className={clsx(
+						'flex items-center gap-8 px-4 py-[9px] border border-[#D9D9D9] rounded-lg',
+						isVisibleDropdown ? 'mb-[92px]' : 'mb-4',
+					)}
 				>
 					<div className="text-[#8C8C8C] body5-regular">{selectedOption.label}</div>
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
