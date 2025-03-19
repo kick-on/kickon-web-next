@@ -20,6 +20,14 @@ export default function Page() {
 	const searchRef = useRef<HTMLDivElement>(null);
 	const fileInputRef = useRef(null);
 
+	const [isFormValid, setIsFormValid] = useState(false);
+	const [title, setTitle] = useState('');
+	const [body, setBody] = useState('');
+
+	useEffect(() => {
+		setIsFormValid(Boolean(selectedOption.value && title.trim() && body.trim() && selectedTeam));
+	}, [selectedOption, title, body, selectedTeam]);
+
 	// 검색어 입력 핸들러
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value;
@@ -182,7 +190,27 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-			<PostEditor />
+			<PostEditor setTitle={setTitle} setBody={setBody} />
+
+			<div className="flex justify-center gap-4 mt-4 mx-auto">
+				{/* 취소 버튼 (항상 활성화) */}
+				<button
+					onClick={() => console.log('취소')}
+					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
+				>
+					취소
+				</button>
+				<button
+					onClick={isFormValid ? () => console.log('완료') : undefined}
+					disabled={!isFormValid}
+					className={clsx(
+						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
+						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000 cursor-not-allowed',
+					)}
+				>
+					작성 완료
+				</button>
+			</div>
 		</div>
 	);
 }

@@ -16,9 +16,11 @@ export default function Page() {
 		value: '',
 	});
 
-	// 홈의 드롭다운 코드 참고 -> 공통 컴포넌트화...? 흠...
+	const [title, setTitle] = useState('');
+	const [body, setBody] = useState('');
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+	const [isFormValid, setIsFormValid] = useState(false);
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -28,6 +30,10 @@ export default function Page() {
 		setSelectedOption(option);
 		setIsVisibleDropdown(false);
 	};
+
+	useEffect(() => {
+		setIsFormValid(Boolean(selectedOption.value && title.trim() && body.trim()));
+	}, [selectedOption, title, body]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -52,11 +58,9 @@ export default function Page() {
 					)}
 				>
 					{selectedOption.logo && <Image src={selectedOption.logo} alt={selectedOption.label} width={16} height={16} />}
-
 					<div className={clsx('body5-regular', selectedOption.value ? 'text-black-900' : 'text-black-600')}>
 						{selectedOption.label}
 					</div>
-
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 				</button>
 
@@ -80,7 +84,30 @@ export default function Page() {
 					</div>
 				)}
 			</div>
-			<PostEditor />
+
+			<PostEditor setTitle={setTitle} setBody={setBody} />
+
+			<div className="flex justify-center gap-4 mt-4 mx-auto">
+				{/* 취소 버튼 (항상 활성화) */}
+				<button
+					onClick={() => console.log('취소')}
+					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
+				>
+					취소
+				</button>
+
+				{/* 작성 완료 버튼 (isFormValid에 따라 활성화/비활성화) */}
+				<button
+					onClick={isFormValid ? () => console.log('완료') : undefined}
+					disabled={!isFormValid}
+					className={clsx(
+						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
+						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000 cursor-not-allowed',
+					)}
+				>
+					작성 완료
+				</button>
+			</div>
 		</div>
 	);
 }

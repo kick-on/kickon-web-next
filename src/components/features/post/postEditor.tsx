@@ -11,7 +11,7 @@ import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import Toolbar from './ToolBar';
 
-const PostEditor = () => {
+const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; setBody: (body: string) => void }) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [showLinkInput, setShowLinkInput] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -42,6 +42,14 @@ const PostEditor = () => {
 			attributes: {
 				class: 'focus:outline-none',
 			},
+		},
+		onUpdate: ({ editor }) => {
+			const content = editor.getHTML().trim();
+
+			// HTML 내부의 텍스트가 완전히 비어 있는지 확인!!
+			const isEmpty = content === '' || content === '<p></p>' || content === '<p><br></p>';
+
+			setBody(isEmpty ? '' : content);
 		},
 	});
 
@@ -156,26 +164,13 @@ const PostEditor = () => {
 			<input
 				placeholder="제목"
 				className="title1-bold w-[636px] px-4 py-[15px] border border-[#D9D9D9] rounded-lg mb-8 focus:outline-none"
+				onChange={(e) => setTitle(e.target.value)}
 			/>
 			<Toolbar {...toolbarProps} />
 			<EditorContent
 				editor={editor}
 				className="tiptap rounded-lg overflow-y-auto minimal-scrollbar border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
 			/>
-			<div className="flex justify-center gap-4 mt-4">
-				{[
-					{ text: '취소', color: 'text-black-700', variant: 'bg-black-200', onClick: () => console.log('취소') },
-					{ text: '작성 완료', color: 'text-black-100', variant: 'bg-primary-900', onClick: () => console.log('완료') },
-				].map(({ text, color, variant, onClick }) => (
-					<button
-						key={text}
-						onClick={onClick}
-						className={`w-[164px] button2-semibold px-4 py-2 ${color} rounded-lg ${variant}`}
-					>
-						{text}
-					</button>
-				))}
-			</div>
 		</div>
 	);
 };

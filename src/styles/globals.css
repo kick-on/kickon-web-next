@@ -56,18 +56,18 @@ button {
 	margin: 16px 0;
 }
 
-ul {
+.tiptap ul {
 	list-style: disc;
 	padding-left: 1.5rem;
 }
 
-blockquote {
+.tiptap blockquote {
 	border-left: 4px solid var(--color-black-800);
 	padding-left: 1rem;
 	margin: 1rem 0;
 }
 
-boxquote {
+.tiptap boxquote {
 	border: 2px solid var(--color-black-300);
 	border-radius: 6px;
 	padding: 1rem;
