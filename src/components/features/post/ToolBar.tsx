@@ -14,7 +14,7 @@ export default function Toolbar({
 	setLinkUrl,
 	handleInsertLink,
 	handleAddImage,
-	handleFormatToggle,
+	handleTextFormatToggle,
 	handleHeadingChange,
 	showYoutubeInput,
 	setShowYoutubeInput,
@@ -26,7 +26,7 @@ export default function Toolbar({
 	const [selectedOption, setSelectedOption] = useState(headingOptions[0]);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const toolbarButtons = [
+	const textFormatButtons = [
 		{ key: 'bold', icon: 'B' },
 		{ key: 'underline', icon: 'U' },
 		{ key: 'italic', icon: 'I' },
@@ -64,6 +64,7 @@ export default function Toolbar({
 		return () => document.removeEventListener('mousedown', handleClickOutside);
 	}, []);
 
+	const Divider = () => <div className="text-[#E0E0E0] px-2"> | </div>;
 	return (
 		<div className="flex flex-wrap items-center gap-2 pb-4">
 			<div ref={dropdownRef} className="relative w-fit">
@@ -92,21 +93,21 @@ export default function Toolbar({
 				)}
 			</div>
 
-			<div className="text-[#E0E0E0] px-2"> | </div>
+			<Divider />
 
 			<div className="flex text-center gap-2 border border-[#D9D9D9] text-[#8C8C8C] rounded-sm px-2 py-[7px]">
-				{toolbarButtons.map((btn) => (
+				{textFormatButtons.map((btn) => (
 					<button
 						key={btn.key}
 						className={clsx('w-5 h-5 px-2 rounded-sm', editor?.isActive(btn.key) && 'bg-gray-300')}
-						onClick={() => handleFormatToggle(btn.key)}
+						onClick={() => handleTextFormatToggle(btn.key)}
 					>
 						{btn.icon}
 					</button>
 				))}
 			</div>
 
-			<div className="text-[#E0E0E0] px-2"> | </div>
+			<Divider />
 
 			<div className="relative flex gap-2">
 				{mediaButtons.map((btn) =>
