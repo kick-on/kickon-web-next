@@ -1,29 +1,10 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import clsx from 'clsx';
-import PostEditor from '@/components/common/postEditor';
 import Image from 'next/image';
-
-const teamOptions = [
-	{ label: '부상', value: 'paragraph' },
-	{ label: '이적', value: '1' },
-	{ label: '감독 교체', value: '2' },
-	{ label: '재계약', value: '3' },
-	{ label: '불화설', value: '4' },
-	{ label: '은퇴', value: '5' },
-	{ label: '인터뷰', value: '6' },
-	{ label: '현지 팬 반응', value: '7' },
-	{ label: '기타', value: '8' },
-];
-
-// Mock Data (API가 완성되면 여기를 서버 데이터로 변경)
-const mockSearchResults = [
-	{ id: 1, name: '리버풀', logo: '/team-logo/liverpool.svg' },
-	{ id: 2, name: '맨시티', logo: '/team-logo/man-city.svg' },
-	{ id: 3, name: '첼시', logo: '/team-logo/chelsea.svg' },
-	{ id: 4, name: '아스널', logo: '/team-logo/arsenal.svg' },
-];
+import clsx from 'clsx';
+import PostEditor from '@/components/features/post/postEditor';
+import { mockSearchResults, newsOptions } from '@/lib/constants/options';
 
 export default function Page() {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -37,6 +18,7 @@ export default function Page() {
 	const [isVisibleSearchResults, setIsVisibleSearchResults] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const searchRef = useRef<HTMLDivElement>(null);
+	const fileInputRef = useRef(null);
 
 	// 검색어 입력 핸들러
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,10 +32,8 @@ export default function Page() {
 		setIsVisibleSearchResults(value.length > 0); // 검색어 입력 시만 검색 결과 표시
 	};
 
-	// 팀 선택 핸들러
 	const handleSelectTeam = (team: { id: number; name: string; logo: string }) => {
 		setSelectedTeam(team);
-		console.log('선택한 팀:', team); // 디버깅용 콘솔 출력
 		setSearchTerm(team.name);
 		setIsVisibleSearchResults(false);
 	};
@@ -64,11 +44,12 @@ export default function Page() {
 		setSelectedTeam(null);
 	};
 
+	// 홈 드롭다운 코드 참고
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
 	};
 
-	const handleOptionClick = (option: { label: string; value: string }) => {
+	const handleNewsOptionClick = (option: { label: string; value: string }) => {
 		setSelectedOption(option);
 		setIsVisibleDropdown(false);
 	};
@@ -86,17 +67,39 @@ export default function Page() {
 		};
 	}, []);
 
+	const handleFileChange = (event) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			console.log('선택된 파일:', file); // 임시로 처리
+		}
+	};
+
+	// 대표 이미지 클릭 시 파일 업로드 창 열기
+	const handleImageClick = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
 	return (
 		<div className="flex flex-col mx-auto">
+			<div
+				className="flex items-center gap-2 cursor-pointer button4-medium text-black-600 mb-7.5"
+				onClick={handleImageClick}
+			>
+				<Image src="/image.svg" width={20} height={20} alt="앨범 아이콘" />
+				대표 이미지 추가
+			</div>
+
+			<input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} accept="image/*" />
+
 			<div className="flex gap-4 mb-4">
-				<div ref={searchRef} className="relative w-[284px]">
-					<div className="relative flex items-center border border-gray-300 rounded-lg h-9 px-4 py-[9px]">
-						{/* 선택된 팀 로고 */}
+				<div ref={searchRef} className="relative w-[17.75rem]">
+					<div className="relative button4-medium flex items-center border border-black-300 rounded-lg h-9 px-4 py-[0.5625rem]">
 						{selectedTeam && (
 							<Image src={selectedTeam.logo} alt={selectedTeam.name} width={20} height={20} className="mr-2" />
 						)}
 
-						{/* 검색 입력창 */}
 						<input
 							type="text"
 							placeholder="팀명"
@@ -105,7 +108,6 @@ export default function Page() {
 							className="w-full focus:outline-none"
 						/>
 
-						{/* 돋보기 아이콘 or X 버튼 */}
 						{searchTerm ? (
 							<Image
 								width={16}
@@ -120,27 +122,26 @@ export default function Page() {
 						)}
 					</div>
 
-					{/* 검색 결과 */}
 					{isVisibleSearchResults && (
-						<div className="z-50 absolute top-10 w-[284px] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
+						<div className="z-50 absolute top-10 w-[17.75rem] bg-black-000 border border-black-200 button4-medium rounded-lg shadow-lg overflow-hidden">
 							{filteredResults.length > 0 ? (
 								filteredResults.map((team, index) => (
 									<div
 										key={team.id}
 										className={clsx(
-											'flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-gray-200 transition-colors',
+											'flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors',
 											{
 												'rounded-b-sm': index === filteredResults.length - 1,
 											},
 										)}
-										onClick={() => handleSelectTeam(team)}
+										onMouseDown={() => handleSelectTeam(team)}
 									>
 										<Image src={team.logo} alt={team.name} width={20} height={20} />
 										{team.name}
 									</div>
 								))
 							) : (
-								<div className="px-4 py-2.5 text-gray-500">검색 결과 없음</div>
+								<div className="px-4 py-2.5 text-black-300">검색 결과 없음</div>
 							)}
 						</div>
 					)}
@@ -149,20 +150,27 @@ export default function Page() {
 				<div ref={dropdownRef} className="relative w-fit button4-medium">
 					<button
 						onClick={handleDropdownToggle}
-						className="flex items-center gap-8 px-4 py-[9px] border border-[#D9D9D9] rounded-lg"
+						className="flex items-center gap-8 px-4 py-[0.5625rem] border border-[#D9D9D9] rounded-lg"
 					>
-						<div className="text-[#8C8C8C] body5-regular">{selectedOption.label}</div>
+						<div
+							className={`button4-medium ${
+								selectedOption.label === '탭 선택하기' ? 'text-black-600' : 'text-black-900'
+							}`}
+						>
+							{selectedOption.label}
+						</div>
 						<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 					</button>
+
 					{isVisibleDropdown && (
-						<div className="z-50 absolute top-10 w-[146px] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
-							{teamOptions.map((option, index) => (
+						<div className="z-50 absolute top-10 w-[9.125rem] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
+							{newsOptions.map((option, index) => (
 								<div
 									key={option.value}
-									className={clsx('px-4 py-2.5 cursor-pointer hover:bg-gray-200 transition-colors', {
-										'rounded-b-sm': index === teamOptions.length - 1,
+									className={clsx('px-4 py-2.5 body5-regular cursor-pointer hover:bg-black-200 transition-colors', {
+										'rounded-b-sm': index === newsOptions.length - 1,
 									})}
-									onClick={() => handleOptionClick(option)}
+									onClick={() => handleNewsOptionClick(option)}
 								>
 									{option.label}
 								</div>
@@ -170,6 +178,9 @@ export default function Page() {
 						</div>
 					)}
 				</div>
+				<button>
+					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
+				</button>
 			</div>
 			<PostEditor />
 		</div>

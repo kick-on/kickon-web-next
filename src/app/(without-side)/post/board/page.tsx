@@ -1,17 +1,22 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import clsx from 'clsx';
-import PostEditor from '@/components/common/postEditor';
 import Image from 'next/image';
-
-const teamOptions = [{ label: '리버풀', logo: '/team-logo/liverpool.svg', value: 'paragraph' }];
+import clsx from 'clsx';
+import PostEditor from '@/components/features/post/postEditor';
+import { teamOptions } from '@/lib/constants/options';
 
 export default function Page() {
-	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
+	const [selectedOption, setSelectedOption] = useState<{
+		label: string;
+		value: string;
+		logo?: string;
+	}>({
 		label: '탭 선택하기',
 		value: '',
 	});
+
+	// 홈의 드롭다운 코드 참고 -> 공통 컴포넌트화...? 흠...
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -19,7 +24,7 @@ export default function Page() {
 		setIsVisibleDropdown((prev) => !prev);
 	};
 
-	const handleOptionClick = (option: { label: string; value: string }) => {
+	const handleOptionClick = (option: { label: string; value: string; logo?: string }) => {
 		setSelectedOption(option);
 		setIsVisibleDropdown(false);
 	};
@@ -42,20 +47,26 @@ export default function Page() {
 				<button
 					onClick={handleDropdownToggle}
 					className={clsx(
-						'flex items-center gap-8 px-4 py-[9px] border border-[#D9D9D9] rounded-lg',
-						isVisibleDropdown ? 'mb-[92px]' : 'mb-4',
+						'flex items-center gap-2 px-4 py-[0.5625rem] border border-black-300 rounded-lg',
+						isVisibleDropdown ? 'mb-[5.75rem]' : 'mb-4',
 					)}
 				>
-					<div className="text-[#8C8C8C] body5-regular">{selectedOption.label}</div>
+					{selectedOption.logo && <Image src={selectedOption.logo} alt={selectedOption.label} width={16} height={16} />}
+
+					<div className={clsx('body5-regular', selectedOption.value ? 'text-black-900' : 'text-black-600')}>
+						{selectedOption.label}
+					</div>
+
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 				</button>
+
 				{isVisibleDropdown && (
-					<div className="z-50 absolute top-10 w-[146px] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
+					<div className="z-50 absolute top-10 w-[9.125rem] bg-black-000 border border-black-300 button4-medium rounded-lg shadow-lg overflow-hidden">
 						<div className="px-4 py-2.5">전체</div>
 						{teamOptions.map((option, index) => (
 							<div
 								key={option.value}
-								className={clsx('px-4 py-2.5 cursor-pointer hover:bg-gray-200 transition-colors', {
+								className={clsx('px-4 py-2.5 cursor-pointer hover:bg-black-300 transition-colors', {
 									'rounded-b-sm': index === teamOptions.length - 1,
 								})}
 								onClick={() => handleOptionClick(option)}
