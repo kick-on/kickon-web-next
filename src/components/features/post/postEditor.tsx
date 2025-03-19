@@ -57,7 +57,7 @@ const PostEditor = () => {
 		}
 	};
 
-	const handleFormatToggle = (type: string) => {
+	const handleTextFormatToggle = (type: string) => {
 		const chain = editor?.chain().focus();
 		switch (type) {
 			case 'bold':
@@ -142,7 +142,7 @@ const PostEditor = () => {
 		setLinkUrl,
 		handleInsertLink,
 		handleAddImage,
-		handleFormatToggle,
+		handleTextFormatToggle,
 		handleHeadingChange,
 		showYoutubeInput,
 		setShowYoutubeInput,
