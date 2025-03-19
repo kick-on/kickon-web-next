@@ -3,8 +3,8 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import PostEditor from '@/components/features/post/postEditor';
 import { teamOptions } from '@/lib/constants/options';
+import PostEditor from '@/components/features/post/PostEditor';
 
 export default function Page() {
 	const [selectedOption, setSelectedOption] = useState<{
@@ -18,9 +18,14 @@ export default function Page() {
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
+	const [isFormValid, setIsFormValid] = useState(false);
+
+	useEffect(() => {
+		setIsFormValid(Boolean(selectedOption.value && title.trim() && body.trim()));
+	}, [selectedOption, title, body]);
+
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const [isFormValid, setIsFormValid] = useState(false);
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -30,10 +35,6 @@ export default function Page() {
 		setSelectedOption(option);
 		setIsVisibleDropdown(false);
 	};
-
-	useEffect(() => {
-		setIsFormValid(Boolean(selectedOption.value && title.trim() && body.trim()));
-	}, [selectedOption, title, body]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -88,15 +89,12 @@ export default function Page() {
 			<PostEditor setTitle={setTitle} setBody={setBody} />
 
 			<div className="flex justify-center gap-4 mt-4 mx-auto">
-				{/* 취소 버튼 (항상 활성화) */}
 				<button
 					onClick={() => console.log('취소')}
 					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소
 				</button>
-
-				{/* 작성 완료 버튼 (isFormValid에 따라 활성화/비활성화) */}
 				<button
 					onClick={isFormValid ? () => console.log('완료') : undefined}
 					disabled={!isFormValid}

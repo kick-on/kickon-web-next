@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import PostEditor from '@/components/features/post/postEditor';
+import PostEditor from '@/components/features/post/PostEditor';
 import { mockSearchResults, newsOptions } from '@/lib/constants/options';
 
 export default function Page() {
@@ -78,7 +78,7 @@ export default function Page() {
 	const handleFileChange = (event) => {
 		const file = event.target.files?.[0];
 		if (file) {
-			console.log('선택된 파일:', file); // 임시로 처리
+			console.log('선택된 파일:', file); // todo: 기능 추가
 		}
 	};
 
@@ -193,7 +193,6 @@ export default function Page() {
 			<PostEditor setTitle={setTitle} setBody={setBody} />
 
 			<div className="flex justify-center gap-4 mt-4 mx-auto">
-				{/* 취소 버튼 (항상 활성화) */}
 				<button
 					onClick={() => console.log('취소')}
 					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
