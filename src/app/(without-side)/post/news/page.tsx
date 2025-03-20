@@ -20,6 +20,8 @@ export default function Page() {
 	const searchRef = useRef<HTMLDivElement>(null);
 	const fileInputRef = useRef(null);
 
+	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
 	const [isFormValid, setIsFormValid] = useState(false);
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
@@ -75,11 +77,16 @@ export default function Page() {
 		};
 	}, []);
 
-	const handleFileChange = (event) => {
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
-			console.log('선택된 파일:', file); // todo: 기능 추가
+			const imageUrl = URL.createObjectURL(file);
+			setSelectedImage(imageUrl);
 		}
+	};
+
+	const handleRemoveImage = () => {
+		setSelectedImage(null);
 	};
 
 	// 대표 이미지 클릭 시 파일 업로드 창 열기
@@ -91,13 +98,29 @@ export default function Page() {
 
 	return (
 		<div className="flex flex-col mx-auto">
-			<div
-				className="flex items-center gap-2 cursor-pointer button4-medium text-black-600 mb-7.5"
-				onClick={handleImageClick}
-			>
-				<Image src="/image.svg" width={20} height={20} alt="앨범 아이콘" />
-				대표 이미지 추가
-			</div>
+			{selectedImage ? (
+				<div className="relative w-[636px] h-[322px] mb-4">
+					<Image
+						src={selectedImage}
+						alt="업로드된 대표 이미지"
+						layout="fill"
+						objectFit="cover"
+						className="rounded-[10px]"
+					/>
+					{/* 삭제 버튼 */}
+					<button onClick={handleRemoveImage} className="absolute top-2 right-2 bg-black-200 p-1 rounded-full">
+						<Image src="/x.svg" alt="삭제 버튼" width={18} height={18} />
+					</button>
+				</div>
+			) : (
+				<div
+					className="flex items-center gap-2 cursor-pointer button4-medium text-black-600 mb-7.5"
+					onClick={handleImageClick}
+				>
+					<Image src="/image.svg" width={20} height={20} alt="앨범 아이콘" />
+					대표 이미지 추가
+				</div>
+			)}
 
 			<input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} accept="image/*" />
 
