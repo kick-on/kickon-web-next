@@ -1,11 +1,8 @@
-'use client';
-
 import clsx from 'clsx';
 import NewsItem from './news-item';
 import PagenationBar from '../pagenation-bar.tsx/pagenation-bar';
 import CommunityItem from './community-item';
 import SelectBox from './select-box';
-import { usePathname, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import CommunityDivisionBar from './community-division-bar';
 
@@ -286,12 +283,9 @@ const renderItems = (items, ItemComponent) => (
 	</div>
 );
 
-export default function CategoryTab() {
-	const pathname = usePathname();
-	const q = useSearchParams().get('q');
-
+export default function CategoryTab({ mode, q }: { mode: 'news' | 'community'; q: string }) {
 	const tabs = ['전체', '인기', 'FC서울'];
-	const isNews = pathname === '/news';
+	const isNews = mode === 'news';
 	const items = isNews ? allNews : allCommunities;
 
 	return (
@@ -299,7 +293,7 @@ export default function CategoryTab() {
 			<div className="flex gap-4 pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
 				{tabs.map((tab) => (
 					<Link
-						href={`${pathname}?q=${tab}`}
+						href={`/${mode}?q=${tab}`}
 						key={tab}
 						className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
 							'border-primary-900 text-primary-900 header-semibold': q === tab,
