@@ -2,8 +2,13 @@
 
 import Image from 'next/image';
 import Icon from '../../../public/edit.svg';
+import { usePathname } from 'next/navigation';
 
 const FloatingWritingButton = () => {
+	const pathname = usePathname();
+
+	if (pathname === '/') return null;
+
 	return (
 		<button
 			className="z-50 flex items-center w-[3.625rem] h-[3.625rem] fixed 
