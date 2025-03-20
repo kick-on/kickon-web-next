@@ -107,7 +107,6 @@ export default function Page() {
 						objectFit="cover"
 						className="rounded-[10px]"
 					/>
-					{/* 삭제 버튼 */}
 					<button onClick={handleRemoveImage} className="absolute top-2 right-2 bg-black-200 p-1 rounded-full">
 						<Image src="/x.svg" alt="삭제 버튼" width={18} height={18} />
 					</button>
