@@ -2,54 +2,75 @@ import { useEffect, useRef, useState } from 'react';
 
 interface CommentInputProps {
 	type?: 'comment' | 'reply';
+	mentionNickname?: string;
 }
 
-const CommentInput = ({ type = 'comment' }: CommentInputProps) => {
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
+const CommentInput = ({ type = 'comment', mentionNickname }: CommentInputProps) => {
+	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
 	const [scrollThumbHeight, setScrollThumbHeight] = useState(0);
+	const [, setContent] = useState('');
+	const [, setCharCount] = useState(0);
 
 	useEffect(() => {
-		const textarea = textareaRef.current;
+		if (type === 'reply' && mentionNickname && inputRef.current) {
+			inputRef.current.innerHTML = `<span style="color: #890f0e">@${mentionNickname}</span>&nbsp;`;
+		}
+	}, [mentionNickname, type]);
+
+	useEffect(() => {
+		const input = inputRef.current;
 		const thumb = thumbRef.current;
 
 		const updateScrollThumb = () => {
-			if (!textarea || !thumb) return;
+			if (!input || !thumb) return;
 
-			const { scrollTop, scrollHeight, clientHeight } = textarea;
+			const scrollTop = input.scrollTop;
+			const scrollHeight = input.scrollHeight;
+			const clientHeight = input.clientHeight;
 
-			// thumb 높이 비율 계산
 			const thumbHeight = (clientHeight / scrollHeight) * clientHeight;
 			setScrollThumbHeight(thumbHeight);
 
-			// thumb 위치 계산
 			const scrollRatio = scrollTop / (scrollHeight - clientHeight);
 			const thumbTop = scrollRatio * (clientHeight - thumbHeight);
 
 			thumb.style.transform = `translateY(${thumbTop}px)`;
 		};
 
-		updateScrollThumb(); // 초기 설정
-		textarea?.addEventListener('scroll', updateScrollThumb);
+		updateScrollThumb();
+		input?.addEventListener('scroll', updateScrollThumb);
 		window.addEventListener('resize', updateScrollThumb);
 
 		return () => {
-			textarea?.removeEventListener('scroll', updateScrollThumb);
+			input?.removeEventListener('scroll', updateScrollThumb);
 			window.removeEventListener('resize', updateScrollThumb);
 		};
 	}, []);
+
+	const handleInput = () => {
+		if (inputRef.current) {
+			const inputText = inputRef.current.innerHTML;
+			const plainText = inputText.replace(/<[^>]*>/g, ''); // HTML 태그 제거
+			if (plainText.length <= 1000) {
+				setContent(inputText);
+				setCharCount(plainText.length);
+			}
+		}
+	};
 
 	return (
 		<div className={type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[10px] p-4 mb-10 flex flex-col gap-4'}>
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
 			<div className={`flex gap-2 ${type === 'reply' ? 'h-20' : 'h-[104px]'}`}>
 				<div className="relative w-full">
-					<textarea
-						ref={textareaRef}
-						maxLength={1000}
-						className={`w-full h-full p-4 pb-3 rounded-l-[10px] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular 
-              ${type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full'}`}
-						placeholder="댓글을 입력하세요"
+					<div
+						ref={inputRef}
+						contentEditable
+						onInput={handleInput}
+						className={`w-full h-full p-4 pb-3 rounded-l-[10px] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular
+              ${type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full'} text-left`}
+						suppressContentEditableWarning={true}
 					/>
 				</div>
 

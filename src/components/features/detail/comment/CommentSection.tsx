@@ -19,7 +19,13 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments, commentItemPro
 						<CommentItem content={comment} {...commentItemProps} />
 						{replyVisible[comment.pk] &&
 							comment.replies?.map((reply) => (
-								<CommentItem key={`${comment.pk}-${reply.pk}`} content={reply} {...commentItemProps} isReply />
+								<CommentItem
+									key={`${comment.pk}-${reply.pk}`}
+									content={reply}
+									{...commentItemProps}
+									isReply
+									parentNickname={comment.user.nickname}
+								/>
 							))}
 					</div>
 				))}

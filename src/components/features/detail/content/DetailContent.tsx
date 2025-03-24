@@ -38,11 +38,11 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 						<Image width={12} height={12} src="/certification-mark.svg" alt="인증" />
 					</span>
 					<span className="ml-2">{data.createdAt}</span>
-					<span className="mx-2">|</span>
+					<span>|</span>
 					<span>읽음 {data.views}</span>
 				</div>
 
-				<div className="flex gap-2 items-center text-black-600 body5-regular">
+				<div className="flex gap-3 items-center text-black-600 body5-regular">
 					<div className="flex items-center gap-1.5">
 						<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
 						<span>{data.likes}</span>
@@ -62,10 +62,10 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 				<Image src={data.image} alt="대표 이미지" width={636} height={322} className="mb-6 rounded-[10px]" />
 			)}
 
-			<p className="mb-40 whitespace-pre-line">{data.content}</p>
+			<p className="mb-40 whitespace-pre-line body3-regular">{data.content}</p>
 
 			<button
-				className="group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
+				className="button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
           rounded-lg shadow-[0px_2px_10px_0px_#DCDCDC] bg-black-100 text-black-900 transition
           hover:shadow-[0px_2px_10px_0px_rgba(217,25,32,0.2)]
           active:!bg-[#D91920] active:!text-white"

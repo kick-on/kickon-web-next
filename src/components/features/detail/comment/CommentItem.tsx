@@ -13,13 +13,13 @@ const CommentItem = ({
 	replyVisible,
 	isReply = false,
 	isOurTeamNews,
+	parentNickname,
 }) => {
 	const isRepliesVisible = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
 
 	const isReplyOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
-
 	return (
 		<>
 			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
@@ -61,7 +61,10 @@ const CommentItem = ({
 						</button>
 					</div>
 
-					<p className="body5-regular text-black-900 mt-3 mb-3.5">{content.contents}</p>
+					<p className="body5-regular text-black-900 mt-3 mb-3.5">
+						{isReply && <span className="text-[#890f0e] mr-1">@{parentNickname}</span>}
+						{content.contents}
+					</p>
 
 					<div className="flex flex-col gap-3.5">
 						{isOurTeamNews && (
@@ -89,7 +92,7 @@ const CommentItem = ({
 						)}
 					</div>
 
-					{isReplyOpen && <CommentInput type="reply" />}
+					{isReplyOpen && <CommentInput type="reply" mentionNickname={content.user.nickname} />}
 				</div>
 			</div>
 			<hr className="border-t border-black-300 -mx-4" />

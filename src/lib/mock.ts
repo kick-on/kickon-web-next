@@ -77,7 +77,21 @@ export const mockComments = [
 		createdAt: '2025-03-20T10:35:18.838Z',
 		kickCount: 12,
 		kicked: true,
-		replies: [],
+		replies: [
+			{
+				pk: 9,
+				contents: '대대댓글 입니다~~',
+				user: {
+					id: '9',
+					nickname: '하늘랑',
+					profileImageUrl: '/default-profile.svg',
+				},
+				createdAt: '2025-03-20T10:35:18.838Z',
+				kickCount: 12,
+				kicked: true,
+				replies: [],
+			},
+		],
 	},
 	{
 		pk: 3,

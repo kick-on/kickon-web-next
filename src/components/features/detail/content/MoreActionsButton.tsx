@@ -39,7 +39,7 @@ const MoreActionsButton = () => {
 
 	return (
 		<div className="relative inline-block">
-			<button ref={buttonRef} onClick={() => setOpen((prev) => !prev)} className="p-1">
+			<button ref={buttonRef} onClick={() => setOpen((prev) => !prev)} className="flex items-center pl-1">
 				<Image src="/x.svg" alt="더보기" width={20} height={20} />
 			</button>
 
