@@ -28,7 +28,7 @@ const CommentItem = ({
 					alt="프로필"
 					width={24}
 					height={24}
-					className="rounded-full mr-[10px]"
+					className="rounded-full mr-[0.625rem]"
 				/>
 
 				<div className="flex flex-col flex-1">
@@ -78,7 +78,7 @@ const CommentItem = ({
 
 						{isRepliesVisible && (
 							<button
-								className="flex items-center gap-[10px] text-black-600 body6-regular"
+								className="flex items-center gap-[0.625rem] text-black-600 body6-regular"
 								onClick={() => toggleReplyVisibility(content.pk)}
 							>
 								<Image

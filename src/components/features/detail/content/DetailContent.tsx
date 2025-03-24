@@ -14,14 +14,14 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 					alt="대표 이미지"
 					width={636}
 					height={322}
-					className="mt-6 mb-12 rounded-[10px]"
+					className="mt-6 mb-12 rounded-[0.625rem]"
 				/>
 			)}
 			{/* 헤더 */}
 			{!isBoard && (
 				<div className="flex gap-2 mb-2.5 items-center">
 					{isOurTeamNews && <Image src="/team-logo/liverpool.svg" alt="팀 로고" width={24} height={24} />}
-					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[20px]">
+					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{data.category}
 					</span>
 				</div>
@@ -59,15 +59,15 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
 
 			{!isTopImage && (
-				<Image src={data.image} alt="대표 이미지" width={636} height={322} className="mb-6 rounded-[10px]" />
+				<Image src={data.image} alt="대표 이미지" width={636} height={322} className="mb-6 rounded-[0.625rem]" />
 			)}
 
 			<p className="mb-40 whitespace-pre-line body3-regular">{data.content}</p>
 
 			<button
 				className="button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
-          rounded-lg shadow-[0px_2px_10px_0px_#DCDCDC] bg-black-100 text-black-900 transition
-          hover:shadow-[0px_2px_10px_0px_rgba(217,25,32,0.2)]
+          rounded-lg shadow-[0rem_0.125rem_0.625rem_0rem_#DCDCDC] bg-black-100 text-black-900 transition
+          hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]
           active:!bg-[#D91920] active:!text-white"
 			>
 				<Image src="/kick/black.svg" alt="축구공" width={18} height={18} />

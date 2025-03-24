@@ -48,8 +48,8 @@ const MoreActionsButton = () => {
 					ref={menuRef}
 					className={clsx(
 						'absolute left-0 mt-2 items-center',
-						'w-[115px] bg-black-000 rounded-lg border border-black-300 z-50',
-						'flex flex-col px-5 py-[10px] gap-5 button4-medium text-black-900',
+						'w-[7.1875rem] bg-black-000 rounded-lg border border-black-300 z-50',
+						'flex flex-col px-5 py-[0.625rem] gap-5 button4-medium text-black-900',
 					)}
 				>
 					<button className="text-left" onClick={handleShareButtonClick}>
