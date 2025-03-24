@@ -1,0 +1,67 @@
+import { useState, useRef, useEffect } from 'react';
+import clsx from 'clsx';
+import Image from 'next/image';
+
+const MoreActionsButton = () => {
+	const [open, setOpen] = useState(false);
+	const menuRef = useRef<HTMLDivElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
+
+	useEffect(() => {
+		const handleClickOutside = (e: MouseEvent) => {
+			if (
+				menuRef.current &&
+				!menuRef.current.contains(e.target as Node) &&
+				!buttonRef.current?.contains(e.target as Node)
+			) {
+				setOpen(false);
+			}
+		};
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, []);
+
+	const handleShareButtonClick = async () => {
+		try {
+			await navigator.clipboard.writeText(window.location.href);
+			alert('URL이 복사되었습니다!');
+		} catch (err) {
+			console.log(err);
+			alert('URL 복사에 실패했습니다.');
+		}
+		setOpen(false);
+	};
+
+	const handleReportButtonClick = () => {
+		setOpen(false);
+		alert('신고하기 클릭됨');
+	};
+
+	return (
+		<div className="relative inline-block">
+			<button ref={buttonRef} onClick={() => setOpen((prev) => !prev)} className="p-1">
+				<Image src="/x.svg" alt="더보기" width={20} height={20} />
+			</button>
+
+			{open && (
+				<div
+					ref={menuRef}
+					className={clsx(
+						'absolute left-0 mt-2 items-center',
+						'w-[115px] bg-black-000 rounded-lg border border-black-300 z-50',
+						'flex flex-col px-5 py-[10px] gap-5 button4-medium text-black-900',
+					)}
+				>
+					<button className="text-left" onClick={handleShareButtonClick}>
+						공유하기
+					</button>
+					<button className="text-left" onClick={handleReportButtonClick}>
+						신고하기
+					</button>
+				</div>
+			)}
+		</div>
+	);
+};
+
+export default MoreActionsButton;

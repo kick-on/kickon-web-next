@@ -46,6 +46,7 @@ const CommentInput = ({ type = 'comment' }: CommentInputProps) => {
 				<div className="relative w-full">
 					<textarea
 						ref={textareaRef}
+						maxLength={1000}
 						className={`w-full h-full p-4 pb-3 rounded-l-[10px] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular 
               ${type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full'}`}
 						placeholder="댓글을 입력하세요"
