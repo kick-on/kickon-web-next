@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import PostEditor from '@/components/features/post/postEditor-temp.tsx';
+import PostEditor from '@/components/features/post/post-editor.tsx';
 import { mockSearchResults, newsOptions } from '@/lib/constants/options';
 
 export default function Page() {
