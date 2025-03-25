@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { teamOptions } from '@/lib/constants/options';
-import PostEditor from '@/components/features/post/PostEditor';
+import PostEditor from '@/components/features/post/postEditor-temp.tsx';
 
 export default function Page() {
 	const [selectedOption, setSelectedOption] = useState<{

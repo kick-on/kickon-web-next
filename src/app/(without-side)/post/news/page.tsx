@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import PostEditor from '@/components/features/post/PostEditor';
+import PostEditor from '@/components/features/post/postEditor-temp.tsx';
 import { mockSearchResults, newsOptions } from '@/lib/constants/options';
 
 export default function Page() {
@@ -46,6 +46,7 @@ export default function Page() {
 		setSelectedTeam(team);
 		setSearchTerm(team.name);
 		setIsVisibleSearchResults(false);
+		setIsVisibleDropdown(false);
 	};
 
 	// 검색 초기화 핸들러 (X 버튼)
@@ -67,8 +68,8 @@ export default function Page() {
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-				setIsVisibleDropdown(false);
 				setIsVisibleSearchResults(false);
+				setIsVisibleDropdown(false);
 			}
 		};
 		document.addEventListener('mousedown', handleClickOutside);
