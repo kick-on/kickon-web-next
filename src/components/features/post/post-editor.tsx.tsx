@@ -163,7 +163,7 @@ const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; 
 		<div>
 			<input
 				placeholder="제목"
-				className="title1-bold w-[636px] px-4 py-[15px] border border-[#D9D9D9] rounded-lg mb-8 focus:outline-none"
+				className="title1-bold w-[39.75rem] h-[3.5rem] px-4 py-[15px] border border-[#D9D9D9] rounded-lg mb-8 focus:outline-none"
 				onChange={(e) => setTitle(e.target.value)}
 			/>
 			<Toolbar {...toolbarProps} />
