@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from 'react';
 import { BiLinkAlt, BiImageAlt, BiVideo } from 'react-icons/bi';
 import ImageIcon from 'next/image';
 import { headingOptions } from '@/lib/constants/options';
+import Image from 'next/image';
 
 export default function Toolbar({
 	editor,
@@ -27,11 +28,11 @@ export default function Toolbar({
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const textFormatButtons = [
-		{ key: 'bold', icon: 'B' },
-		{ key: 'underline', icon: 'U' },
-		{ key: 'italic', icon: 'I' },
-		{ key: 'bulletList', icon: '.' },
-		{ key: 'orderedList', icon: '1.' },
+		{ key: 'bold', icon: <Image src="/bold.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'underline', icon: <Image src="/underline.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'italic', icon: <Image src="/italic.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'bulletList', icon: <Image src="/Frame80.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'orderedList', icon: <Image src="/Frame793.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'blockquote', icon: 'Q' },
 		{ key: 'horizontalRule', icon: 'ㅡ' },
 	];
@@ -99,7 +100,7 @@ export default function Toolbar({
 				{textFormatButtons.map((btn) => (
 					<button
 						key={btn.key}
-						className={clsx('w-5 h-5 px-2 rounded-sm', editor?.isActive(btn.key) && 'bg-gray-300')}
+						className={clsx('px-2 rounded-sm', editor?.isActive(btn.key) && 'bg-gray-300')}
 						onClick={() => handleTextFormatToggle(btn.key)}
 					>
 						{btn.icon}
