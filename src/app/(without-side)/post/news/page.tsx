@@ -22,13 +22,9 @@ export default function Page() {
 
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-	const [isFormValid, setIsFormValid] = useState(false);
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-
-	useEffect(() => {
-		setIsFormValid(Boolean(selectedOption.value && title.trim() && body.trim() && selectedTeam));
-	}, [selectedOption, title, body, selectedTeam]);
+	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
 
 	// 검색어 입력 핸들러
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {

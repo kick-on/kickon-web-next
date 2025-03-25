@@ -18,11 +18,7 @@ export default function Page() {
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-	const [isFormValid, setIsFormValid] = useState(false);
-
-	useEffect(() => {
-		setIsFormValid(Boolean(selectedOption.value && title.trim() && body.trim()));
-	}, [selectedOption, title, body]);
+	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
