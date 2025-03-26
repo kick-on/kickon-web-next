@@ -11,13 +11,13 @@ export default function AccountSelectBox({
 	options,
 	content,
 	onChange,
-	isEditible = true,
+	isEditable = true,
 }: {
 	category: '리그' | '응원팀';
 	options: { content: string; src: string }[];
 	content: string;
 	onChange: (string) => void;
-	isEditible?: boolean;
+	isEditable?: boolean;
 }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
@@ -64,11 +64,11 @@ export default function AccountSelectBox({
 					className={`flex gap-2.5 items-center px-4 py-3 w-full
 						border border-black-300 rounded-lg body3-regular
 						${content ? 'text-black-900' : 'text-black-600'}
-						${isEditible ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
+						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
 					{content && <Image width={18} height={18} src="/league-logo/premier-league.svg" alt={content} />}
 					{content || '선택해 주세요.'}
-					{isEditible && (
+					{isEditable && (
 						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
 					)}
 				</button>

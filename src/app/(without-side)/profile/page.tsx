@@ -14,7 +14,7 @@ export default function Page() {
 
 	const route = useRouter();
 
-	const isEditible = false;
+	const isEditable = false;
 	const hasTeam = league !== '응원팀이 없어요.';
 
 	const handleNicknameChange = (e) => {
@@ -55,7 +55,7 @@ export default function Page() {
 			<div className="flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
 				<AccountSelectBox
-					isEditible={isEditible}
+					isEditable={isEditable}
 					category={'리그'}
 					options={leagues}
 					content={league}
@@ -63,7 +63,7 @@ export default function Page() {
 				/>
 				{hasTeam && (
 					<AccountSelectBox
-						isEditible={isEditible}
+						isEditable={isEditable}
 						category={'응원팀'}
 						options={leagues}
 						content={team}
