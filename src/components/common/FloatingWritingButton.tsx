@@ -18,6 +18,8 @@ const FloatingWritingButton = () => {
 		}
 	};
 
+	if (pathname === '/') return null;
+
 	return (
 		<button
 			onClick={handleEditButtonClick}
