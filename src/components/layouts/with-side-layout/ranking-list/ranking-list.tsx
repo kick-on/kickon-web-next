@@ -2,6 +2,7 @@ import ComponentFrame from '@/components/common/componentFrame';
 import RankingItem from './ranking-item';
 import SelectBox from './select-box';
 import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/ranking';
+import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 export default async function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const response = mode === 'predict' ? await getGambleSeasonRanking(1) : await getActualSeasonRanking(1);
@@ -31,7 +32,7 @@ export default async function RankingList({ mode }: { mode: 'season' | 'predict'
 			</div>
 			<div className="p-4 pt-0">
 				{response === null ? (
-					<div>데이터를 불러오지 못했어요.</div>
+					<FetchingFailedCard height="356px" marginTop="50px" />
 				) : (
 					response.data.map(({ rankOrder }) => <RankingItem key={rankOrder} mode={mode} />)
 				)}

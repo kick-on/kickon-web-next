@@ -15,7 +15,7 @@ export default function Nickname({ nickname, onChange }) {
               placeholder:[color:var(--color-black-600)]
               placeholder:[font-size:var(--fs-16)]
               placeholder:[font-weight:var(--fw-regular)]
-              placeholder:[line-height:var(--lh-24);]`}
+              placeholder:[line-height:var(--lh-24)]`}
 			/>
 			{isInvalidNickname && <div className="text-negative caption1-regular">{invalidNicknameAlert}</div>}
 		</div>
