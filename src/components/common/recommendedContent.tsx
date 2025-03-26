@@ -43,14 +43,14 @@ const RecommendedContent = ({ mode, data, teamName = '' }) => {
 
 			{!isNews && <CommunityDivisionBar />}
 
-			<ul className="flex flex-col">
+			<div className="flex flex-col">
 				{itemsToRender.map((item, index) => (
-					<li key={item.id}>
+					<div key={item.id}>
 						<Component {...item} isMyTeam={isMyTeam} />
 						{index !== itemsToRender.length - 1 && <hr className="border-black-300 mx-4" />}
-					</li>
+					</div>
 				))}
-			</ul>
+			</div>
 		</ComponentFrame>
 	);
 };
