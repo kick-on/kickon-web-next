@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
-export default function Account() {
+export default function Profile() {
 	const searchParams = useSearchParams();
 	const [isLoggedin, setIsLoggedin] = useState(true);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));

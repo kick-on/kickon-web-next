@@ -3,7 +3,7 @@
 import { usePathname } from 'next/navigation';
 import FloatingWritingButton from '@/components/common/FloatingWritingButton';
 import MostReadNewsList from '@/components/layouts/with-side-layout/most-read-news-list/most-read-news-list';
-import Account from '@/components/layouts/with-side-layout/account';
+import Profile from '@/components/layouts/with-side-layout/profile';
 import RankingList from '@/components/layouts/with-side-layout/ranking-list/ranking-list';
 import { ReactNode } from 'react';
 
@@ -17,7 +17,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 			</aside>
 			<main className="flex flex-col gap-4">{children}</main>
 			<aside className="flex flex-col gap-4 relative">
-				<Account />
+				<Profile />
 				<MostReadNewsList />
 				{pathname !== '/' && <FloatingWritingButton />}
 			</aside>
