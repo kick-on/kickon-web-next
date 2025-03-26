@@ -68,9 +68,9 @@ export default function Page() {
 				setIsVisibleDropdown(false);
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
+		document.addEventListener('click', handleClickOutside);
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('click', handleClickOutside);
 		};
 	}, []);
 
@@ -161,7 +161,9 @@ export default function Page() {
 												'rounded-b-sm': index === filteredResults.length - 1,
 											},
 										)}
-										onMouseDown={() => handleSelectTeam(team)}
+										onClick={() => {
+											handleSelectTeam(team);
+										}}
 									>
 										<Image src={team.logo} alt={team.name} width={20} height={20} />
 										{team.name}

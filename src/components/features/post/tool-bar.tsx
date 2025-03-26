@@ -76,8 +76,8 @@ export default function Toolbar({
 				setIsVisibleDropdown(false);
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
 	}, []);
 
 	const Divider = () => <div className="text-[#E0E0E0] px-2"> | </div>;
