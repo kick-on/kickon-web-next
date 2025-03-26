@@ -9,7 +9,7 @@ export interface NavButtonProps {
 
 export default function NavButton({ href, content }: NavButtonProps) {
 	const pathname = usePathname();
-	const isActive = pathname + '?q=전체' === href;
+	const isActive = pathname.split('/').includes(content === '뉴스' ? 'news' : 'board');
 
 	return (
 		<Link
@@ -17,7 +17,7 @@ export default function NavButton({ href, content }: NavButtonProps) {
 			className={clsx('w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium', {
 				'text-black-900': pathname === '/',
 				'text-black-000': pathname === '/signup' || isActive,
-				'text-black-600': (pathname === '/news' || pathname === '/board') && !isActive,
+				'text-black-600': !isActive,
 			})}
 		>
 			{content}
