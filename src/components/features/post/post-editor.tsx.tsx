@@ -9,7 +9,7 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
-import Toolbar from './ToolBar';
+import Toolbar from './tool-bar';
 
 const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; setBody: (body: string) => void }) => {
 	const [linkUrl, setLinkUrl] = useState('');

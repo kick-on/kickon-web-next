@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import { useRef, useEffect, useState } from 'react';
-import { BiLinkAlt, BiImageAlt, BiVideo } from 'react-icons/bi';
 import ImageIcon from 'next/image';
 import { headingOptions } from '@/lib/constants/options';
 import Image from 'next/image';
@@ -31,22 +30,38 @@ export default function Toolbar({
 		{ key: 'bold', icon: <Image src="/bold.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'underline', icon: <Image src="/underline.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'italic', icon: <Image src="/italic.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'bulletList', icon: <Image src="/Frame80.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'orderedList', icon: <Image src="/Frame793.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'blockquote', icon: 'Q' },
+		{ key: 'bulletList', icon: <Image src="/ellipsis.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'orderedList', icon: <Image src="/sort-numeric.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'blockquote', icon: <Image src="/quote.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'horizontalRule', icon: 'ㅡ' },
 	];
 
 	const mediaButtons = [
-		{ key: 'link', icon: <BiLinkAlt />, onClick: () => setShowLinkInput((prev) => !prev), isLabel: false },
-		{ key: 'image', icon: <BiImageAlt />, onChange: handleAddImage, accept: 'image/*', isLabel: true },
-		{ key: 'youtube', icon: <BiVideo />, onClick: () => setShowYoutubeInput((prev) => !prev), isLabel: false },
+		{
+			key: 'link',
+			icon: <Image src="/link.svg" alt="링크 붙여넣기" width={20} height={20} />,
+			onClick: () => setShowLinkInput((prev) => !prev),
+			isLabel: false,
+		},
+		{
+			key: 'image',
+			icon: <Image src="/image.svg" alt="사진 붙여넣기" width={20} height={20} />,
+			onChange: handleAddImage,
+			accept: 'image/*',
+			isLabel: true,
+		},
+		{
+			key: 'youtube',
+			icon: <Image src="/video.svg" alt="유튜브 영상 붙여넣기" width={20} height={20} />,
+			onClick: () => setShowYoutubeInput((prev) => !prev),
+			isLabel: false,
+		},
 	];
 
 	// 홈 드롭다운 코드 참고
 
 	const handleDropdownToggle = () => {
-		setIsVisibleDropdown((prev) => !prev);
+		setIsVisibleDropdown(!isVisibleDropdown);
 	};
 
 	const handleOptionClick = (option) => {
@@ -100,7 +115,7 @@ export default function Toolbar({
 				{textFormatButtons.map((btn) => (
 					<button
 						key={btn.key}
-						className={clsx('px-2 rounded-sm', editor?.isActive(btn.key) && 'bg-gray-300')}
+						className={clsx('w-rounded-sm', editor?.isActive(btn.key) && 'bg-gray-300')}
 						onClick={() => handleTextFormatToggle(btn.key)}
 					>
 						{btn.icon}
@@ -133,14 +148,16 @@ export default function Toolbar({
 							value={linkUrl}
 							onChange={(e) => setLinkUrl(e.target.value)}
 						/>
-
 						<button
-							className="button4-medium bg-black-000 text-black-600 border border-black-300 px-3 py-1 rounded-lg shadow-md whitespace-nowrap flex items-center hover:bg-black-200"
+							className={`button4-medium px-3 py-1 rounded-lg shadow-md whitespace-nowrap flex items-center 
+		${linkUrl ? 'bg-primary-900 text-black-000' : 'bg-black-000 text-black-600 border border-black-300 cursor-not-allowed'}`}
 							onClick={() => {
+								if (!linkUrl) return;
 								handleInsertLink();
 								setShowLinkInput(false);
 								setLinkUrl('');
 							}}
+							disabled={!linkUrl}
 						>
 							저장
 						</button>
@@ -157,8 +174,12 @@ export default function Toolbar({
 							onChange={(e) => setYoutubeUrl(e.target.value)}
 						/>
 						<button
-							className="button4-medium bg-black-000 text-black-600 border border-black-300 px-3 py-1 rounded-lg shadow-md whitespace-nowrap flex items-center hover:bg-black-200"
-							onClick={handleInsertYoutube}
+							className={`button4-medium px-3 py-1 rounded-lg shadow-md whitespace-nowrap flex items-center 
+								${youtubeUrl ? 'bg-primary-900 text-black-000' : 'bg-black-000 text-black-600 border border-black-300 cursor-not-allowed'}`}
+							onClick={() => {
+								if (!youtubeUrl) return;
+								handleInsertYoutube();
+							}}
 						>
 							업로드
 						</button>
