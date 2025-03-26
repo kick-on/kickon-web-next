@@ -5,12 +5,13 @@ import { usePathname } from 'next/navigation';
 
 export default function Footer() {
 	const pathname = usePathname();
-	const isHome = pathname === '/';
-	const bgColor = isHome ? 'bg-black-000' : 'bg-black-800';
-	const textColor = isHome ? 'text-black-700' : 'text-black-200';
-	const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
 
 	if (pathname === '/' || pathname === '/signup') {
+		const isHome = pathname === '/';
+		const bgColor = isHome ? 'bg-black-000' : 'bg-black-800';
+		const textColor = isHome ? 'text-black-700' : 'text-black-200';
+		const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
+
 		return (
 			<div className={`${bgColor} h-[13.125rem] pl-[17.5rem] flex items-center`}>
 				<div className={`${textColor} flex items-start gap-[3.625rem] button4-medium`}>
