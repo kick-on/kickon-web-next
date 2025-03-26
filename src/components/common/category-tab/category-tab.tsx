@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import NewsItem from './news-item';
-import PagenationBar from '../pagenation-bar.tsx/pagenation-bar';
+import PaginationBar from '../pagination-bar.tsx/pagination-bar';
 import CommunityItem from './community-item';
 import SelectBox from './select-box';
 import { usePathname, useSearchParams } from 'next/navigation';
@@ -325,7 +325,7 @@ export default function CategoryTab() {
 				renderItems(items, isNews ? NewsItem : CommunityItem)
 			)}
 			<div className="flex mt-[3.75rem] mb-10 mx-auto">
-				<PagenationBar />
+				<PaginationBar />
 			</div>
 		</div>
 	);
