@@ -3,9 +3,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { mockComments, mockDataMap } from '@/lib/mock';
+import { mockNewsList } from '@/lib/mock';
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
-import { allNews } from '@/components/common/category-tab/category-tab';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/CommentSection';
 
@@ -82,7 +82,7 @@ const DetailPage = () => {
 				/>
 			</ComponentFrame>
 
-			<RecommendedContent mode="뉴스" data={allNews} teamName={data.teamName} />
+			<RecommendedContent mode="뉴스" data={mockNewsList} teamName={data.teamName} />
 		</div>
 	);
 };
