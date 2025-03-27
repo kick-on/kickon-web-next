@@ -5,272 +5,9 @@ import CommunityItem from './community-item';
 import SelectBox from './select-box';
 import Link from 'next/link';
 import CommunityDivisionBar from './community-division-bar';
-
-export const allNews = [
-	{
-		id: 1,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’ 제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: true,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 2,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: true,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 3,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: true,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 4,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: true,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 5,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: false,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 6,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: false,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 7,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: false,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 8,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: false,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 9,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: false,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-	{
-		id: 10,
-		teamLogo: '/team-logo/ulsan.svg',
-		team: '울산',
-		tag: '부상',
-		title: '제주SK, FC서울 상대로 다음 달 ‘홈 개막전’',
-		content:
-			'프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경프로축구 K리그1 제주SK가 다음 달 15일 FC서울과의 홈 개막전을 시작으로 2025시즌에 돌입합니다. 한국프로축구연맹이 발표한 2025시즌 일정표를 보면 제주는 다음 달 15일 오후 3시 30분 제주월드컵경',
-		image: '',
-		nickname: '닉네임',
-		isCertified: false,
-		timeAgo: '1시간 전',
-		views: '1,098',
-		kick: 55,
-		comment: 23,
-	},
-];
-
-export const allCommunities = [
-	{
-		id: 1,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 2,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 3,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 4,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 5,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 6,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 7,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 8,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 9,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-	{
-		id: 10,
-		title: '(속보) 손흥민 다리 부상 ㄷㄷ',
-		hasImage: true,
-		comment: 20,
-		nickname: '닉네임최대여덟자',
-		createdAt: '2025.02.26',
-		views: '1,023',
-		kick: 22,
-	},
-];
+import { getNewsList } from '@/services/apis/news/getNewsList';
+import { getBoardList } from '@/services/apis/news/getBoardList';
+import FetchingFailedCard from '../fetching-failed-card';
 
 const renderItems = (items, ItemComponent) => (
 	<div>
@@ -283,10 +20,18 @@ const renderItems = (items, ItemComponent) => (
 	</div>
 );
 
-export default function CategoryTab({ mode, q }: { mode: 'news' | 'community'; q: string }) {
+export default async function CategoryTab({ mode, q }: { mode: 'news' | 'board'; q: string }) {
 	const tabs = ['전체', '인기', 'FC서울'];
 	const isNews = mode === 'news';
-	const items = isNews ? allNews : allCommunities;
+
+	const request = {
+		team: q === tabs[2] ? 0 : undefined, // TODO: team pk를 어떻게 받아올지 -> query에 저장
+		size: isNews ? 10 : 20,
+		page: 1,
+		order: q === '인기' ? 'hot' : 'recent',
+		league: !tabs.includes(q) ? 0 : undefined, // TODO: league pk를 어떻게 받아올지 -> query에 저장
+	};
+	const response = isNews ? await getNewsList(request) : await getBoardList(request);
 
 	return (
 		<div className="flex flex-col w-full">
@@ -313,10 +58,10 @@ export default function CategoryTab({ mode, q }: { mode: 'news' | 'community'; q
 				)}
 			</div>
 			{!isNews && <CommunityDivisionBar />}
-			{items.length === 0 ? (
-				<div>아직 작성된 게시글이 없어요</div>
+			{!response ? (
+				<FetchingFailedCard height="770px" marginTop="9.5rem" />
 			) : (
-				renderItems(items, isNews ? NewsItem : CommunityItem)
+				renderItems(response.data, isNews ? NewsItem : CommunityItem)
 			)}
 			<div className="flex mt-[3.75rem] mb-10 mx-auto">
 				<PaginationBar />
