@@ -13,7 +13,7 @@ export const getBoardList = async ({
 	params.append('size', String(size));
 	params.append('page', String(page));
 
-	if (order) params.append('team', String(team));
+	if (team !== undefined) params.append('team', String(team));
 
 	const response = await fetch(`${SERVER_URL}/api/board?${params.toString()}`);
 

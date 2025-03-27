@@ -14,8 +14,8 @@ export const getNewsList = async ({
 	params.append('size', String(size));
 	params.append('page', String(page));
 
-	if (order) params.append('team', String(team));
-	if (league) params.append('league', String(league));
+	if (team !== undefined) params.append('team', String(team));
+	if (league !== undefined) params.append('league', String(league));
 
 	const response = await fetch(`${SERVER_URL}/api/news?${params.toString()}`);
 
