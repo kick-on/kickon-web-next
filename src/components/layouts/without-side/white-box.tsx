@@ -7,7 +7,7 @@ const paddingMap: Record<string, string> = {
 	'/signup': 'py-[6.25rem]',
 	'/post/news': 'px-4',
 	'/post/board': 'px-4',
-	'/page4': 'pt-[7.5rem] pb-14', // 프로필 설정 페이지
+	'/profile-setting': 'pt-[8.25rem] pb-[4.25rem]', // 프로필 설정 페이지
 };
 
 const WhiteBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {

@@ -29,10 +29,10 @@ export default function Score({
 		>
 			<div className={clsx('flex flex-col gap-1.5', { invisible: isCompleted })}>
 				<button
-					// ref={upButtonRef}
 					disabled={score >= 20}
 					onClick={onClickUpButton}
-					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
+					className="group w-4 h-4 rounded-xs bg-black-000 shadow-score-button
+						hover:bg-black-700 active:bg-black-900 disabled:pointer-events-none"
 				>
 					<Image
 						width={16}
@@ -43,10 +43,10 @@ export default function Score({
 					/>
 				</button>
 				<button
-					// ref={downButtonRef}
 					disabled={score <= 0}
 					onClick={onClickDownButton}
-					className="group w-4 h-4 rounded-xs bg-black-000 hover:bg-black-700 active:bg-black-900 shadow-score-button disabled:pointer-events-none"
+					className="group w-4 h-4 rounded-xs bg-black-000 shadow-score-button
+						hover:bg-black-700 active:bg-black-900 disabled:pointer-events-none"
 				>
 					<Image
 						width={16}

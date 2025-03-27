@@ -6,7 +6,19 @@ import OptionItem from './option-item';
 import clsx from 'clsx';
 import { leagues } from '@/lib/constants/leagues';
 
-export default function AccountSelectBox({ category, options, content, onChange }) {
+export default function AccountSelectBox({
+	category,
+	options,
+	content,
+	onChange,
+	isEditable = true,
+}: {
+	category: '리그' | '응원팀';
+	options: { content: string; src: string }[];
+	content: string;
+	onChange: (string) => void;
+	isEditable?: boolean;
+}) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
@@ -50,12 +62,15 @@ export default function AccountSelectBox({ category, options, content, onChange 
 				<button
 					onClick={handleSelectBoxClick}
 					className={`flex gap-2.5 items-center px-4 py-3 w-full
-						border border-black-300 rounded-lg bg-black-000 body3-regular
-						${content ? 'text-black-900' : 'text-black-600'}`}
+						border border-black-300 rounded-lg body3-regular
+						${content ? 'text-black-900' : 'text-black-600'}
+						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
 					{content && <Image width={18} height={18} src="/league-logo/premier-league.svg" alt={content} />}
 					{content || '선택해 주세요.'}
-					<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
+					{isEditable && (
+						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
+					)}
 				</button>
 
 				{isVisibleOptions && (
@@ -72,7 +87,7 @@ export default function AccountSelectBox({ category, options, content, onChange 
 								{index < leagues.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
-						{!isLeagueSelectBox && (
+						{isLeagueSelectBox && (
 							<div
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"

@@ -19,8 +19,9 @@ export default function Home() {
 			</div>
 			<hr className="mx-6 border-black-600" />
 			<div className="flex flex-col gap-4">
-				<PredictCard status="participated" />
-				<PredictCard status="unParticipated" />
+				<PredictCard status="success" />
+				<PredictCard status="fail" />
+				<PredictCard status="unparticipated" />
 			</div>
 		</div>
 	);
