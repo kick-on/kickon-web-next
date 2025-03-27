@@ -1,0 +1,188 @@
+export const mockDataMap = {
+	news: {
+		pk: 1,
+		title: '[충격] 쿠르투아는 시메오네를 향해 쏘아붙인다',
+		user: {
+			id: '1',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		isOurTeamNews: true,
+		teamName: '리버풀',
+		createdAt: '1시간 전',
+		views: 1233,
+		likes: 12354,
+		replies: 12354,
+		thumbnailUrl: '/example.jpg',
+		category: '부상',
+		content:
+			'벨기에 선수가 혼합 구역에서 콜로 선수의 페널티 거부에 대한 항의에 응답하고 있다.\n\n티보 쿠르투아는 기자 회견에서 시메오네 가 화를 내자 혼합 구역에서 반응하며, 승부차기에서 훌리안 알바레즈 가 페널티킥을 두 번 터치하는 것을 기자가 봤는지 큰 소리로 물었다 . 벨기에인은 시메오네에 대해 엄하게 말했다. \"저는 그런 피해자 의식에 질렸어요. 항상 이런 일에 대해 울부짖어요. 심판은 스페인이나 유럽에서도 팀에 이로운 일을 하고 싶어하지 않아요. 그들은 그것을 분명히 보고 그렇게 말했어요. 그들은 인간이고, 기술을 통해 그것을 분명히 봤어요. 첫 번째 분에 1-0으로 이기고 두 번째 분에 가지 않는다면, 그것은 그들의 경기의 잘못이에요.\"앞서 Movistar 에서 그는 경기를 분석했습니다. \"결국 복권이었습니다. 더블인 것 같아서 심판에게 말했습니다. 보기 쉽지 않고 그들에게는 불운입니다. 그리고 코레아가 골을 넣지 못한 것은 저에게 불운이었습니다. 우리는 최고의 경기를 하지 못했지만, 통과했고, 그것이 중요합니다.\"\n\n그리고 그는 총격전을 어떻게 공부했는지 분석했습니다. \"우리는 이번 주에 무엇을 했는지에 대해 이야기했고, 그 다음에는 스트라이커에 따라 다릅니다... 소를로트는 슛을 할 때 항상 바뀌었습니다. 저는 그가 바뀔 것이라고 생각했습니다. 훌리안의 경우, 저는 의심했습니다. 그가 중앙에서 슛을 할 것이라고 생각하지 않았습니다. 우리는 요렌테에 대한 정보가 없었지만, 훈련에서 그는 오른쪽으로 슛하는 것을 좋아했고, 그는 멀리 떨어진 슛을 쳤습니다.',
+		isKicked: true,
+	},
+	board: {
+		pk: 3,
+		title: '[자유게시판] 이번 주 경기 후기',
+		user: {
+			id: '3',
+			nickname: '축덕남',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '1시간 전',
+		views: 456,
+		likes: 120,
+		replies: 18,
+		image: '/example.jpg',
+		content:
+			'벨기에 선수가 혼합 구역에서 콜로 선수의 페널티 거부에 대한 항의에 응답하고 있다.\n\n티보 쿠르투아는 기자 회견에서 시메오네 가 화를 내자 혼합 구역에서 반응하며, 승부차기에서 훌리안 알바레즈 가 페널티킥을 두 번 터치하는 것을 기자가 봤는지 큰 소리로 물었다 . 벨기에인은 시메오네에 대해 엄하게 말했다. \"저는 그런 피해자 의식에 질렸어요. 항상 이런 일에 대해 울부짖어요. 심판은 스페인이나 유럽에서도 팀에 이로운 일을 하고 싶어하지 않아요. 그들은 그것을 분명히 보고 그렇게 말했어요. 그들은 인간이고, 기술을 통해 그것을 분명히 봤어요. 첫 번째 분에 1-0으로 이기고 두 번째 분에 가지 않는다면, 그것은 그들의 경기의 잘못이에요.\"앞서 Movistar 에서 그는 경기를 분석했습니다. \"결국 복권이었습니다. 더블인 것 같아서 심판에게 말했습니다. 보기 쉽지 않고 그들에게는 불운입니다. 그리고 코레아가 골을 넣지 못한 것은 저에게 불운이었습니다. 우리는 최고의 경기를 하지 못했지만, 통과했고, 그것이 중요합니다.\"\n\n그리고 그는 총격전을 어떻게 공부했는지 분석했습니다. \"우리는 이번 주에 무엇을 했는지에 대해 이야기했고, 그 다음에는 스트라이커에 따라 다릅니다... 소를로트는 슛을 할 때 항상 바뀌었습니다. 저는 그가 바뀔 것이라고 생각했습니다. 훌리안의 경우, 저는 의심했습니다. 그가 중앙에서 슛을 할 것이라고 생각하지 않았습니다. 우리는 요렌테에 대한 정보가 없었지만, 훈련에서 그는 오른쪽으로 슛하는 것을 좋아했고, 그는 멀리 떨어진 슛을 쳤습니다.',
+		isKicked: false,
+	},
+};
+
+export const mockComments = [
+	{
+		pk: 1,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '1',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: false,
+		replies: [
+			{
+				pk: 9,
+				contents: '대대댓글 입니다~~',
+				user: {
+					id: '9',
+					nickname: '하늘천사랑',
+					profileImageUrl: '/default-profile.svg',
+				},
+				createdAt: '2025-03-20T10:35:18.838Z',
+				kickCount: 12,
+				kicked: true,
+				replies: [],
+			},
+		],
+	},
+	{
+		pk: 2,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '2',
+			nickname: '하늘사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [
+			{
+				pk: 9,
+				contents: '대대댓글 입니다~~',
+				user: {
+					id: '9',
+					nickname: '하늘랑',
+					profileImageUrl: '/default-profile.svg',
+				},
+				createdAt: '2025-03-20T10:35:18.838Z',
+				kickCount: 12,
+				kicked: true,
+				replies: [],
+			},
+		],
+	},
+	{
+		pk: 3,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '3',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [],
+	},
+	{
+		pk: 4,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '4',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [],
+	},
+	{
+		pk: 5,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '5',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [],
+	},
+	{
+		pk: 6,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '6',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [],
+	},
+	{
+		pk: 7,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '7',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [],
+	},
+	{
+		pk: 8,
+		contents: '댓글 입니다~~',
+		user: {
+			id: '8',
+			nickname: '하늘천사랑',
+			profileImageUrl: '/default-profile.svg',
+		},
+		createdAt: '2025-03-20T10:35:18.838Z',
+		kickCount: 12,
+		kicked: true,
+		replies: [
+			{
+				pk: 10,
+				contents: '대댓글 입니다~~',
+				user: {
+					id: '10',
+					nickname: '하늘천사랑',
+					profileImageUrl: '/default-profile.svg',
+				},
+				createdAt: '2025-03-20T10:35:18.838Z',
+				kickCount: 12,
+				kicked: true,
+				replies: [],
+			},
+		],
+	},
+];

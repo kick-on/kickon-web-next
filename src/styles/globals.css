@@ -10,7 +10,7 @@
 	--color-primary-700: #c00c0bb2;
 	--color-primary-300: #c00c0b4d;
 	--color-primary-200: #c00c0b33;
-	--color-primary-100: #c00c0b0d;
+	--color-primary-50: #c00c0b0d;
 	--color-secondary: #890f0e;
 
 	--color-black-900: #000000;
@@ -34,4 +34,94 @@ body {
 
 button {
 	cursor: pointer;
+}
+
+.banner-swiper .swiper-pagination {
+	position: absolute;
+	z-index: 20;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+
+	display: flex;
+	width: fit-content;
+	gap: 0.4375rem;
+}
+
+.banner-swiper .swiper-pagination-bullet {
+	width: 0.5rem;
+	height: 0.5rem;
+	background-color: white;
+	border-radius: 4px;
+	opacity: 1;
+	transition: width 0.3s ease;
+}
+
+.banner-swiper .swiper-pagination-bullet-active {
+	width: 3.125rem;
+}
+.tiptap h1 {
+	font-size: 20px;
+	font-weight: 700;
+}
+
+.tiptap h2 {
+	font-size: 18px;
+	font-weight: 600;
+}
+
+.tiptap p {
+	font-size: 16px;
+	font-weight: 400;
+}
+
+.tiptap hr {
+	border: none;
+	border-top: 1px solid #d9d9d9;
+	margin: 16px 0;
+}
+
+.tiptap ul {
+	list-style: disc;
+	padding-left: 1.5rem;
+}
+
+.tiptap blockquote {
+	border-left: 4px solid var(--color-black-800);
+	padding-left: 1rem;
+	margin: 1rem 0;
+}
+
+.tiptap boxquote {
+	border: 2px solid var(--color-black-300);
+	border-radius: 6px;
+	padding: 1rem;
+	margin: 1rem 0;
+}
+.tiptap ol {
+	list-style-type: decimal;
+	padding-left: 1.5rem;
+}
+.minimal-scrollbar::-webkit-scrollbar {
+	width: 6px; /* 바만 좁게 남기고 */
+}
+
+.minimal-scrollbar::-webkit-scrollbar-track {
+	background: transparent; /* 트랙 투명하게 */
+}
+
+.minimal-scrollbar::-webkit-scrollbar-thumb {
+	background-color: rgba(0, 0, 0, 0.3); /* 바만 보이게 */
+	border-radius: 4px;
+}
+
+.minimal-scrollbar {
+	scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
+}
+.no-scrollbar {
+	-ms-overflow-style: none; /* IE */
+	scrollbar-width: none; /* Firefox */
 }

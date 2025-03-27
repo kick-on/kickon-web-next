@@ -26,7 +26,7 @@ export default function Nickname({ nickname, onChange }) {
               placeholder:[color:var(--color-black-600)]
               placeholder:[font-size:var(--fs-16)]
               placeholder:[font-weight:var(--fw-regular)]
-              placeholder:[line-height:var(--lh-24);]`}
+              placeholder:[line-height:var(--lh-24)]`}
 				/>
 				{nickname && (
 					<button className="absolute top-1/2 -translate-y-1/2 right-4" onClick={handleXbuttonClick}>

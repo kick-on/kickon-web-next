@@ -1,11 +1,28 @@
 'use client';
 
+import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Icon from '../../../public/edit.svg';
 
 const FloatingWritingButton = () => {
+	const router = useRouter();
+	const pathname = usePathname();
+
+	const handleEditButtonClick = () => {
+		if (pathname.startsWith('/news')) {
+			router.push('/post/news');
+		} else if (pathname.startsWith('/board')) {
+			router.push('/post/board');
+		} else {
+			router.push('/');
+		}
+	};
+
+	if (pathname === '/') return null;
+
 	return (
 		<button
+			onClick={handleEditButtonClick}
 			className="z-50 flex items-center w-[3.625rem] h-[3.625rem] fixed 
 					  bottom-15 bg-black-700 text-white rounded-full shadow-lg 
 					  overflow-hidden group transition-all duration-300 ease-in-out 
