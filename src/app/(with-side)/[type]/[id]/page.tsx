@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { mockComments, mockDataMap } from '@/lib/mock';
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
@@ -16,6 +16,7 @@ const config = {
 
 const DetailPage = () => {
 	const params = useParams();
+	const router = useRouter();
 	const type = params?.type as string;
 	const id = params?.id;
 
@@ -26,28 +27,34 @@ const DetailPage = () => {
 
 	useEffect(() => {
 		if (!type || !id) return;
+		if (!config[type]) {
+			router.push('/404');
+			return;
+		}
 		const mock = mockDataMap[type];
 		setData(mock);
-	}, [type, id]);
+	}, [type, id, router]);
 
 	if (!data) return <p>Loading...</p>;
 
 	const toggleCommentLike = (commentId) => {
-		setLikedComments((prev) => ({
-			...prev,
-			[commentId]: !prev[commentId],
-		}));
+		setLikedComments({
+			...likedComments,
+			[commentId]: !likedComments[commentId],
+		});
 	};
 
 	const toggleReplyInputVisibility = (commentId) => {
-		setReplyingTo((prev) => (prev.includes(commentId) ? prev.filter((id) => id !== commentId) : [...prev, commentId]));
+		setReplyingTo(
+			replyingTo.includes(commentId) ? replyingTo.filter((id) => id !== commentId) : [...replyingTo, commentId],
+		);
 	};
 
 	const toggleReplyListVisibility = (commentId) => {
-		setReplyVisible((prev) => ({
-			...prev,
-			[commentId]: !prev[commentId],
-		}));
+		setReplyVisible({
+			...replyVisible,
+			[commentId]: !replyVisible[commentId],
+		});
 	};
 
 	const { allowComments, imagePosition } = config[type] || {};
