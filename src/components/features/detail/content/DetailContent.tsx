@@ -1,11 +1,22 @@
+'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/MoreActionsButton';
+import { useState } from 'react';
+import { postContentLike } from '@/services/apis/detail/kick';
 
 const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
-	const isBoard = type === 'board';
+	const isNews = type === 'news';
 	const isTopImage = imagePosition === 'top';
-	const titleMargin = isBoard ? 'mt-7.5' : 'mt-0';
+	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
 
+	const [, setLikes] = useState(data.likes);
+
+	const handleLikeButtonClick = async () => {
+		const success = await postContentLike(data.id, isNews);
+		if (success) {
+			setLikes((prev) => prev + 1);
+		}
+	};
 	return (
 		<div className="px-4">
 			{imagePosition === 'top' && (
@@ -18,7 +29,7 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 				/>
 			)}
 			{/* 헤더 */}
-			{!isBoard && (
+			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
 					{isOurTeamNews && <Image src="/team-logo/liverpool.svg" alt="팀 로고" width={24} height={24} />}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
@@ -65,6 +76,7 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 			<p className="mb-40 whitespace-pre-line body3-regular">{data.content}</p>
 
 			<button
+				onClick={handleLikeButtonClick}
 				className="button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
           rounded-lg shadow-[0rem_0.125rem_0.625rem_0rem_#DCDCDC] bg-black-100 text-black-900 transition
           hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]

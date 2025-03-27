@@ -6,9 +6,10 @@ import CommentSection from '@/components/features/detail/comment/CommentSection'
 import { allNews } from '@/components/common/category-tab/category-tab';
 import { getDetailByType } from '@/services/apis/detail';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import { getCommentList } from '@/services/apis/comment';
-import { GetCommentsResponse } from '@/services/apis/comment/dto';
+
 import { GetDetailResponse } from '@/services/apis/detail/dto';
+import { getCommentList } from '@/services/apis/detail/comment';
+import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 
 const config = {
 	news: { allowComments: true, imagePosition: 'top' },

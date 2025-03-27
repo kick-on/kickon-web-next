@@ -1,4 +1,4 @@
-import { SuccessResponse } from '../../config/dto';
+import { SuccessResponse } from '@/services/config/dto';
 
 export interface UserDto {
 	id: string;
