@@ -17,7 +17,8 @@ export default function NavButton({ href, content }: NavButtonProps) {
 			className={clsx('w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium', {
 				'text-black-900': pathname === '/',
 				'text-black-000': pathname === '/signup' || isActive,
-				'text-black-600': (pathname.startsWith('/news') || pathname.startsWith('/board')) && !isActive,
+				'text-black-600':
+					(pathname.startsWith('/news') || pathname.startsWith('/board') || pathname.startsWith('/post')) && !isActive,
 			})}
 		>
 			{content}
