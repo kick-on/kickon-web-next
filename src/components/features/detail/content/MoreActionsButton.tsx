@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
