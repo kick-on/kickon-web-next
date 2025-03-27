@@ -6,37 +6,42 @@ import CommentSection from '@/components/features/detail/comment/CommentSection'
 import { allNews } from '@/components/common/category-tab/category-tab';
 import { getDetailByType } from '@/services/apis/detail';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
+import { getCommentList } from '@/services/apis/comment';
+import { GetCommentsResponse } from '@/services/apis/comment/dto';
+import { GetDetailResponse } from '@/services/apis/detail/dto';
 
 const config = {
 	news: { allowComments: true, imagePosition: 'top' },
 	board: { allowComments: true, imagePosition: 'bottom' },
 };
 
-// 내 팀 뉴스인지 확인해야 됨... 뉴스에 있는 team pk랑 내 팀 pk랑 비교 -> 응답으로 오는 pk랑 내 팀 pk 비교 내 팀 pk는 어디에???
+// TODO: 내 팀 뉴스인지 확인, 뉴스에 있는 team pk와 내 팀 pk랑 비교
 const DetailPage = async ({ params }: { params: { type: string; id: string } }) => {
 	const { type, id } = params;
 	if (!config[type]) return notFound();
 
-	const data = await getDetailByType(type as 'news' | 'board', Number(id));
-	if (!data) {
-		console.log('데이터를 불러오지 못함:', data);
-		return (
-			<ComponentFrame isMain={true}>
-				<div className="w-full flex justify-center items-center py-10">
-					<FetchingFailedCard height="856px" marginTop="200px" />
-				</div>
-			</ComponentFrame>
-		);
-	}
+	const contents = (await getDetailByType(type as 'news' | 'board', Number(id))) as GetDetailResponse;
+	console.log(contents.data); // TODO: 추후에는 이 상세 페이지 정보가 안 불러와지면 댓글까지 렌더링 안 되도록 if(!data) return(<FetchingFailedCard/>)
+
+	const comments = (await getCommentList(Number(id), 1, 10, type === 'news')) as GetCommentsResponse;
+	console.log(comments);
 
 	const { allowComments, imagePosition } = config[type];
-	const isOurTeamNews = false; // 하드코딩
+	const isOurTeamNews = false; // 임시
 
 	return (
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
-				<DetailContent data={data} imagePosition={imagePosition} type={type} isOurTeamNews={isOurTeamNews} />
-				<CommentSection allowComments={allowComments} isOurTeamNews={isOurTeamNews} />
+				{contents.data ? (
+					<DetailContent data={contents.data} imagePosition={imagePosition} type={type} isOurTeamNews={isOurTeamNews} />
+				) : (
+					<FetchingFailedCard height="800px" marginTop="200px" />
+				)}
+				{comments ? (
+					<CommentSection allowComments={allowComments} isOurTeamNews={isOurTeamNews} comments={comments.data} />
+				) : (
+					<FetchingFailedCard height="300px" marginTop="50px" />
+				)}
 			</ComponentFrame>
 			<RecommendedContent mode={type === 'news' ? '뉴스' : '게시글'} data={allNews} teamName="FC 서울" />
 		</div>

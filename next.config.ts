@@ -1,5 +1,9 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {};
+const nextConfig: NextConfig = {
+	images: {
+		domains: ['k.kakaocdn.net'],
+	},
+};
 
-export default nextConfig;
+module.exports = nextConfig;

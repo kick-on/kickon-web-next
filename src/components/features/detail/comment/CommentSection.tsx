@@ -3,9 +3,8 @@
 import { useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
-import { mockComments } from '@/lib/mock';
 
-const CommentSection = ({ allowComments, isOurTeamNews }: { allowComments: boolean; isOurTeamNews: boolean }) => {
+const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
@@ -32,7 +31,9 @@ const CommentSection = ({ allowComments, isOurTeamNews }: { allowComments: boole
 		isOurTeamNews,
 	};
 
-	const totalComments = mockComments.reduce((acc, comment) => acc + 1 + (comment.replies?.length ?? 0), 0);
+	const totalComments = Array.isArray(comments)
+		? comments.reduce((acc, comment) => acc + 1 + (comment.replies?.length ?? 0), 0)
+		: 0;
 
 	return (
 		<div className="px-4">
@@ -41,7 +42,7 @@ const CommentSection = ({ allowComments, isOurTeamNews }: { allowComments: boole
 				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
 			<div className="flex flex-col pr-2">
-				{mockComments.map((comment) => (
+				{comments.map((comment) => (
 					<div key={comment.pk}>
 						<CommentItem content={comment} {...commentItemProps} parentNickname={comment.user.nickname} />
 						{replyVisibilities[comment.pk] &&

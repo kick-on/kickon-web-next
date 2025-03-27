@@ -1,4 +1,4 @@
-import { BaseSuccessResponse } from '../dto';
+import { SuccessResponse } from '../../config/dto';
 
 export interface UserDto {
 	id: string;
@@ -28,4 +28,4 @@ export interface MetaDto {
 }
 
 // 뉴스 상세 조회 응답 타입
-export type GetDetailResponse = BaseSuccessResponse<DetailDto> & { meta: MetaDto };
+export type GetDetailResponse = SuccessResponse<DetailDto>;

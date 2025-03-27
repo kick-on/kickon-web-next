@@ -51,7 +51,7 @@ const CommentInput = ({ type = 'comment', mentionNickname }: CommentInputProps) 
 	const handleInput = () => {
 		if (inputRef.current) {
 			const inputText = inputRef.current.innerHTML;
-			const plainText = inputText.replace(/<[^>]*>/g, ''); // HTML 태그 제거
+			const plainText = inputText.replace(/<[^>]*>/g, '');
 			if (plainText.length <= 1000) {
 				setContent(inputText);
 				setCharCount(plainText.length);

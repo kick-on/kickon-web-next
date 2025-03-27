@@ -1,4 +1,4 @@
-import { BaseSuccessResponse } from '../dto';
+import { SuccessResponse } from '../../config/dto';
 
 export interface GambleRankingDto {
 	rankOrder: number;
@@ -18,7 +18,7 @@ export interface ActualRankingDto {
 }
 
 // 승부예측 시즌 랭킹
-export type GetGambleSeasonRankingResponse = BaseSuccessResponse<GambleRankingDto[]>;
+export type GetGambleSeasonRankingResponse = SuccessResponse<GambleRankingDto[]>;
 
 // 실제 시즌 랭킹
-export type GetActualSeasonRankingResponse = BaseSuccessResponse<ActualRankingDto[]>;
+export type GetActualSeasonRankingResponse = SuccessResponse<ActualRankingDto[]>;
