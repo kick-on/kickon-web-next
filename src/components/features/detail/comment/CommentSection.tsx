@@ -2,7 +2,7 @@ import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 
 const CommentSection = ({ allowComments, isOurTeamNews, comments, commentItemProps }) => {
-	const { replyVisible } = commentItemProps;
+	const { replyVisibilities } = commentItemProps;
 	const totalComments = comments.reduce((acc, comment) => acc + 1 + (comment.replies?.length ?? 0), 0);
 
 	return (
@@ -17,7 +17,7 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments, commentItemPro
 				{comments.map((comment) => (
 					<div key={comment.pk}>
 						<CommentItem content={comment} {...commentItemProps} />
-						{replyVisible[comment.pk] &&
+						{replyVisibilities[comment.pk] &&
 							comment.replies?.map((reply) => (
 								<CommentItem
 									key={`${comment.pk}-${reply.pk}`}

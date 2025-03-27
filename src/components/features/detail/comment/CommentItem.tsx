@@ -10,16 +10,16 @@ const CommentItem = ({
 	handleReply,
 	toggleReplyVisibility,
 	replyingTo,
-	replyVisible,
+	replyVisibilities,
 	isReply = false,
 	isOurTeamNews,
 	parentNickname,
 }) => {
-	const isRepliesVisible = useMemo(() => {
+	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
 
-	const isReplyOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
+	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
 	return (
 		<>
 			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
@@ -76,23 +76,23 @@ const CommentItem = ({
 							</button>
 						)}
 
-						{isRepliesVisible && (
+						{isRepliesOpen && (
 							<button
 								className="flex items-center gap-[0.625rem] text-black-600 body6-regular"
 								onClick={() => toggleReplyVisibility(content.pk)}
 							>
 								<Image
-									src={replyVisible[content.pk] ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
+									src={replyVisibilities[content.pk] ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
 									alt="toggle replies"
 									width={16}
 									height={16}
 								/>
-								{replyVisible[content.pk] ? '답글 숨기기' : `답글 ${content.replies.length}개`}
+								{replyVisibilities[content.pk] ? '답글 숨기기' : `답글 ${content.replies.length}개`}
 							</button>
 						)}
 					</div>
 
-					{isReplyOpen && <CommentInput type="reply" mentionNickname={content.user.nickname} />}
+					{isReplyInputOpen && <CommentInput type="reply" mentionNickname={content.user.nickname} />}
 				</div>
 			</div>
 			<hr className="border-t border-black-300 -mx-4" />

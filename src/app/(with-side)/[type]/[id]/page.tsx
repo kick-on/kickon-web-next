@@ -23,7 +23,7 @@ const DetailPage = () => {
 	const [data, setData] = useState(null);
 	const [likedComments, setLikedComments] = useState({});
 	const [replyingTo, setReplyingTo] = useState([]);
-	const [replyVisible, setReplyVisible] = useState({});
+	const [replyVisibilities, setReplyVisibilities] = useState({});
 
 	useEffect(() => {
 		if (!type || !id) return;
@@ -51,9 +51,9 @@ const DetailPage = () => {
 	};
 
 	const toggleReplyListVisibility = (commentId) => {
-		setReplyVisible({
-			...replyVisible,
-			[commentId]: !replyVisible[commentId],
+		setReplyVisibilities({
+			...replyVisibilities,
+			[commentId]: !replyVisibilities[commentId],
 		});
 	};
 
@@ -66,7 +66,7 @@ const DetailPage = () => {
 		handleReply: toggleReplyInputVisibility,
 		toggleReplyVisibility: toggleReplyListVisibility,
 		replyingTo,
-		replyVisible,
+		replyVisibilities,
 		isOurTeamNews,
 	};
 

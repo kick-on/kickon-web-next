@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 
 const MoreActionsButton = () => {
-	const [open, setOpen] = useState(false);
+	const [isOpen, setisOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -14,11 +14,11 @@ const MoreActionsButton = () => {
 				!menuRef.current.contains(e.target as Node) &&
 				!buttonRef.current?.contains(e.target as Node)
 			) {
-				setOpen(false);
+				setisOpen(false);
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
 	}, []);
 
 	const handleShareButtonClick = async () => {
@@ -29,21 +29,21 @@ const MoreActionsButton = () => {
 			console.log(err);
 			alert('URL 복사에 실패했습니다.');
 		}
-		setOpen(false);
+		setisOpen(false);
 	};
 
 	const handleReportButtonClick = () => {
-		setOpen(false);
+		setisOpen(false);
 		alert('신고하기 클릭됨');
 	};
 
 	return (
 		<div className="relative inline-block">
-			<button ref={buttonRef} onClick={() => setOpen((prev) => !prev)} className="flex items-center pl-1">
+			<button ref={buttonRef} onClick={() => setisOpen((prev) => !prev)} className="flex items-center pl-1">
 				<Image src="/x.svg" alt="더보기" width={20} height={20} />
 			</button>
 
-			{open && (
+			{isOpen && (
 				<div
 					ref={menuRef}
 					className={clsx(
