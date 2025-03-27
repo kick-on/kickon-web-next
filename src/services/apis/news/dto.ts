@@ -1,4 +1,4 @@
-import { BaseSuccessResponse } from '../dto';
+import { SuccessResponse } from '../../config/dto';
 
 // 뉴스 리스트 조회
 export interface GetNewsListRequest {
@@ -9,7 +9,7 @@ export interface GetNewsListRequest {
 	league?: number;
 }
 
-export type GetNewsListResponse = BaseSuccessResponse<NewsItemDto[]>;
+export type GetNewsListResponse = SuccessResponse<NewsItemDto[]>;
 
 // 게시글 리스트 조회
 export interface GetBoardListRequest {
@@ -19,7 +19,7 @@ export interface GetBoardListRequest {
 	order: string;
 }
 
-export type GetBoardListResponse = BaseSuccessResponse<BoardItemDto[]>;
+export type GetBoardListResponse = SuccessResponse<BoardItemDto[]>;
 
 // 내부 DTO
 export interface NewsItemDto {
