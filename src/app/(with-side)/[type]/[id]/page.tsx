@@ -1,87 +1,36 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import { mockComments, mockDataMap } from '@/lib/mock';
+import { notFound } from 'next/navigation';
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
-import { allNews } from '@/components/common/category-tab/category-tab';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/CommentSection';
+import { allNews } from '@/components/common/category-tab/category-tab';
 
 const config = {
 	news: { allowComments: true, imagePosition: 'top' },
 	board: { allowComments: true, imagePosition: 'bottom' },
 };
 
-const DetailPage = () => {
-	const params = useParams();
-	const router = useRouter();
-	const type = params?.type as string;
-	const id = params?.id;
+const fetchDetailData = async (type: string, id: string) => {
+	const mockDataMap = await import('@/lib/mock').then((mod) => mod.mockDataMap);
+	return mockDataMap[type] || null;
+};
 
-	const [data, setData] = useState(null);
-	const [likedComments, setLikedComments] = useState({});
-	const [replyingTo, setReplyingTo] = useState([]);
-	const [replyVisibilities, setReplyVisibilities] = useState({});
+const DetailPage = async ({ params }: { params: { type: string; id: string } }) => {
+	const { type, id } = params;
+	if (!config[type]) return notFound();
 
-	useEffect(() => {
-		if (!type || !id) return;
-		if (!config[type]) {
-			router.push('/404');
-			return;
-		}
-		const mock = mockDataMap[type];
-		setData(mock);
-	}, [type, id, router]);
+	const data = await fetchDetailData(type, id);
+	if (!data) return notFound();
 
-	if (!data) return <p>Loading...</p>;
-
-	const toggleCommentLike = (commentId) => {
-		setLikedComments({
-			...likedComments,
-			[commentId]: !likedComments[commentId],
-		});
-	};
-
-	const toggleReplyInputVisibility = (commentId) => {
-		setReplyingTo(
-			replyingTo.includes(commentId) ? replyingTo.filter((id) => id !== commentId) : [...replyingTo, commentId],
-		);
-	};
-
-	const toggleReplyListVisibility = (commentId) => {
-		setReplyVisibilities({
-			...replyVisibilities,
-			[commentId]: !replyVisibilities[commentId],
-		});
-	};
-
-	const { allowComments, imagePosition } = config[type] || {};
+	const { allowComments, imagePosition } = config[type];
 	const isOurTeamNews = data.isOurTeamNews ?? false;
-
-	const commentItemProps = {
-		likedComments,
-		handleLikeToggle: toggleCommentLike,
-		handleReply: toggleReplyInputVisibility,
-		toggleReplyVisibility: toggleReplyListVisibility,
-		replyingTo,
-		replyVisibilities,
-		isOurTeamNews,
-	};
 
 	return (
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
 				<DetailContent data={data} imagePosition={imagePosition} type={type} isOurTeamNews={isOurTeamNews} />
-				<CommentSection
-					allowComments={allowComments}
-					isOurTeamNews={isOurTeamNews}
-					comments={mockComments}
-					commentItemProps={commentItemProps}
-				/>
+				<CommentSection allowComments={allowComments} isOurTeamNews={isOurTeamNews} />
 			</ComponentFrame>
-
 			<RecommendedContent mode="뉴스" data={allNews} teamName={data.teamName} />
 		</div>
 	);
