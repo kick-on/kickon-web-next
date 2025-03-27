@@ -6,18 +6,18 @@ export interface UserDto {
 	profileImageUrl: string;
 }
 
-export interface NewsDetailDto {
+export interface DetailDto {
 	pk: number;
 	title: string;
 	content: string;
-	thumbnailUrl: string;
-	category: string;
 	user: UserDto;
 	createdAt: string;
 	views: number;
 	likes: number;
 	replies: number;
 	isKicked: boolean;
+	thumbnailUrl?: string;
+	category?: string;
 }
 
 export interface MetaDto {
@@ -28,4 +28,4 @@ export interface MetaDto {
 }
 
 // 뉴스 상세 조회 응답 타입
-export type GetNewsDetailResponse = BaseSuccessResponse<NewsDetailDto> & { meta: MetaDto };
+export type GetDetailResponse = BaseSuccessResponse<DetailDto> & { meta: MetaDto };

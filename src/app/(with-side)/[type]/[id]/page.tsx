@@ -4,7 +4,7 @@ import RecommendedContent from '@/components/common/recommendedContent';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/CommentSection';
 import { allNews } from '@/components/common/category-tab/category-tab';
-import { getNewsDetail } from '@/services/apis/detail';
+import { getDetailByType } from '@/services/apis/detail';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 const config = {
@@ -12,13 +12,14 @@ const config = {
 	board: { allowComments: true, imagePosition: 'bottom' },
 };
 
+// 내 팀 뉴스인지 확인해야 됨... 뉴스에 있는 team pk랑 내 팀 pk랑 비교 -> 응답으로 오는 pk랑 내 팀 pk 비교 내 팀 pk는 어디에???
 const DetailPage = async ({ params }: { params: { type: string; id: string } }) => {
 	const { type, id } = params;
 	if (!config[type]) return notFound();
 
-	const data = await getNewsDetail(Number(id));
+	const data = await getDetailByType(type as 'news' | 'board', Number(id));
 	if (!data) {
-		console.log('데이터를 불러오지 못함:', data); // 디버깅용
+		console.log('데이터를 불러오지 못함:', data);
 		return (
 			<ComponentFrame isMain={true}>
 				<div className="w-full flex justify-center items-center py-10">
@@ -37,7 +38,7 @@ const DetailPage = async ({ params }: { params: { type: string; id: string } }) 
 				<DetailContent data={data} imagePosition={imagePosition} type={type} isOurTeamNews={isOurTeamNews} />
 				<CommentSection allowComments={allowComments} isOurTeamNews={isOurTeamNews} />
 			</ComponentFrame>
-			<RecommendedContent mode="뉴스" data={allNews} teamName="FC 서울" />
+			<RecommendedContent mode={type === 'news' ? '뉴스' : '게시글'} data={allNews} teamName="FC 서울" />
 		</div>
 	);
 };

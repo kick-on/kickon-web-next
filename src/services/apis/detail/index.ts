@@ -1,10 +1,10 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetNewsDetailResponse } from './dto';
+import { GetDetailResponse } from './dto';
 
 const JWT = process.env.NEXT_PUBLIC_ACCESS_JWT;
 
-export const getNewsDetail = async (newsPk: number): Promise<GetNewsDetailResponse | null> => {
-	const response = await fetch(`${SERVER_URL}/api/news/${newsPk}`, {
+export const getDetailByType = async (type: 'news' | 'board', id: number): Promise<GetDetailResponse | null> => {
+	const response = await fetch(`${SERVER_URL}/api/${type}/${id}`, {
 		method: 'GET',
 		headers: {
 			Authorization: `Bearer ${JWT}`,
@@ -12,7 +12,7 @@ export const getNewsDetail = async (newsPk: number): Promise<GetNewsDetailRespon
 	});
 
 	if (!response.ok) {
-		console.error('상세 페이지 조회 오류', await response.json());
+		console.error(`${type} 상세페이지 조회 오류`, await response.json());
 		return null;
 	}
 	return response.json();
