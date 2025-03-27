@@ -12,7 +12,7 @@ export const getNewsDetail = async (newsPk: number): Promise<GetNewsDetailRespon
 	});
 
 	if (!response.ok) {
-		console.error(await response.json());
+		console.error('상세 페이지 조회 오류', await response.json());
 		return null;
 	}
 	return response.json();
