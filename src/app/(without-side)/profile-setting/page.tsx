@@ -5,7 +5,6 @@ import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
 import { useState } from 'react';
 import AccountSelectBox from '@/components/common/account-selectbox';
-import { leagues } from '@/lib/constants/leagues';
 
 export default function Page() {
 	const [nickname, setNickname] = useState('가나다라');
@@ -54,21 +53,9 @@ export default function Page() {
 
 			<div className="flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<AccountSelectBox
-					isEditable={isEditable}
-					category={'리그'}
-					options={leagues}
-					content={league}
-					onChange={handleLeagueChange}
-				/>
+				<AccountSelectBox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
 				{hasTeam && (
-					<AccountSelectBox
-						isEditable={isEditable}
-						category={'응원팀'}
-						options={leagues}
-						content={team}
-						onChange={handleTeamChange}
-					/>
+					<AccountSelectBox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
 				)}
 			</div>
 

@@ -5,42 +5,16 @@ import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
-import { leagues } from '@/lib/constants/leagues';
 import { UpdatePrivacyRequest } from '@/services/auth/dto';
 import { updatePrivacy } from '@/services/auth';
-
-const checkboxDatas = [
-	{
-		key: 'all',
-		content: '모두 동의',
-		hasTerm: false,
-	},
-	{
-		key: 'age',
-		content: '만 14세 이상 가입 동의 (필수)',
-		hasTerm: false,
-	},
-	{
-		key: 'term',
-		content: '서비스 이용약관 동의 (필수)',
-		hasTerm: true,
-	},
-	{
-		key: 'privacy',
-		content: '개인정보처리방침 동의 (필수)',
-		hasTerm: true,
-	},
-	{
-		key: 'marketing',
-		content: '마케팅 정보 수신 동의 (선택)',
-		hasTerm: true,
-	},
-];
+import { agreementDatas } from '@/lib/constants/agreementDatas';
+import { LeagueDto } from '@/services/apis/league/dto';
+import { TeamDto } from '@/services/apis/team/dto';
 
 export default function Page() {
 	const [nickname, setNickname] = useState('');
-	const [league, setLeague] = useState('');
-	const [team, setTeam] = useState('');
+	const [league, setLeague] = useState<LeagueDto | null>(null);
+	const [team, setTeam] = useState<TeamDto | null>(null);
 	const [agreements, setAgreements] = useState({
 		all: false,
 		age: false,
@@ -105,12 +79,19 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<AccountSelectbox category="리그" options={leagues} content={league} onChange={handleLeagueChange} />
-				{league && <AccountSelectbox category="응원팀" options={leagues} content={team} onChange={handleTeamChange} />}
+				<AccountSelectbox category="리그" content={league ? league.name : ''} onChange={handleLeagueChange} />
+				{league && (
+					<AccountSelectbox
+						category="응원팀"
+						league={league.pk}
+						content={team ? team.name : ''}
+						onChange={handleTeamChange}
+					/>
+				)}
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
-				{checkboxDatas.map(({ key, content, hasTerm }) => (
+				{agreementDatas.map(({ key, content, hasTerm }) => (
 					<Checkbox
 						key={key}
 						content={content}

@@ -5,21 +5,26 @@ import { useEffect, useRef, useState } from 'react';
 import OptionItem from './option-item';
 import clsx from 'clsx';
 import { leagues } from '@/lib/constants/leagues';
+import { getLeague } from '@/services/apis/league';
+import { getTeam } from '@/services/apis/team';
+import { TeamDto } from '@/services/apis/team/dto';
+import { LeagueDto } from '@/services/apis/league/dto';
 
 export default function AccountSelectBox({
 	category,
-	options,
+	league,
 	content,
 	onChange,
 	isEditable = true,
 }: {
 	category: '리그' | '응원팀';
-	options: { content: string; src: string }[];
+	league?: number;
 	content: string;
-	onChange: (string) => void;
+	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
 }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
+	const [options, setOptions] = useState<LeagueDto[] | TeamDto[]>([]);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
 
@@ -27,10 +32,22 @@ export default function AccountSelectBox({
 		setIsVisibleOptions(!isVisibleOptions);
 	};
 
-	const handleOptionClick = (selectedOption: string) => {
+	const handleOptionClick = (selectedPk: number) => {
+		const selectedOption = options.find((option) => option.pk === selectedPk);
 		onChange(selectedOption);
 		setIsVisibleOptions(false);
 	};
+
+	useEffect(() => {
+		const getOptions = async () => {
+			const response = isLeagueSelectBox ? await getLeague() : await getTeam(league);
+
+			if (!response) return;
+			setOptions(response.data);
+		};
+
+		getOptions();
+	}, [isLeagueSelectBox, league]);
 
 	useEffect(() => {
 		// isVisibleOptions가 true일 때만 리스너 등록
@@ -77,7 +94,7 @@ export default function AccountSelectBox({
 					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]">
 						{options.map((option, index) => (
 							<div
-								key={option.content}
+								key={option.pk}
 								className={clsx('bg-black-000 hover:bg-black-150 transition-colors', {
 									'rounded-t-[0.5625rem]': index === 0,
 									'rounded-b-[0.5625rem]': index === leagues.length - 1 && isLeagueSelectBox,
@@ -92,7 +109,7 @@ export default function AccountSelectBox({
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
 							>
-								<OptionItem onClick={handleOptionClick} content="응원팀이 없어요." src="/ban.svg" />
+								<OptionItem onClick={handleOptionClick} pk={-1} name="응원팀이 없어요." logoUrl="/ban.svg" />
 							</div>
 						)}
 					</div>
