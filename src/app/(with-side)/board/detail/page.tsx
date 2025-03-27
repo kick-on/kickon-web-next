@@ -1,6 +1,6 @@
 'use client';
 
-import { allCommunities } from '@/components/common/category-tab/category-tab';
+import { allCommunities } from '@/lib/constants/items';
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
 import { useSearchParams } from 'next/navigation';
