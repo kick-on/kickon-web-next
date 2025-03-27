@@ -79,14 +79,9 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<AccountSelectbox category="리그" content={league ? league.name : ''} onChange={handleLeagueChange} />
-				{league && (
-					<AccountSelectbox
-						category="응원팀"
-						league={league.pk}
-						content={team ? team.name : ''}
-						onChange={handleTeamChange}
-					/>
+				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
+				{league && league.pk !== -1 && (
+					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
 				)}
 			</div>
 

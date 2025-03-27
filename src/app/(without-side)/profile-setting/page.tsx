@@ -5,16 +5,26 @@ import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
 import { useState } from 'react';
 import AccountSelectBox from '@/components/common/account-selectbox';
+import { LeagueDto } from '@/services/apis/league/dto';
+import { TeamDto } from '@/services/apis/team/dto';
 
 export default function Page() {
 	const [nickname, setNickname] = useState('가나다라');
-	const [league, setLeague] = useState('응원팀이 없어요.');
-	const [team, setTeam] = useState('프리미어 리그');
+	const [league, setLeague] = useState<LeagueDto>({
+		pk: -1,
+		name: '응원팀이 없어요.',
+		logoUrl: '/ban.svg',
+	});
+	const [team, setTeam] = useState<TeamDto>({
+		pk: -1,
+		name: '응원팀이 없어요.',
+		logoUrl: '/ban.svg',
+	});
 
 	const route = useRouter();
 
 	const isEditable = false;
-	const hasTeam = league !== '응원팀이 없어요.';
+	const hasTeam = league.name !== '응원팀이 없어요.';
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);

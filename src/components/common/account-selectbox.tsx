@@ -19,7 +19,7 @@ export default function AccountSelectBox({
 }: {
 	category: '리그' | '응원팀';
 	league?: number;
-	content: string;
+	content: { name: string; logoUrl: string };
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
 }) {
@@ -33,7 +33,16 @@ export default function AccountSelectBox({
 	};
 
 	const handleOptionClick = (selectedPk: number) => {
-		const selectedOption = options.find((option) => option.pk === selectedPk);
+		let selectedOption = {
+			pk: -1,
+			name: '응원팀이 없어요.',
+			logoUrl: '/ban.svg',
+		};
+
+		if (selectedPk !== -1) {
+			selectedOption = options.find((option) => option.pk === selectedPk);
+		}
+
 		onChange(selectedOption);
 		setIsVisibleOptions(false);
 	};
@@ -83,8 +92,8 @@ export default function AccountSelectBox({
 						${content ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
-					{content && <Image width={18} height={18} src="/league-logo/premier-league.svg" alt={content} />}
-					{content || '선택해 주세요.'}
+					{content && <Image width={18} height={18} src={content.logoUrl} alt={content.name} />}
+					{content ? content.name : '선택해 주세요.'}
 					{isEditable && (
 						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
 					)}
