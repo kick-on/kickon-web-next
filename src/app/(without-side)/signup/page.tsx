@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { leagues } from '@/lib/constants/leagues';
+import { UpdatePrivacyRequest } from '@/services/auth/dto';
+import { updatePrivacy } from '@/services/auth';
 
 const checkboxDatas = [
 	{
@@ -83,6 +85,16 @@ export default function Page() {
 		}
 	};
 
+	const handleSignupButtonClick = async () => {
+		const request: UpdatePrivacyRequest = {
+			privacyAgreedAt: agreements.privacy && new Date().toISOString(),
+			marketingAgreedAt: agreements.marketing && new Date().toISOString(),
+		};
+
+		const response = await updatePrivacy(request);
+		console.log(response);
+	};
+
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
 			<div className="mb-8 title1-bold">회원가입</div>
@@ -108,6 +120,7 @@ export default function Page() {
 					/>
 				))}
 				<button
+					onClick={handleSignupButtonClick}
 					disabled={isButtonDisabled}
 					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
 										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
