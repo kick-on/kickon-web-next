@@ -2,7 +2,7 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
 	images: {
-		domains: ['k.kakaocdn.net'],
+		domains: ['k.kakaocdn.net', 'premierskillsenglish.britishcouncil.org', 'media.gettyimages.com'],
 	},
 };
 

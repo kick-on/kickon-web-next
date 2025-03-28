@@ -9,17 +9,25 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 	const isTopImage = imagePosition === 'top';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
 
-	const [, setLikes] = useState(data.likes);
+	const [likes, setLikes] = useState(data.likes);
+	const [isLiked, setIsLiked] = useState(false); // 좋아요 눌렀는지 여부
 
 	const handleLikeButtonClick = async () => {
+		if (isLiked) return; // 이미 눌렀다면 실행 안 함
+
+		console.log('좋아요 요청 데이터:', data.pk, isNews);
 		const success = await postContentLike(data.pk, isNews);
+		console.log('API 호출 결과:', success);
+
 		if (success) {
 			setLikes((prev) => prev + 1);
+			setIsLiked(true); // 좋아요 상태 유지
 		}
 	};
 
 	return (
 		<div className="px-4">
+			{/* 대표 이미지 */}
 			{imagePosition === 'top' && (
 				<Image
 					src={data.thumbnailUrl}
@@ -29,6 +37,7 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 					className="mt-6 mb-12 rounded-[0.625rem]"
 				/>
 			)}
+
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
@@ -57,7 +66,7 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 				<div className="flex gap-3 items-center text-black-600 body5-regular">
 					<div className="flex items-center gap-1.5">
 						<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
-						<span>{data.likes}</span>
+						<span>{likes}</span>
 					</div>
 					<div className="flex items-center gap-1.5">
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
@@ -76,16 +85,18 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 
 			<p className="mb-40 whitespace-pre-line body3-regular">{data.content}</p>
 
+			{/* 좋아요 버튼 */}
 			<button
 				onClick={handleLikeButtonClick}
-				className="button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
-          rounded-lg shadow-[0rem_0.125rem_0.625rem_0rem_#DCDCDC] bg-black-100 text-black-900 transition
-          hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]
-          active:!bg-[#D91920] active:!text-white"
+				disabled={isLiked} // 한 번 누르면 비활성화
+				className={`button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
+          rounded-lg shadow-[0rem_0.125rem_0.625rem_0rem_#DCDCDC] 
+          ${isLiked ? 'bg-[#D91920] text-white' : 'bg-black-100 text-black-900'} transition
+          hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]`}
 			>
-				<Image src="/kick/black.svg" alt="축구공" width={18} height={18} />
+				<Image src={isLiked ? '/kick/red.svg' : '/kick/black.svg'} alt="축구공" width={18} height={18} />
 				<span className="mr-0.5">킥</span>
-				<span className="group-hover:text-[#D91920] group-active:!text-white">{data.likes}</span>
+				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
 			</button>
 		</div>
 	);
