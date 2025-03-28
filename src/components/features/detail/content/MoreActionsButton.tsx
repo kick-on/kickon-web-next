@@ -1,11 +1,16 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, FC } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import ReportModal from './ReportModal';
 
-const MoreActionsButton = () => {
+interface MoreActionsButtonProps {
+	type: 'news' | 'board';
+	pk: number;
+}
+
+const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showReportModal, setShowReportModal] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
@@ -67,7 +72,7 @@ const MoreActionsButton = () => {
 				)}
 			</div>
 
-			{showReportModal && <ReportModal onClose={() => setShowReportModal(false)} />}
+			{showReportModal && <ReportModal type={type} pk={pk} onClose={() => setShowReportModal(false)} />}
 		</>
 	);
 };

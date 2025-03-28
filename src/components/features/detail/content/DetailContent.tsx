@@ -12,11 +12,12 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 	const [, setLikes] = useState(data.likes);
 
 	const handleLikeButtonClick = async () => {
-		const success = await postContentLike(data.id, isNews);
+		const success = await postContentLike(data.pk, isNews);
 		if (success) {
 			setLikes((prev) => prev + 1);
 		}
 	};
+
 	return (
 		<div className="px-4">
 			{imagePosition === 'top' && (
@@ -62,7 +63,7 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
 						<span>{data.replies}</span>
 					</div>
-					<MoreActionsButton />
+					<MoreActionsButton type={type} pk={data.pk} />
 				</div>
 			</div>
 

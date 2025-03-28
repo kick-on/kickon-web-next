@@ -1,55 +1,71 @@
+import { reportOptions } from '@/lib/constants/options';
+import { postReport } from '@/services/apis/detail/report';
+import { PostReportDetailRequest } from '@/services/apis/detail/report/dto';
 import Image from 'next/image';
 import { useState } from 'react';
 
 interface ReportModalProps {
 	onClose: () => void;
+	type: string;
+	pk: number;
 }
-
-const REPORT_REASONS = [
-	'허위사실이에요.',
-	'비방 및 욕설 표현을 사용했어요.',
-	'선정성 게시글이에요.',
-	'스팸 홍보/도배글이에요.',
-	'개인정보가 노출되었어요.',
-	'저작권 및 법적인 문제예요.',
-	'기타',
-];
-
-const ReportModal: React.FC<ReportModalProps> = ({ onClose }) => {
+export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 	const [selectedReason, setSelectedReason] = useState<string | null>(null);
 	const [otherReason, setOtherReason] = useState('');
 
-	const handleReasonChange = (reason: string) => {
-		setSelectedReason(reason);
-		if (reason !== '기타') {
-			setOtherReason('');
-		}
+	const handleOptionChange = (reason: string) => {
+		setSelectedReason(selectedReason === reason ? null : reason);
+
+		if (reason !== '기타') setOtherReason('');
 	};
 
 	const isSubmitEnabled = selectedReason !== null && (selectedReason !== '기타' || otherReason.trim().length > 0);
 
+	const handleSubmitButtonClick = async () => {
+		const isNews = type === 'news';
+
+		const reportData: PostReportDetailRequest = {
+			reason: selectedReason === '기타' ? otherReason.trim() : selectedReason!,
+			...(type === 'news' ? { news: pk } : { board: pk }),
+		};
+		console.log(reportData); // 디버깅
+
+		const result = await postReport(reportData, isNews);
+
+		if (result) {
+			alert('신고가 접수되었습니다.');
+			console.log(result);
+			onClose();
+		} else {
+			alert('신고 접수에 실패했습니다. 다시 시도해주세요.');
+			console.log(result);
+		}
+	};
+
 	return (
 		<div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
-			<div className="bg-black-000 px-[35px] py-6 rounded-[10px] w-[378px]">
-				<div className="flex gap-24 ml-24">
-					<h2 className="title3-semibold text-black-900 mb-10.5">게시글 신고</h2>
-					<button onClick={onClose}>
-						<Image src="/x.svg" alt="취소 버튼" width={24} height={24} />
+			<div className="bg-black-000 px-[2.1875rem] py-6 rounded-[0.625rem] w-[23.625rem]">
+				<div className="flex justify-between items-center mb-10.5">
+					<h2 className="title3-semibold text-black-900 text-center flex-grow">게시글 신고</h2>
+					<button onClick={onClose} className="ml-auto">
+						<Image src="/x.svg" alt="닫기 버튼" width={24} height={24} />
 					</button>
 				</div>
 				<div className="flex flex-col gap-4">
-					{REPORT_REASONS.map((reason) => (
-						<label key={reason} className="flex body5-regular items-center gap-2 text-black-900 cursor-pointer">
-							<input
-								type="radio"
-								name="reportReason"
-								value={reason}
-								checked={selectedReason === reason}
-								onChange={() => handleReasonChange(reason)}
-								className="appearance-none w-4.5 h-4.5 border border-black-300 rounded-[2px] checked:bg-black-900 checked:bg-[url('/check-icon.svg')] checked:bg-center checked:bg-no-repeat cursor-pointer"
-							/>
+					{reportOptions.map((reason) => (
+						<div
+							key={reason}
+							className="flex items-center gap-2 text-black-900 cursor-pointer"
+							onClick={() => handleOptionChange(reason)}
+						>
+							<div
+								className={`w-5 h-5 border border-black-300 rounded flex items-center justify-center 
+									${selectedReason === reason ? 'bg-black-900 border-black-900' : 'bg-black-000'}`}
+							>
+								{selectedReason === reason && <Image src="/check.svg" alt="선택됨" width={12} height={12} />}
+							</div>
 							{reason}
-						</label>
+						</div>
 					))}
 
 					{selectedReason === '기타' && (
@@ -65,8 +81,9 @@ const ReportModal: React.FC<ReportModalProps> = ({ onClose }) => {
 
 				<div className="flex justify-end gap-2 mt-4">
 					<button
+						onClick={handleSubmitButtonClick}
 						disabled={!isSubmitEnabled}
-						className={`w-77 px-4 py-[10px] rounded-lg ${
+						className={`w-77 px-4 py-[0.625rem] rounded-lg ${
 							isSubmitEnabled ? 'bg-black-900 text-black-000' : 'bg-black-300 text-black-500 cursor-not-allowed'
 						}`}
 					>
@@ -76,6 +93,4 @@ const ReportModal: React.FC<ReportModalProps> = ({ onClose }) => {
 			</div>
 		</div>
 	);
-};
-
-export default ReportModal;
+}
