@@ -1,3 +1,4 @@
+import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
 import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 
@@ -13,7 +14,7 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments, commentItemPro
 				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
 
-			<div className="flex flex-col pr-2">
+			<div className="flex flex-col pr-2 mb-12">
 				{comments.map((comment) => (
 					<div key={comment.pk}>
 						<CommentItem content={comment} {...commentItemProps} />
@@ -30,6 +31,7 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments, commentItemPro
 					</div>
 				))}
 			</div>
+			<PaginationBar currentPage={1} totalPages={10} onPageChange={() => {}} />
 		</div>
 	);
 };
