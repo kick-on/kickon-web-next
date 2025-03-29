@@ -50,7 +50,6 @@ export default function AccountSelectBox({
 	useEffect(() => {
 		const getOptions = async () => {
 			const response = isLeagueSelectBox ? await getLeague() : await getTeam(league);
-			console.log(response);
 
 			if (!response) return;
 			setOptions(response.data);

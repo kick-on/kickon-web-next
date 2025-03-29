@@ -1,17 +1,45 @@
+'use client';
+
 import ComponentFrame from '@/components/common/componentFrame';
 import RankingItem from './ranking-item';
 import SelectBox from './select-box';
 import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/ranking';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
+import { LeagueDto } from '@/services/apis/league/dto';
+import { useEffect, useState } from 'react';
+import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/dto';
 
-export default async function RankingList({ mode }: { mode: 'season' | 'predict' }) {
-	const response = mode === 'predict' ? await getGambleSeasonRanking(1) : await getActualSeasonRanking(1);
+export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
+	const [ranking, setRanking] = useState<GambleRankingDto[] | ActualRankingDto[] | null>();
+	const [league, setLeague] = useState<LeagueDto>({
+		pk: 1,
+		krName: '프리미어 리그',
+		enName: 'Premier League',
+		logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
+		leagueType: 'League',
+	});
+
+	const handleLeagueChange = (selectedLeague: LeagueDto) => {
+		if (league.pk === selectedLeague.pk) return;
+		setLeague(selectedLeague);
+	};
+
+	useEffect(() => {
+		const getRanking = async () => {
+			const leaguePk = league.pk;
+			const response =
+				mode === 'predict' ? await getGambleSeasonRanking(leaguePk) : await getActualSeasonRanking(leaguePk);
+			setRanking(response?.data || null);
+		};
+
+		getRanking();
+	}, [league, mode]);
 
 	return (
 		<ComponentFrame>
 			<div className="p-4 title5-semibold">{mode === 'season' ? '이번 시즌 순위' : '승부예측 순위'}</div>
 			<div className="p-4 pl-2 border border-black-200 border-x-0 button4-medium">
-				<SelectBox />
+				<SelectBox content={league.krName} onChange={handleLeagueChange} />
 			</div>
 			<div className="flex justify-between p-4 subtitle2-medium text-black-700">
 				<div className="w-7 text-center">순위</div>
@@ -31,10 +59,10 @@ export default async function RankingList({ mode }: { mode: 'season' | 'predict'
 				</div>
 			</div>
 			<div className="p-4 pt-0">
-				{response === null ? (
+				{!ranking ? (
 					<FetchingFailedCard height="356px" marginTop="50px" />
 				) : (
-					response.data.map(({ rankOrder }) => <RankingItem key={rankOrder} mode={mode} />)
+					ranking.map(({ rankOrder }) => <RankingItem key={rankOrder} mode={mode} />)
 				)}
 			</div>
 		</ComponentFrame>
