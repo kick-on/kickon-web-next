@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import OptionItem from './option-item';
 import clsx from 'clsx';
-import { leagues } from '@/lib/constants/leagues';
 import { getLeague } from '@/services/apis/league';
 import { getTeam } from '@/services/apis/team';
 import { TeamDto } from '@/services/apis/team/dto';
@@ -19,7 +18,7 @@ export default function AccountSelectBox({
 }: {
 	category: '리그' | '응원팀';
 	league?: number;
-	content: { name: string; logoUrl: string };
+	content: { krName: string; logoUrl: string };
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
 }) {
@@ -35,7 +34,8 @@ export default function AccountSelectBox({
 	const handleOptionClick = (selectedPk: number) => {
 		let selectedOption = {
 			pk: -1,
-			name: '응원팀이 없어요.',
+			krName: '응원팀이 없어요.',
+			enName: 'no cheering team',
 			logoUrl: '/ban.svg',
 		};
 
@@ -50,6 +50,7 @@ export default function AccountSelectBox({
 	useEffect(() => {
 		const getOptions = async () => {
 			const response = isLeagueSelectBox ? await getLeague() : await getTeam(league);
+			console.log(response);
 
 			if (!response) return;
 			setOptions(response.data);
@@ -92,8 +93,8 @@ export default function AccountSelectBox({
 						${content ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
-					{content && <Image width={18} height={18} src={content.logoUrl} alt={content.name} />}
-					{content ? content.name : '선택해 주세요.'}
+					{content && <Image width={18} height={18} src={content.logoUrl} alt={content.krName} />}
+					{content ? content.krName : '선택해 주세요.'}
 					{isEditable && (
 						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
 					)}
@@ -106,11 +107,11 @@ export default function AccountSelectBox({
 								key={option.pk}
 								className={clsx('bg-black-000 hover:bg-black-150 transition-colors', {
 									'rounded-t-[0.5625rem]': index === 0,
-									'rounded-b-[0.5625rem]': index === leagues.length - 1 && isLeagueSelectBox,
+									'rounded-b-[0.5625rem]': index === options.length - 1 && !isLeagueSelectBox,
 								})}
 							>
 								<OptionItem onClick={handleOptionClick} {...option} />
-								{index < leagues.length - 1 && <hr className="border-black-300" />}
+								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
 						{isLeagueSelectBox && (
@@ -118,7 +119,7 @@ export default function AccountSelectBox({
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
 							>
-								<OptionItem onClick={handleOptionClick} pk={-1} name="응원팀이 없어요." logoUrl="/ban.svg" />
+								<OptionItem onClick={handleOptionClick} pk={-1} krName="응원팀이 없어요." logoUrl="/ban.svg" />
 							</div>
 						)}
 					</div>
