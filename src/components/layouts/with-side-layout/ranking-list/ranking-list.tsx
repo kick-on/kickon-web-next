@@ -6,14 +6,14 @@ import SelectBox from './select-box';
 import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/ranking';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { LeagueDto } from '@/services/apis/league/dto';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/dto';
 
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const [ranking, setRanking] = useState<GambleRankingDto[] | ActualRankingDto[] | null>();
 	const [league, setLeague] = useState<LeagueDto>({
 		pk: 1,
-		krName: '프리미어 리그',
+		krName: '프리미어리그',
 		enName: 'Premier League',
 		logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
 		leagueType: 'League',
@@ -24,16 +24,17 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 		setLeague(selectedLeague);
 	};
 
-	useEffect(() => {
-		const getRanking = async () => {
-			const leaguePk = league.pk;
-			const response =
-				mode === 'predict' ? await getGambleSeasonRanking(leaguePk) : await getActualSeasonRanking(leaguePk);
-			setRanking(response?.data || null);
-		};
+	const getRanking = useCallback(async () => {
+		const leaguePk = league.pk;
+		const response =
+			mode === 'season' ? await getActualSeasonRanking(leaguePk) : await getGambleSeasonRanking(leaguePk);
+		setRanking(response?.data || null);
+		console.log(response);
+	}, [league.pk, mode]);
 
+	useEffect(() => {
 		getRanking();
-	}, [league, mode]);
+	}, [getRanking]);
 
 	return (
 		<ComponentFrame>
@@ -59,8 +60,8 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 				</div>
 			</div>
 			<div className="p-4 pt-0">
-				{!ranking ? (
-					<FetchingFailedCard height="356px" marginTop="50px" />
+				{!ranking || !ranking.length ? (
+					<FetchingFailedCard onClick={getRanking} height="356px" marginTop="50px" />
 				) : (
 					ranking.map(({ rankOrder }) => <RankingItem key={rankOrder} mode={mode} />)
 				)}
