@@ -13,8 +13,8 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const [ranking, setRanking] = useState<GambleRankingDto[] | ActualRankingDto[] | null>();
 	const [league, setLeague] = useState<LeagueDto>({
 		pk: 1,
-		krName: '프리미어리그',
-		enName: 'Premier League',
+		nameKr: '프리미어리그',
+		nameEn: 'Premier League',
 		logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
 		leagueType: 'League',
 	});
@@ -40,7 +40,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 		<ComponentFrame>
 			<div className="p-4 title5-semibold">{mode === 'season' ? '이번 시즌 순위' : '승부예측 순위'}</div>
 			<div className="p-4 pl-2 border border-black-200 border-x-0 button4-medium">
-				<SelectBox content={league.krName} onChange={handleLeagueChange} />
+				<SelectBox content={league.nameKr} onChange={handleLeagueChange} />
 			</div>
 			<div className="flex justify-between p-4 subtitle2-medium text-black-700">
 				<div className="w-7 text-center">순위</div>

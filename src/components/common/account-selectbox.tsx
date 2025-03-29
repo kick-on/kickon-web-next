@@ -18,7 +18,7 @@ export default function AccountSelectBox({
 }: {
 	category: '리그' | '응원팀';
 	league?: number;
-	content: { krName: string; logoUrl: string };
+	content: LeagueDto | TeamDto;
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
 }) {
@@ -34,13 +34,23 @@ export default function AccountSelectBox({
 	const handleOptionClick = (selectedPk: number) => {
 		let selectedOption = {
 			pk: -1,
-			krName: '응원팀이 없어요.',
-			enName: 'no cheering team',
+			nameKr: '응원팀이 없어요.',
+			nameEn: 'no cheering team',
 			logoUrl: '/ban.svg',
 		};
 
 		if (selectedPk !== -1) {
-			selectedOption = options.find((option) => option.pk === selectedPk);
+			if (category === '리그') {
+				const selectedLeague = options.find((option) => option.pk === selectedPk) as LeagueDto;
+				selectedOption = {
+					pk: selectedLeague.pk,
+					nameKr: selectedLeague.nameKr,
+					nameEn: selectedLeague.nameEn,
+					logoUrl: selectedLeague.logoUrl,
+				};
+			} else {
+				selectedOption = options.find((option) => option.pk === selectedPk) as TeamDto;
+			}
 		}
 
 		onChange(selectedOption);
@@ -92,14 +102,14 @@ export default function AccountSelectBox({
 						${content ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
-					{content && <Image width={18} height={18} src={content.logoUrl} alt={content.krName} />}
-					{content ? content.krName : '선택해 주세요.'}
+					{content && <Image width={18} height={18} src={content.logoUrl} alt={content.nameKr} />}
+					{content ? content.nameKr : '선택해 주세요.'}
 					{isEditable && (
 						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
 					)}
 				</button>
 
-				{isVisibleOptions && (
+				{isVisibleOptions && !!options.length && (
 					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]">
 						{options.map((option, index) => (
 							<div
@@ -118,7 +128,7 @@ export default function AccountSelectBox({
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
 							>
-								<OptionItem onClick={handleOptionClick} pk={-1} krName="응원팀이 없어요." logoUrl="/ban.svg" />
+								<OptionItem onClick={handleOptionClick} pk={-1} nameKr="응원팀이 없어요." logoUrl="/ban.svg" />
 							</div>
 						)}
 					</div>
