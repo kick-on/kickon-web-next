@@ -10,6 +10,7 @@ import { updatePrivacy } from '@/services/auth';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function Page() {
 	const [nickname, setNickname] = useState('');
@@ -80,7 +81,7 @@ export default function Page() {
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
 				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
-				{league && league.pk !== -1 && (
+				{league && league.pk !== NO_CHEERING_TEAM_PK && (
 					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
 				)}
 			</div>

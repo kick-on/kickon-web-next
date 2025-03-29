@@ -8,6 +8,7 @@ import { getLeague } from '@/services/apis/league';
 import { getTeam } from '@/services/apis/team';
 import { TeamDto } from '@/services/apis/team/dto';
 import { LeagueDto } from '@/services/apis/league/dto';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function AccountSelectBox({
 	category,
@@ -33,13 +34,13 @@ export default function AccountSelectBox({
 
 	const handleOptionClick = (selectedPk: number) => {
 		let selectedOption = {
-			pk: -1,
+			pk: NO_CHEERING_TEAM_PK,
 			nameKr: '응원팀이 없어요.',
 			nameEn: 'no cheering team',
 			logoUrl: '/ban.svg',
 		};
 
-		if (selectedPk !== -1) {
+		if (selectedPk !== NO_CHEERING_TEAM_PK) {
 			if (category === '리그') {
 				const selectedLeague = options.find((option) => option.pk === selectedPk) as LeagueDto;
 				selectedOption = {
