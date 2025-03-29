@@ -5,6 +5,6 @@ export interface UpdatePrivacyRequest {
 
 export interface UpdateUserInfoRequest {
 	nickname: string;
-	team: number;
-	league: number;
+	team?: number;
+	league?: number;
 }

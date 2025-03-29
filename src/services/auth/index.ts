@@ -13,14 +13,14 @@ export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
 		}
 		return response;
 	} catch (error) {
-		console.error(error);
+		console.error('개인정보 동의 실패: ', error);
 	}
 };
 
 // 유저 정보 수정
 export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 	try {
-		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user/privacy', body);
+		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user', body);
 
 		if (response.code !== 'SUCCESS') {
 			console.error(response);
@@ -28,6 +28,6 @@ export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 		}
 		return response;
 	} catch (error) {
-		console.error(error);
+		console.error('유저 정보 수정 실패: ', error);
 	}
 };
