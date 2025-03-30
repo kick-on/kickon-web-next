@@ -3,9 +3,16 @@
 import Image from 'next/image';
 import LoginButton from './login-button';
 import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { SERVER_URL } from '@/services/config/constants';
 
 export default function LoginModal({ onClose }) {
+	const router = useRouter();
 	const modalRef = useRef<HTMLDivElement | null>(null);
+
+	const handleKakaoLoginButtonClick = () => {
+		router.push(`${SERVER_URL}/oauth2/authorization/kakao?state=http://localhost:3000`);
+	};
 
 	useEffect(() => {
 		const handleOutsideClick = (e: MouseEvent) => {
@@ -38,7 +45,7 @@ export default function LoginModal({ onClose }) {
 				<div>좋아하는 축구팀 승부예측하러 가요!</div>
 
 				<div className="mt-[6.625rem] flex flex-col gap-5">
-					<LoginButton social="카카오" onClick={() => {}} />
+					<LoginButton social="카카오" onClick={handleKakaoLoginButtonClick} />
 					<LoginButton social="네이버" onClick={() => {}} />
 				</div>
 			</div>

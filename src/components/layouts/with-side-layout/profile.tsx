@@ -5,11 +5,11 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Profile() {
 	const searchParams = useSearchParams();
-	const [isLoggedin, setIsLoggedin] = useState(true);
+	const [isLoggedin, setIsLoggedin] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));
 
 	const handleLoginButtonClick = () => {
@@ -19,6 +19,14 @@ export default function Profile() {
 	const handleLoginModalClose = () => {
 		setIsLoginModalOpen(false);
 	};
+
+	useEffect(() => {
+		const accessToken = localStorage.getItem('accessToken');
+
+		if (accessToken) {
+			// 유저정보조회 api 호출 후 성공하면 setIsLoggedIn을 true로
+		}
+	}, []);
 
 	return (
 		<>
