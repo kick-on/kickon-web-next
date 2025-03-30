@@ -1,6 +1,7 @@
-import type { UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
+import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
 import type { EmptySuccessResponse, FailResponse } from '../config/dto';
 import axiosInstance from '../config/axiosInstance';
+import { SERVER_URL } from '../config/constants';
 
 // 개인정보 동의 업데이트
 export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
@@ -29,5 +30,19 @@ export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 		return response;
 	} catch (error) {
 		console.error('유저 정보 수정 실패: ', error);
+	}
+};
+
+export const getUserInfo = async () => {
+	try {
+		const response = await axiosInstance.get<GetUserInfoResponse | FailResponse>('/api/user/me');
+
+		if (!response.code.split('_').includes('SUCCESS')) {
+			console.error(response);
+			return response.message;
+		}
+		return response;
+	} catch (error) {
+		console.error('유저 정보 조회 실패: ', error);
 	}
 };
