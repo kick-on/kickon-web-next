@@ -52,7 +52,7 @@ export default function Page() {
 	const handleCompleteButtonClick = () => {
 		const body: UpdateUserInfoRequest = {
 			nickname,
-			team: team.pk,
+			team: team.pk === -1 ? undefined : team.pk, // 응원하는 팀이 없는 경우 team을 undefined로
 			// league: league.pk, 현재 서버에서 league를 처리하지 않음
 		};
 
