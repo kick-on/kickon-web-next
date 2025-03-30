@@ -5,14 +5,16 @@ import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
-import { UpdatePrivacyRequest } from '@/services/auth/dto';
-import { updatePrivacy } from '@/services/auth';
+import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
+import { updatePrivacy, updateUserInfo } from '@/services/auth';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+	const router = useRouter();
 	const [nickname, setNickname] = useState('');
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
@@ -61,13 +63,28 @@ export default function Page() {
 	};
 
 	const handleSignupButtonClick = async () => {
-		const request: UpdatePrivacyRequest = {
-			privacyAgreedAt: agreements.privacy && new Date().toISOString(),
-			marketingAgreedAt: agreements.marketing && new Date().toISOString(),
+		const privacyRequest: UpdatePrivacyRequest = {
+			privacyAgreedAt: agreements.privacy && new Date().toISOString().split('.')[0] + 'Z',
+			marketingAgreedAt: agreements.marketing ? new Date().toISOString().split('.')[0] + 'Z' : undefined,
 		};
+		const privacyResponse = await updatePrivacy(privacyRequest);
 
-		const response = await updatePrivacy(request);
-		console.log(response);
+		if (typeof privacyResponse === 'string') {
+			console.log(privacyResponse);
+		} else {
+			// 회원가입 성공 시 유저 정보 수정 후 홈으로 이동
+			const userInfoRequest: UpdateUserInfoRequest = {
+				nickname: nickname,
+				team: team.pk === -1 ? undefined : team.pk,
+			};
+			const userInfoResponse = updateUserInfo(userInfoRequest);
+
+			if (typeof userInfoResponse === 'string') {
+				console.log(userInfoResponse);
+			} else {
+				router.push('/');
+			}
+		}
 	};
 
 	return (
