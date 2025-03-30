@@ -4,10 +4,11 @@ import ComponentFrame from '@/components/common/componentFrame';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Profile() {
+	const router = useRouter();
 	const searchParams = useSearchParams();
 	const [isLoggedin, setIsLoggedin] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));
@@ -18,6 +19,11 @@ export default function Profile() {
 
 	const handleLoginModalClose = () => {
 		setIsLoginModalOpen(false);
+	};
+
+	const handleLogoutButtonClick = () => {
+		localStorage.clear();
+		router.push('/');
 	};
 
 	useEffect(() => {
@@ -51,7 +57,12 @@ export default function Profile() {
 									</Link>
 								</div>
 							</div>
-							<button className="mr-2.5 mt-0 h-fit button6-regular text-black-700 underline">로그아웃</button>
+							<button
+								onClick={handleLogoutButtonClick}
+								className="mr-2.5 mt-0 h-fit button6-regular text-black-700 underline"
+							>
+								로그아웃
+							</button>
 						</div>
 						<div className="grid grid-cols-2">
 							<div className="flex border-r border-black-200">
