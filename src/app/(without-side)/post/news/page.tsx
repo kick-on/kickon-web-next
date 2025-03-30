@@ -5,6 +5,9 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { mockSearchResults, newsOptions } from '@/lib/constants/options';
+import { PostNewsContentsRequest } from '@/services/apis/post/dto';
+import { createNewPost } from '@/services/apis/post';
+import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
 export default function Page() {
 	const [searchTerm, setSearchTerm] = useState('');
@@ -74,14 +77,24 @@ export default function Page() {
 		};
 	}, []);
 
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
-		if (file) {
-			const imageUrl = URL.createObjectURL(file);
-			setSelectedImage(imageUrl);
+		if (!file) return;
+
+		try {
+			// 1. Presigned URL 요청
+			const presignedResponse = await getPresignedUrl(file.name);
+			const { presignedUrl, s3Url } = presignedResponse.data;
+
+			// 2. Presigned URL을 사용해 S3에 업로드
+			await uploadToS3(presignedUrl, file);
+
+			// 3. 업로드된 S3 URL을 상태에 저장 (서버에 보낼 URL)
+			setSelectedImage(s3Url);
+		} catch (error) {
+			console.error('파일 업로드 실패:', error);
 		}
 	};
-
 	const handleRemoveImage = () => {
 		setSelectedImage(null);
 	};
@@ -94,6 +107,21 @@ export default function Page() {
 	};
 
 	console.log(body);
+
+	const postNewsContents = async () => {
+		if (!isFormValid) return;
+
+		const requestBody: PostNewsContentsRequest = {
+			team: 2, // 임시...
+			title: title.trim(),
+			contents: body.trim(),
+			thumbnailUrl: selectedImage || '', // 선택한 대표 이미지가 있으면 URL 포함
+			category: 'INJURY', // 임시...
+		};
+		const response = await createNewPost(requestBody);
+		console.log(response);
+	};
+
 	return (
 		<div className="flex flex-col mx-auto">
 			{selectedImage ? (
@@ -222,7 +250,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={isFormValid ? () => console.log('완료') : undefined}
+					onClick={isFormValid ? postNewsContents : undefined}
 					disabled={!isFormValid}
 					className={clsx(
 						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',

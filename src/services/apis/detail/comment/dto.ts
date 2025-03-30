@@ -21,5 +21,11 @@ export interface PostCommentKickRequest {
 	reply: number; // 댓글 PK값
 }
 
+export interface createNewReplyRequest {
+	news: number;
+	parentReply?: number;
+	contents: string;
+}
+
 // 댓글 조회 응답
 export type GetCommentsResponse = SuccessResponse<CommentDto[]>;

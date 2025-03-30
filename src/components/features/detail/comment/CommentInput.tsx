@@ -1,16 +1,27 @@
+import { postCreateReply } from '@/services/apis/detail/comment';
 import { useEffect, useRef, useState } from 'react';
 
 interface CommentInputProps {
 	type?: 'comment' | 'reply';
 	mentionNickname?: string;
+	parentReplyId?: number;
+	contentType: 'news' | 'board';
+	contentsId: number;
 }
 
-const CommentInput = ({ type = 'comment', mentionNickname }: CommentInputProps) => {
+const CommentInput = ({
+	type = 'comment',
+	mentionNickname,
+	contentsId,
+	parentReplyId,
+	contentType,
+}: CommentInputProps) => {
 	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
 	const [scrollThumbHeight, setScrollThumbHeight] = useState(0);
-	const [, setContent] = useState('');
+	const [content, setContent] = useState('');
 	const [, setCharCount] = useState(0);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	useEffect(() => {
 		if (type === 'reply' && mentionNickname && inputRef.current) {
@@ -51,12 +62,42 @@ const CommentInput = ({ type = 'comment', mentionNickname }: CommentInputProps) 
 	const handleInput = () => {
 		if (inputRef.current) {
 			const inputText = inputRef.current.innerHTML;
-			const plainText = inputText.replace(/<[^>]*>/g, '');
-			if (plainText.length <= 1000) {
-				setContent(inputText);
-				setCharCount(plainText.length);
+			const plainText = inputText.replace(/<[^>]*>/g, ''); // HTML 태그 제거
+
+			// @mentionNickname&nbsp; 포함해서 제거
+			const mentionPattern = new RegExp(`^@${mentionNickname}&nbsp;`);
+			const textWithoutMention = mentionPattern.test(plainText)
+				? plainText.replace(mentionPattern, '') // 멘션 제거
+				: plainText;
+
+			if (textWithoutMention.length <= 1000) {
+				setContent(textWithoutMention);
+				setCharCount(textWithoutMention.length);
 			}
 		}
+	};
+	const handleSubmit = async () => {
+		if (!content.trim()) return alert('내용을 입력해주세요!');
+		if (isSubmitting) return;
+
+		setIsSubmitting(true);
+
+		// request 보내기 전에 @mentionNickname 제거
+		const mentionPattern = new RegExp(`^@${mentionNickname}&nbsp;`);
+		const sanitizedContent = mentionPattern.test(content) ? content.replace(mentionPattern, '') : content;
+
+		const requestBody = {
+			news: contentsId,
+			contents: sanitizedContent, // 멘션 제거한 내용만 전송
+			...(type === 'reply' && parentReplyId ? { parentReply: parentReplyId } : {}),
+		};
+		console.log(requestBody);
+
+		await postCreateReply(contentType, requestBody);
+
+		setContent('');
+		if (inputRef.current) inputRef.current.innerHTML = '';
+		setIsSubmitting(false);
 	};
 
 	return (
@@ -86,8 +127,14 @@ const CommentInput = ({ type = 'comment', mentionNickname }: CommentInputProps) 
 				</div>
 
 				{/* 등록 버튼 */}
-				<button className="w-13.5 h-full bg-primary-900 border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem]">
-					등록
+				<button
+					onClick={handleSubmit}
+					disabled={isSubmitting}
+					className={`w-13.5 h-full bg-primary-900 border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem] ${
+						isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+					}`}
+				>
+					{isSubmitting ? '등록 중...' : '등록'}
 				</button>
 			</div>
 		</div>

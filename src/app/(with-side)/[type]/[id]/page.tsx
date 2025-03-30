@@ -10,6 +10,7 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { getCommentList } from '@/services/apis/detail/comment';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
+
 const config = {
 	news: { allowComments: true, imagePosition: 'top' },
 	board: { allowComments: true, imagePosition: 'bottom' },
@@ -48,7 +49,13 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 					<FetchingFailedCard height="800px" marginTop="200px" />
 				)}
 				{comments ? (
-					<CommentSection allowComments={allowComments} isOurTeamNews={isOurTeamNews} comments={comments.data} />
+					<CommentSection
+						type={type}
+						allowComments={allowComments}
+						isOurTeamNews={isOurTeamNews}
+						comments={comments.data}
+						contentsId={contents.data.pk}
+					/>
 				) : (
 					<FetchingFailedCard height="300px" marginTop="50px" />
 				)}

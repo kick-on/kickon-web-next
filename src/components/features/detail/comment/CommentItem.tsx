@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import CommentInput from './CommentInput';
 
 const CommentItem = ({
+	type,
 	content,
 	likedComments,
 	handleLikeToggle,
@@ -13,7 +14,8 @@ const CommentItem = ({
 	replyVisibilities,
 	isReply = false,
 	isOurTeamNews,
-	parentNickname,
+	parentReply,
+	contentsId,
 }) => {
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
@@ -62,7 +64,7 @@ const CommentItem = ({
 					</div>
 
 					<p className="body5-regular text-black-900 mt-3 mb-3.5">
-						{isReply && <span className="text-[#890f0e] mr-1">@{parentNickname}</span>}
+						{isReply && <span className="text-[#890f0e] mr-1">@{parentReply}</span>}
 						{content.contents}
 					</p>
 
@@ -92,7 +94,15 @@ const CommentItem = ({
 						)}
 					</div>
 
-					{isReplyInputOpen && <CommentInput type="reply" mentionNickname={content.user.nickname} />}
+					{isReplyInputOpen && (
+						<CommentInput
+							type="reply"
+							contentsId={contentsId}
+							parentReplyId={content.pk}
+							contentType={type}
+							mentionNickname={content.user.nickname}
+						/>
+					)}
 				</div>
 			</div>
 			<hr className="border-t border-black-300 -mx-4" />

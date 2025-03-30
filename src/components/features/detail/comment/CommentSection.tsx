@@ -5,7 +5,7 @@ import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 import { postCommentKick } from '@/services/apis/detail/comment';
 
-const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
+const CommentSection = ({ type, allowComments, isOurTeamNews, comments, contentsId }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
@@ -29,6 +29,7 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
 	};
 
 	const commentItemProps = {
+		type,
 		likedComments,
 		handleLikeToggle: toggleCommentLike,
 		handleReply: toggleReplyInputVisibility,
@@ -36,6 +37,7 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
 		replyingTo,
 		replyVisibilities,
 		isOurTeamNews,
+		contentsId,
 	};
 
 	const totalComments = Array.isArray(comments)
@@ -44,14 +46,14 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
 
 	return (
 		<div className="px-4">
-			{allowComments && isOurTeamNews && <CommentInput />}
+			{allowComments && isOurTeamNews && <CommentInput contentType={type} contentsId={contentsId} />}
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
 				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
 			<div className="flex flex-col pr-2">
 				{comments.map((comment) => (
 					<div key={comment.pk}>
-						<CommentItem content={comment} {...commentItemProps} parentNickname={comment.user.nickname} />
+						<CommentItem content={comment} {...commentItemProps} parentReply={comment.user.nickname} />
 						{replyVisibilities[comment.pk] &&
 							comment.replies?.map((reply) => (
 								<CommentItem
@@ -59,7 +61,7 @@ const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
 									content={reply}
 									{...commentItemProps}
 									isReply
-									parentNickname={comment.user.nickname}
+									parentReply={comment.user.nickname}
 								/>
 							))}
 					</div>
