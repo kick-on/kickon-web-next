@@ -93,6 +93,7 @@ export default function Page() {
 		}
 	};
 
+	console.log(body);
 	return (
 		<div className="flex flex-col mx-auto">
 			{selectedImage ? (

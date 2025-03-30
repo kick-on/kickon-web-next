@@ -10,6 +10,7 @@ import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import Toolbar from './tool-bar';
+import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
 const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; setBody: (body: string) => void }) => {
 	const [linkUrl, setLinkUrl] = useState('');
@@ -94,20 +95,30 @@ const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; 
 		}
 	};
 
-	const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (!event.target.files?.length) return;
+	const handleAddImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files?.length || !editor) return;
 		const file = event.target.files[0];
-		const reader = new FileReader();
-		reader.onload = () => {
-			if (reader.result) {
-				editor
-					?.chain()
-					.focus()
-					.setImage({ src: reader.result as string })
-					.run();
-			}
-		};
-		reader.readAsDataURL(file);
+
+		try {
+			// Presigned URL 요청
+			const presignedResponse = await getPresignedUrl(file.name);
+			const { presignedUrl, s3Url } = presignedResponse.data;
+			console.log('S3 URL 요청', presignedResponse);
+			console.log('받은 presignedUrl:', presignedUrl);
+			console.log('URL 길이:', presignedUrl.length);
+
+			// 2️⃣ Presigned URL로 S3에 이미지 업로드
+			await uploadToS3(presignedUrl, file);
+
+			// 3️⃣ 업로드된 이미지 URL을 에디터에 추가
+			editor.chain().focus().setImage({ src: s3Url }).run();
+
+			// 4️⃣ 에디터의 내용을 업데이트 (이미지 포함)
+			const updatedContent = editor.getHTML();
+			setBody(updatedContent);
+		} catch (error) {
+			console.error('이미지 업로드 실패:', error);
+		}
 	};
 
 	const handleInsertLink = () => {
@@ -129,7 +140,7 @@ const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; 
 			.focus()
 			.setYoutubeVideo({
 				src: `https://www.youtube.com/watch?v=${youtubeId}`,
-				width: 640,
+				width: 600,
 				height: 360,
 			})
 			.run();

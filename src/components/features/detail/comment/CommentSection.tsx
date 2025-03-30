@@ -3,14 +3,21 @@
 import { useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
+import { postCommentKick } from '@/services/apis/detail/comment';
 
 const CommentSection = ({ allowComments, isOurTeamNews, comments }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
 
-	const toggleCommentLike = (commentId: string) => {
-		setLikedComments((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
+	const toggleCommentLike = async (commentId: number) => {
+		console.log({ reply: commentId });
+		try {
+			await postCommentKick(commentId, true);
+			setLikedComments((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
+		} catch (error) {
+			console.error('Failed to kick comment:', error);
+		}
 	};
 
 	const toggleReplyInputVisibility = (commentId: string) => {

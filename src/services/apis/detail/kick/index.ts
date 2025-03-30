@@ -4,6 +4,7 @@ export const postContentLike = async (id: number, isNews: boolean = false): Prom
 	const body = JSON.stringify({ [isNews ? 'news' : 'board']: id });
 
 	const endpoint = isNews ? 'news-kick' : 'board-kick';
+	console.log(body);
 	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
 		method: 'POST',
 		headers: {

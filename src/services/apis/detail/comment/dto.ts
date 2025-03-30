@@ -16,5 +16,10 @@ export interface CommentDto {
 	kicked: boolean;
 }
 
+// 댓글 킥 요청
+export interface PostCommentKickRequest {
+	reply: number; // 댓글 PK값
+}
+
 // 댓글 조회 응답
 export type GetCommentsResponse = SuccessResponse<CommentDto[]>;
