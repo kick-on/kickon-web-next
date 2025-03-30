@@ -7,7 +7,7 @@ export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
 	try {
 		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user/privacy', body);
 
-		if (response.code !== 'SUCCESS') {
+		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
 			return response.message;
 		}
@@ -22,7 +22,7 @@ export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 	try {
 		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user', body);
 
-		if (response.code !== 'SUCCESS') {
+		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
 			return response.message;
 		}
