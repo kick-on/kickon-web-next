@@ -5,40 +5,19 @@ import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
-import { leagues } from '@/lib/constants/leagues';
-
-const checkboxDatas = [
-	{
-		key: 'all',
-		content: '모두 동의',
-		hasTerm: false,
-	},
-	{
-		key: 'age',
-		content: '만 14세 이상 가입 동의 (필수)',
-		hasTerm: false,
-	},
-	{
-		key: 'term',
-		content: '서비스 이용약관 동의 (필수)',
-		hasTerm: true,
-	},
-	{
-		key: 'privacy',
-		content: '개인정보처리방침 동의 (필수)',
-		hasTerm: true,
-	},
-	{
-		key: 'marketing',
-		content: '마케팅 정보 수신 동의 (선택)',
-		hasTerm: true,
-	},
-];
+import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
+import { updatePrivacy, updateUserInfo } from '@/services/auth';
+import { agreementDatas } from '@/lib/constants/agreementDatas';
+import { LeagueDto } from '@/services/apis/league/dto';
+import { TeamDto } from '@/services/apis/team/dto';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+	const router = useRouter();
 	const [nickname, setNickname] = useState('');
-	const [league, setLeague] = useState('');
-	const [team, setTeam] = useState('');
+	const [league, setLeague] = useState<LeagueDto | null>(null);
+	const [team, setTeam] = useState<TeamDto | null>(null);
 	const [agreements, setAgreements] = useState({
 		all: false,
 		age: false,
@@ -83,6 +62,31 @@ export default function Page() {
 		}
 	};
 
+	const handleSignupButtonClick = async () => {
+		const privacyRequest: UpdatePrivacyRequest = {
+			privacyAgreedAt: agreements.privacy && new Date().toISOString().split('.')[0] + 'Z',
+			marketingAgreedAt: agreements.marketing ? new Date().toISOString().split('.')[0] + 'Z' : undefined,
+		};
+		const privacyResponse = await updatePrivacy(privacyRequest);
+
+		if (typeof privacyResponse === 'string') {
+			console.log(privacyResponse);
+		} else {
+			// 회원가입 성공 시 유저 정보 수정 후 홈으로 이동
+			const userInfoRequest: UpdateUserInfoRequest = {
+				nickname: nickname,
+				team: team.pk === -1 ? undefined : team.pk,
+			};
+			const userInfoResponse = updateUserInfo(userInfoRequest);
+
+			if (typeof userInfoResponse === 'string') {
+				console.log(userInfoResponse);
+			} else {
+				router.push('/');
+			}
+		}
+	};
+
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
 			<div className="mb-8 title1-bold">회원가입</div>
@@ -93,12 +97,14 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<AccountSelectbox category="리그" options={leagues} content={league} onChange={handleLeagueChange} />
-				{league && <AccountSelectbox category="응원팀" options={leagues} content={team} onChange={handleTeamChange} />}
+				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
+				{league && league.pk !== NO_CHEERING_TEAM_PK && (
+					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
+				)}
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
-				{checkboxDatas.map(({ key, content, hasTerm }) => (
+				{agreementDatas.map(({ key, content, hasTerm }) => (
 					<Checkbox
 						key={key}
 						content={content}
@@ -108,6 +114,7 @@ export default function Page() {
 					/>
 				))}
 				<button
+					onClick={handleSignupButtonClick}
 					disabled={isButtonDisabled}
 					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
 										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
