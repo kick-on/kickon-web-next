@@ -5,17 +5,31 @@ import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
 import { useState } from 'react';
 import AccountSelectBox from '@/components/common/account-selectbox';
-import { leagues } from '@/lib/constants/leagues';
+import { LeagueDto } from '@/services/apis/league/dto';
+import { TeamDto } from '@/services/apis/team/dto';
+import { UpdateUserInfoRequest } from '@/services/auth/dto';
+import { updateUserInfo } from '@/services/auth';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function Page() {
 	const [nickname, setNickname] = useState('가나다라');
-	const [league, setLeague] = useState('응원팀이 없어요.');
-	const [team, setTeam] = useState('프리미어 리그');
+	const [league, setLeague] = useState<LeagueDto>({
+		pk: NO_CHEERING_TEAM_PK,
+		nameKr: '응원팀이 없어요.',
+		nameEn: 'no cheering team',
+		logoUrl: '/ban.svg',
+	});
+	const [team, setTeam] = useState<TeamDto>({
+		pk: NO_CHEERING_TEAM_PK,
+		nameKr: '응원팀이 없어요.',
+		nameEn: 'no cheering team',
+		logoUrl: '/ban.svg',
+	});
 
 	const route = useRouter();
 
 	const isEditable = false;
-	const hasTeam = league !== '응원팀이 없어요.';
+	const hasTeam = league.nameKr !== '응원팀이 없어요.';
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -36,8 +50,23 @@ export default function Page() {
 	};
 
 	const handleCompleteButtonClick = () => {
-		// api 호출 후
-		route.push('/');
+		const body: UpdateUserInfoRequest = {
+			nickname,
+			team: team.pk === -1 ? undefined : team.pk, // 응원하는 팀이 없는 경우 team을 undefined로
+			// league: league.pk, 현재 서버에서 league를 처리하지 않음
+		};
+
+		editUserInfo(body);
+	};
+
+	const editUserInfo = async (body: UpdateUserInfoRequest) => {
+		const response = await updateUserInfo(body);
+
+		if (typeof response === 'string') {
+			alert(response);
+		} else {
+			route.push('/');
+		}
 	};
 
 	return (
@@ -54,33 +83,21 @@ export default function Page() {
 
 			<div className="flex flex-col gap-6">
 				<Nickname nickname={nickname} onChange={handleNicknameChange} />
-				<AccountSelectBox
-					isEditable={isEditable}
-					category={'리그'}
-					options={leagues}
-					content={league}
-					onChange={handleLeagueChange}
-				/>
+				<AccountSelectBox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
 				{hasTeam && (
-					<AccountSelectBox
-						isEditable={isEditable}
-						category={'응원팀'}
-						options={leagues}
-						content={team}
-						onChange={handleTeamChange}
-					/>
+					<AccountSelectBox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
 				)}
 			</div>
 
 			<div className="flex flex-col gap-2 mt-[4.25rem]">
 				<div className="flex gap-1.5 items-center subtitle1-medium">계정 관리</div>
-				<button
+				<div
 					className="flex gap-2.5 items-center px-4 py-3 w-full
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
 				>
 					<Image width={18} height={18} src="/sns/naver-small.svg" alt="네이버 로고" />
 					email.naver.com
-				</button>
+				</div>
 			</div>
 
 			<div className="mt-[6.25rem] flex gap-4">

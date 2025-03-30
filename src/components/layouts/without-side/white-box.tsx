@@ -4,7 +4,7 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const paddingMap: Record<string, string> = {
-	'/signup': 'py-[6.25rem]',
+	'/signup': 'pt-[6.25rem] pb-[6.25rem]',
 	'/post/news': 'px-4',
 	'/post/board': 'px-4',
 	'/profile-setting': 'pt-[8.25rem] pb-[4.25rem]', // 프로필 설정 페이지

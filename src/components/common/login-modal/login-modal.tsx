@@ -16,18 +16,23 @@ export default function LoginModal({ onClose }) {
 
 	useEffect(() => {
 		const handleOutsideClick = (e: MouseEvent) => {
-			if (modalRef && !modalRef.current.contains(e.target as Node)) {
+			if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
 				onClose();
+				router.replace('/');
+
+				// 뒤로 가기 히스토리를 없애기 위해 replaceState 사용
+				window.history.replaceState(null, '', '/');
 			}
 		};
 
 		document.addEventListener('click', handleOutsideClick);
 		document.body.style.overflow = 'hidden';
+
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
 			document.body.style.overflow = 'unset';
 		};
-	}, [onClose]);
+	}, [onClose, router]);
 
 	return (
 		<div className="fixed z-50 flex justify-center items-center top-0 left-0 w-full h-full bg-black/40">

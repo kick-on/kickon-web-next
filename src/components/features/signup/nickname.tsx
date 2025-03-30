@@ -1,7 +1,7 @@
 import Image from 'next/image';
 
 export default function Nickname({ nickname, onChange }) {
-	const isDuplicatedNickname = true;
+	const isDuplicatedNickname = false; // 현재 닉네임 중복 허용
 	const isInvalidNickname = !nickname || isDuplicatedNickname;
 	const invalidNicknameAlert = !nickname
 		? '닉네임을 입력해 주세요.'
