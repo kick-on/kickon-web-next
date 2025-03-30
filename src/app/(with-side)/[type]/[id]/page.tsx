@@ -1,15 +1,17 @@
 import { notFound } from 'next/navigation';
+
+import { mockNewsList } from '@/lib/mock';
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/CommentSection';
-import { allNews } from '@/components/common/category-tab/category-tab';
 import { getDetailByType } from '@/services/apis/detail';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { getCommentList } from '@/services/apis/detail/comment';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
+import PrivacyAgreementButton from '@/components/features/button';
 
 const config = {
 	news: { allowComments: true, imagePosition: 'top' },
@@ -22,7 +24,7 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 
 	const { type, id } = params;
 
-	if (!config[type]) return notFound(); // ✅ 유효한 type인지 확인
+	if (!config[type]) return notFound(); // 유효한 type인지 확인
 
 	const contents = (await getDetailByType(type as 'news' | 'board', Number(id))) as GetDetailResponse;
 	console.log(contents.data); // TODO: 추후에는 이 상세 페이지 정보가 안 불러와지면 댓글까지 렌더링 안 되도록 if(!data) return(<FetchingFailedCard/>)
@@ -44,9 +46,10 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 							type={type}
 							isOurTeamNews={isOurTeamNews}
 						/>
+						<PrivacyAgreementButton />
 					</>
 				) : (
-					<FetchingFailedCard height="800px" marginTop="200px" />
+					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
 				)}
 				{comments ? (
 					<CommentSection
@@ -57,12 +60,14 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 						contentsId={contents.data.pk}
 					/>
 				) : (
-					<FetchingFailedCard height="300px" marginTop="50px" />
+					<FetchingFailedCard height="300px" marginTop="50px" onClick={() => {}} />
 				)}
 			</ComponentFrame>
-			<RecommendedContent mode={type === 'news' ? '뉴스' : '게시글'} data={allNews} teamName="FC 서울" />
+
+			<RecommendedContent mode="뉴스" data={mockNewsList} teamName="FC 서울" />
 		</div>
 	);
 };
 
 export default DetailPage;
+//Todo 저 비어있는  onClick={()=>{}} 이거 채워

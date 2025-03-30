@@ -112,7 +112,7 @@ export default function Page() {
 		if (!isFormValid) return;
 
 		const requestBody: PostNewsContentsRequest = {
-			team: 2, // 임시...
+			team: 1668, // 임시... 전남 드래곤즈...
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '', // 선택한 대표 이미지가 있으면 URL 포함

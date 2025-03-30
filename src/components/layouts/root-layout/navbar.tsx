@@ -18,8 +18,9 @@ export default function Navbar() {
 		router.push('/');
 	};
 
+	// TODO: 로그인 모달 상태를 zustand로 관리
 	const handleLoginButtonClick = () => {
-		router.push('/?q=login');
+		router.push('/?login=true');
 	};
 
 	return (

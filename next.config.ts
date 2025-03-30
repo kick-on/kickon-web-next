@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
 			'premierskillsenglish.britishcouncil.org',
 			'media.gettyimages.com',
 			'kickon-files-bucket.s3.ap-northeast-2.amazonaws.com',
+			'media.api-sports.io',
 		],
 	},
 };
