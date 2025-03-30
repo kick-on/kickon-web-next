@@ -4,7 +4,7 @@ import ComponentFrame from '@/components/common/componentFrame';
 export default function Page({ searchParams }: { searchParams: { q: string } }) {
 	return (
 		<ComponentFrame isMain={true}>
-			<CategoryTab mode="community" q={searchParams.q} />
+			<CategoryTab mode="board" q={searchParams.q} />
 		</ComponentFrame>
 	);
 }
