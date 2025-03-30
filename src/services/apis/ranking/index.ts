@@ -20,7 +20,7 @@ export const getGambleSeasonRanking = async (league: number): Promise<GetGambleS
 	const params = new URLSearchParams({
 		league: String(league),
 	});
-	const response = await fetch(`${SERVER_URL}/api/gamble-season-ranking?${params}`);
+	const response = await fetch(`${SERVER_URL}/api/gamble-season-ranking?${params.toString()}`);
 
 	if (!response.ok) {
 		console.error(await response.json());
