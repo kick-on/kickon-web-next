@@ -17,7 +17,7 @@ export default function Profile() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));
 
-	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const handleLoginButtonClick = () => {
 		setIsLoginModalOpen(true);
@@ -28,7 +28,10 @@ export default function Profile() {
 	};
 
 	const handleLogoutButtonClick = () => {
+		setIsLoggedIn(false);
+		clearCurrentUserInfo();
 		localStorage.clear();
+
 		router.push('/');
 	};
 
