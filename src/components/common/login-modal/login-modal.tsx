@@ -4,10 +4,15 @@ import Image from 'next/image';
 import LoginButton from './login-button';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { SERVER_URL } from '@/services/config/constants';
 
 export default function LoginModal({ onClose }) {
-	const modalRef = useRef<HTMLDivElement | null>(null);
 	const router = useRouter();
+	const modalRef = useRef<HTMLDivElement | null>(null);
+
+	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
+		router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=http://localhost:3000/login/${provider}`);
+	};
 
 	useEffect(() => {
 		const handleOutsideClick = (e: MouseEvent) => {
@@ -45,8 +50,8 @@ export default function LoginModal({ onClose }) {
 				<div>좋아하는 축구팀 승부예측하러 가요!</div>
 
 				<div className="mt-[6.625rem] flex flex-col gap-5">
-					<LoginButton social="카카오" onClick={() => {}} />
-					<LoginButton social="네이버" onClick={() => {}} />
+					<LoginButton social="카카오" onClick={() => handleLoginButtonClick('kakao')} />
+					<LoginButton social="네이버" onClick={() => handleLoginButtonClick('naver')} />
 				</div>
 			</div>
 		</div>

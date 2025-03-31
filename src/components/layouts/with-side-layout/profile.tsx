@@ -2,15 +2,22 @@
 
 import ComponentFrame from '@/components/common/componentFrame';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getUserPointRanking } from '@/services/apis/user-point-event';
+import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function Profile() {
+	const router = useRouter();
 	const searchParams = useSearchParams();
-	const [isLoggedin, setIsLoggedin] = useState(true);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
+	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));
+
+	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const handleLoginButtonClick = () => {
 		setIsLoginModalOpen(true);
@@ -20,45 +27,90 @@ export default function Profile() {
 		setIsLoginModalOpen(false);
 	};
 
+	const handleLogoutButtonClick = () => {
+		setIsLoggedIn(false);
+		clearCurrentUserInfo();
+		localStorage.clear();
+
+		router.push('/');
+	};
+
+	useEffect(() => {
+		if (currentUserInfo) {
+			setIsLoggedIn(true);
+
+			const getExtraUserInfo = async () => {
+				const response = await getUserPointRanking();
+
+				if (typeof response === 'string') {
+					console.log(response);
+				} else {
+					setExtraUserInfo({
+						totalPoints: response.data.totalPoints,
+						ranking: response.data.ranking,
+					});
+				}
+			};
+
+			getExtraUserInfo();
+		}
+	}, [currentUserInfo]);
+
 	return (
 		<>
 			{isLoginModalOpen && <LoginModal onClose={handleLoginModalClose} />}
 			<ComponentFrame>
-				{isLoggedin ? (
+				{isLoggedIn ? (
 					<div>
 						<div className="flex p-4 justify-between border-b border-black-200">
 							<div className="flex gap-3">
 								<Image width={60} height={60} src="/default-profile.svg" alt="프로필 사진" />
 								<div className="flex flex-col gap-[0.3125rem] mt-[0.4688rem]">
 									<div className="flex gap-2">
-										<div className="flex gap-1">
-											<div className="body2-semibold">닉네임</div>
+										<div className="flex gap-1 h-fit">
+											<div className="body2-semibold">{currentUserInfo.nickname}</div>
 											<div className="body2-regular text-black-800">님</div>
 										</div>
-										<Image width={16} height={16} src="/team-logo/ulsan.svg" alt="팀 로고" />
+										{currentUserInfo.teamName && (
+											<Image
+												width={16}
+												height={16}
+												src={currentUserInfo.teamLogoUrl}
+												alt={`${currentUserInfo.teamName} 로고`}
+											/>
+										)}
 									</div>
-									<Link href="/setting" className="flex gap-0.5 button6-regular text-black-700 underline">
+									<Link href="/profile-setting" className="flex gap-0.5 button6-regular text-black-700 underline">
 										프로필 설정
 										<Image width={10} height={10} src="/chevron/right-gray.svg" alt="바로가기" />
 									</Link>
 								</div>
 							</div>
-							<button className="mr-2.5 mt-0 h-fit button6-regular text-black-700 underline">로그아웃</button>
+							<button
+								onClick={handleLogoutButtonClick}
+								className="mr-2.5 mt-0 h-fit button6-regular text-black-700 underline"
+							>
+								로그아웃
+							</button>
 						</div>
 						<div className="grid grid-cols-2">
 							<div className="flex border-r border-black-200">
-								<div className="mx-auto my-[0.5625rem] text-center">
-									<div className="caption2-regular h-4">이번 시즌 팀 내 순위</div>
-									<div className="body4-semibold">1위</div>
+								<div className="mx-auto my-[0.5625rem] text-center items-center">
+									<div className="caption2-regular h-4">
+										이번 시즌 {currentUserInfo.teamName ? '우리 팀 내' : '전체'} 순위
+									</div>
+									<div className="body4-semibold">{extraUserInfo?.ranking || '-'}위</div>
 								</div>
 							</div>
 							<div className="flex">
 								<div className="mx-auto my-[0.5625rem] text-center">
-									<div className="flex gap-1 caption2-regular h-4">
+									<div className="flex gap-1 items-center caption2-regular h-4">
 										지금까지 모은 포인트
-										<Image width={12} height={12} src="/help-circle.svg" alt="도움말" />
+										<button>
+											<Image width={12} height={12} src="/help-circle.svg" alt="도움말" />
+										</button>
 									</div>
-									<div className="body4-semibold">512 P</div>
+									<div className="body4-semibold">{extraUserInfo?.totalPoints || '-'} P</div>
 								</div>
 							</div>
 						</div>
