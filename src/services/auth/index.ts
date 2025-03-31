@@ -1,7 +1,12 @@
-import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
+import type {
+	PostNewTokenRequest,
+	PostNewTokenResponse,
+	GetUserInfoResponse,
+	UpdatePrivacyRequest,
+	UpdateUserInfoRequest,
+} from './dto';
 import type { EmptySuccessResponse, FailResponse } from '../config/dto';
 import axiosInstance from '../config/axiosInstance';
-import { SERVER_URL } from '../config/constants';
 
 // 개인정보 동의 업데이트
 export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
@@ -33,6 +38,7 @@ export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 	}
 };
 
+// 유저 정보 조회
 export const getUserInfo = async () => {
 	try {
 		const response = await axiosInstance.get<GetUserInfoResponse | FailResponse>('/api/user/me');
@@ -44,5 +50,20 @@ export const getUserInfo = async () => {
 		return response;
 	} catch (error) {
 		console.error('유저 정보 조회 실패: ', error);
+	}
+};
+
+// 토큰 재발급
+export const postNewToken = async (body: PostNewTokenRequest) => {
+	try {
+		const response = await axiosInstance.post<PostNewTokenResponse | FailResponse>('/auth/refresh', body);
+
+		if (!response.code.split('_').includes('SUCCESS')) {
+			console.error(response);
+			return response.message;
+		}
+		return response;
+	} catch (error) {
+		console.error('토큰 발급 실패: ', error);
 	}
 };

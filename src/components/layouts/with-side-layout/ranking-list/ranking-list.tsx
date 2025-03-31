@@ -63,7 +63,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 				{!ranking || !ranking.length ? (
 					<FetchingFailedCard onClick={getRanking} height="356px" marginTop="50px" />
 				) : (
-					ranking.map(({ rankOrder }) => <RankingItem key={rankOrder} mode={mode} />)
+					ranking.map((item, rankOrder) => <RankingItem key={rankOrder} mode={mode} {...item} />)
 				)}
 			</div>
 		</ComponentFrame>

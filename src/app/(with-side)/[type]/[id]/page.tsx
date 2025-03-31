@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation';
 
-import { mockNewsList } from '@/lib/mock';
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
 import DetailContent from '@/components/features/detail/content/DetailContent';
@@ -53,7 +52,7 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 				)}
 			</ComponentFrame>
 
-			<RecommendedContent mode="뉴스" data={mockNewsList} teamName="FC 서울" />
+			<RecommendedContent mode="뉴스" teamName="FC 서울" />
 		</div>
 	);
 };
