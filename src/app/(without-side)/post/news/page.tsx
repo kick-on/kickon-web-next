@@ -138,7 +138,7 @@ export default function Page() {
 		};
 
 		try {
-			const response = await postNewContents(requestBody);
+			const response = await postNewContents(requestBody, true);
 			console.log(response);
 
 			navigate.back();

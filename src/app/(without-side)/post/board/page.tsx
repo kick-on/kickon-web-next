@@ -3,14 +3,15 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { teamOptions } from '@/lib/constants/options';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter } from 'next/navigation';
+import { getTeam } from '@/services/apis/team';
 
 export default function Page() {
 	const navigate = useRouter();
+	const [teams, setTeams] = useState<{ label: string; value: string; logo?: string }[]>([]);
 	const [selectedOption, setSelectedOption] = useState<{
 		label: string;
 		value: string;
@@ -26,6 +27,19 @@ export default function Page() {
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const getTeamList = async () => {
+			const response = await getTeam(12);
+			const teamData = response.data.map((team) => ({
+				label: team.nameEn,
+				value: String(team.pk),
+				logo: team.logoUrl,
+			}));
+			setTeams(teamData); // 상태 업데이트
+		};
+		getTeamList();
+	}, []);
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -48,11 +62,11 @@ export default function Page() {
 		};
 	}, []);
 
-	const postNewsContents = async () => {
+	const postCommunityContents = async () => {
 		if (!isFormValid) return;
 
 		const requestBody: PostNewsContentsRequest = {
-			team: 1668,
+			team: Number(selectedOption.value),
 			title: title.trim(),
 			contents: body.trim(),
 		};
@@ -87,11 +101,11 @@ export default function Page() {
 				{isVisibleDropdown && (
 					<div className="z-50 absolute top-10 w-[9.125rem] bg-black-000 border border-black-300 button4-medium rounded-lg shadow-lg overflow-hidden">
 						<div className="px-4 py-2.5">전체</div>
-						{teamOptions.map((option, index) => (
+						{teams.map((option, index) => (
 							<div
 								key={option.value}
 								className={clsx('px-4 py-2.5 cursor-pointer hover:bg-black-300 transition-colors', {
-									'rounded-b-sm': index === teamOptions.length - 1,
+									'rounded-b-sm': index === teams.length - 1,
 								})}
 								onClick={() => handleOptionClick(option)}
 							>
@@ -115,7 +129,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={isFormValid ? postNewsContents : undefined}
+					onClick={isFormValid ? postCommunityContents : undefined}
 					disabled={!isFormValid}
 					className={clsx(
 						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',

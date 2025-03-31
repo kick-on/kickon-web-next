@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 import { postCommentKick } from '@/services/apis/detail/comment';
@@ -10,14 +10,19 @@ const CommentSection = ({ type, isOurTeamPost, comments, contentsId }) => {
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
 
-	const toggleCommentLike = async (commentId: number) => {
-		console.log({ reply: commentId });
-		try {
-			await postCommentKick(commentId, true);
-			setLikedComments((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
-		} catch (error) {
-			console.error('Failed to kick comment:', error);
+	useEffect(() => {
+		const storedLikes = localStorage.getItem('likedComments');
+		if (storedLikes) {
+			setLikedComments(JSON.parse(storedLikes));
 		}
+	}, []);
+
+	const toggleCommentLike = async (commentId: number) => {
+		await postCommentKick(commentId, true);
+
+		const updatedLikes = { ...likedComments, [commentId]: !likedComments[commentId] };
+		setLikedComments(updatedLikes);
+		localStorage.setItem('likedComments', JSON.stringify(updatedLikes));
 	};
 
 	const toggleReplyInputVisibility = (commentId: string) => {
