@@ -5,7 +5,7 @@ import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 import { postCommentKick } from '@/services/apis/detail/comment';
 
-const CommentSection = ({ type, allowComments, isOurTeamNews, comments, contentsId }) => {
+const CommentSection = ({ type, allowComments, isOurTeamPost, comments, contentsId }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
@@ -36,7 +36,7 @@ const CommentSection = ({ type, allowComments, isOurTeamNews, comments, contents
 		toggleReplyVisibility: toggleReplyListVisibility,
 		replyingTo,
 		replyVisibilities,
-		isOurTeamNews,
+		isOurTeamPost,
 		contentsId,
 	};
 
@@ -46,26 +46,32 @@ const CommentSection = ({ type, allowComments, isOurTeamNews, comments, contents
 
 	return (
 		<div className="px-4">
-			{allowComments && isOurTeamNews && <CommentInput contentType={type} contentsId={contentsId} />}
+			{allowComments && isOurTeamPost && <CommentInput contentType={type} contentsId={contentsId} />}
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
 				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
 			<div className="flex flex-col pr-2">
-				{comments.map((comment) => (
-					<div key={comment.pk}>
-						<CommentItem content={comment} {...commentItemProps} parentReply={comment.user.nickname} />
-						{replyVisibilities[comment.pk] &&
-							comment.replies?.map((reply) => (
-								<CommentItem
-									key={`${comment.pk}-${reply.pk}`}
-									content={reply}
-									{...commentItemProps}
-									isReply
-									parentReply={comment.user.nickname}
-								/>
-							))}
+				{totalComments === 0 ? (
+					<p className="text-center body5-regular text-black-500 py-10">댓글이 없습니다.</p>
+				) : (
+					<div className="flex flex-col pr-2">
+						{comments.map((comment) => (
+							<div key={comment.pk}>
+								<CommentItem content={comment} {...commentItemProps} parentReply={comment.user.nickname} />
+								{replyVisibilities[comment.pk] &&
+									comment.replies?.map((reply) => (
+										<CommentItem
+											key={`${comment.pk}-${reply.pk}`}
+											content={reply}
+											{...commentItemProps}
+											isReply
+											parentReply={comment.user.nickname}
+										/>
+									))}
+							</div>
+						))}
 					</div>
-				))}
+				)}
 			</div>
 		</div>
 	);

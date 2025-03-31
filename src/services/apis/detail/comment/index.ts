@@ -1,6 +1,6 @@
 import { MIMIZAE_JWT, SERVER_URL } from '@/services/config/constants';
 import { createNewReplyRequest, GetCommentsResponse, PostCommentKickRequest } from './dto';
-import { SuccessResponse } from '@/services/config/dto';
+import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 
 export const getCommentList = async (
 	id: number,
@@ -18,8 +18,10 @@ export const getCommentList = async (
 	const response = await fetch(`${SERVER_URL}/api/${endpoint}?${params.toString()}`);
 
 	if (!response.ok) {
-		console.error(`${endpoint} 댓글 리스트 조회 실패:`, await response.json());
-		return null;
+		const errorText = await response.text();
+		console.error('댓글 조회 실패 - 응답 상태:', response.status, response.statusText);
+		console.error('서버 응답 본문:', errorText);
+		throw new Error('댓글 조회 실패');
 	}
 
 	return response.json();
@@ -46,7 +48,10 @@ export const postCommentKick = async (id: number, isNews: boolean = false): Prom
 	return response.json();
 };
 
-export async function postCreateReply(type: 'news' | 'board', requestBody: createNewReplyRequest) {
+export const postCreateReply = async (
+	type: 'news' | 'board',
+	requestBody: createNewReplyRequest,
+): Promise<EmptySuccessResponse> => {
 	const endpoint = type === 'news' ? '/api/news-reply' : '/api/board-reply';
 
 	const response = await fetch(`${SERVER_URL}${endpoint}`, {
@@ -66,4 +71,4 @@ export async function postCreateReply(type: 'news' | 'board', requestBody: creat
 	}
 
 	return response.json(); // 성공하면 응답 데이터 반환
-}
+};

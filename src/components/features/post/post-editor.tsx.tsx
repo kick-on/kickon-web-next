@@ -12,7 +12,15 @@ import Youtube from '@tiptap/extension-youtube';
 import Toolbar from './tool-bar';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
-const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; setBody: (body: string) => void }) => {
+const PostEditor = ({
+	setTitle,
+	setBody,
+	isNews,
+}: {
+	setTitle: (title: string) => void;
+	setBody: (body: string) => void;
+	isNews: boolean;
+}) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [showLinkInput, setShowLinkInput] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -101,7 +109,7 @@ const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; 
 
 		try {
 			// 1️⃣ Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name);
+			const presignedResponse = await getPresignedUrl(file.name, isNews);
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			console.log('S3 업로드 요청:', presignedResponse);

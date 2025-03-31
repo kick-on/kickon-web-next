@@ -82,7 +82,7 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} />
 
 			<div className="flex justify-center gap-4 mt-4 mx-auto">
 				<button

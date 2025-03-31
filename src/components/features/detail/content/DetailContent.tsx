@@ -4,7 +4,7 @@ import MoreActionsButton from '@/components/features/detail/content/MoreActionsB
 import { useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 
-const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
+const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
 	const isNews = type === 'news';
 	const isTopImage = imagePosition === 'top';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
@@ -41,7 +41,7 @@ const DetailContent = ({ data, type, isOurTeamNews, imagePosition }) => {
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
-					{isOurTeamNews && <Image src="/team-logo/liverpool.svg" alt="팀 로고" width={24} height={24} />}
+					{isOurTeamPost && <Image src="/team-logo/liverpool.svg" alt="팀 로고" width={24} height={24} />}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{data.category}
 					</span>

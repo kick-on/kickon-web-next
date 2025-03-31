@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { mockSearchResults, newsOptions } from '@/lib/constants/options';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
-import { createNewPost } from '@/services/apis/post';
+import { postNewContents } from '@/services/apis/post';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
 export default function Page() {
@@ -83,7 +83,7 @@ export default function Page() {
 
 		try {
 			// 1. Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name);
+			const presignedResponse = await getPresignedUrl(file.name, true);
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			// 2. Presigned URL을 사용해 S3에 업로드
@@ -118,7 +118,7 @@ export default function Page() {
 			thumbnailUrl: selectedImage || '', // 선택한 대표 이미지가 있으면 URL 포함
 			category: 'INJURY', // 임시...
 		};
-		const response = await createNewPost(requestBody);
+		const response = await postNewContents(requestBody);
 		console.log(response);
 	};
 
@@ -240,7 +240,7 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-			<PostEditor setTitle={setTitle} setBody={setBody} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} />
 
 			<div className="flex justify-center gap-4 mt-4 mx-auto">
 				<button

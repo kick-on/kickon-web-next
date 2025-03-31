@@ -1,5 +1,5 @@
 import { reportOptions } from '@/lib/constants/options';
-import { postReport } from '@/services/apis/detail/report';
+import { postReportDetail } from '@/services/apis/detail/report';
 import { PostReportDetailRequest } from '@/services/apis/detail/report/dto';
 import Image from 'next/image';
 import { useState } from 'react';
@@ -30,7 +30,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 		};
 		console.log(reportData); // 디버깅
 
-		const result = await postReport(reportData, isNews);
+		const result = await postReportDetail(reportData, isNews);
 
 		if (result) {
 			alert('신고가 접수되었습니다.');

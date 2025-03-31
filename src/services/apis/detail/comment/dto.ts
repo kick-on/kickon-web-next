@@ -21,6 +21,7 @@ export interface PostCommentKickRequest {
 	reply: number; // 댓글 PK값
 }
 
+// 새로운 댓글 생성 요청
 export interface createNewReplyRequest {
 	news: number;
 	parentReply?: number;
