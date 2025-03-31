@@ -3,6 +3,7 @@ import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/MoreActionsButton';
 import { useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
+import DOMPurify from 'dompurify';
 
 const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
 	const isNews = type === 'news';
@@ -83,8 +84,10 @@ const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
 				<Image src={data.image} alt="대표 이미지" width={636} height={322} className="mb-6 rounded-[0.625rem]" />
 			)}
 
-			<p className="mb-40 whitespace-pre-line body3-regular">{data.content}</p>
-
+			<div
+				className="mb-40 whitespace-pre-line body3-regular"
+				dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }}
+			/>
 			{/* 좋아요 버튼 */}
 			<button
 				onClick={handleLikeButtonClick}

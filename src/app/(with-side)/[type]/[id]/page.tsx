@@ -12,6 +12,7 @@ import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { getCommentList } from '@/services/apis/detail/comment';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import PrivacyAgreementButton from '@/components/features/button';
+
 //import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const config = {
