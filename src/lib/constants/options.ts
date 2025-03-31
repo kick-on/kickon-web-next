@@ -18,6 +18,16 @@ export const headingOptions = [
 	{ label: '본문', value: 'paragraph' },
 ];
 
+export const reportOptions = [
+	'허위사실이에요.',
+	'비방 및 욕설 표현을 사용했어요.',
+	'선정성 게시글이에요.',
+	'스팸 홍보/도배글이에요.',
+	'개인정보가 노출되었어요.',
+	'저작권 및 법적인 문제예요.',
+	'기타',
+];
+
 export const mockSearchResults = [
 	{ id: 1, name: '리버풀', logo: '/team-logo/liverpool.svg' },
 	{ id: 2, name: '맨시티', logo: '/team-logo/man-city.svg' },
