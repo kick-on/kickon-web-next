@@ -7,7 +7,7 @@ export default function FetchingFailedCard({
 }: {
 	height: string;
 	marginTop: string;
-	onClick: () => void;
+	onClick?: () => void;
 }) {
 	return (
 		<div className="flex flex-col items-center" style={{ height }}>

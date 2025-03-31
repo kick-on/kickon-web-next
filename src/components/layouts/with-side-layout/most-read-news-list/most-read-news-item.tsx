@@ -1,12 +1,14 @@
-export default function MostReadNewsItem() {
+import { HotNewsDto } from '@/services/apis/news/dto';
+import Image from 'next/image';
+import Link from 'next/link';
+
+export default function MostReadNewsItem({ pk, title, thumbnailUrl }: HotNewsDto) {
 	return (
-		<button className="grid grid-cols-[auto_1fr] gap-2 border-t border-black-200 p-4">
-			<div className="w-20 h-[3.75rem] bg-black-200 rounded-[0.25rem]"></div>
+		<Link href={`/news/${pk}`} className="grid grid-cols-[auto_1fr] gap-2 border-t border-black-200 p-4">
+			<Image width={80} height={60} src={thumbnailUrl} alt="기사 사진" className="w-20 h-[3.75rem] rounded-[0.25rem]" />
 			<div className="mr-2.5 my-auto body6-regular text-left line-clamp-3">
-				<strong>[K리그 1]</strong> 새 시즌 판도에 영향을 미칠 새로운 팀을 찾아 떠나는 경험 많은 선수들새 시즌 판도에
-				영향을 미칠 새로운 팀을 찾아 떠나는 경험 많은 선수들새 시즌 판도에 영향을 미칠 새로운 팀을 찾아 떠나는 경험 많은
-				선수들
+				<strong>[K리그 1]</strong> {title}
 			</div>
-		</button>
+		</Link>
 	);
 }
