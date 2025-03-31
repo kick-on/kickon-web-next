@@ -1,7 +1,15 @@
+import createDOMPurify from 'dompurify';
 import { getTimeAgo } from '@/lib/utils/getTimeAgo';
 import { NewsItemDto } from '@/services/apis/news/dto';
 import Image from 'next/image';
 import Link from 'next/link';
+
+// 서버 환경에서도 DOMPurify 사용 가능하도록 설정
+const DOMPurify = createDOMPurify();
+
+function sanitizeContent(content: string) {
+	return DOMPurify.sanitize(content, { FORBID_TAGS: ['img'] });
+}
 
 export default function NewsItem({
 	pk,
@@ -16,7 +24,8 @@ export default function NewsItem({
 	replies,
 	isMyTeam = false,
 }: NewsItemDto & { isMyTeam?: boolean }) {
-	// TODO: 서버 응답 수정에 따라 팀 로고 src/alt 수정, 인증 뱃지 추가가
+	const sanitizedContent = sanitizeContent(content); // 서버에서 미리 정리된 콘텐츠
+
 	return (
 		<Link href={`news/${pk}`}>
 			<article className="flex flex-col py-6 px-4 cursor-pointer">
@@ -28,9 +37,7 @@ export default function NewsItem({
 				<section className="flex justify-between">
 					<div className="w-[28rem]">
 						<h2 className="title3-semibold mb-2">{title.length > 33 ? `${title.substring(0, 33)}...` : title}</h2>
-						<p className="subtitle2-regular mb-[1.125rem] ">
-							{content.length > 120 ? `${content.substring(0, 117)}...` : content}
-						</p>
+						<div className="subtitle2-regular mb-[1.125rem]" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
 					</div>
 					<Image
 						width={160}
@@ -50,10 +57,7 @@ export default function NewsItem({
 							height={24}
 							className="w-6 h-6 rounded-full object-cover"
 						/>
-						<span className="flex gap-1.5 text-black-900">
-							{user.nickname}
-							{/* {isCertified && <Image width={12} height={12} src="/certification-mark.svg" alt="인증" />} */}
-						</span>
+						<span className="flex gap-1.5 text-black-900">{user.nickname}</span>
 						<span className="ml-2">{getTimeAgo(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>
