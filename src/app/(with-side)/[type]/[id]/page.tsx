@@ -13,7 +13,7 @@ import { getCommentList } from '@/services/apis/detail/comment';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import PrivacyAgreementButton from '@/components/features/button';
 
-//import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 // TODO: 내 팀 뉴스인지 확인, 뉴스에 있는 team pk와 내 팀 pk랑 비교
 const DetailPage = async ({ params }: { params?: { type?: string; id?: string } }) => {
@@ -26,7 +26,8 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 	const comments = (await getCommentList(Number(id), 1, 10, type === 'news')) as GetCommentsResponse;
 	console.log(comments);
 
-	// const { currentUserInfo } = useCurrentUserInfoStore.getState();
+	const { currentUserInfo } = useCurrentUserInfoStore.getState();
+	console.log('내 정보', currentUserInfo);
 	// const isOurTeamPost = contents.data.team?.pk === currentUserInfo?.teamPk;
 	const isOurTeamPost = true;
 
