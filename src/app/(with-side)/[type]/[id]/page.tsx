@@ -15,26 +15,16 @@ import PrivacyAgreementButton from '@/components/features/button';
 
 //import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
-const config = {
-	news: { allowComments: true, imagePosition: 'top' },
-	board: { allowComments: true, imagePosition: 'bottom' },
-};
-
 // TODO: 내 팀 뉴스인지 확인, 뉴스에 있는 team pk와 내 팀 pk랑 비교
 const DetailPage = async ({ params }: { params?: { type?: string; id?: string } }) => {
 	if (!params?.type || !params?.id) return notFound();
 
 	const { type, id } = params;
-
-	if (!config[type]) return notFound(); // 유효한 type인지 확인
-
 	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
 	console.log(contents.data); // TODO: 추후에는 이 상세 페이지 정보가 안 불러와지면 댓글까지 렌더링 안 되도록 if(!data) return(<FetchingFailedCard/>)
 
 	const comments = (await getCommentList(Number(id), 1, 10, type === 'news')) as GetCommentsResponse;
 	console.log(comments);
-
-	const { allowComments, imagePosition } = config[type];
 
 	// const { currentUserInfo } = useCurrentUserInfoStore.getState();
 	// const isOurTeamPost = contents.data.team?.pk === currentUserInfo?.teamPk;
@@ -45,12 +35,7 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 			<ComponentFrame isMain={true}>
 				{contents.data ? (
 					<>
-						<DetailContent
-							data={contents.data}
-							imagePosition={imagePosition}
-							type={type}
-							isOurTeamPost={isOurTeamPost}
-						/>
+						<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
 						<PrivacyAgreementButton />
 					</>
 				) : (
@@ -59,7 +44,6 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 				{comments ? (
 					<CommentSection
 						type={type}
-						allowComments={allowComments}
 						isOurTeamPost={isOurTeamPost}
 						comments={comments.data}
 						contentsId={contents.data.pk}

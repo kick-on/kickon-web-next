@@ -1,17 +1,28 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/MoreActionsButton';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 
-const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
+const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const isNews = type === 'news';
-	const isTopImage = imagePosition === 'top';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
 
 	const [likes, setLikes] = useState(data.likes);
 	const [isLiked, setIsLiked] = useState(false); // 좋아요 눌렀는지 여부
+	const [sanitizedContent, setSanitizedContent] = useState('');
+
+	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			setSanitizedContent(
+				DOMPurify.sanitize(data.content, {
+					ADD_TAGS: ['iframe'],
+					ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'], // iframe 관련 속성 허용
+				}),
+			);
+		}
+	}, [data.content]);
 
 	const handleLikeButtonClick = async () => {
 		if (isLiked) return; // 이미 눌렀다면 실행 안 함
@@ -26,10 +37,30 @@ const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
 		}
 	};
 
+	const getRelativeTime = (dateString: string) => {
+		const now = new Date();
+		const past = new Date(dateString);
+		const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+
+		const rtf = new Intl.RelativeTimeFormat('ko', { numeric: 'auto' });
+
+		if (diffInSeconds < 60) return rtf.format(-diffInSeconds, 'second'); // "몇 초 전"
+		const diffInMinutes = Math.floor(diffInSeconds / 60);
+		if (diffInMinutes < 60) return rtf.format(-diffInMinutes, 'minute'); // "몇 분 전"
+		const diffInHours = Math.floor(diffInMinutes / 60);
+		if (diffInHours < 24) return rtf.format(-diffInHours, 'hour'); // "몇 시간 전"
+		const diffInDays = Math.floor(diffInHours / 24);
+		if (diffInDays < 30) return rtf.format(-diffInDays, 'day'); // "몇 일 전"
+		const diffInMonths = Math.floor(diffInDays / 30);
+		if (diffInMonths < 12) return rtf.format(-diffInMonths, 'month'); // "몇 달 전"
+		const diffInYears = Math.floor(diffInDays / 365);
+		return rtf.format(-diffInYears, 'year'); // "몇 년 전"
+	};
+
 	return (
 		<div className="px-4">
 			{/* 대표 이미지 */}
-			{imagePosition === 'top' && (
+			{isNews && (
 				<Image
 					src={data.thumbnailUrl}
 					alt="대표 이미지"
@@ -59,7 +90,7 @@ const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
 						{data.user.nickname}
 						<Image width={12} height={12} src="/certification-mark.svg" alt="인증" />
 					</span>
-					<span className="ml-2">{data.createdAt}</span>
+					<span className="ml-2">{getRelativeTime(data.createdAt)}</span>
 					<span>|</span>
 					<span>읽음 {data.views}</span>
 				</div>
@@ -80,14 +111,7 @@ const DetailContent = ({ data, type, isOurTeamPost, imagePosition }) => {
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
 
-			{!isTopImage && (
-				<Image src={data.image} alt="대표 이미지" width={636} height={322} className="mb-6 rounded-[0.625rem]" />
-			)}
-
-			<div
-				className="mb-40 whitespace-pre-line body3-regular"
-				dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(data.content) }}
-			/>
+			<div className="mb-40 whitespace-pre-line body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
 			{/* 좋아요 버튼 */}
 			<button
 				onClick={handleLikeButtonClick}

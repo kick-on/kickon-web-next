@@ -8,8 +8,10 @@ import { mockSearchResults, newsOptions } from '@/lib/constants/options';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+	const navigate = useRouter();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [filteredResults, setFilteredResults] = useState(mockSearchResults);
@@ -112,14 +114,21 @@ export default function Page() {
 		if (!isFormValid) return;
 
 		const requestBody: PostNewsContentsRequest = {
-			team: 1668, // 임시... 전남 드래곤즈...
+			team: 1668,
 			title: title.trim(),
 			contents: body.trim(),
-			thumbnailUrl: selectedImage || '', // 선택한 대표 이미지가 있으면 URL 포함
-			category: 'INJURY', // 임시...
+			thumbnailUrl: selectedImage || '',
+			category: 'INJURY',
 		};
-		const response = await postNewContents(requestBody);
-		console.log(response);
+
+		try {
+			const response = await postNewContents(requestBody);
+			console.log(response);
+
+			navigate.back();
+		} catch (error) {
+			console.error('게시글 작성 실패:', error);
+		}
 	};
 
 	return (

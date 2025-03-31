@@ -5,8 +5,12 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { teamOptions } from '@/lib/constants/options';
 import PostEditor from '@/components/features/post/post-editor.tsx';
+import { PostNewsContentsRequest } from '@/services/apis/post/dto';
+import { postNewContents } from '@/services/apis/post';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+	const navigate = useRouter();
 	const [selectedOption, setSelectedOption] = useState<{
 		label: string;
 		value: string;
@@ -43,6 +47,25 @@ export default function Page() {
 			document.removeEventListener('click', handleClickOutside);
 		};
 	}, []);
+
+	const postNewsContents = async () => {
+		if (!isFormValid) return;
+
+		const requestBody: PostNewsContentsRequest = {
+			team: 1668,
+			title: title.trim(),
+			contents: body.trim(),
+		};
+
+		try {
+			const response = await postNewContents(requestBody);
+			console.log(response);
+
+			navigate.back();
+		} catch (error) {
+			console.error('게시글 작성 실패:', error);
+		}
+	};
 
 	return (
 		<div className="flex flex-col mx-auto">
@@ -92,7 +115,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={isFormValid ? () => console.log('완료') : undefined}
+					onClick={isFormValid ? postNewsContents : undefined}
 					disabled={!isFormValid}
 					className={clsx(
 						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',

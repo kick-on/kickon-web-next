@@ -5,7 +5,7 @@ import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 import { postCommentKick } from '@/services/apis/detail/comment';
 
-const CommentSection = ({ type, allowComments, isOurTeamPost, comments, contentsId }) => {
+const CommentSection = ({ type, isOurTeamPost, comments, contentsId }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
@@ -46,7 +46,7 @@ const CommentSection = ({ type, allowComments, isOurTeamPost, comments, contents
 
 	return (
 		<div className="px-4">
-			{allowComments && isOurTeamPost && <CommentInput contentType={type} contentsId={contentsId} />}
+			{isOurTeamPost && <CommentInput contentType={type} contentsId={contentsId} />}
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
 				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
