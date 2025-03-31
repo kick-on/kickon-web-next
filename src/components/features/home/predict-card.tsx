@@ -4,9 +4,9 @@ import Closed from './closed';
 
 export default function PredictCard({ status }: { status: 'inProgress' | 'success' | 'fail' | 'unparticipated' }) {
 	const successBackground =
-		'linear-gradient(262deg, #000 -20.49%, #600606 3.69%, #C00C0B 50.27%, #600606 87.98%, #000 114.36%);';
+		'linear-gradient(262deg, #000 -20.49%, #600606 3.69%, #C00C0B 50.27%, #600606 87.98%, #000 114.36%)';
 	const failBackground =
-		'linear-gradient(84deg, #6D6D6D -12.16%, #888 11.83%, #AFAFAF 49.66%, #888 95.51%, #6D6D6D 113.24%);';
+		'linear-gradient(84deg, #6D6D6D -12.16%, #888 11.83%, #AFAFAF 49.66%, #888 95.51%, #6D6D6D 113.24%)';
 
 	return (
 		<div
