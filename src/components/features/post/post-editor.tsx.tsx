@@ -10,8 +10,17 @@ import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import Toolbar from './tool-bar';
+import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
-const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; setBody: (body: string) => void }) => {
+const PostEditor = ({
+	setTitle,
+	setBody,
+	isNews,
+}: {
+	setTitle: (title: string) => void;
+	setBody: (body: string) => void;
+	isNews: boolean;
+}) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [showLinkInput, setShowLinkInput] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -94,20 +103,34 @@ const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; 
 		}
 	};
 
-	const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (!event.target.files?.length) return;
+	const handleAddImage = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files?.length || !editor) return;
 		const file = event.target.files[0];
-		const reader = new FileReader();
-		reader.onload = () => {
-			if (reader.result) {
-				editor
-					?.chain()
-					.focus()
-					.setImage({ src: reader.result as string })
-					.run();
-			}
-		};
-		reader.readAsDataURL(file);
+
+		try {
+			// 1️⃣ Presigned URL 요청
+			const presignedResponse = await getPresignedUrl(file.name, isNews);
+			const { presignedUrl, s3Url } = presignedResponse.data;
+
+			console.log('S3 업로드 요청:', presignedResponse);
+
+			// 2️⃣ Presigned URL로 S3에 이미지 업로드
+			await uploadToS3(presignedUrl, file);
+			console.log('S3 업로드 완료:', s3Url);
+
+			// 3️⃣ 업로드된 이미지 URL을 에디터에 추가
+			editor.chain().focus().setImage({ src: s3Url }).run();
+			console.log('이미지 추가됨:', s3Url);
+
+			// 4️⃣ 에디터 내용 업데이트 (비동기 반영 확인)
+			setTimeout(() => {
+				const updatedContent = editor.getHTML();
+				setBody(updatedContent);
+				console.log('업데이트된 에디터 내용:', updatedContent);
+			}, 100);
+		} catch (error) {
+			console.error('이미지 업로드 실패:', error);
+		}
 	};
 
 	const handleInsertLink = () => {
@@ -129,7 +152,7 @@ const PostEditor = ({ setTitle, setBody }: { setTitle: (title: string) => void; 
 			.focus()
 			.setYoutubeVideo({
 				src: `https://www.youtube.com/watch?v=${youtubeId}`,
-				width: 640,
+				width: 600,
 				height: 360,
 			})
 			.run();
