@@ -13,6 +13,7 @@ import { RecommendedBoardDto } from '@/services/apis/board/dto';
 import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
 import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
 import FetchingFailedCard from './fetching-failed-card';
+import Link from 'next/link';
 
 const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();
@@ -59,10 +60,14 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 			>
 				<h3 className="title4-semibold">{displayTitle}</h3>
 
-				<a href="#" aria-label="더 보기" className="flex gap-2 items-center text-black-700 body5-regular">
+				<Link
+					href={!isNews ? '/board?q=전체' : isMyTeam ? `/news?q=${teamName}` : `/news?q=전체`}
+					aria-label="더 보기"
+					className="flex gap-2 items-center text-black-700 body5-regular"
+				>
 					<span>더 보기</span>
 					<Image src="/chevron/right-gray.svg" width={18} height={18} alt="오른쪽 화살표" />
-				</a>
+				</Link>
 			</header>
 
 			{!isNews && <CommunityDivisionBar />}
@@ -70,13 +75,12 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 			<div className="flex flex-col">
 				{!data ? (
 					<FetchingFailedCard
-						onClick={() => {}}
 						height={isNews ? '45.375rem' : '35.125rem'}
 						marginTop={isNews ? '14.4375rem' : '10.25rem'}
 					/>
 				) : (
 					data.map((item, index) => (
-						<div key={item.id}>
+						<div key={item.pk}>
 							<Component {...item} isMyTeam={isMyTeam} />
 							{index !== data.length - 1 && <hr className="border-black-300 mx-4" />}
 						</div>
