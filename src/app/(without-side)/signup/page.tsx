@@ -11,10 +11,15 @@ import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Page() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const provider = searchParams.get('provider');
+	const socialLogoUrl = provider === 'naver' ? '/sns/naver-small.svg' : '/sns/kakao-small.svg';
+	const socialLogoAlt = provider === 'naver' ? '네이버 로고 이미지' : '카카오 로고 이미지';
+
 	const [nickname, setNickname] = useState('');
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
@@ -92,7 +97,7 @@ export default function Page() {
 			<div className="mb-8 title1-bold">회원가입</div>
 			<div className="flex gap-2">
 				{/* TODO: 로그인 버튼 클릭 시 query에 provider type을 담아 소셜 이미지 렌더링 */}
-				<Image width={24} height={24} src="/sns/naver-small.svg" alt="네이버" />
+				<Image width={24} height={24} src={socialLogoUrl} alt={socialLogoAlt} />
 				<div className="body3-regular">계정으로 가입을 진행하고 있어요.</div>
 			</div>
 

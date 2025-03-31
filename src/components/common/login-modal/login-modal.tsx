@@ -10,8 +10,8 @@ export default function LoginModal({ onClose }) {
 	const router = useRouter();
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
-	const handleKakaoLoginButtonClick = () => {
-		router.push(`${SERVER_URL}/oauth2/authorization/kakao?state=http://localhost:3000`);
+	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
+		router.push(`${SERVER_URL}/oauth2/authorization/kakao?state=http://localhost:3000/login/${provider}`);
 	};
 
 	useEffect(() => {
@@ -50,8 +50,8 @@ export default function LoginModal({ onClose }) {
 				<div>좋아하는 축구팀 승부예측하러 가요!</div>
 
 				<div className="mt-[6.625rem] flex flex-col gap-5">
-					<LoginButton social="카카오" onClick={handleKakaoLoginButtonClick} />
-					<LoginButton social="네이버" onClick={() => {}} />
+					<LoginButton social="카카오" onClick={() => handleLoginButtonClick('kakao')} />
+					<LoginButton social="네이버" onClick={() => handleLoginButtonClick('naver')} />
 				</div>
 			</div>
 		</div>
