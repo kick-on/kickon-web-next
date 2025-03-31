@@ -11,7 +11,7 @@ export default function LoginModal({ onClose }) {
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
 	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
-		router.push(`${SERVER_URL}/oauth2/authorization/kakao?state=http://localhost:3000/login/${provider}`);
+		router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=http://localhost:3000/login/${provider}`);
 	};
 
 	useEffect(() => {

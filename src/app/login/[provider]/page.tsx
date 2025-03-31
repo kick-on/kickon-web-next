@@ -10,27 +10,33 @@ export default function Page() {
 	const pathParams = useParams();
 	const searchParams = useSearchParams();
 	const provider = pathParams?.provider;
-	const accessToken = searchParams.get('accessToken');
 
 	const { setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	useEffect(() => {
+		const accessToken = searchParams.get('accessToken');
+		const refreshToken = searchParams.get('refreshToken');
+		console.log('accesstoken: ', accessToken);
+
+		if (accessToken && refreshToken) {
+			localStorage.setItem('accessToken', accessToken);
+			localStorage.setItem('refreshToken', refreshToken);
+		}
+
 		const getCurrentUserInfo = async () => {
 			const response = await getUserInfo();
+			console.log(response);
 
 			if (typeof response === 'string') {
-				// 유저 정보 불러오기 실패(401) 시 회원가입 페이지로
+				// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
 				router.push(`/signup?provider=${provider}`);
 			} else {
 				// 유저 정보 불러오기 성공 시 홈으로
 				setCurrentUserInfo(response.data);
-				localStorage.setItem('accessToken', accessToken);
-
 				router.replace('/');
-				window.history.replaceState(null, '', '/'); // 뒤로가기 제어
 			}
 		};
 
 		getCurrentUserInfo();
-	}, [router, accessToken, setCurrentUserInfo, provider]);
+	}, [router, searchParams, setCurrentUserInfo, provider]);
 }
