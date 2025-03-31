@@ -1,4 +1,5 @@
 import { SuccessResponse } from '../../config/dto';
+import { TeamDto } from '../team/dto';
 
 // 뉴스 리스트 조회
 export interface GetNewsListRequest {
@@ -20,6 +21,13 @@ export interface GetBoardListRequest {
 }
 
 export type GetBoardListResponse = SuccessResponse<BoardItemDto[]>;
+
+// 함께 볼 만한 게시글 조회
+export interface GetRecommendedNewsRequest {
+	type?: 'all';
+}
+
+export type GetRecommendedNewsResponse = SuccessResponse<RecommendedNewsDto[]>;
 
 // 내부 DTO
 export interface NewsItemDto {
@@ -49,4 +57,18 @@ export interface UserDto {
 	id: string;
 	nickname: string;
 	profileImageUrl: string;
+}
+
+export interface RecommendedNewsDto {
+	pk: number;
+	title: string;
+	content: string;
+	thumbnailUrl: string;
+	category: string;
+	user: UserDto;
+	team: TeamDto;
+	createdAt: string;
+	views: number;
+	likes: number;
+	replies: number;
 }
