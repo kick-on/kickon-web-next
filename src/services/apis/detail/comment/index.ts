@@ -1,4 +1,4 @@
-import { MIMIZAE_JWT, SERVER_URL } from '@/services/config/constants';
+import { JWT, SERVER_URL } from '@/services/config/constants';
 import { createNewReplyRequest, GetCommentsResponse, PostCommentKickRequest } from './dto';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 
@@ -35,7 +35,7 @@ export const postCommentKick = async (id: number, isNews: boolean = false): Prom
 	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${MIMIZAE_JWT}`,
+			Authorization: `Bearer ${JWT}`,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(body),
@@ -57,7 +57,7 @@ export const postCreateReply = async (
 	const response = await fetch(`${SERVER_URL}${endpoint}`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${MIMIZAE_JWT}`,
+			Authorization: `Bearer ${JWT}`,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(requestBody),

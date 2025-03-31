@@ -1,4 +1,4 @@
-import { MIMIZAE_JWT, SERVER_URL } from '@/services/config/constants';
+import { JWT, SERVER_URL } from '@/services/config/constants';
 import { PostReportDetailRequest } from './dto';
 import { EmptySuccessResponse } from '@/services/config/dto';
 
@@ -11,7 +11,7 @@ export const postReportDetail = async (
 	const response = await fetch(`${SERVER_URL}${endpoint}`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${MIMIZAE_JWT}`,
+			Authorization: `Bearer ${JWT}`,
 			'Content-Type': 'application/json',
 		},
 		body: JSON.stringify(data),

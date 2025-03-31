@@ -1,11 +1,11 @@
-import { MIMIZAE_JWT, SERVER_URL } from '@/services/config/constants';
+import { JWT, SERVER_URL } from '@/services/config/constants';
 import { GetDetailResponse } from './dto';
 
 export const getDetailContent = async (type: 'news' | 'board', id: number): Promise<GetDetailResponse | null> => {
 	const response = await fetch(`${SERVER_URL}/api/${type}/${id}`, {
 		method: 'GET',
 		headers: {
-			Authorization: `Bearer ${MIMIZAE_JWT}`,
+			Authorization: `Bearer ${JWT}`,
 		},
 	});
 

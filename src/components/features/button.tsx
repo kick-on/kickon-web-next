@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { MIMIZAE_JWT, SERVER_URL } from '@/services/config/constants';
+import { JWT, SERVER_URL } from '@/services/config/constants';
 
 const PrivacyAgreementButton = () => {
 	const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const PrivacyAgreementButton = () => {
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
-					Authorization: `Bearer ${MIMIZAE_JWT}`,
+					Authorization: `Bearer ${JWT}`,
 				},
 				body: JSON.stringify(requestBody),
 			});

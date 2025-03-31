@@ -1,4 +1,4 @@
-import { MIMIZAE_JWT, SERVER_URL } from '@/services/config/constants';
+import { JWT, SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse } from '@/services/config/dto';
 
 export const postContentLike = async (id: number, isNews: boolean = false): Promise<EmptySuccessResponse> => {
@@ -9,7 +9,7 @@ export const postContentLike = async (id: number, isNews: boolean = false): Prom
 	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
 		method: 'POST',
 		headers: {
-			Authorization: `Bearer ${MIMIZAE_JWT}`,
+			Authorization: `Bearer ${JWT}`,
 			'Content-Type': 'application/json',
 		},
 		body,
