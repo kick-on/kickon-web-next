@@ -1,7 +1,6 @@
 import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
 import type { EmptySuccessResponse, FailResponse } from '../config/dto';
 import axiosInstance from '../config/axiosInstance';
-import { SERVER_URL } from '../config/constants';
 
 // 개인정보 동의 업데이트
 export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
