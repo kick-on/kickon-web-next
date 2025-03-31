@@ -22,12 +22,15 @@ export interface GetBoardListRequest {
 
 export type GetBoardListResponse = SuccessResponse<BoardItemDto[]>;
 
-// 함께 볼 만한 게시글 조회
+// 함께 볼 만한 뉴스 조회
 export interface GetRecommendedNewsRequest {
 	type?: 'all';
 }
 
 export type GetRecommendedNewsResponse = SuccessResponse<RecommendedNewsDto[]>;
+
+// top5 뉴스 조회
+export type GetHotNewsResponse = SuccessResponse<HotNewsDto[]>;
 
 // 내부 DTO
 export interface NewsItemDto {
@@ -71,4 +74,12 @@ export interface RecommendedNewsDto {
 	views: number;
 	likes: number;
 	replies: number;
+}
+
+export interface HotNewsDto {
+	pk: number;
+	title: string;
+	thumbnailUrl: string;
+	category: string;
+	views: number;
 }
