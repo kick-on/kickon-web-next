@@ -5,8 +5,13 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { mockSearchResults, newsOptions } from '@/lib/constants/options';
+import { PostNewsContentsRequest } from '@/services/apis/post/dto';
+import { postNewContents } from '@/services/apis/post';
+import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
+import { useRouter } from 'next/navigation';
 
 export default function Page() {
+	const navigate = useRouter();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [filteredResults, setFilteredResults] = useState(mockSearchResults);
@@ -74,14 +79,24 @@ export default function Page() {
 		};
 	}, []);
 
-	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
-		if (file) {
-			const imageUrl = URL.createObjectURL(file);
-			setSelectedImage(imageUrl);
+		if (!file) return;
+
+		try {
+			// 1. Presigned URL 요청
+			const presignedResponse = await getPresignedUrl(file.name, true);
+			const { presignedUrl, s3Url } = presignedResponse.data;
+
+			// 2. Presigned URL을 사용해 S3에 업로드
+			await uploadToS3(presignedUrl, file);
+
+			// 3. 업로드된 S3 URL을 상태에 저장 (서버에 보낼 URL)
+			setSelectedImage(s3Url);
+		} catch (error) {
+			console.error('파일 업로드 실패:', error);
 		}
 	};
-
 	const handleRemoveImage = () => {
 		setSelectedImage(null);
 	};
@@ -90,6 +105,29 @@ export default function Page() {
 	const handleImageClick = () => {
 		if (fileInputRef.current) {
 			fileInputRef.current.click();
+		}
+	};
+
+	console.log(body);
+
+	const postNewsContents = async () => {
+		if (!isFormValid) return;
+
+		const requestBody: PostNewsContentsRequest = {
+			team: 1668,
+			title: title.trim(),
+			contents: body.trim(),
+			thumbnailUrl: selectedImage || '',
+			category: 'INJURY',
+		};
+
+		try {
+			const response = await postNewContents(requestBody);
+			console.log(response);
+
+			navigate.back();
+		} catch (error) {
+			console.error('게시글 작성 실패:', error);
 		}
 	};
 
@@ -211,7 +249,7 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-			<PostEditor setTitle={setTitle} setBody={setBody} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} />
 
 			<div className="flex justify-center gap-4 mt-4 mx-auto">
 				<button
@@ -221,7 +259,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={isFormValid ? () => console.log('완료') : undefined}
+					onClick={isFormValid ? postNewsContents : undefined}
 					disabled={!isFormValid}
 					className={clsx(
 						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',

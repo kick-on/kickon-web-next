@@ -1,37 +1,78 @@
-import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
+'use client';
+
+import { useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
+import { postCommentKick } from '@/services/apis/detail/comment';
 
-const CommentSection = ({ allowComments, isOurTeamNews, comments, commentItemProps }) => {
-	const { replyVisibilities } = commentItemProps;
-	const totalComments = comments.reduce((acc, comment) => acc + 1 + (comment.replies?.length ?? 0), 0);
+const CommentSection = ({ type, isOurTeamPost, comments, contentsId }) => {
+	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
+	const [replyingTo, setReplyingTo] = useState<string[]>([]);
+	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
+
+	const toggleCommentLike = async (commentId: number) => {
+		console.log({ reply: commentId });
+		try {
+			await postCommentKick(commentId, true);
+			setLikedComments((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
+		} catch (error) {
+			console.error('Failed to kick comment:', error);
+		}
+	};
+
+	const toggleReplyInputVisibility = (commentId: string) => {
+		setReplyingTo((prev) => (prev.includes(commentId) ? prev.filter((id) => id !== commentId) : [...prev, commentId]));
+	};
+
+	const toggleReplyListVisibility = (commentId: string) => {
+		setReplyVisibilities((prev) => ({ ...prev, [commentId]: !prev[commentId] }));
+	};
+
+	const commentItemProps = {
+		type,
+		likedComments,
+		handleLikeToggle: toggleCommentLike,
+		handleReply: toggleReplyInputVisibility,
+		toggleReplyVisibility: toggleReplyListVisibility,
+		replyingTo,
+		replyVisibilities,
+		isOurTeamPost,
+		contentsId,
+	};
+
+	const totalComments = Array.isArray(comments)
+		? comments.reduce((acc, comment) => acc + 1 + (comment.replies?.length ?? 0), 0)
+		: 0;
 
 	return (
 		<div className="px-4">
-			{allowComments && isOurTeamNews && <CommentInput />}
-
+			{isOurTeamPost && <CommentInput contentType={type} contentsId={contentsId} />}
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
 				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
-
-			<div className="flex flex-col pr-2 mb-12">
-				{comments.map((comment) => (
-					<div key={comment.pk}>
-						<CommentItem content={comment} {...commentItemProps} />
-						{replyVisibilities[comment.pk] &&
-							comment.replies?.map((reply) => (
-								<CommentItem
-									key={`${comment.pk}-${reply.pk}`}
-									content={reply}
-									{...commentItemProps}
-									isReply
-									parentNickname={comment.user.nickname}
-								/>
-							))}
+			<div className="flex flex-col pr-2">
+				{totalComments === 0 ? (
+					<p className="text-center body5-regular text-black-500 py-10">댓글이 없습니다.</p>
+				) : (
+					<div className="flex flex-col pr-2">
+						{comments.map((comment) => (
+							<div key={comment.pk}>
+								<CommentItem content={comment} {...commentItemProps} parentReply={comment.user.nickname} />
+								{replyVisibilities[comment.pk] &&
+									comment.replies?.map((reply) => (
+										<CommentItem
+											key={`${comment.pk}-${reply.pk}`}
+											content={reply}
+											{...commentItemProps}
+											isReply
+											parentReply={comment.user.nickname}
+										/>
+									))}
+							</div>
+						))}
 					</div>
-				))}
+				)}
 			</div>
-			<PaginationBar currentPage={1} totalPages={10} onPageChange={() => {}} />
 		</div>
 	);
 };
