@@ -7,15 +7,22 @@ import NewsItem from './category-tab/news-item';
 import ComponentFrame from './componentFrame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { RecommendedNewsDto } from '@/services/apis/news/dto';
+import { RecommendedBoardDto } from '@/services/apis/board/dto';
+import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
+import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
+import FetchingFailedCard from './fetching-failed-card';
 
-const RecommendedContent = ({ mode, data, teamName = '' }) => {
+const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();
+	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
 
 	const isMyTeam = Boolean(teamName);
 	const isNews = mode === '뉴스';
-
-	const itemsToRender = isNews ? data.slice(0, 3) : data.slice(0, 10);
+	const isHome = pathname === '/';
 	const Component = isNews ? NewsItem : CommunityItem;
+
 	const displayTitle =
 		pathname === '/' && mode === '게시글' ? (
 			'클럽 커뮤니티'
@@ -25,6 +32,23 @@ const RecommendedContent = ({ mode, data, teamName = '' }) => {
 				{mode}
 			</>
 		);
+
+	useEffect(() => {
+		const getDatas = async () => {
+			const response = isNews
+				? await getRecommendedNews({ type: isHome ? 'all' : undefined })
+				: await getRecommendedBoards();
+
+			if (!response) {
+				setData(null);
+			} else {
+				setData(response.data);
+				console.log(response.data);
+			}
+		};
+
+		getDatas();
+	}, [isHome, isNews, isMyTeam]);
 
 	return (
 		<ComponentFrame isMain={true}>
@@ -44,12 +68,20 @@ const RecommendedContent = ({ mode, data, teamName = '' }) => {
 			{!isNews && <CommunityDivisionBar />}
 
 			<div className="flex flex-col">
-				{itemsToRender.map((item, index) => (
-					<div key={item.id}>
-						<Component {...item} isMyTeam={isMyTeam} />
-						{index !== itemsToRender.length - 1 && <hr className="border-black-300 mx-4" />}
-					</div>
-				))}
+				{!data ? (
+					<FetchingFailedCard
+						onClick={() => {}}
+						height={isNews ? '45.375rem' : '35.125rem'}
+						marginTop={isNews ? '14.4375rem' : '10.25rem'}
+					/>
+				) : (
+					data.map((item, index) => (
+						<div key={item.id}>
+							<Component {...item} isMyTeam={isMyTeam} />
+							{index !== data.length - 1 && <hr className="border-black-300 mx-4" />}
+						</div>
+					))
+				)}
 			</div>
 		</ComponentFrame>
 	);

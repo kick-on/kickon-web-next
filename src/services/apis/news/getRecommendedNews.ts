@@ -6,7 +6,7 @@ export const getRecommendedNews = async ({
 }: GetRecommendedNewsRequest): Promise<GetRecommendedNewsResponse | null> => {
 	const params = new URLSearchParams();
 
-	if (type !== undefined) params.append('team', type);
+	if (type !== undefined) params.append('type', type);
 	const response = await fetch(`${SERVER_URL}/api/news/home?${params.toString()}`);
 
 	if (!response.ok) {

@@ -1,5 +1,6 @@
 'use client';
 
+import RecommendedContent from '@/components/common/recommendedContent';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
@@ -41,6 +42,8 @@ export default function Home() {
 				<PredictCard status="fail" />
 				<PredictCard status="unparticipated" />
 			</div>
+			<RecommendedContent mode={'뉴스'} />
+			<RecommendedContent mode={'게시글'} />
 		</div>
 	);
 }
