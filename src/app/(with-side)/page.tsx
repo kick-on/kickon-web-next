@@ -6,29 +6,30 @@ import { getUserInfo } from '@/services/auth';
 import { useEffect } from 'react';
 
 export default function Home() {
-	const { setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	useEffect(() => {
+		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
+		if (!currentUserInfo) {
+			const getCurrentUserInfo = async () => {
+				const response = await getUserInfo();
+
+				if (typeof response === 'string') {
+					console.log(response);
+				} else {
+					setCurrentUserInfo(response.data);
+				}
+			};
+
+			getCurrentUserInfo();
+		}
+
 		document.body.style.backgroundColor = 'var(--color-black-800)';
-
-		// jwt 기반으로 유저 정보 불러와 전역 상태 관리
-		const getCurrentUserInfo = async () => {
-			const response = await getUserInfo();
-
-			if (typeof response === 'string') {
-				console.log(response);
-			} else {
-				console.log(response.data);
-				setCurrentUserInfo(response.data);
-			}
-		};
-
-		getCurrentUserInfo();
 
 		return () => {
 			document.body.style.backgroundColor = 'var(--color-black-100)';
 		};
-	}, [setCurrentUserInfo]);
+	}, [currentUserInfo, setCurrentUserInfo]);
 
 	return (
 		<div className="flex flex-col gap-8">
