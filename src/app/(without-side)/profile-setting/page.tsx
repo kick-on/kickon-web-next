@@ -10,9 +10,12 @@ import { TeamDto } from '@/services/apis/team/dto';
 import { UpdateUserInfoRequest } from '@/services/auth/dto';
 import { updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function Page() {
-	const [nickname, setNickname] = useState('가나다라');
+	const { currentUserInfo } = useCurrentUserInfoStore();
+
+	const [nickname, setNickname] = useState(currentUserInfo?.nickname);
 	const [league, setLeague] = useState<LeagueDto>({
 		pk: NO_CHEERING_TEAM_PK,
 		nameKr: '응원팀이 없어요.',
@@ -30,6 +33,7 @@ export default function Page() {
 
 	const isEditable = false;
 	const hasTeam = league.nameKr !== '응원팀이 없어요.';
+	const socialLogoUrl = currentUserInfo.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -95,8 +99,8 @@ export default function Page() {
 					className="flex gap-2.5 items-center px-4 py-3 w-full
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
 				>
-					<Image width={18} height={18} src="/sns/naver-small.svg" alt="네이버 로고" />
-					email.naver.com
+					<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo.providerType} 로고`} />
+					{currentUserInfo.email}
 				</div>
 			</div>
 

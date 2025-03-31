@@ -19,8 +19,8 @@ export interface UserInfoDto {
 	email: string;
 	profileImageUrl: string;
 	providerType: string;
-	teamLogoUrl: string;
-	teamName: string;
-	leagueLogoUrl: string;
-	leagueName: string;
+	teamLogoUrl?: string;
+	teamName?: string;
+	leagueLogoUrl?: string;
+	leagueName?: string;
 }
