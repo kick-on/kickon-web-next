@@ -1,13 +1,39 @@
 'use client';
 
+import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import RecommendedContent from '@/components/common/recommendedContent';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getGames } from '@/services/apis/user-game-gamble';
+import { GameDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
 import { getUserInfo } from '@/services/auth';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const [proceedingGames, setProceedingGames] = useState<GameDto[] | null>(null);
+	const [finishedGames, setFinishedGames] = useState<GameDto[] | null>(null);
+
+	useEffect(() => {
+		const getProceedingGames = async () => {
+			// TODO: 백엔드에서 league pk 넣어줘야 연결 가능
+			// TODO: 카테고리탭 리그 선택 연결하기
+			const request: GetGamesRequest = {
+				league: 1,
+				season: 2024,
+				status: 'proceeding',
+			};
+			const response = await getGames(request);
+
+			if (!response) {
+				setProceedingGames(null);
+			} else {
+				setProceedingGames(response.data.games);
+			}
+		};
+
+		getProceedingGames();
+	}, [currentUserInfo, currentUserInfo?.leagueName]);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -35,7 +61,13 @@ export default function Home() {
 	return (
 		<div className="flex flex-col gap-8">
 			<div className="flex flex-col gap-4">
-				<PredictCard status="inProgress" />
+				{!proceedingGames ? (
+					<div className="w-[41.75rem] bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
+						<FetchingFailedCard isCardVisible={false} height="8.25rem" marginTop="0" />
+					</div>
+				) : (
+					proceedingGames.map((game) => <PredictCard key={game.pk} status="inProgress" {...game} />)
+				)}
 			</div>
 			<hr className="mx-6 border-black-600" />
 			<div className="flex flex-col gap-4">

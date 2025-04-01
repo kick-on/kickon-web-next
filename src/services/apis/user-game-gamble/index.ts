@@ -12,7 +12,7 @@ export const getGames = async ({ league, season, status }: GetGamesRequest): Pro
 	const response = await fetch(`${SERVER_URL}/api/game?${params}`);
 
 	if (!response.ok) {
-		console.error(await response.json());
+		console.error('게임 리스트 조회 실패:', await response.json());
 		return null;
 	}
 	return response.json();
