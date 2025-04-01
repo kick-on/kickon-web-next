@@ -8,14 +8,16 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { useCallback, useEffect, useState } from 'react';
 import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/dto';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
+	const { currentUserInfo } = useCurrentUserInfoStore();
 	const [ranking, setRanking] = useState<GambleRankingDto[] | ActualRankingDto[] | null>();
 	const [league, setLeague] = useState<LeagueDto>({
-		pk: 1,
-		nameKr: '프리미어리그',
-		nameEn: 'Premier League',
-		logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
+		pk: currentUserInfo?.leaguePk || 1,
+		nameKr: currentUserInfo?.leagueName || '프리미어리그',
+		nameEn: currentUserInfo?.leagueName || 'Premier League',
+		logoUrl: currentUserInfo?.leagueLogoUrl || 'https://media.api-sports.io/football/leagues/39.png',
 		leagueType: 'League',
 	});
 
