@@ -24,6 +24,7 @@ export interface UserInfoDto {
 	providerType: string;
 	teamLogoUrl?: string;
 	teamName?: string;
+	teamPk: number;
 	leagueLogoUrl?: string;
 	leagueName?: string;
 	privacyAgreedAt: string;

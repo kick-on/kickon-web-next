@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/CommentInput';
 import CommentItem from '@/components/features/detail/comment/CommentItem';
 import { postCommentKick } from '@/services/apis/detail/comment';
+//import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
-const CommentSection = ({ type, isOurTeamPost, comments, contentsId }) => {
+//teampK 받아야됨
+const CommentSection = ({ type, comments, contentsId }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
-
+	const isNews = type === 'news';
+	const isOurTeamPost = true;
 	useEffect(() => {
 		const storedLikes = localStorage.getItem('likedComments');
 		if (storedLikes) {
@@ -18,8 +21,8 @@ const CommentSection = ({ type, isOurTeamPost, comments, contentsId }) => {
 	}, []);
 
 	const toggleCommentLike = async (commentId: number) => {
-		await postCommentKick(commentId, true);
-
+		const result = await postCommentKick(commentId, isNews);
+		console.log('결과', result);
 		const updatedLikes = { ...likedComments, [commentId]: !likedComments[commentId] };
 		setLikedComments(updatedLikes);
 		localStorage.setItem('likedComments', JSON.stringify(updatedLikes));
@@ -83,3 +86,6 @@ const CommentSection = ({ type, isOurTeamPost, comments, contentsId }) => {
 };
 
 export default CommentSection;
+// const { currentUserInfo } = useCurrentUserInfoStore.getState();
+// console.log('내 정보', currentUserInfo?.id);
+// const isOurTeamPost = !!teamPk && !!currentUserInfo?.teamPk && teamPk === currentUserInfo.teamPk;

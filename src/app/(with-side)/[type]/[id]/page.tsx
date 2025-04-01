@@ -14,39 +14,30 @@ import PrivacyAgreementButton from '@/components/features/button';
 
 //import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
-// TODO: 내 팀 뉴스인지 확인, 뉴스에 있는 team pk와 내 팀 pk랑 비교
+// TODO: 내 정보 불러와서 내 팀 뉴스인지 isOurTeamPost 확인하기
 const DetailPage = async ({ params }: { params?: { type?: string; id?: string } }) => {
 	if (!params?.type || !params?.id) return notFound();
 
 	const { type, id } = params;
 	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
-	console.log(contents.data); // TODO: 추후에는 이 상세 페이지 정보가 안 불러와지면 댓글까지 렌더링 안 되도록 if(!data) return(<FetchingFailedCard/>)
+	console.log(contents.data);
 
 	const comments = (await getCommentList(Number(id), 1, 10, type === 'news')) as GetCommentsResponse;
 	console.log(comments);
-
-	// const { currentUserInfo } = useCurrentUserInfoStore.getState();
-	// console.log('내 정보', currentUserInfo?.id);
-	const isOurTeamPost = contents.data.team?.pk === 1668; // 전남드래곤즈로 우선...
 
 	return (
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
 				{contents.data ? (
 					<>
-						<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
+						<DetailContent data={contents.data} type={type} />
 						<PrivacyAgreementButton />
 					</>
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
 				)}
 				{comments ? (
-					<CommentSection
-						type={type}
-						isOurTeamPost={isOurTeamPost}
-						comments={comments.data}
-						contentsId={contents.data.pk}
-					/>
+					<CommentSection type={type} comments={comments.data} contentsId={contents.data.pk} />
 				) : (
 					<FetchingFailedCard height="300px" marginTop="50px" onClick={() => {}} />
 				)}

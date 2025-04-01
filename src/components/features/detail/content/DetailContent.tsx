@@ -5,11 +5,17 @@ import { useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
+//import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
-const DetailContent = ({ data, type, isOurTeamPost }) => {
+const DetailContent = ({ data, type }) => {
 	const isNews = type === 'news';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
 
+	// const { currentUserInfo } = useCurrentUserInfoStore.getState();
+	// console.log('내 정보', currentUserInfo);
+	// const isOurTeamPost = (data.team?.pk ?? null) === (currentUserInfo?.teamPk ?? null);
+
+	const isOurTeamPost = true;
 	const [likes, setLikes] = useState(data.likes);
 	const [isLiked, setIsLiked] = useState(false); // 좋아요 눌렀는지 여부
 	const [sanitizedContent, setSanitizedContent] = useState('');

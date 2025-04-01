@@ -58,7 +58,7 @@ const CommentItem = ({
 								height={16}
 							/>
 							<span className={likedComments[content.pk] ? 'text-black-900' : 'text-gray-500'}>
-								{content.kickCount + (likedComments[content.pk] ? 1 : 0)}
+								{content.kickCount + (likedComments[content.pk] && content.kickCount === 0 ? 1 : 0)}
 							</span>
 						</button>
 					</div>
