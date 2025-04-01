@@ -1,9 +1,19 @@
 import Image from 'next/image';
 import clsx from 'clsx';
+import { GameDto } from '@/services/apis/user-game-gamble/dto';
 
-export default function Closed({ isParticipated }: { isParticipated: boolean }) {
-	const leftScore = 2 as number;
-	const rightScore = 1 as number;
+export default function Closed({
+	homeTeam,
+	awayTeam,
+	homeScore,
+	awayScore,
+	gambleResult,
+	isParticipated,
+}: Pick<GameDto, 'homeTeam' | 'awayTeam' | 'homeScore' | 'awayScore' | 'gambleResult'> & {
+	isParticipated: boolean;
+}) {
+	const leftScore = homeScore;
+	const rightScore = awayScore;
 
 	const selectedButtonClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
@@ -17,10 +27,16 @@ export default function Closed({ isParticipated }: { isParticipated: boolean }) 
 					[selectedButtonClass('left')]: isParticipated && leftScore > rightScore,
 				})}
 			>
-				<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
+				<Image
+					className="relative z-20"
+					width={22}
+					height={22}
+					src={homeTeam.logoUrl}
+					alt={`${homeTeam.name} 로고 이미지`}
+				/>
 				<div>
-					<div className="relative z-20">FC 서울</div>
-					<div className="relative z-20 caption2-medium">53%</div>
+					<div className="relative z-20">{homeTeam.name || '팀 이름'}</div>
+					<div className="relative z-20 caption2-medium">{`${gambleResult.home}%`}</div>
 				</div>
 			</div>
 
@@ -52,7 +68,7 @@ export default function Closed({ isParticipated }: { isParticipated: boolean }) 
 					{rightScore}
 				</div>
 				<div className="relative z-20">무승부</div>
-				<div className="relative z-20 caption2-medium">5%</div>
+				<div className="relative z-20 caption2-medium">{gambleResult.draw}%</div>
 			</div>
 
 			<div
@@ -61,10 +77,16 @@ export default function Closed({ isParticipated }: { isParticipated: boolean }) 
 				})}
 			>
 				<div>
-					<div className="relative z-20">FC 서울</div>
-					<div className="relative z-20 caption2-medium">53%</div>
+					<div className="relative z-20">{awayTeam.name || '팀 이름'}</div>
+					<div className="relative z-20 caption2-medium">{`${gambleResult.away}%`}</div>
 				</div>
-				<Image className="relative z-20" width={22} height={22} src="/team-logo/ulsan.svg" alt="FC 서울" />
+				<Image
+					className="relative z-20"
+					width={22}
+					height={22}
+					src={awayTeam.logoUrl}
+					alt={`${awayTeam.name} 로고 이미지`}
+				/>
 			</div>
 		</div>
 	);

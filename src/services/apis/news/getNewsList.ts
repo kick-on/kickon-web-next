@@ -20,7 +20,7 @@ export const getNewsList = async ({
 	const response = await fetch(`${SERVER_URL}/api/news?${params.toString()}`);
 
 	if (!response.ok) {
-		console.error(await response.json());
+		console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, await response.json());
 		return null;
 	}
 	return response.json();

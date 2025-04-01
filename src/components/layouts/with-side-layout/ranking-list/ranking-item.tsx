@@ -5,7 +5,7 @@ export default function RankingItem({
 	mode,
 	rankOrder,
 	teamLogoUrl,
-	teamName = '팀 이름',
+	teamName,
 	gameNum,
 	points,
 	wonScores,
@@ -21,7 +21,7 @@ export default function RankingItem({
 					src={teamLogoUrl}
 					alt={`${teamLogoUrl} 로고`}
 				/>
-				<div>{teamName}</div>
+				<div>{teamName || '팀 이름'}</div>
 			</div>
 			<div className="flex gap-2">
 				{mode === 'season' ? (

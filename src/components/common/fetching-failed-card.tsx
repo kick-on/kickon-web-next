@@ -4,14 +4,18 @@ export default function FetchingFailedCard({
 	height,
 	marginTop,
 	onClick,
+	isCardVisible = true,
 }: {
 	height: string;
 	marginTop: string;
 	onClick?: () => void;
+	isCardVisible?: boolean;
 }) {
 	return (
 		<div className="flex flex-col items-center" style={{ height }}>
-			<Image style={{ marginTop }} width={100} height={100} src={'/x-card.svg'} alt="정보 불러오기 실패" />
+			{isCardVisible && (
+				<Image style={{ marginTop }} width={100} height={100} src={'/x-card.svg'} alt="정보 불러오기 실패" />
+			)}
 			<div className="mt-7 mb-6 title4-semibold">데이터를 불러오지 못했어요.</div>
 			<button
 				onClick={onClick}

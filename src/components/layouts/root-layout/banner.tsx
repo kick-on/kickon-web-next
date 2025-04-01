@@ -1,15 +1,35 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import Image from 'next/image';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { BannerDto } from '@/services/apis/event-board/dto';
+import { useEffect, useState } from 'react';
+import { getBanner } from '@/services/apis/event-board';
+import clsx from 'clsx';
 
 export default function Banner() {
+	const router = useRouter();
 	const pathname = usePathname();
+	const [banners, setBanners] = useState<BannerDto[]>([]);
+
+	useEffect(() => {
+		const getBanners = async () => {
+			const response = await getBanner();
+
+			if (!response) {
+				setBanners([]);
+			} else {
+				setBanners(response.data);
+			}
+		};
+
+		getBanners();
+	}, []);
 
 	const navigationButtons = [
 		{
@@ -51,13 +71,17 @@ export default function Banner() {
 					/>
 				))}
 
-				{[0, 1, 2].map((i) => (
-					<SwiperSlide key={i} className="w-full h-full">
+				{banners.map((banner) => (
+					<SwiperSlide key={banner.id} className="w-full h-full">
 						<Image
-							className="w-full h-full object-cover"
+							onClick={() => {
+								if (banner.embeddedUrl) router.push(banner.embeddedUrl);
+							}}
+							className={clsx('w-full h-full object-cover', { 'cursor-pointer': banner.embeddedUrl })}
 							width={1920}
 							height={560}
-							src={`/banner/${i}.svg`}
+							title={banner.title}
+							src={banner.thumbnailUrl}
 							alt="배너 이미지"
 						/>
 					</SwiperSlide>

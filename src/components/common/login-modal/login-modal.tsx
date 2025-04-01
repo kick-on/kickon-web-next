@@ -9,6 +9,12 @@ import { SERVER_URL } from '@/services/config/constants';
 export default function LoginModal({ onClose }) {
 	const router = useRouter();
 	const modalRef = useRef<HTMLDivElement | null>(null);
+	const previousPage = sessionStorage.getItem('previousPage');
+
+	const handleXButtonClick = () => {
+		onClose();
+		router.replace(previousPage);
+	};
 
 	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
 		router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=http://localhost:3000/login/${provider}`);
@@ -18,10 +24,7 @@ export default function LoginModal({ onClose }) {
 		const handleOutsideClick = (e: MouseEvent) => {
 			if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
 				onClose();
-				router.replace('/');
-
-				// 뒤로 가기 히스토리를 없애기 위해 replaceState 사용
-				window.history.replaceState(null, '', '/');
+				router.replace(previousPage);
 			}
 		};
 
@@ -32,7 +35,7 @@ export default function LoginModal({ onClose }) {
 			document.removeEventListener('click', handleOutsideClick);
 			document.body.style.overflow = 'unset';
 		};
-	}, [onClose, router]);
+	}, [onClose, router, previousPage]);
 
 	return (
 		<div className="fixed z-50 flex justify-center items-center top-0 left-0 w-full h-full bg-black/40">
@@ -41,7 +44,7 @@ export default function LoginModal({ onClose }) {
 				className="flex flex-col items-center p-6 shadow-predict-button
             w-[39.5rem] h-[39.75rem] bg-black-000 rounded-[0.625rem] display-semibold"
 			>
-				<button onClick={onClose} className="ml-auto mb-[4.6875rem]">
+				<button onClick={handleXButtonClick} className="ml-auto mb-[4.6875rem]">
 					<Image width={24} height={24} src="/x.svg" alt="닫기" />
 				</button>
 				<Image width={280} height={62} src="/logo/kick-on-mixed.svg" alt="킥온 로고" />
