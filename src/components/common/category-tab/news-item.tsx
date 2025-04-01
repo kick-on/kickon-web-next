@@ -1,15 +1,8 @@
-import createDOMPurify from 'dompurify';
 import { getTimeAgo } from '@/lib/utils/getTimeAgo';
 import { NewsItemDto } from '@/services/apis/news/dto';
 import Image from 'next/image';
 import Link from 'next/link';
-
-// 서버 환경에서도 DOMPurify 사용 가능하도록 설정
-const DOMPurify = createDOMPurify();
-
-function sanitizeContent(content: string) {
-	return DOMPurify.sanitize(content, { FORBID_TAGS: ['img'] });
-}
+import SanitizedContent from '../SanitizedContent';
 
 export default function NewsItem({
 	pk,
@@ -24,8 +17,6 @@ export default function NewsItem({
 	replies,
 	isMyTeam = false,
 }: NewsItemDto & { isMyTeam?: boolean }) {
-	const sanitizedContent = sanitizeContent(content); // 서버에서 미리 정리된 콘텐츠
-
 	return (
 		<Link href={`news/${pk}`}>
 			<article className="flex flex-col py-6 px-4 cursor-pointer">
@@ -37,7 +28,7 @@ export default function NewsItem({
 				<section className="flex justify-between">
 					<div className="w-[28rem]">
 						<h2 className="title3-semibold mb-2">{title.length > 33 ? `${title.substring(0, 33)}...` : title}</h2>
-						<div className="subtitle2-regular mb-[1.125rem]" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+						<SanitizedContent content={content} />
 					</div>
 					<Image
 						width={160}
