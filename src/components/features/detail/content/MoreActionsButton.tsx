@@ -50,7 +50,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 		<>
 			<div className="relative inline-block">
 				<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
-					<Image src="/x.svg" alt="더보기" width={20} height={20} />
+					<Image src="/more-horizontal.svg" alt="더보기" width={20} height={20} />
 				</button>
 
 				{isOpen && (
@@ -62,11 +62,11 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 							'flex flex-col px-5 py-[0.625rem] gap-5 button4-medium text-black-900',
 						)}
 					>
-						<button className="text-left" onClick={handleShareButtonClick}>
-							공유하기
+						<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleShareButtonClick}>
+							<Image src="/share.svg" alt="공유하기 버튼" width={18} height={18} /> 공유하기
 						</button>
-						<button className="text-left" onClick={handleReportButtonClick}>
-							신고하기
+						<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleReportButtonClick}>
+							<Image src="/report.svg" alt="신고하기기 버튼" width={18} height={18} /> 신고하기
 						</button>
 					</div>
 				)}

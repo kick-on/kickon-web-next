@@ -1,5 +1,3 @@
-export const teamOptions = [{ label: '리버풀', logo: '/team-logo/liverpool.svg', value: 'liverpool' }];
-
 export const categories = [
 	{ label: '부상', value: 'INJURY' },
 	{ label: '이적', value: 'TRANSFER' },
@@ -13,8 +11,8 @@ export const categories = [
 ];
 
 export const headingOptions = [
-	{ label: '제목1', value: '1' },
-	{ label: '제목2', value: '2' },
+	{ label: '제목1', value: 'Header1' },
+	{ label: '제목2', value: 'Header2' },
 	{ label: '본문', value: 'paragraph' },
 ];
 
@@ -26,11 +24,4 @@ export const reportOptions = [
 	'개인정보가 노출되었어요.',
 	'저작권 및 법적인 문제예요.',
 	'기타',
-];
-
-export const mockSearchResults = [
-	{ id: 1, name: '리버풀', logo: '/team-logo/liverpool.svg' },
-	{ id: 2, name: '맨시티', logo: '/team-logo/man-city.svg' },
-	{ id: 3, name: '첼시', logo: '/team-logo/chelsea.svg' },
-	{ id: 4, name: '아스널', logo: '/team-logo/arsenal.svg' },
 ];

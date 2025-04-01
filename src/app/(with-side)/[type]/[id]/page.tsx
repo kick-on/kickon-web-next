@@ -24,18 +24,21 @@ const DetailPage = async ({
 
 	const { type, id } = params;
 	const currentPage = Number(searchParams?.page || '1');
-	const commentsPerPage = 10; // 페이지당 댓글 수
+	const commentsPerPage = 10;
 
 	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
 
-	// 현재 페이지 번호를 쿼리 파라미터에서 가져와 API 호출에 사용
 	const comments = (await getCommentList(
 		Number(id),
 		currentPage,
 		commentsPerPage,
 		type === 'news',
 	)) as GetCommentsResponse;
-	console.log(comments);
+
+	const totalComments = comments.data.length || 0;
+
+	// 총 페이지 수 계산 (최소 1페이지)
+	const totalPages = Math.max(1, Math.ceil(totalComments / commentsPerPage));
 
 	// 현재 URL 경로 (쿼리 파라미터 제외)
 	const baseUrl = `/${type}/${id}`;
@@ -54,7 +57,7 @@ const DetailPage = async ({
 				{comments ? (
 					<>
 						<CommentSection type={type} comments={comments.data} contentsId={contents.data.pk} />
-						<PaginationBar totalPages={10} baseUrl={baseUrl} />
+						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
 					</>
 				) : (
 					<FetchingFailedCard height="300px" marginTop="50px" onClick={() => {}} />
