@@ -6,13 +6,9 @@ import OptionItem from '../option-item';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { LeagueDto } from '@/services/apis/league/dto';
-import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getLeague } from '@/services/apis/league';
 
 export default function SelectBox({ isClickedOtherTab = false }: { isClickedOtherTab: boolean }) {
-	const { currentUserInfo } = useCurrentUserInfoStore();
-	console.log(currentUserInfo);
-
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const [options, setOptions] = useState<LeagueDto[] | null>(null);
 	const [league, setLeague] = useState<LeagueDto | null>(null);
@@ -30,7 +26,7 @@ export default function SelectBox({ isClickedOtherTab = false }: { isClickedOthe
 		setLeague(selectedLeague);
 		setIsVisibleOptions(false);
 
-		route.push(`/news?q=${selectedLeague.nameKr}`);
+		route.push(`/news?q=${selectedLeague.nameKr}&type=league&id=${selectedLeague.pk}`);
 	};
 
 	useEffect(() => {
