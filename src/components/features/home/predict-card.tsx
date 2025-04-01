@@ -52,11 +52,13 @@ export default function PredictCard({
 					>
 						{gameStatus === 'PENDING'
 							? '예측 진행 중'
-							: myGambleResult?.gambleStatus === 'SUCCEED'
-								? '예측 성공'
-								: myGambleResult?.gambleStatus === 'FAILED'
-									? '예측 실패 1:0'
-									: '미참여'}
+							: !myGambleResult
+								? '미참여'
+								: myGambleResult.gambleStatus === 'SUCCEED'
+									? '예측 성공'
+									: myGambleResult.gambleStatus === 'FAILED'
+										? `예측 실패 ${myGambleResult.homeScore}:${myGambleResult.awayScore}`
+										: ''}
 					</div>
 				</div>
 				{gameStatus === 'PENDING' && <div className="caption1-regular text-black-700">마감 {timeBefore}</div>}
@@ -77,7 +79,14 @@ export default function PredictCard({
 				{gameStatus === 'PENDING' ? (
 					<InProgress homeTeam={homeTeam} awayTeam={awayTeam} gambleResult={gambleResult} />
 				) : (
-					<Closed isParticipated={!!myGambleResult} />
+					<Closed
+						homeTeam={homeTeam}
+						awayTeam={awayTeam}
+						homeScore={homeScore}
+						awayScore={awayScore}
+						gambleResult={gambleResult}
+						isParticipated={!!myGambleResult}
+					/>
 				)}
 			</div>
 			<div className="caption1-regular text-black-700 text-right">{participations}명 참여</div>
