@@ -4,6 +4,6 @@ export interface PostNewsContentsRequest {
 	title: string;
 	contents: string;
 	thumbnailUrl?: string;
-	category?: 'INJURY' | 'TRANSFER' | 'MATCH' | 'OTHER';
+	category?: string;
 }
 // TODO: 카테고리 종류 정리

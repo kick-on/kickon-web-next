@@ -11,42 +11,54 @@ import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { getCommentList } from '@/services/apis/detail/comment';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import PrivacyAgreementButton from '@/components/features/button';
+import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
 
-//import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-
-// TODO: 내 팀 뉴스인지 확인, 뉴스에 있는 team pk와 내 팀 pk랑 비교
-const DetailPage = async ({ params }: { params?: { type?: string; id?: string } }) => {
+const DetailPage = async ({
+	params,
+	searchParams,
+}: {
+	params?: { type?: string; id?: string };
+	searchParams?: { page?: string };
+}) => {
 	if (!params?.type || !params?.id) return notFound();
 
 	const { type, id } = params;
+	const currentPage = Number(searchParams?.page || '1');
+	const commentsPerPage = 10;
+
 	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
-	console.log(contents.data); // TODO: 추후에는 이 상세 페이지 정보가 안 불러와지면 댓글까지 렌더링 안 되도록 if(!data) return(<FetchingFailedCard/>)
 
-	const comments = (await getCommentList(Number(id), 1, 10, type === 'news')) as GetCommentsResponse;
-	console.log(comments);
+	const comments = (await getCommentList(
+		Number(id),
+		currentPage,
+		commentsPerPage,
+		type === 'news',
+	)) as GetCommentsResponse;
 
-	// const { currentUserInfo } = useCurrentUserInfoStore.getState();
-	// const isOurTeamPost = contents.data.team?.pk === currentUserInfo?.teamPk;
-	const isOurTeamPost = true;
+	const totalComments = comments.data.length || 0;
+
+	// 총 페이지 수 계산 (최소 1페이지)
+	const totalPages = Math.max(1, Math.ceil(totalComments / commentsPerPage));
+
+	// 현재 URL 경로 (쿼리 파라미터 제외)
+	const baseUrl = `/${type}/${id}`;
 
 	return (
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
 				{contents.data ? (
 					<>
-						<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
+						<DetailContent data={contents.data} type={type} />
 						<PrivacyAgreementButton />
 					</>
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
 				)}
 				{comments ? (
-					<CommentSection
-						type={type}
-						isOurTeamPost={isOurTeamPost}
-						comments={comments.data}
-						contentsId={contents.data.pk}
-					/>
+					<>
+						<CommentSection type={type} comments={comments.data} contentsId={contents.data.pk} />
+						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
+					</>
 				) : (
 					<FetchingFailedCard height="300px" marginTop="50px" onClick={() => {}} />
 				)}
@@ -58,4 +70,3 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 };
 
 export default DetailPage;
-//Todo 저 비어있는  onClick={()=>{}} 이거 채워

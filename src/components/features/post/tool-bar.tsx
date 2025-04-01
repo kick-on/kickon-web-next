@@ -33,7 +33,7 @@ export default function Toolbar({
 		{ key: 'bulletList', icon: <Image src="/ellipsis.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'orderedList', icon: <Image src="/sort-numeric.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'blockquote', icon: <Image src="/quote.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'horizontalRule', icon: 'ㅡ' },
+		{ key: 'horizontalRule', icon: <Image src="/line.svg" alt="Bold" width={20} height={20} /> },
 	];
 
 	const mediaButtons = [

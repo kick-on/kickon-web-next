@@ -30,7 +30,7 @@ const CommentItem = ({
 					alt="프로필"
 					width={24}
 					height={24}
-					className="rounded-full mr-[0.625rem]"
+					className="w-6 h-6 rounded-full mr-[0.625rem] object-contain"
 				/>
 
 				<div className="flex flex-col flex-1">
@@ -58,7 +58,7 @@ const CommentItem = ({
 								height={16}
 							/>
 							<span className={likedComments[content.pk] ? 'text-black-900' : 'text-gray-500'}>
-								{content.kickCount + (likedComments[content.pk] ? 1 : 0)}
+								{content.kickCount + (likedComments[content.pk] && content.kickCount === 0 ? 1 : 0)}
 							</span>
 						</button>
 					</div>

@@ -4,17 +4,17 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { mockSearchResults, newsOptions } from '@/lib/constants/options';
+import { categories } from '@/lib/constants/options';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { useRouter } from 'next/navigation';
+import { getTeam } from '@/services/apis/team';
 
 export default function Page() {
 	const navigate = useRouter();
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
-	const [filteredResults, setFilteredResults] = useState(mockSearchResults);
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
 		label: '탭 선택하기',
 		value: '',
@@ -30,17 +30,33 @@ export default function Page() {
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
 	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
+	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
+	const [filteredResults, setFilteredResults] = useState(teams);
 
-	// 검색어 입력 핸들러
+	useEffect(() => {
+		const getTeamList = async () => {
+			const response = await getTeam(12);
+
+			const teamData = response.data.map((team) => ({
+				id: team.pk,
+				name: team.nameEn,
+				logo: team.logoUrl,
+			}));
+
+			setTeams(teamData);
+		};
+		getTeamList();
+	}, []);
+
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value;
+		const value = e.target.value.trim();
 		setSearchTerm(value);
-		setSelectedTeam(null); // 입력하면 기존 선택한 팀 초기화
+		setSelectedTeam(null);
 
-		// 검색 결과 필터링
-		const filtered = mockSearchResults.filter((item) => item.name.toLowerCase().includes(value.toLowerCase()));
+		const filtered = teams.filter((team) => team.name.toLowerCase().includes(value.toLowerCase()));
+
 		setFilteredResults(filtered);
-		setIsVisibleSearchResults(value.length > 0); // 검색어 입력 시만 검색 결과 표시
+		setIsVisibleSearchResults(value.length > 0);
 	};
 
 	const handleSelectTeam = (team: { id: number; name: string; logo: string }) => {
@@ -114,15 +130,15 @@ export default function Page() {
 		if (!isFormValid) return;
 
 		const requestBody: PostNewsContentsRequest = {
-			team: 1668,
+			team: selectedTeam.id,
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
-			category: 'INJURY',
+			category: selectedOption.value,
 		};
 
 		try {
-			const response = await postNewContents(requestBody);
+			const response = await postNewContents(requestBody, true);
 			console.log(response);
 
 			navigate.back();
@@ -231,11 +247,11 @@ export default function Page() {
 
 					{isVisibleDropdown && (
 						<div className="z-50 absolute top-10 w-[9.125rem] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
-							{newsOptions.map((option, index) => (
+							{categories.map((option, index) => (
 								<div
 									key={option.value}
 									className={clsx('px-4 py-2.5 body5-regular cursor-pointer hover:bg-black-200 transition-colors', {
-										'rounded-b-sm': index === newsOptions.length - 1,
+										'rounded-b-sm': index === categories.length - 1,
 									})}
 									onClick={() => handleNewsOptionClick(option)}
 								>

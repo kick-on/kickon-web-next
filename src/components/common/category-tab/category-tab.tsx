@@ -1,5 +1,4 @@
 import NewsItem from './news-item';
-import PaginationBar from '../pagination-bar.tsx/pagination-bar';
 import CommunityItem from './community-item';
 import CommunityDivisionBar from './community-division-bar';
 import { getNewsList } from '@/services/apis/news/getNewsList';
@@ -49,9 +48,6 @@ export default async function CategoryTab({
 			) : (
 				renderItems(response.data, isNews ? NewsItem : CommunityItem)
 			)}
-			<div className="flex mt-[3.75rem] mb-10 mx-auto">
-				<PaginationBar />
-			</div>
 		</div>
 	);
 }
