@@ -22,11 +22,6 @@ export default function PredictCard({
 	const participations = formatGambleParticipations(gambleResult.participationNumber);
 	const timeBefore = getGameStartTimeBefore(startAt);
 
-	const successBackground =
-		'linear-gradient(262deg, #000 -20.49%, #600606 3.69%, #C00C0B 50.27%, #600606 87.98%, #000 114.36%)';
-	const failBackground =
-		'linear-gradient(84deg, #6D6D6D -12.16%, #888 11.83%, #AFAFAF 49.66%, #888 95.51%, #6D6D6D 113.24%)';
-
 	return (
 		<div
 			className={clsx(
@@ -40,16 +35,10 @@ export default function PredictCard({
 					<div
 						className={clsx('px-2 py-1 rounded-full text-black-000 caption2-regular text-center items-center', {
 							'bg-black-900': gameStatus === 'PENDING',
-							'bg-black-500': gameStatus !== 'PENDING',
+							'bg-primary-900': myGambleResult?.gambleStatus === 'SUCCEED' || 'PERFECT',
+							'bg-black-700': myGambleResult?.gambleStatus === 'FAILED',
+							'bg-black-500': (gameStatus !== 'PENDING' && !myGambleResult) || gameStatus === 'CANCELED',
 						})}
-						style={{
-							background:
-								myGambleResult?.gambleStatus === 'SUCCEED'
-									? successBackground
-									: myGambleResult?.gambleStatus === 'FAILED'
-										? failBackground
-										: '',
-						}}
 					>
 						{gameStatus === 'PENDING'
 							? '예측 진행 중'
@@ -66,16 +55,22 @@ export default function PredictCard({
 			</div>
 			<div className="flex gap-1.5 items-center">
 				<div
-					className={clsx(
-						'px-[0.3125rem] py-3 flex flex-col justify-center items-center border border-black-200 rounded-[0.625rem]',
-						{ 'bg-black-200': gameStatus !== 'PENDING' },
-					)}
+					className={clsx('px-[0.3125rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
+						'border-black-200': gameStatus === 'PENDING',
+						'bg-black-200 border-black-100': gameStatus !== 'PENDING',
+					})}
 				>
 					<div className="body7-medium">
-						{gameStatus === 'PENDING' ? '경기 전' : gameStatus === 'AWAY' || 'HOME' || 'DRAW' ? '풀타임' : '기타'}
+						{gameStatus === 'PENDING'
+							? '경기 전'
+							: gameStatus === 'AWAY' || 'HOME' || 'DRAW'
+								? '풀타임'
+								: gameStatus === 'CANCELED'
+									? '경기 취소'
+									: '기타'}
 					</div>
-					<div className="button6-regular">{startDate}</div>
-					<div className="button6-regular">{startTime}</div>
+					<div className={clsx('button6-regular', { 'line-through': gameStatus === 'CANCELED' })}>{startDate}</div>
+					<div className={clsx('button6-regular', { 'line-through': gameStatus === 'CANCELED' })}>{startTime}</div>
 				</div>
 				{gameStatus === 'PENDING' ? (
 					<InProgress

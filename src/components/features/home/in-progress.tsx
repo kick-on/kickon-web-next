@@ -68,6 +68,7 @@ export default function InProgress({
 		} else {
 			// 동일 버튼 클릭 시 선택 종료
 			if (selectedButton === button) {
+				// 기존 예측이 있는 경우에는 예측 삭제
 				if (myGambleResult) {
 					const response = await deleteGameGamble(myGambleResult.id);
 
@@ -197,7 +198,7 @@ export default function InProgress({
 	};
 
 	return (
-		<div className="flex flex-col gap-2.5 w-[36rem] cursor-pointer">
+		<div className="flex flex-col gap-4 w-[36rem] cursor-pointer">
 			<div className="relative w-full h-[4.625rem] grid grid-cols-3 border border-black-200 rounded-[0.625rem] button3-semibold shadow-predict-button">
 				{/* 왼쪽 팀 */}
 				{renderTeamButton('left')}
@@ -244,7 +245,7 @@ export default function InProgress({
 			{isClicked && (
 				<button
 					onClick={handleCompleteButtonClick}
-					className="w-full h-[1.875rem] border border-black-200 rounded-[0.625rem]
+					className="w-full h-[2.125rem] border border-black-200 rounded-[0.625rem]
 						flex justify-center items-center button5-medium shadow-predict-button transition-colors
 						hover:bg-primary-700 hover:border-0 hover:shadow-kick-button-active active:bg-primary-900 active:text-white"
 				>
