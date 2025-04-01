@@ -27,6 +27,7 @@ export interface UserInfoDto {
 	teamPk?: number;
 	leagueLogoUrl?: string;
 	leagueName?: string;
+	leaguePk?: number;
 	privacyAgreedAt: string;
 	marketingAgreedAt: string;
 }
