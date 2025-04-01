@@ -4,19 +4,24 @@ import Score from './score';
 import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
 import clsx from 'clsx';
-import { GameDto } from '@/services/apis/user-game-gamble/dto';
+import { GameDto, PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
+import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
 
 type SelectedButton = 'none' | 'left' | 'center' | 'right';
 
 export default function InProgress({
+	pk,
 	homeTeam,
 	awayTeam,
 	gambleResult,
-}: Pick<GameDto, 'homeTeam' | 'awayTeam' | 'gambleResult'>) {
+	myGambleResult,
+}: Pick<GameDto, 'pk' | 'homeTeam' | 'awayTeam' | 'gambleResult' | 'myGambleResult'>) {
 	const [isClicked, setIsClicked] = useState(false);
-	const [leftScore, setLeftScore] = useState(0);
-	const [rightScore, setRightScore] = useState(0);
-	const [isCompleted, setIsCompleted] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(!!myGambleResult);
+	const [isEditing, setIsEditing] = useState(false);
+
+	const [leftScore, setLeftScore] = useState(myGambleResult?.homeScore || 0);
+	const [rightScore, setRightScore] = useState(myGambleResult?.awayScore || 0);
 
 	const selectedButton = !isClicked
 		? 'none'
@@ -54,14 +59,24 @@ export default function InProgress({
 		}
 	};
 
-	const handleTeamButtonClick = (button: SelectedButton) => {
+	const handleTeamButtonClick = async (button: SelectedButton) => {
 		// 선택이 완료된 상태에서 다시 클릭 시 득점 업다운 버튼 활성화
 		if (isCompleted) {
 			setIsCompleted(false);
+			setIsEditing(true);
 			setIsClicked(true);
 		} else {
 			// 동일 버튼 클릭 시 선택 종료
 			if (selectedButton === button) {
+				if (myGambleResult) {
+					const response = await deleteGameGamble(myGambleResult.id);
+
+					// 삭제 실패 시 현재 상태 유지
+					if (typeof response === 'string') {
+						console.error(response);
+						return;
+					}
+				}
 				setIsClicked(false);
 				setLeftScore(0);
 				setRightScore(0);
@@ -119,9 +134,39 @@ export default function InProgress({
 		}
 	};
 
-	const handleCompleteButtonClick = () => {
-		setIsClicked(false);
-		setIsCompleted(true);
+	const handleCompleteButtonClick = async () => {
+		if (isEditing) {
+			// 수정 중인 상태에서는 patch 함수 호출
+			const request: PatchGameGambleRequest = {
+				gamble: myGambleResult?.id,
+				predictedHomeScore: leftScore,
+				predictedAwayScore: rightScore,
+			};
+			const response = await patchGameGamble(request);
+
+			if (typeof response === 'string') {
+				console.error(response);
+			} else {
+				setIsClicked(false);
+				setIsEditing(false);
+				setIsCompleted(true);
+			}
+		} else {
+			// 새로 생성하는 경우 post 함수 호출
+			const request: PostGameGambleRequest = {
+				game: pk,
+				predictedHomeScore: leftScore,
+				predictedAwayScore: rightScore,
+			};
+			const response = await postGameGamble(request);
+
+			if (typeof response === 'string') {
+				console.error(response);
+			} else {
+				setIsClicked(false);
+				setIsCompleted(true);
+			}
+		}
 	};
 
 	// TODO: data 매개변수로 받아서 뿌리기

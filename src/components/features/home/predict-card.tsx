@@ -7,6 +7,7 @@ import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipation
 import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
 
 export default function PredictCard({
+	pk,
 	homeTeam,
 	awayTeam,
 	gambleResult,
@@ -77,7 +78,13 @@ export default function PredictCard({
 					<div className="button6-regular">{startTime}</div>
 				</div>
 				{gameStatus === 'PENDING' ? (
-					<InProgress homeTeam={homeTeam} awayTeam={awayTeam} gambleResult={gambleResult} />
+					<InProgress
+						pk={pk}
+						homeTeam={homeTeam}
+						awayTeam={awayTeam}
+						gambleResult={gambleResult}
+						myGambleResult={myGambleResult}
+					/>
 				) : (
 					<Closed
 						homeTeam={homeTeam}
