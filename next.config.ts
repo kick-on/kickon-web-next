@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
 			'media.api-sports.io',
 			'i.ytimg.com',
 			'img1.kakaocdn.net',
+			'ssl.pstatic.net',
 		],
 	},
 };
