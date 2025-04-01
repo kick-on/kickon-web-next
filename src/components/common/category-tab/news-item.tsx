@@ -15,13 +15,16 @@ export default function NewsItem({
 	views,
 	likes,
 	replies,
+	team,
 	isMyTeam = false,
 }: NewsItemDto & { isMyTeam?: boolean }) {
 	return (
 		<Link href={`news/${pk}`}>
 			<article className="flex flex-col py-6 px-4 cursor-pointer">
 				<header className="flex gap-2 mb-2.5 items-center">
-					{!isMyTeam && <Image width={24} height={24} src={'/team-logo/arsenal.svg'} alt={'팀 로고'} />}
+					{!isMyTeam && (
+						<Image width={24} height={24} src={team.logoUrl} alt={`${team.nameKr || team.nameEn} 로고 이미지`} />
+					)}
 					<div className="h-5 px-2.5 py-0.5 rounded-full bg-black-200 text-black-800 caption1-medium">{category}</div>
 				</header>
 

@@ -70,19 +70,26 @@ export default function Profile() {
 					<div>
 						<div className="flex p-4 justify-between border-b border-black-200">
 							<div className="flex gap-3">
-								<Image width={60} height={60} src="/default-profile.svg" alt="프로필 사진" />
+								<Image
+									className="rounded-full"
+									width={60}
+									height={60}
+									src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+									alt="프로필 사진"
+								/>
 								<div className="flex flex-col gap-[0.3125rem] mt-[0.4688rem]">
 									<div className="flex gap-2">
-										<div className="flex gap-1 h-fit">
-											<div className="body2-semibold">{currentUserInfo.nickname}</div>
-											<div className="body2-regular text-black-800">님</div>
+										<div className="flex gap-1 h-fit items-center">
+											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
+											<div className="body3-regular text-black-800">님</div>
 										</div>
-										{currentUserInfo.teamName && (
+										{currentUserInfo?.teamName && (
 											<Image
+												className="w-4 h-4 my-auto"
 												width={16}
 												height={16}
-												src={currentUserInfo.teamLogoUrl}
-												alt={`${currentUserInfo.teamName} 로고`}
+												src={currentUserInfo?.teamLogoUrl}
+												alt={`${currentUserInfo?.teamName} 로고`}
 											/>
 										)}
 									</div>
@@ -103,7 +110,7 @@ export default function Profile() {
 							<div className="flex border-r border-black-200">
 								<div className="mx-auto my-[0.5625rem] text-center items-center">
 									<div className="caption2-regular h-4">
-										이번 시즌 {currentUserInfo.teamName ? '우리 팀 내' : '전체'} 순위
+										이번 시즌 {currentUserInfo?.teamName ? '우리 팀 내' : '전체'} 순위
 									</div>
 									<div className="body4-semibold">{extraUserInfo?.ranking || '-'}위</div>
 								</div>
@@ -122,11 +129,11 @@ export default function Profile() {
 						</div>
 					</div>
 				) : (
-					<div className="mx-auto my-[1.8125rem] flex flex-col items-center gap-4">
+					<div className="mx-auto h-[8.8125rem] flex flex-col items-center justify-center gap-4">
 						<Image width={40} height={32} src="/logo/icon-black.svg" alt="킥온" />
 						<button
 							onClick={handleLoginButtonClick}
-							className="flex gap-2.5 items-center w-fit px-[1.125rem] py-2.5 bg-primary-900 rounded-3xl shadow-login-button"
+							className="flex gap-2.5 items-center w-fit px-[1.125rem] py-1.5 bg-primary-900 rounded-3xl shadow-login-button"
 						>
 							<div className="text-black-000 button1-medium">간편 로그인 하기</div>
 							<Image width={18} height={18} src="/chevron/right-white.svg" alt="바로가기" />

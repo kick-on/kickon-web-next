@@ -55,7 +55,7 @@ export default function PredictCard({
 			</div>
 			<div className="flex gap-1.5 items-center">
 				<div
-					className={clsx('px-[0.3125rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
+					className={clsx('w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
 						'border-black-200': gameStatus === 'PENDING',
 						'bg-black-200 border-black-100': gameStatus !== 'PENDING',
 					})}
