@@ -11,12 +11,8 @@ export default function PredictCard({
 	awayTeam,
 	gambleResult,
 	myGambleResult,
-	pk,
 	homeScore,
 	awayScore,
-	round,
-	homePenaltyScore,
-	awayPenaltyScore,
 	gameStatus,
 	startAt,
 	leagueName,
@@ -78,7 +74,11 @@ export default function PredictCard({
 					<div className="button6-regular">{startDate}</div>
 					<div className="button6-regular">{startTime}</div>
 				</div>
-				{gameStatus === 'PENDING' ? <InProgress /> : <Closed isParticipated={!!myGambleResult} />}
+				{gameStatus === 'PENDING' ? (
+					<InProgress homeTeam={homeTeam} awayTeam={awayTeam} gambleResult={gambleResult} />
+				) : (
+					<Closed isParticipated={!!myGambleResult} />
+				)}
 			</div>
 			<div className="caption1-regular text-black-700 text-right">{participations}명 참여</div>
 		</div>
