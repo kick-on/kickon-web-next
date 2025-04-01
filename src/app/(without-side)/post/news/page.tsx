@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { newsOptions } from '@/lib/constants/options';
+import { categories } from '@/lib/constants/options';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
@@ -134,7 +134,7 @@ export default function Page() {
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
-			category: 'INJURY',
+			category: selectedOption.value,
 		};
 
 		try {
@@ -247,11 +247,11 @@ export default function Page() {
 
 					{isVisibleDropdown && (
 						<div className="z-50 absolute top-10 w-[9.125rem] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
-							{newsOptions.map((option, index) => (
+							{categories.map((option, index) => (
 								<div
 									key={option.value}
 									className={clsx('px-4 py-2.5 body5-regular cursor-pointer hover:bg-black-200 transition-colors', {
-										'rounded-b-sm': index === newsOptions.length - 1,
+										'rounded-b-sm': index === categories.length - 1,
 									})}
 									onClick={() => handleNewsOptionClick(option)}
 								>

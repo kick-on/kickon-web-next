@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
+import { categories } from '@/lib/constants/options';
 //import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const DetailContent = ({ data, type }) => {
@@ -19,6 +20,8 @@ const DetailContent = ({ data, type }) => {
 	const [likes, setLikes] = useState(data.likes);
 	const [isLiked, setIsLiked] = useState(false); // 좋아요 눌렀는지 여부
 	const [sanitizedContent, setSanitizedContent] = useState('');
+
+	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
@@ -83,7 +86,7 @@ const DetailContent = ({ data, type }) => {
 				<div className="flex gap-2 mb-2.5 items-center">
 					{isOurTeamPost && <Image src="/team-logo/liverpool.svg" alt="팀 로고" width={24} height={24} />}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
-						{data.category}
+						{categoryLabel}
 					</span>
 				</div>
 			)}
