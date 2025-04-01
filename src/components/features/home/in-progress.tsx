@@ -182,7 +182,7 @@ export default function InProgress({
 				onClick={() => handleTeamButtonClick(side)}
 				className={clsx('relative h-full flex gap-2 items-center', {
 					'pl-4 rounded-l-[0.5625rem]': isLeft,
-					'pr-4 justify-end text-right rounded-r-[0.5625rem]': !isLeft,
+					'pr-4 flex-row-reverse text-right rounded-r-[0.5625rem]': !isLeft,
 					[selectedButtonClass(side)]:
 						(isClicked || isCompleted) && (isLeft ? leftScore > rightScore : leftScore < rightScore),
 					[hoveredButtonClass(side)]: !(isClicked || isCompleted),

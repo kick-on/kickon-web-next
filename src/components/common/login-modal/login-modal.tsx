@@ -47,7 +47,7 @@ export default function LoginModal({ onClose }) {
 				<button onClick={handleXButtonClick} className="ml-auto mb-[4.6875rem]">
 					<Image width={24} height={24} src="/x.svg" alt="닫기" />
 				</button>
-				<Image width={280} height={62} src="/logo/kick-on-mixed.svg" alt="킥온 로고" />
+				<Image width={280} height={62} src="/logo/kick-on-red.svg" alt="킥온 로고" />
 
 				<div className="mt-[1.875rem]">로그인하고 킥온과 함께</div>
 				<div>좋아하는 축구팀 승부예측하러 가요!</div>

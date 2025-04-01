@@ -76,13 +76,20 @@ export default function Page() {
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
 			<div className="relative mb-7">
-				<Image width={68} height={68} src="/default-profile.svg" alt="프로필 이미지" />
-				<button
+				<Image
+					className="rounded-full"
+					width={68}
+					height={68}
+					src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+					alt="프로필 이미지"
+				/>
+				{/* <button
+				onClick={()=>{}}
 					className="absolute z-10 left-11 top-11
             bg-black-000 border border-black-200 rounded-full p-[0.3125rem]"
 				>
 					<Image width={18} height={18} src="/camera.svg" alt="프로필 사진 변경" />
-				</button>
+				</button> */}
 			</div>
 
 			<div className="flex flex-col gap-6">

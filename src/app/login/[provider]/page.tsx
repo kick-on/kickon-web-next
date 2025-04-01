@@ -30,9 +30,8 @@ export default function Page() {
 				// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
 				router.push(`/signup?provider=${provider}`);
 			} else {
-				// 유저 정보 불러오기 성공 시 이전 페이지로로
+				// 유저 정보 불러오기 성공 시 이전 페이지로
 				setCurrentUserInfo(response.data);
-
 				const previousPage = sessionStorage.getItem('previousPage');
 				router.replace(previousPage);
 			}
