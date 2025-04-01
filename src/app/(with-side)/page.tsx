@@ -5,14 +5,14 @@ import RecommendedContent from '@/components/common/recommendedContent';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getGames } from '@/services/apis/user-game-gamble';
-import { GameDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
+import { GameDto, GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
 import { getUserInfo } from '@/services/auth';
 import { useEffect, useState } from 'react';
 
 export default function Home() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
-	const [proceedingGames, setProceedingGames] = useState<GameDto[] | null>(null);
-	const [finishedGames, setFinishedGames] = useState<GameDto[] | null>(null);
+	const [proceedingGames, setProceedingGames] = useState<GameTaggedLeagueDto | null>(null);
+	const [finishedGames, setFinishedGames] = useState<GameTaggedLeagueDto | null>(null);
 
 	useEffect(() => {
 		const getProceedingGames = async () => {
@@ -24,11 +24,12 @@ export default function Home() {
 				status: 'proceeding',
 			};
 			const response = await getGames(request);
+			console.log(response);
 
 			if (!response) {
 				setProceedingGames(null);
 			} else {
-				setProceedingGames(response.data.games);
+				setProceedingGames(response.data);
 			}
 		};
 
@@ -66,14 +67,14 @@ export default function Home() {
 						<FetchingFailedCard isCardVisible={false} height="8.25rem" marginTop="0" />
 					</div>
 				) : (
-					proceedingGames.map((game) => <PredictCard key={game.pk} status="inProgress" {...game} />)
+					proceedingGames.games.map((game) => <PredictCard key={game.pk} leagueName={proceedingGames.name} {...game} />)
 				)}
 			</div>
 			<hr className="mx-6 border-black-600" />
 			<div className="flex flex-col gap-4">
-				<PredictCard status="success" />
+				{/* <PredictCard status="success" />
 				<PredictCard status="fail" />
-				<PredictCard status="unparticipated" />
+				<PredictCard status="unparticipated" /> */}
 			</div>
 			<RecommendedContent mode={'뉴스'} />
 			<RecommendedContent mode={'게시글'} />
