@@ -11,19 +11,34 @@ import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { getCommentList } from '@/services/apis/detail/comment';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import PrivacyAgreementButton from '@/components/features/button';
+import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
 
-//import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-
-// TODO: 내 정보 불러와서 내 팀 뉴스인지 isOurTeamPost 확인하기
-const DetailPage = async ({ params }: { params?: { type?: string; id?: string } }) => {
+const DetailPage = async ({
+	params,
+	searchParams,
+}: {
+	params?: { type?: string; id?: string };
+	searchParams?: { page?: string };
+}) => {
 	if (!params?.type || !params?.id) return notFound();
 
 	const { type, id } = params;
-	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
-	console.log(contents.data);
+	const currentPage = Number(searchParams?.page || '1');
+	const commentsPerPage = 10; // 페이지당 댓글 수
 
-	const comments = (await getCommentList(Number(id), 1, 10, type === 'news')) as GetCommentsResponse;
+	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
+
+	// 현재 페이지 번호를 쿼리 파라미터에서 가져와 API 호출에 사용
+	const comments = (await getCommentList(
+		Number(id),
+		currentPage,
+		commentsPerPage,
+		type === 'news',
+	)) as GetCommentsResponse;
 	console.log(comments);
+
+	// 현재 URL 경로 (쿼리 파라미터 제외)
+	const baseUrl = `/${type}/${id}`;
 
 	return (
 		<div className="flex flex-col gap-4">
@@ -37,7 +52,10 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
 				)}
 				{comments ? (
-					<CommentSection type={type} comments={comments.data} contentsId={contents.data.pk} />
+					<>
+						<CommentSection type={type} comments={comments.data} contentsId={contents.data.pk} />
+						<PaginationBar totalPages={10} baseUrl={baseUrl} />
+					</>
 				) : (
 					<FetchingFailedCard height="300px" marginTop="50px" onClick={() => {}} />
 				)}
@@ -49,4 +67,3 @@ const DetailPage = async ({ params }: { params?: { type?: string; id?: string } 
 };
 
 export default DetailPage;
-//Todo 저 비어있는  onClick={()=>{}} 이거 채워

@@ -1,4 +1,11 @@
-export default function PaginationBar({ currentPage, totalPages, onPageChange }) {
+'use client';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+export default function PaginationBar({ totalPages, baseUrl }) {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const currentPage = Number(searchParams.get('page') || '1');
+
 	const pageGroupSize = 10;
 	const currentGroup = Math.floor((currentPage - 1) / pageGroupSize);
 	const startPage = currentGroup * pageGroupSize + 1;
@@ -6,7 +13,10 @@ export default function PaginationBar({ currentPage, totalPages, onPageChange })
 
 	const handlePageClick = (page) => {
 		if (page >= 1 && page <= totalPages) {
-			onPageChange(page);
+			// 현재 URL에서 쿼리 파라미터만 변경
+			const params = new URLSearchParams(searchParams);
+			params.set('page', page.toString());
+			router.push(`${baseUrl}?${params.toString()}`);
 		}
 	};
 
