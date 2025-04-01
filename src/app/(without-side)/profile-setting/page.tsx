@@ -33,7 +33,7 @@ export default function Page() {
 
 	const isEditable = false;
 	const hasTeam = league.nameKr !== '응원팀이 없어요.';
-	const socialLogoUrl = currentUserInfo.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
+	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -99,8 +99,8 @@ export default function Page() {
 					className="flex gap-2.5 items-center px-4 py-3 w-full
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
 				>
-					<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo.providerType} 로고`} />
-					{currentUserInfo.email}
+					<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo?.providerType} 로고`} />
+					{currentUserInfo?.email}
 				</div>
 			</div>
 
