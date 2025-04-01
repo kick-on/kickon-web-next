@@ -9,7 +9,7 @@ import TabBar from './tab-bar';
 const renderItems = (items, ItemComponent) => (
 	<div>
 		{items.map((item, index) => (
-			<div key={item.id}>
+			<div key={item.pk}>
 				<ItemComponent {...item} />
 				{index !== items.length - 1 && <hr className="border-black-300 mx-4" />}
 			</div>
@@ -38,6 +38,7 @@ export default async function CategoryTab({
 		league: type === 'league' ? parseInt(id) : undefined,
 	};
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
+	console.log(response);
 
 	return (
 		<div className="flex flex-col w-full">
