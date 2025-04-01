@@ -7,6 +7,20 @@ export interface GetGamesRequest {
 	status: 'proceeding' | 'finished';
 }
 
+// 승부예측 생성
+export interface PostGameGambleRequest {
+	game: number;
+	predictedHomeScore: number;
+	predictedAwayScore: number;
+}
+
+// 승부예측 수정
+export interface PatchGameGambleRequest {
+	gamble: string;
+	predictedHomeScore: number;
+	predictedAwayScore: number;
+}
+
 export type GetGamesResponse = SuccessResponse<GameTaggedLeagueDto>;
 
 // 내부 dto
