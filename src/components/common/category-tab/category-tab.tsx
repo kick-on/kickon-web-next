@@ -1,13 +1,11 @@
-import clsx from 'clsx';
 import NewsItem from './news-item';
 import PaginationBar from '../pagination-bar.tsx/pagination-bar';
 import CommunityItem from './community-item';
-import SelectBox from './select-box';
-import Link from 'next/link';
 import CommunityDivisionBar from './community-division-bar';
 import { getNewsList } from '@/services/apis/news/getNewsList';
 import { getBoardList } from '@/services/apis/news/getBoardList';
 import FetchingFailedCard from '../fetching-failed-card';
+import TabBar from './tab-bar';
 
 const renderItems = (items, ItemComponent) => (
 	<div>
@@ -20,43 +18,31 @@ const renderItems = (items, ItemComponent) => (
 	</div>
 );
 
-export default async function CategoryTab({ mode, q }: { mode: 'news' | 'board'; q: string }) {
-	const tabs = ['전체', '인기', 'FC서울'];
+export default async function CategoryTab({
+	mode,
+	q,
+	type,
+	id,
+}: {
+	mode: 'news' | 'board';
+	q: string;
+	type: string;
+	id: string;
+}) {
 	const isNews = mode === 'news';
 
 	const request = {
-		team: q === tabs[2] ? 0 : undefined, // TODO: team pk를 어떻게 받아올지 -> query에 저장
+		team: type === 'team' ? parseInt(id) : undefined,
 		size: isNews ? 10 : 20,
 		page: 1,
 		order: q === '인기' ? 'hot' : 'recent',
-		league: !tabs.includes(q) ? 0 : undefined, // TODO: league pk를 어떻게 받아올지 -> query에 저장
+		league: type === 'league' ? parseInt(id) : undefined,
 	};
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
 
 	return (
 		<div className="flex flex-col w-full">
-			<div className="flex gap-4 pt-[0.9375rem] pl-4 header-medium border-b border-black-300">
-				{tabs.map((tab) => (
-					<Link
-						href={`/${mode}?q=${tab}`}
-						key={tab}
-						className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
-							'border-primary-900 text-primary-900 header-semibold': q === tab,
-						})}
-					>
-						{tab}
-					</Link>
-				))}
-				{isNews && (
-					<div
-						className={clsx('border-b-2 border-transparent', {
-							'border-primary-900 text-primary-900 header-semibold': !tabs.includes(q),
-						})}
-					>
-						<SelectBox isClickedOtherTab={tabs.includes(q)} />
-					</div>
-				)}
-			</div>
+			<TabBar mode={mode} q={q} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />

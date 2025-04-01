@@ -18,7 +18,7 @@ export const getBoardList = async ({
 	const response = await fetch(`${SERVER_URL}/api/board?${params.toString()}`);
 
 	if (!response.ok) {
-		console.error(await response.json());
+		console.error('게시글 리스트 조회 실패: ', `${SERVER_URL}/api/board?${params.toString()}`, await response.json());
 		return null;
 	}
 	return response.json();

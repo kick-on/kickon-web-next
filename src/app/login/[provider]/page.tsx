@@ -25,15 +25,16 @@ export default function Page() {
 
 		const getCurrentUserInfo = async () => {
 			const response = await getUserInfo();
-			console.log(response);
 
 			if (typeof response === 'string') {
 				// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
 				router.push(`/signup?provider=${provider}`);
 			} else {
-				// 유저 정보 불러오기 성공 시 홈으로
+				// 유저 정보 불러오기 성공 시 이전 페이지로로
 				setCurrentUserInfo(response.data);
-				router.replace('/');
+
+				const previousPage = sessionStorage.getItem('previousPage');
+				router.replace(previousPage);
 			}
 		};
 

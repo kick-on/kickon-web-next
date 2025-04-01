@@ -7,17 +7,23 @@ import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Profile() {
 	const router = useRouter();
+	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('q'));
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
 
 	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
+
+	const fullUrl = !!searchParams.get('login')
+		? '/'
+		: `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+	sessionStorage.setItem('previousPage', fullUrl);
 
 	const handleLoginButtonClick = () => {
 		setIsLoginModalOpen(true);

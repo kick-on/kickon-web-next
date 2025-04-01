@@ -6,12 +6,13 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
-import { updatePrivacy, updateUserInfo } from '@/services/auth';
+import { getUserInfo, updatePrivacy, updateUserInfo } from '@/services/auth';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function Page() {
 	const router = useRouter();
@@ -30,6 +31,8 @@ export default function Page() {
 		privacy: false,
 		marketing: false,
 	});
+
+	const { setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const isValidNickname = nickname.length > 0 && nickname.length < 9;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
@@ -78,15 +81,22 @@ export default function Page() {
 			console.log(privacyResponse);
 		} else {
 			// 회원가입 성공 시 유저 정보 수정 후 홈으로 이동
-			const userInfoRequest: UpdateUserInfoRequest = {
+			const updateUserInfoRequest: UpdateUserInfoRequest = {
 				nickname: nickname,
 				team: team.pk === -1 ? undefined : team.pk,
 			};
-			const userInfoResponse = updateUserInfo(userInfoRequest);
+			const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
-			if (typeof userInfoResponse === 'string') {
-				console.log(userInfoResponse);
+			if (typeof updateUserInfoResponse === 'string') {
+				console.log(updateUserInfoResponse);
 			} else {
+				const getUserInfoResponse = await getUserInfo();
+
+				if (typeof getUserInfoResponse === 'string') {
+					return getUserInfoResponse;
+				} else {
+					setCurrentUserInfo(getUserInfoResponse.data);
+				}
 				router.push('/');
 			}
 		}
