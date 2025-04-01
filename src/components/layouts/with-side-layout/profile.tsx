@@ -85,6 +85,7 @@ export default function Profile() {
 										</div>
 										{currentUserInfo?.teamName && (
 											<Image
+												className="w-4 h-4 my-auto"
 												width={16}
 												height={16}
 												src={currentUserInfo?.teamLogoUrl}
@@ -128,11 +129,11 @@ export default function Profile() {
 						</div>
 					</div>
 				) : (
-					<div className="mx-auto my-[1.8125rem] flex flex-col items-center gap-4">
+					<div className="mx-auto h-[8.8125rem] flex flex-col items-center justify-center gap-4">
 						<Image width={40} height={32} src="/logo/icon-black.svg" alt="킥온" />
 						<button
 							onClick={handleLoginButtonClick}
-							className="flex gap-2.5 items-center w-fit px-[1.125rem] py-2.5 bg-primary-900 rounded-3xl shadow-login-button"
+							className="flex gap-2.5 items-center w-fit px-[1.125rem] py-1.5 bg-primary-900 rounded-3xl shadow-login-button"
 						>
 							<div className="text-black-000 button1-medium">간편 로그인 하기</div>
 							<Image width={18} height={18} src="/chevron/right-white.svg" alt="바로가기" />
