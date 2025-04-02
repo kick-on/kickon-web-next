@@ -20,17 +20,17 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
 
 	const isMyTeam = Boolean(teamName);
-	const isNews = mode === '뉴스';
+	const isNews = mode === 'news';
 	const isHome = pathname === '/';
 	const Component = isNews ? NewsItem : CommunityItem;
 
 	const displayTitle =
-		pathname === '/' && mode === '게시글' ? (
+		pathname === '/' && !isNews ? (
 			'클럽 커뮤니티'
 		) : (
 			<>
 				함께 볼 만한 {isMyTeam && <span className="text-primary-900">{teamName} </span>}
-				{mode}
+				{isNews ? '뉴스' : '게시글'}
 			</>
 		);
 

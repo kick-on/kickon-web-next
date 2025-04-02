@@ -28,14 +28,14 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 	}, [data.content]);
 
 	const handleLikeButtonClick = async () => {
-		// ✅ UI 즉시 업데이트 (API 응답을 기다리지 않고 반영)
+		// UI 즉시 업데이트 (API 응답을 기다리지 않고 반영)
 		setIsLiked((prev) => !prev);
 		setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
 
-		// ✅ 좋아요 요청 API 호출
+		// 좋아요 요청 API 호출
 		const success = await postContentLike(data.pk, isNews);
 
-		// ✅ API 요청 실패 시 원래 상태로 롤백
+		// API 요청 실패 시 원래 상태로 롤백
 		if (!success) {
 			setIsLiked((prev) => !prev);
 			setLikes((prev) => (isLiked ? prev + 1 : prev - 1));

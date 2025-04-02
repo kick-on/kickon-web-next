@@ -108,21 +108,21 @@ const PostEditor = ({
 		const file = event.target.files[0];
 
 		try {
-			// 1️⃣ Presigned URL 요청
+			// Presigned URL 요청
 			const presignedResponse = await getPresignedUrl(file.name, isNews);
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			console.log('S3 업로드 요청:', presignedResponse);
 
-			// 2️⃣ Presigned URL로 S3에 이미지 업로드
+			// Presigned URL로 S3에 이미지 업로드
 			await uploadToS3(presignedUrl, file);
 			console.log('S3 업로드 완료:', s3Url);
 
-			// 3️⃣ 업로드된 이미지 URL을 에디터에 추가
+			// 업로드된 이미지 URL을 에디터에 추가
 			editor.chain().focus().setImage({ src: s3Url }).run();
 			console.log('이미지 추가됨:', s3Url);
 
-			// 4️⃣ 에디터 내용 업데이트 (비동기 반영 확인)
+			// 에디터 내용 업데이트 (비동기 반영 확인)
 			setTimeout(() => {
 				const updatedContent = editor.getHTML();
 				setBody(updatedContent);

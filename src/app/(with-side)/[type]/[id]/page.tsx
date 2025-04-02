@@ -8,7 +8,6 @@ import RecommendedContent from '@/components/common/recommendedContent';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/CommentSection';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import PrivacyAgreementButton from '@/components/features/button';
 import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
 
 import { getDetailContent } from '@/services/apis/detail';
@@ -29,11 +28,15 @@ const DetailPage = () => {
 
 	const type = params?.type as 'news' | 'board';
 	const id = Number(params?.id);
+	const isNews = type == 'news';
 	const currentPage = Number(searchParams.get('page') || '1');
 	const commentsPerPage = 10;
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isOurTeamPost = currentUserInfo?.teamPk == contents?.data?.team?.pk;
+	console.log(currentUserInfo);
+	console.log(currentUserInfo?.teamPk);
+	console.log(contents?.data?.team?.pk);
 
 	useEffect(() => {
 		if (!type || !id) {
@@ -44,7 +47,7 @@ const DetailPage = () => {
 		const fetchData = async () => {
 			try {
 				const contentData = await getDetailContent(type, id);
-				const commentData = await getCommentList(id, currentPage, commentsPerPage, type === 'news');
+				const commentData = await getCommentList(id, currentPage, commentsPerPage, isNews);
 				console.log(contentData);
 				setContents(contentData);
 				setComments(commentData);
@@ -56,13 +59,13 @@ const DetailPage = () => {
 		};
 
 		fetchData();
-	}, [type, id, currentPage, router]);
+	}, [type, id, currentPage, router, isNews]);
 
 	if (isLoading) {
 		return <div className="text-center">로딩 중...</div>;
 	}
 
-	const totalComments = comments?.data.length || 0;
+	const totalComments = contents?.data.replies || 0;
 	const totalPages = Math.max(1, Math.ceil(totalComments / commentsPerPage));
 	const baseUrl = `/${type}/${id}`;
 
@@ -70,10 +73,7 @@ const DetailPage = () => {
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
 				{contents?.data ? (
-					<>
-						<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
-						<PrivacyAgreementButton />
-					</>
+					<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
 				)}
@@ -85,6 +85,7 @@ const DetailPage = () => {
 							type={type}
 							comments={comments.data}
 							contentsId={contents?.data?.pk || 0}
+							totalreplies={contents?.data?.replies}
 						/>
 						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
 					</>
@@ -93,7 +94,7 @@ const DetailPage = () => {
 				)}
 			</ComponentFrame>
 
-			<RecommendedContent mode="뉴스" teamName="FC 서울" />
+			<RecommendedContent mode={type} teamName={isOurTeamPost ? contents?.data.team.nameEn : ''} />
 		</div>
 	);
 };
