@@ -62,7 +62,7 @@ export const postNewToken = async (body: PostNewTokenRequest) => {
 			console.error(response);
 			return response.message;
 		}
-		return response;
+		return response.data;
 	} catch (error) {
 		console.error('토큰 발급 실패: ', error);
 	}

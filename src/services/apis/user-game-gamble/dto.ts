@@ -3,7 +3,6 @@ import { SuccessResponse } from '@/services/config/dto';
 // 리그 기반으로 매치 리스트 조회
 export interface GetGamesRequest {
 	league: number;
-	season: number;
 	status: 'proceeding' | 'finished';
 }
 
