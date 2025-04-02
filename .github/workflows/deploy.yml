@@ -1,0 +1,79 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+jobs:
+  deploy-dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 코드
+        uses: actions/checkout@v4
+
+      - name: Node.js 22 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: 의존성 설치 및 빌드
+        run: |
+          yarn install
+          yarn build
+      - name: 파일 압축
+        run: |
+          mkdir -p deploy
+          cp -R .next package.json yarn.lock node_modules deploy/
+          cd deploy && zip -r build.zip .
+
+      - name: S3에 업로드
+        run: aws s3 cp deploy/build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+
+      - name: AWS CodeDeploy 실행
+        run: |
+          aws deploy create-deployment \
+            --application-name kickon-dev-frontend \
+            --deployment-group-name kickon-dev-frontend-group \
+            --s3-location bucket=kickon-frontend-bucket,key=dev/latest-build.zip,bundleType=zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-northeast-2
+
+  deploy-prod:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 코드
+        uses: actions/checkout@v4
+
+      - name: Node.js 22 설정
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'yarn'
+
+      - name: 의존성 설치 및 빌드
+        run: |
+          yarn install
+          yarn build
+          zip -r deploy.zip . -x "node_modules/*" ".git/*"
+
+      - name: Elastic Beanstalk 배포
+        uses: einaregilsson/beanstalk-deploy@v21
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: 'YourEBAppName'
+          environment_name: 'YourEBEnvName'
+          version_label: 'v-${{ github.run_id }}'
+          region: 'ap-northeast-2'
+          deployment_package: 'deploy.zip'
