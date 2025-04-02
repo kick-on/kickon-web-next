@@ -22,7 +22,6 @@ export default function Home() {
 			// TODO: 카테고리탭 리그 선택 연결하기
 			const request: GetGamesRequest = {
 				league: currentUserInfo?.leaguePk,
-				season: new Date().getFullYear(),
 				status: status,
 			};
 			const response = await getGames(request);
