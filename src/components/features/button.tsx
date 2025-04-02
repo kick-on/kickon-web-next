@@ -1,7 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { JWT, SERVER_URL } from '@/services/config/constants';
+import { SERVER_URL } from '@/services/config/constants';
+import { getAuthToken } from '@/lib/utils/getAccessToken';
+
+const JWT = getAuthToken();
 
 const PrivacyAgreementButton = () => {
 	const [loading, setLoading] = useState(false);
@@ -18,6 +21,7 @@ const PrivacyAgreementButton = () => {
 		};
 
 		console.log(requestBody);
+		console.log(JWT);
 		try {
 			const response = await fetch(`${SERVER_URL}/api/user/privacy`, {
 				method: 'PATCH',

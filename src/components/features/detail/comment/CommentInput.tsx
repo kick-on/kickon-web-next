@@ -1,3 +1,4 @@
+'use clinet';
 import { postCreateReply } from '@/services/apis/detail/comment';
 import { useEffect, useRef, useState } from 'react';
 

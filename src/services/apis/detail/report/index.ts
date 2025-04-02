@@ -1,6 +1,9 @@
-import { JWT, SERVER_URL } from '@/services/config/constants';
+import { SERVER_URL } from '@/services/config/constants';
 import { PostReportDetailRequest } from './dto';
 import { EmptySuccessResponse } from '@/services/config/dto';
+import { getAuthToken } from '@/lib/utils/getAccessToken';
+
+const JWT = getAuthToken();
 
 export const postReportDetail = async (
 	data: PostReportDetailRequest,

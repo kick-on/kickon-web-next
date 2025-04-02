@@ -7,12 +7,11 @@ import { postCommentKick } from '@/services/apis/detail/comment';
 //import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 //teampK 받아야됨
-const CommentSection = ({ type, comments, contentsId }) => {
+const CommentSection = ({ type, comments, isOurTeamPost, contentsId }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
 	const isNews = type === 'news';
-	const isOurTeamPost = true;
 	useEffect(() => {
 		const storedLikes = localStorage.getItem('likedComments');
 		if (storedLikes) {

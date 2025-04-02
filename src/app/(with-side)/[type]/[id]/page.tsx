@@ -1,62 +1,91 @@
-import { notFound } from 'next/navigation';
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useSearchParams, useParams, useRouter } from 'next/navigation';
 
 import ComponentFrame from '@/components/common/componentFrame';
 import RecommendedContent from '@/components/common/recommendedContent';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/CommentSection';
-import { getDetailContent } from '@/services/apis/detail';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-
-import { GetDetailResponse } from '@/services/apis/detail/dto';
-import { getCommentList } from '@/services/apis/detail/comment';
-import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import PrivacyAgreementButton from '@/components/features/button';
 import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
 
-const DetailPage = async ({
-	params,
-	searchParams,
-}: {
-	params?: { type?: string; id?: string };
-	searchParams?: { page?: string };
-}) => {
-	if (!params?.type || !params?.id) return notFound();
+import { getDetailContent } from '@/services/apis/detail';
+import { getCommentList } from '@/services/apis/detail/comment';
 
-	const { type, id } = params;
-	const currentPage = Number(searchParams?.page || '1');
+import { GetDetailResponse } from '@/services/apis/detail/dto';
+import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+
+const DetailPage = () => {
+	const params = useParams();
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
+	const [contents, setContents] = useState<GetDetailResponse | null>(null);
+	const [comments, setComments] = useState<GetCommentsResponse | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	const type = params?.type as 'news' | 'board';
+	const id = Number(params?.id);
+	const currentPage = Number(searchParams.get('page') || '1');
 	const commentsPerPage = 10;
 
-	const contents = (await getDetailContent(type as 'news' | 'board', Number(id))) as GetDetailResponse;
+	const { currentUserInfo } = useCurrentUserInfoStore();
+	const isOurTeamPost = currentUserInfo?.teamPk == contents?.data?.team?.pk;
 
-	const comments = (await getCommentList(
-		Number(id),
-		currentPage,
-		commentsPerPage,
-		type === 'news',
-	)) as GetCommentsResponse;
+	useEffect(() => {
+		if (!type || !id) {
+			router.replace('/404');
+			return;
+		}
 
-	const totalComments = comments.data.length || 0;
+		const fetchData = async () => {
+			try {
+				const contentData = await getDetailContent(type, id);
+				const commentData = await getCommentList(id, currentPage, commentsPerPage, type === 'news');
+				console.log(contentData);
+				setContents(contentData);
+				setComments(commentData);
+			} catch (error) {
+				console.error('데이터 불러오기 실패:', error);
+			} finally {
+				setIsLoading(false);
+			}
+		};
 
-	// 총 페이지 수 계산 (최소 1페이지)
+		fetchData();
+	}, [type, id, currentPage, router]);
+
+	if (isLoading) {
+		return <div className="text-center">로딩 중...</div>;
+	}
+
+	const totalComments = comments?.data.length || 0;
 	const totalPages = Math.max(1, Math.ceil(totalComments / commentsPerPage));
-
-	// 현재 URL 경로 (쿼리 파라미터 제외)
 	const baseUrl = `/${type}/${id}`;
 
 	return (
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
-				{contents.data ? (
+				{contents?.data ? (
 					<>
-						<DetailContent data={contents.data} type={type} />
+						<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
 						<PrivacyAgreementButton />
 					</>
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
 				)}
-				{comments ? (
+
+				{comments?.data ? (
 					<>
-						<CommentSection type={type} comments={comments.data} contentsId={contents.data.pk} />
+						<CommentSection
+							isOurTeamPost={isOurTeamPost}
+							type={type}
+							comments={comments.data}
+							contentsId={contents?.data?.pk || 0}
+						/>
 						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
 					</>
 				) : (
