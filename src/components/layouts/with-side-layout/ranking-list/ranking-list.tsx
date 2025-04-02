@@ -12,14 +12,28 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+
 	const [ranking, setRanking] = useState<GambleRankingDto[] | ActualRankingDto[] | null>();
 	const [league, setLeague] = useState<LeagueDto>({
-		pk: currentUserInfo?.leaguePk || 1,
-		nameKr: currentUserInfo?.leagueName || '프리미어리그',
-		nameEn: currentUserInfo?.leagueName || 'Premier League',
-		logoUrl: currentUserInfo?.leagueLogoUrl || 'https://media.api-sports.io/football/leagues/39.png',
+		pk: 1,
+		nameKr: '프리미어리그',
+		nameEn: 'Premier League',
+		logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
 		leagueType: 'League',
 	});
+
+	// 렌더링 초기 currentUserInfo가 null인 문제 해결
+	useEffect(() => {
+		if (currentUserInfo) {
+			setLeague({
+				pk: currentUserInfo?.leaguePk,
+				nameKr: currentUserInfo?.leagueName,
+				nameEn: currentUserInfo?.leagueName,
+				logoUrl: currentUserInfo?.leagueLogoUrl,
+				leagueType: 'League',
+			});
+		}
+	}, [currentUserInfo]);
 
 	const handleLeagueChange = (selectedLeague: LeagueDto) => {
 		if (league.pk === selectedLeague.pk) return;
