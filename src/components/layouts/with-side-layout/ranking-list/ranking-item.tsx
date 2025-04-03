@@ -15,6 +15,7 @@ export default function RankingItem({
 			<div className="flex gap-2.5">
 				<div className="flex justify-center items-center w-7">{rankOrder}</div>
 				<Image
+					unoptimized
 					className="w-[1.125rem] h-[1.125rem] object-contain"
 					width={18}
 					height={18}

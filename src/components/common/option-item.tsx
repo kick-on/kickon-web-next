@@ -16,7 +16,7 @@ export default function OptionItem({
 			onClick={() => onClick(pk)}
 			className="w-full h-8 flex gap-4 items-center pl-6 body5-regular text-black-900"
 		>
-			<Image width={16} height={16} src={logoUrl} alt={`${nameKr} 로고`} />
+			<Image unoptimized width={16} height={16} src={logoUrl} alt={`${nameKr} 로고`} />
 			{nameKr}
 		</button>
 	);
