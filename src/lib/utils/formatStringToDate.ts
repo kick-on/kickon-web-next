@@ -1,5 +1,6 @@
 export const formatStringToDate = (createdAt: string) => {
 	const date = new Date(createdAt);
+	date.setHours(date.getHours() + 9);
 
 	return new Intl.DateTimeFormat('ko-KR', {
 		year: 'numeric',
