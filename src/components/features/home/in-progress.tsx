@@ -33,13 +33,13 @@ export default function InProgress({
 
 	const selectedButtonClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:bg-primary-300 before:shadow-predict-button-active
+		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
 		${side === 'left' && 'before:rounded-l-[0.5625rem]'} ${side === 'right' && 'before:rounded-r-[0.5625rem]'}`;
 
 	const hoveredButtonClass = (
 		side,
 	) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:hover:bg-primary-50 before:hover:shadow-predict-button-active before:transition-all
+		before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
 		${side === 'left' && 'before:rounded-l-[0.5625rem]'} ${side === 'right' && 'before:rounded-r-[0.5625rem]'}`;
 
 	const updateScore = (side: 'left' | 'center' | 'right', mode: 'increase' | 'decrease') => {

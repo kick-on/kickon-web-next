@@ -17,7 +17,7 @@ export default function Closed({
 
 	const selectedButtonClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:bg-primary-200 before:shadow-closed-button-active
+		before:content-[''] before:bg-primary-200 before:shadow-closed-button-active
 		${side === 'left' ? 'before:rounded-l-[0.5625rem]' : side === 'right' ? 'before:rounded-r-[0.5625rem]' : ''}`;
 
 	return (
