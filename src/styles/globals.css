@@ -79,6 +79,11 @@ p {
 hr {
 	border: none;
 	border-top: 1px solid #d9d9d9;
+}
+
+.tiptap hr {
+	border: none;
+	border-top: 1px solid #d9d9d9;
 	margin: 16px 0;
 }
 
