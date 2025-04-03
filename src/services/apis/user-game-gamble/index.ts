@@ -1,4 +1,3 @@
-import { SERVER_URL } from '@/services/config/constants';
 import { GetGamesRequest, GetGamesResponse, PatchGameGambleRequest, PostGameGambleRequest } from './dto';
 import axiosInstance from '@/services/config/axiosInstance';
 import { EmptySuccessResponse, FailResponse } from '@/services/config/dto';
@@ -10,13 +9,13 @@ export const getGames = async ({ league, status }: GetGamesRequest): Promise<Get
 	params.append('league', String(league));
 	params.append('status', String(status));
 
-	const response = await fetch(`${SERVER_URL}/api/game?${params}`);
+	const response = await axiosInstance.get<GetGamesResponse | FailResponse>(`/api/game?${params.toString()}`);
 
-	if (!response.ok) {
-		console.error('게임 리스트 조회 실패:', await response.json());
+	if (!response.code.split('_').includes('SUCCESS')) {
+		console.error('게임 리스트 조회 실패:', response);
 		return null;
 	}
-	return response.json();
+	return response;
 };
 
 // 승부예측 생성
