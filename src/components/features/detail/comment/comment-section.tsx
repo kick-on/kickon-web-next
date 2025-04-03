@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/comment-input';
 import CommentItem from '@/components/features/detail/comment/comment-item';
 import { postCommentKick } from '@/services/apis/detail/comment';
+import { getAuthToken } from '@/lib/utils/getAccessToken';
 
 const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplies }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
@@ -19,11 +20,22 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 	}, []);
 
 	const toggleCommentLike = async (commentId: number) => {
+		if (!getAuthToken()) {
+			alert('로그인이 필요합니다.');
+			return;
+		}
+
 		const result = await postCommentKick(commentId, isNews);
-		console.log('결과', result);
-		const updatedLikes = { ...likedComments, [commentId]: !likedComments[commentId] };
-		setLikedComments(updatedLikes);
-		localStorage.setItem('likedComments', JSON.stringify(updatedLikes));
+		if (result) {
+			setLikedComments((prev) => ({
+				...prev,
+				[commentId]: !prev[commentId],
+			}));
+			localStorage.setItem(
+				'likedComments',
+				JSON.stringify({ ...likedComments, [commentId]: !likedComments[commentId] }),
+			);
+		}
 	};
 
 	const toggleReplyInputVisibility = (commentId: string) => {
