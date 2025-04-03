@@ -2,7 +2,7 @@ import { getTimeAgo } from '@/lib/utils/getTimeAgo';
 import { NewsItemDto } from '@/services/apis/news/dto';
 import Image from 'next/image';
 import Link from 'next/link';
-import SanitizedContent from '../SanitizedContent';
+import SanitizedContent from '../sanitized-content-temp';
 
 export default function NewsItem({
 	pk,
