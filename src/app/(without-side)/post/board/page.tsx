@@ -7,39 +7,35 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter } from 'next/navigation';
-import { getTeam } from '@/services/apis/team';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function Page() {
 	const navigate = useRouter();
-	const [teams, setTeams] = useState<{ label: string; value: string; logo?: string }[]>([]);
-	const [selectedOption, setSelectedOption] = useState<{
-		label: string;
-		value: string;
-		logo?: string;
-	}>({
-		label: '탭 선택하기',
-		value: '',
-	});
+	const { currentUserInfo } = useCurrentUserInfoStore();
+
+	const userTeams = currentUserInfo?.teamPk
+		? [
+				{
+					label: currentUserInfo.teamName ?? '내 팀',
+					value: String(currentUserInfo.teamPk),
+					logo: currentUserInfo.teamLogoUrl,
+				},
+			]
+		: [];
+
+	const [teams] = useState<{ label: string; value: string; logo?: string }[]>([
+		{ label: '전체', value: '' },
+		...userTeams,
+	]);
+
+	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string; logo?: string }>(teams[0]);
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
+	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
-
-	useEffect(() => {
-		const getTeamList = async () => {
-			const response = await getTeam(12);
-			const teamData = response.data.map((team) => ({
-				label: team.nameEn,
-				value: String(team.pk),
-				logo: team.logoUrl,
-			}));
-			setTeams(teamData); // 상태 업데이트
-		};
-		getTeamList();
-	}, []);
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -68,16 +64,16 @@ export default function Page() {
 		if (!isFormValid) return;
 
 		const requestBody: PostNewsContentsRequest = {
-			team: Number(selectedOption.value),
+			team: selectedOption.value ? Number(selectedOption.value) : null,
 			title: title.trim(),
 			contents: body.trim(),
 			hasImage: hasImage,
 		};
 
+		console.log(requestBody);
 		try {
 			const response = await postNewContents(requestBody);
 			console.log(response);
-
 			navigate.back();
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
@@ -95,7 +91,7 @@ export default function Page() {
 					)}
 				>
 					{selectedOption.logo && <Image src={selectedOption.logo} alt={selectedOption.label} width={16} height={16} />}
-					<div className={clsx('body5-regular', selectedOption.value ? 'text-black-900' : 'text-black-600')}>
+					<div className={clsx('button4-medium', selectedOption.value !== '' ? 'text-black-900' : 'text-black-900')}>
 						{selectedOption.label}
 					</div>
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
@@ -103,7 +99,6 @@ export default function Page() {
 
 				{isVisibleDropdown && (
 					<div className="z-50 absolute top-10 w-[9.125rem] bg-black-000 border border-black-300 button4-medium rounded-lg shadow-lg overflow-hidden">
-						<div className="px-4 py-2.5">전체</div>
 						{teams.map((option, index) => (
 							<div
 								key={option.value}

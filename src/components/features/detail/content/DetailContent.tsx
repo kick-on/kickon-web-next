@@ -18,12 +18,11 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
-			setSanitizedContent(
-				DOMPurify.sanitize(data.content, {
-					ADD_TAGS: ['iframe'],
-					ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
-				}),
-			);
+			const sanitized = DOMPurify.sanitize(data.content, {
+				ADD_TAGS: ['iframe'],
+				ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+			});
+			setSanitizedContent(sanitized);
 		}
 	}, [data.content]);
 
@@ -95,7 +94,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 whitespace-pre-line body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+			<div className="mb-40 body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
 
 			{/* 좋아요 버튼 */}
 			<button
@@ -105,7 +104,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 	${isLiked ? 'bg-[#D91920] text-white' : 'bg-black-100 text-black-900'} transition
 	hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]`}
 			>
-				<Image src={isLiked ? '/kick/red.svg' : '/kick/black.svg'} alt="축구공" width={18} height={18} />
+				<Image src={'/kick/black.svg'} alt="축구공" width={18} height={18} />
 				<span className="mr-0.5">킥</span>
 				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
 			</button>

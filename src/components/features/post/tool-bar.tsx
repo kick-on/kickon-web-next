@@ -115,7 +115,7 @@ export default function Toolbar({
 				{textFormatButtons.map((btn) => (
 					<button
 						key={btn.key}
-						className={clsx('w-rounded-sm', editor?.isActive(btn.key) && 'bg-gray-300')}
+						className={clsx('w-5 rounded-xs', editor?.isActive(btn.key) && 'bg-black-300')}
 						onClick={() => handleTextFormatToggle(btn.key)}
 					>
 						{btn.icon}
