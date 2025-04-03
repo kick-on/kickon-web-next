@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import CommentInput from '@/components/features/detail/comment/comment-input-temp';
-import CommentItem from '@/components/features/detail/comment/comment-item-temp';
+import CommentInput from '@/components/features/detail/comment/comment-input';
+import CommentItem from '@/components/features/detail/comment/comment-item';
 import { postCommentKick } from '@/services/apis/detail/comment';
 
 const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplies }) => {

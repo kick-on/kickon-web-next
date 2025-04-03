@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useMemo } from 'react';
 import clsx from 'clsx';
-import CommentInput from './comment-input-temp';
+import CommentInput from './comment-input';
 
 const CommentItem = ({
 	type,
