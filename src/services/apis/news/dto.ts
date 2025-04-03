@@ -80,6 +80,11 @@ export interface RecommendedNewsDto {
 export interface HotNewsDto {
 	pk: number;
 	title: string;
+	leagueNameKr: string;
+	teamPk: number;
+	teamNameKr: string;
+	teamNameEn: string;
+	teamLogoUrl: string;
 	thumbnailUrl: string;
 	category: string;
 	views: number;
