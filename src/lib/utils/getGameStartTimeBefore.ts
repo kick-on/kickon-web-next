@@ -1,6 +1,8 @@
 export const getGameStartTimeBefore = (startAt: string) => {
 	const now = new Date();
 	const date = new Date(startAt);
+	date.setHours(date.getHours() + 9);
+
 	const diff = Math.floor((date.getTime() - now.getTime()) / 1000); // 초 단위 차이 계산
 
 	if (diff < 60) return `${diff}초 전`;

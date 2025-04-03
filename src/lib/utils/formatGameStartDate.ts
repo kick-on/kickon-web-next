@@ -1,5 +1,6 @@
 export const formatGameStartDate = (startAt): [string, string] => {
 	const date = new Date(startAt);
+	date.setHours(date.getHours() + 9);
 
 	// 날짜 포맷 (MM.DD (요일))
 	const dateStr = new Intl.DateTimeFormat('ko-KR', {
