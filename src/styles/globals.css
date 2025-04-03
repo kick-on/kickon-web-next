@@ -61,19 +61,24 @@ button {
 .banner-swiper .swiper-pagination-bullet-active {
 	width: 3.125rem;
 }
-.tiptap h1 {
+h1 {
 	font-size: 20px;
 	font-weight: 700;
 }
 
-.tiptap h2 {
+h2 {
 	font-size: 18px;
 	font-weight: 600;
 }
 
-.tiptap p {
+p {
 	font-size: 16px;
 	font-weight: 400;
+}
+
+hr {
+	border: none;
+	border-top: 1px solid #d9d9d9;
 }
 
 .tiptap hr {
@@ -82,25 +87,17 @@ button {
 	margin: 16px 0;
 }
 
-.tiptap ul {
+ul {
 	list-style: disc;
 	padding-left: 1.5rem;
 }
 
-.tiptap blockquote {
+blockquote {
 	border-left: 4px solid var(--color-black-800);
 	padding-left: 1rem;
 	margin: 1rem 0;
 }
-
-.tiptap boxquote {
-	border: 2px solid var(--color-black-300);
-	border-radius: 6px;
-	padding: 1rem;
-	margin: 1rem 0;
-}
-
-.tiptap ol {
+ol {
 	list-style-type: decimal;
 	padding-left: 1.5rem;
 }

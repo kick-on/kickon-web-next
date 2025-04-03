@@ -15,18 +15,21 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 export default function Page() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
+	console.log(currentUserInfo);
+
 	const [nickname, setNickname] = useState(currentUserInfo?.nickname);
 	const [league, setLeague] = useState<LeagueDto>({
-		pk: NO_CHEERING_TEAM_PK,
-		nameKr: '응원팀이 없어요.',
+		pk: currentUserInfo?.leaguePk ?? NO_CHEERING_TEAM_PK,
+		nameKr: currentUserInfo?.leagueName ?? '응원팀이 없어요.',
 		nameEn: 'no cheering team',
-		logoUrl: '/ban.svg',
+		logoUrl: currentUserInfo?.leagueLogoUrl ?? '/ban.svg',
 	});
+
 	const [team, setTeam] = useState<TeamDto>({
-		pk: NO_CHEERING_TEAM_PK,
-		nameKr: '응원팀이 없어요.',
+		pk: currentUserInfo?.teamPk ?? NO_CHEERING_TEAM_PK,
+		nameKr: currentUserInfo?.teamName ?? '응원팀이 없어요.',
 		nameEn: 'no cheering team',
-		logoUrl: '/ban.svg',
+		logoUrl: currentUserInfo?.teamLogoUrl ?? '/ban.svg',
 	});
 
 	const route = useRouter();
@@ -82,9 +85,9 @@ export default function Page() {
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
-			<div className="relative mb-7">
+			<div className="relative mb-7 w-[68px] h-[68px] rounded-full overflow-hidden">
 				<Image
-					className="rounded-full"
+					className="w-full h-full object-cover"
 					width={68}
 					height={68}
 					src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
