@@ -6,7 +6,8 @@ import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
+import LoginModal from '@/components/common/login-modal/login-modal';
 
 const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const isNews = type === 'news';
@@ -15,6 +16,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const [likes, setLikes] = useState(data.likes);
 	const [sanitizedContent, setSanitizedContent] = useState('');
 
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
 	useEffect(() => {
@@ -29,8 +31,9 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 
 	const handleLikeButtonClick = async () => {
 		// 비회원인 경우 클릭 차단 & 알림 표시
-		if (!getAuthToken()) {
+		if (!getAccessToken() || !getRefreshToken()) {
 			alert('로그인이 필요합니다.');
+			setIsLoginModalOpen(true);
 			return;
 		}
 
@@ -116,6 +119,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 				<span className="mr-0.5">킥</span>
 				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
 			</button>
+			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);
 };

@@ -4,13 +4,15 @@ import { useEffect, useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/comment-input';
 import CommentItem from '@/components/features/detail/comment/comment-item';
 import { postCommentKick } from '@/services/apis/detail/comment';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
+import LoginModal from '@/components/common/login-modal/login-modal';
 
 const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplies }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
 	const isNews = type === 'news';
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	useEffect(() => {
 		const storedLikes = localStorage.getItem('likedComments');
@@ -20,8 +22,9 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 	}, []);
 
 	const toggleCommentLike = async (commentId: number) => {
-		if (!getAuthToken()) {
+		if (!getAccessToken() || !getRefreshToken()) {
 			alert('로그인이 필요합니다.');
+			setIsLoginModalOpen(true);
 			return;
 		}
 
@@ -87,6 +90,7 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 					</div>
 				)}
 			</div>
+			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);
 };
