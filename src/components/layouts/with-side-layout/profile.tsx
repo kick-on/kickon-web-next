@@ -5,6 +5,7 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
+import { getUserInfo } from '@/services/auth';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -18,7 +19,7 @@ export default function Profile() {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
 
-	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, setCurrentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const fullUrl = !!searchParams.get('login')
 		? '/'
@@ -42,9 +43,23 @@ export default function Profile() {
 	};
 
 	useEffect(() => {
-		if (currentUserInfo) {
-			setIsLoggedIn(true);
+		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
+		if (!currentUserInfo) {
+			const getCurrentUserInfo = async () => {
+				const response = await getUserInfo();
 
+				if (typeof response === 'string') {
+					console.log(response);
+				} else {
+					setCurrentUserInfo(response.data);
+				}
+			};
+
+			getCurrentUserInfo();
+		}
+
+		// 저장된 유저 정보가 있으면 사용자 프로필 렌더링
+		if (currentUserInfo) {
 			const getExtraUserInfo = async () => {
 				const response = await getUserPointRanking();
 
@@ -59,8 +74,9 @@ export default function Profile() {
 			};
 
 			getExtraUserInfo();
+			setIsLoggedIn(true);
 		}
-	}, [currentUserInfo]);
+	}, [currentUserInfo, setCurrentUserInfo]);
 
 	return (
 		<>
