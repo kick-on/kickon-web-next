@@ -10,6 +10,8 @@ import { postNewContents } from '@/services/apis/post';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { useRouter } from 'next/navigation';
 import { getTeam } from '@/services/apis/team';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
+import LoginModal from '@/components/common/login-modal/login-modal';
 
 export default function Page() {
 	const navigate = useRouter();
@@ -32,6 +34,8 @@ export default function Page() {
 	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
 	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
 	const [filteredResults, setFilteredResults] = useState(teams);
+
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	useEffect(() => {
 		const getTeamList = async () => {
@@ -127,6 +131,11 @@ export default function Page() {
 	console.log(body);
 
 	const postNewsContents = async () => {
+		if (!getAccessToken() || !getRefreshToken()) {
+			alert('로그인이 필요합니다.');
+			setIsLoginModalOpen(true);
+			return;
+		}
 		const requestBody: PostNewsContentsRequest = {
 			team: selectedTeam.id,
 			title: title.trim(),
@@ -288,6 +297,7 @@ export default function Page() {
 				>
 					작성 완료
 				</button>
+				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 			</div>
 		</div>
 	);
