@@ -361,46 +361,48 @@ button {
 	width: 3.125rem;
 }
 
-// TODO: 에디터에서 사용하는 태그 설정 classname으로 감싸야 함
-h1 {
-	font-size: 20px;
-	font-weight: 700;
-}
+@layer base {
+	h1 {
+		font-size: 20px;
+		font-weight: 700;
+	}
 
-h2 {
-	font-size: 18px;
-	font-weight: 600;
-}
+	h2 {
+		font-size: 18px;
+		font-weight: 600;
+	}
 
-p {
-	font-size: 16px;
-	font-weight: 400;
-}
+	p {
+		font-size: 16px;
+		font-weight: 400;
+	}
 
-hr {
-	border: none;
-	border-top: 1px solid #d9d9d9;
+	hr {
+		border: none;
+		border-top: 1px solid #d9d9d9;
+	}
+
+	ul {
+		list-style: disc;
+		padding-left: 1.5rem;
+	}
+
+	blockquote {
+		border-left: 4px solid var(--color-black-800);
+		padding-left: 1rem;
+		margin: 1rem 0;
+	}
+
+	ol {
+		list-style-type: decimal;
+		padding-left: 1.5rem;
+	}
 }
 
 .tiptap hr {
 	border: none;
 	border-top: 1px solid #d9d9d9;
 	margin: 16px 0;
-}
-
-ul {
-	list-style: disc;
-	padding-left: 1.5rem;
-}
-
-blockquote {
-	border-left: 4px solid var(--color-black-800);
-	padding-left: 1rem;
-	margin: 1rem 0;
-}
-ol {
-	list-style-type: decimal;
-	padding-left: 1.5rem;
 }
 
 .tiptap .ProseMirror {
