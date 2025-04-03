@@ -259,7 +259,13 @@ export default function Page() {
 						</div>
 					)}
 				</div>
-				<button>
+				<button
+					onClick={() => {
+						if (window) {
+							window.open('https://www.notion.so/devbob/1c4e7fdb8ed1804780f4d7b6702c5316', '_blank');
+						}
+					}}
+				>
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>

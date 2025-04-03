@@ -1,20 +1,33 @@
 'use client';
 
-export default function Checkbox({ content, hasTerm, checked, onChange }) {
+export default function Checkbox({ content, hasTerm, documentUrl, checked, onChange }) {
 	return (
-		<label className="flex items-center gap-2 body5-medium">
-			<input
-				type="checkbox"
-				checked={checked}
-				onChange={onChange}
-				className="relative w-[0.875rem] h-[0.875rem] border border-black-300 rounded-xs appearance-none cursor-pointer
+		<div className="flex">
+			<label className="flex items-center gap-2 body5-medium">
+				<input
+					type="checkbox"
+					checked={checked}
+					onChange={onChange}
+					className="relative w-[0.875rem] h-[0.875rem] border border-black-300 rounded-xs appearance-none cursor-pointer
                   checked:[background-color:var(--color-primary-900)] checked:[border:var(--color-primary-900)]
                   after:content-[''] after:absolute after:w-full after:h-full
                   after:bg-[url('/check.svg')] after:bg-center after:bg-no-repeat
                   after:opacity-0 checked:after:opacity-100"
-			/>
-			<span className="cursor-pointer">{content}</span>
-			{hasTerm && <span className="button5-regular text-black-700 underline ml-auto cursor-pointer">약관보기</span>}
-		</label>
+				/>
+				<span className="cursor-pointer">{content}</span>
+			</label>
+			{hasTerm && (
+				<span
+					onClick={() => {
+						if (window) {
+							window.open(documentUrl, '_blank');
+						}
+					}}
+					className="button5-regular text-black-700 underline ml-auto cursor-pointer"
+				>
+					약관보기
+				</span>
+			)}
+		</div>
 	);
 }
