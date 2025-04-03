@@ -92,11 +92,7 @@ export default function AccountSelectBox({
 				{category}
 				{isLeagueSelectBox && (
 					<Image
-						onClick={() => {
-							if (window) {
-								window.open('https://www.notion.so/devbob/1c4e7fdb8ed1804780f4d7b6702c5316', '_blank');
-							}
-						}}
+						title="리그가 종료되면 다시 선택할 수 있어요."
 						width={12}
 						height={12}
 						src="/help-circle.svg"

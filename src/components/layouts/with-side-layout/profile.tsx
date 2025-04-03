@@ -141,7 +141,13 @@ export default function Profile() {
 									<div className="flex gap-1 items-center caption2-regular h-4">
 										지금까지 모은 포인트
 										<button>
-											<Image width={12} height={12} src="/help-circle.svg" alt="도움말" />
+											<Image
+												title={`포인트는 승부 예측 기반으로,\n가상의 킥온 리그 순위를 정하는 데 쓰여요.`}
+												width={12}
+												height={12}
+												src="/help-circle.svg"
+												alt="도움말"
+											/>
 										</button>
 									</div>
 									<div className="body4-semibold">{extraUserInfo?.totalPoints || '-'} P</div>
