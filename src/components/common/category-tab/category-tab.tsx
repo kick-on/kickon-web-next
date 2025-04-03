@@ -5,9 +5,10 @@ import { getNewsList } from '@/services/apis/news/getNewsList';
 import { getBoardList } from '@/services/apis/news/getBoardList';
 import FetchingFailedCard from '../fetching-failed-card';
 import TabBar from './tab-bar';
+import PaginationBar from '../pagination-bar.tsx/pagination-bar';
 
 const renderItems = (items, ItemComponent) => (
-	<div>
+	<div className="mb-12">
 		{items.map((item, index) => (
 			<div key={item.pk}>
 				<ItemComponent {...item} />
@@ -22,18 +23,20 @@ export default async function CategoryTab({
 	q,
 	type,
 	id,
+	page,
 }: {
 	mode: 'news' | 'board';
 	q: string;
 	type: string;
 	id: string;
+	page: string | undefined;
 }) {
 	const isNews = mode === 'news';
 
 	const request = {
 		team: type === 'team' ? parseInt(id) : undefined,
 		size: isNews ? 10 : 20,
-		page: 1,
+		page: page !== undefined ? parseInt(page) : 1,
 		order: q === '인기' ? 'hot' : 'recent',
 		league: type === 'league' ? parseInt(id) : undefined,
 	};
@@ -46,7 +49,10 @@ export default async function CategoryTab({
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />
 			) : (
-				renderItems(response.data, isNews ? NewsItem : CommunityItem)
+				<>
+					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
+					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />
+				</>
 			)}
 		</div>
 	);
