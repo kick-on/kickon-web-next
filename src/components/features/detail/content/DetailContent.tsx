@@ -18,12 +18,11 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
-			setSanitizedContent(
-				DOMPurify.sanitize(data.content, {
-					ADD_TAGS: ['iframe'],
-					ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
-				}),
-			);
+			const sanitized = DOMPurify.sanitize(data.content, {
+				ADD_TAGS: ['iframe'],
+				ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
+			});
+			setSanitizedContent(sanitized);
 		}
 	}, [data.content]);
 
@@ -95,7 +94,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 whitespace-pre-line body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+			<div className="mb-40 body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
 
 			{/* 좋아요 버튼 */}
 			<button
