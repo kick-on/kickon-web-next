@@ -1,4 +1,4 @@
-import FloatingWritingButton from '@/components/common/floating-writing-button-temp';
+import FloatingWritingButton from '@/components/common/floating-writing-button';
 import MostReadNewsList from '@/components/layouts/with-side-layout/most-read-news-list/most-read-news-list';
 import Profile from '@/components/layouts/with-side-layout/profile';
 import RankingList from '@/components/layouts/with-side-layout/ranking-list/ranking-list';
