@@ -1,6 +1,6 @@
-import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse } from '@/services/config/dto';
 import { PostContentViewRequest } from './dto';
+import axiosInstance from '@/services/config/axiosInstance';
 
 interface PostContentViewProps {
 	requestBody: PostContentViewRequest;
@@ -11,23 +11,14 @@ export const PostContentView = async ({
 	requestBody,
 	isNews = false,
 }: PostContentViewProps): Promise<EmptySuccessResponse> => {
-	const endpoint = isNews ? 'news-view-history' : 'board-view-history';
-	console.log(requestBody);
+	try {
+		const endpoint = isNews ? '/api/news-view-history' : '/api/board-view-history';
 
-	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(requestBody),
-	});
+		const response = await axiosInstance.post<EmptySuccessResponse>(endpoint, requestBody);
 
-	if (!response.ok) {
-		const errorText = await response.text();
-		console.error('뷰 생성 실패 - 응답 상태:', response.status, response.statusText);
-		console.error('서버 응답 본문:', errorText);
-		throw new Error('뷰 생성 실패');
+		return response;
+	} catch (error) {
+		console.error('뷰 생성 실패:', error);
+		throw error;
 	}
-
-	return response.json();
 };

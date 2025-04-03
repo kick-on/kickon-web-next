@@ -1,24 +1,18 @@
-import { SERVER_URL } from '@/services/config/constants';
+import axiosInstance from '@/services/config/axiosInstance';
 import { GetDetailResponse } from './dto';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
 
 export const getDetailContent = async (type: 'news' | 'board', id: number): Promise<GetDetailResponse | null> => {
-	const JWT = getAuthToken();
+	try {
+		const response = await axiosInstance.get<GetDetailResponse>(`/api/${type}/${id}`);
 
-	// 헤더 동적 설정
-	const headers: HeadersInit = JWT ? { Authorization: `Bearer ${JWT}` } : {};
+		if (!response) {
+			console.error('상세페이지 조회 실패 - 응답 없음');
+			throw new Error('상세페이지 조회 실패');
+		}
 
-	const response = await fetch(`${SERVER_URL}/api/${type}/${id}`, {
-		method: 'GET',
-		headers,
-	});
-
-	if (!response.ok) {
-		const errorText = await response.text();
-		console.error('상세페이지 조회 실패 - 응답 상태:', response.status, response.statusText);
-		console.error('서버 응답 본문:', errorText);
-		throw new Error('상세페이지 조회 실패');
+		return response;
+	} catch (error) {
+		console.error('상세페이지 조회 실패:', error);
+		throw error;
 	}
-
-	return response.json();
 };
