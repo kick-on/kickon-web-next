@@ -98,10 +98,16 @@ button {
 	padding: 1rem;
 	margin: 1rem 0;
 }
+
 .tiptap ol {
 	list-style-type: decimal;
 	padding-left: 1.5rem;
 }
+
+.tiptap .ProseMirror {
+	height: 100%; /* 에디터 전체 영역을 인풋으로 받음 */
+}
+
 .minimal-scrollbar::-webkit-scrollbar {
 	width: 6px; /* 바만 좁게 남기고 */
 }

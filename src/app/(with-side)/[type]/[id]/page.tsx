@@ -101,7 +101,7 @@ const DetailPage = () => {
 						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
 					</>
 				) : (
-					<FetchingFailedCard height="300px" marginTop="50px" onClick={() => {}} />
+					<FetchingFailedCard height="300px" marginTop="50px" />
 				)}
 			</ComponentFrame>
 

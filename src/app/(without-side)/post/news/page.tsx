@@ -127,8 +127,6 @@ export default function Page() {
 	console.log(body);
 
 	const postNewsContents = async () => {
-		if (!isFormValid) return;
-
 		const requestBody: PostNewsContentsRequest = {
 			team: selectedTeam.id,
 			title: title.trim(),
@@ -275,11 +273,11 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={isFormValid ? postNewsContents : undefined}
+					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
 					disabled={!isFormValid}
 					className={clsx(
 						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
-						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000 cursor-not-allowed',
+						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000 pointer-events-none',
 					)}
 				>
 					작성 완료

@@ -77,8 +77,8 @@ export default function Home() {
 					finishedGames.games.map((game) => <PredictCard key={game.pk} leagueName={finishedGames.name} {...game} />)
 				)}
 			</div>
-			<RecommendedContent mode={'뉴스'} />
-			<RecommendedContent mode={'게시글'} />
+			<RecommendedContent mode={'news'} />
+			<RecommendedContent mode={'board'} />
 		</div>
 	);
 }

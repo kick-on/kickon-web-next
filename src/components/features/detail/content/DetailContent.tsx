@@ -51,7 +51,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 					alt="대표 이미지"
 					width={636}
 					height={322}
-					className="mt-6 mb-12 rounded-[0.625rem]"
+					className="mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] object-cover"
 				/>
 			)}
 
