@@ -62,6 +62,8 @@ export default function Page() {
 		};
 	}, []);
 
+	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
+
 	const postCommunityContents = async () => {
 		if (!isFormValid) return;
 
@@ -69,6 +71,7 @@ export default function Page() {
 			team: Number(selectedOption.value),
 			title: title.trim(),
 			contents: body.trim(),
+			hasImage: hasImage,
 		};
 
 		try {

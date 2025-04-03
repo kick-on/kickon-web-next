@@ -23,7 +23,8 @@ export interface PostCommentKickRequest {
 
 // 새로운 댓글 생성 요청
 export interface createNewReplyRequest {
-	news: number;
+	news?: number;
+	board?: number;
 	parentReply?: number;
 	contents: string;
 }

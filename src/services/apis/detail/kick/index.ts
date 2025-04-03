@@ -1,5 +1,8 @@
-import { JWT, SERVER_URL } from '@/services/config/constants';
+import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse } from '@/services/config/dto';
+import { getAuthToken } from '@/lib/utils/getAccessToken';
+
+const JWT = getAuthToken();
 
 export const postContentLike = async (id: number, isNews: boolean = false): Promise<EmptySuccessResponse> => {
 	const body = JSON.stringify({ [isNews ? 'news' : 'board']: id });

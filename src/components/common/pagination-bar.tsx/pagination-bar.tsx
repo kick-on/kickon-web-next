@@ -14,7 +14,6 @@ export default function PaginationBar({ totalPages, baseUrl }) {
 
 	const handlePageClick = (page) => {
 		if (page >= 1 && page <= totalPages) {
-			// 현재 URL에서 쿼리 파라미터만 변경
 			const params = new URLSearchParams(searchParams.toString());
 			params.set('page', page.toString());
 			router.push(`${baseUrl}?${params.toString()}`);
@@ -22,14 +21,14 @@ export default function PaginationBar({ totalPages, baseUrl }) {
 	};
 
 	return (
-		<div className="flex gap-3 body6-medium items-center mx-auto mb-10">
-			{/* 이전 그룹 버튼 - 페이지가 1일 때는 비활성화 */}
+		<div className="flex gap-3 body6-regular items-center mx-auto mb-10">
+			{/* 이전 그룹 버튼 */}
 			<button
 				onClick={() => handlePageClick(startPage - 1)}
 				disabled={currentPage === 1}
-				className={`px-3 py-1 flex gap-2 rounded-full ${currentPage === 1 ? 'text-black-400' : 'text-black-600'}`}
+				className={`px-3 py-1 flex gap-2 rounded-full ${currentPage === 1 ? 'text-black-600' : 'text-black-400'}`}
 			>
-				<Image src="/chevron/pagenation-left.svg" alt="다음 버튼" width={16} height={16} />
+				<Image src="/chevron/pagenation-left.svg" alt="이전 버튼" width={16} height={16} />
 				이전
 			</button>
 
@@ -46,11 +45,11 @@ export default function PaginationBar({ totalPages, baseUrl }) {
 				))}
 			</div>
 
-			{/* 다음 그룹 버튼 - 마지막 페이지일 때는 비활성화 */}
+			{/* 다음 그룹 버튼 */}
 			<button
 				onClick={() => handlePageClick(endPage + 1)}
-				disabled={endPage === totalPages}
-				className={`px-3 py-1 rounded-full flex gap-2 items-center ${endPage === totalPages ? 'text-black-400' : ''}`}
+				disabled={currentPage === totalPages}
+				className={`px-3 py-1 rounded-full flex gap-2 items-center ${currentPage === totalPages ? 'text-black-600' : 'text-black-400'}`}
 			>
 				다음
 				<Image src="/chevron/pagenation-right.svg" alt="다음 버튼" width={16} height={16} />

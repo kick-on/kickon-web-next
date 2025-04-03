@@ -1,3 +1,4 @@
+'use client';
 import { reportOptions } from '@/lib/constants/options';
 import { postReportDetail } from '@/services/apis/detail/report';
 import { PostReportDetailRequest } from '@/services/apis/detail/report/dto';
