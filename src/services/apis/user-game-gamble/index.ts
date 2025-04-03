@@ -4,11 +4,10 @@ import axiosInstance from '@/services/config/axiosInstance';
 import { EmptySuccessResponse, FailResponse } from '@/services/config/dto';
 
 // 매치 리스트 조회
-export const getGames = async ({ league, season, status }: GetGamesRequest): Promise<GetGamesResponse | null> => {
+export const getGames = async ({ league, status }: GetGamesRequest): Promise<GetGamesResponse | null> => {
 	const params = new URLSearchParams();
 
 	params.append('league', String(league));
-	params.append('season', String(season));
 	params.append('status', String(status));
 
 	const response = await fetch(`${SERVER_URL}/api/game?${params}`);

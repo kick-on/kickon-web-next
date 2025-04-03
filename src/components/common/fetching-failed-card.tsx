@@ -1,4 +1,6 @@
+'use client';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 export default function FetchingFailedCard({
 	height,
@@ -11,6 +13,16 @@ export default function FetchingFailedCard({
 	onClick?: () => void;
 	isCardVisible?: boolean;
 }) {
+	const router = useRouter();
+
+	const handleRefreshButtonClick = () => {
+		if (onClick === undefined) {
+			router.refresh();
+		} else {
+			onClick();
+		}
+	};
+
 	return (
 		<div className="flex flex-col items-center" style={{ height }}>
 			{isCardVisible && (
@@ -18,7 +30,7 @@ export default function FetchingFailedCard({
 			)}
 			<div className="mt-7 mb-6 title4-semibold">데이터를 불러오지 못했어요.</div>
 			<button
-				onClick={onClick}
+				onClick={handleRefreshButtonClick}
 				className="flex gap-1.5 px-5 py-[0.6875rem] rounded-full bg-black-900
 					text-black-000 button4-medium shadow-kick-button"
 			>

@@ -38,7 +38,6 @@ export default async function CategoryTab({
 		league: type === 'league' ? parseInt(id) : undefined,
 	};
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
-	console.log(response);
 
 	return (
 		<div className="flex flex-col w-full">

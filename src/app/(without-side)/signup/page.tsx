@@ -120,11 +120,12 @@ export default function Page() {
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
-				{agreementDatas.map(({ key, content, hasTerm }) => (
+				{agreementDatas.map(({ key, content, hasTerm, documentUrl }) => (
 					<Checkbox
 						key={key}
 						content={content}
 						hasTerm={hasTerm}
+						documentUrl={documentUrl}
 						checked={agreements[key]}
 						onChange={() => handleCheckboxChange(key)}
 					/>

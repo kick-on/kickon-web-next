@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AccountSelectBox from '@/components/common/account-selectbox';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
@@ -72,6 +72,13 @@ export default function Page() {
 			route.push('/');
 		}
 	};
+
+	useEffect(() => {
+		if (!currentUserInfo) {
+			alert('로그인이 필요한 서비스입니다. 홈으로 이동합니다.');
+			route.push('/?login=true');
+		}
+	}, [currentUserInfo, route]);
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">

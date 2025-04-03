@@ -91,7 +91,18 @@ export default function AccountSelectBox({
 			<div className="flex gap-1.5 items-center subtitle1-medium">
 				{category}
 				{isLeagueSelectBox && (
-					<Image width={12} height={12} src="/help-circle.svg" alt="도움말" className="cursor-pointer" />
+					<Image
+						onClick={() => {
+							if (window) {
+								window.open('https://www.notion.so/devbob/1c4e7fdb8ed1804780f4d7b6702c5316', '_blank');
+							}
+						}}
+						width={12}
+						height={12}
+						src="/help-circle.svg"
+						alt="리그 선택 도움말"
+						className="cursor-pointer"
+					/>
 				)}
 			</div>
 

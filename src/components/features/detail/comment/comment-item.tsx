@@ -30,7 +30,7 @@ const CommentItem = ({
 					alt="프로필"
 					width={24}
 					height={24}
-					className="w-6 h-6 rounded-full mr-[0.625rem] object-contain"
+					className="w-6 h-6 rounded-full mr-[0.625rem] object-cover"
 				/>
 
 				<div className="flex flex-col flex-1">
