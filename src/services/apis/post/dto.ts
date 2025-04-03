@@ -5,5 +5,5 @@ export interface PostNewsContentsRequest {
 	contents: string;
 	thumbnailUrl?: string;
 	category?: string;
+	hasImage?: boolean;
 }
-// TODO: 카테고리 종류 정리

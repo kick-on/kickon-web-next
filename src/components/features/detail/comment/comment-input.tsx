@@ -1,3 +1,4 @@
+'use clinet';
 import { postCreateReply } from '@/services/apis/detail/comment';
 import { useEffect, useRef, useState } from 'react';
 
@@ -87,9 +88,10 @@ const CommentInput = ({
 		const sanitizedContent = mentionPattern.test(content) ? content.replace(mentionPattern, '') : content;
 
 		const requestBody = {
-			news: contentsId,
 			contents: sanitizedContent, // 멘션 제거한 내용만 전송
 			...(type === 'reply' && parentReplyId ? { parentReply: parentReplyId } : {}),
+			...(contentType === 'news' ? { news: contentsId } : {}),
+			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 		console.log(requestBody);
 
@@ -134,7 +136,7 @@ const CommentInput = ({
 						isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
 					}`}
 				>
-					{isSubmitting ? '등록 중...' : '등록'}
+					등록
 				</button>
 			</div>
 		</div>

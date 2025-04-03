@@ -88,14 +88,16 @@ export default function Profile() {
 				{isLoggedIn ? (
 					<div>
 						<div className="flex p-4 justify-between border-b border-black-200">
-							<div className="flex gap-3">
-								<Image
-									className="rounded-full"
-									width={60}
-									height={60}
-									src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
-									alt="프로필 사진"
-								/>
+							<div className="flex gap-3 ">
+								<div className="w-[3.75rem] h-[3.75rem] rounded-full overflow-hidden">
+									<Image
+										className="w-full h-full object-cover"
+										width={60}
+										height={60}
+										src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+										alt="프로필 사진"
+									/>
+								</div>
 								<div className="flex flex-col gap-[0.3125rem] mt-[0.4688rem]">
 									<div className="flex gap-2">
 										<div className="flex gap-1 h-fit items-center">

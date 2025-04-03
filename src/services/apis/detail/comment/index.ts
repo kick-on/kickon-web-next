@@ -1,6 +1,9 @@
-import { JWT, SERVER_URL } from '@/services/config/constants';
+import { SERVER_URL } from '@/services/config/constants';
 import { createNewReplyRequest, GetCommentsResponse, PostCommentKickRequest } from './dto';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
+import { getAuthToken } from '@/lib/utils/getAccessToken';
+
+const JWT = getAuthToken();
 
 export const getCommentList = async (
 	id: number,
@@ -31,7 +34,6 @@ export const postCommentKick = async (id: number, isNews: boolean = false): Prom
 	const endpoint = isNews ? 'news-reply-kick' : 'board-reply-kick';
 
 	const body: PostCommentKickRequest = { reply: id };
-
 	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
 		method: 'POST',
 		headers: {

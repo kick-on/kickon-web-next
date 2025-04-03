@@ -6,19 +6,12 @@ import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
-//import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
-const DetailContent = ({ data, type }) => {
+const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const isNews = type === 'news';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
-
-	// const { currentUserInfo } = useCurrentUserInfoStore.getState();
-	// console.log('내 정보', currentUserInfo);
-	// const isOurTeamPost = (data.team?.pk ?? null) === (currentUserInfo?.teamPk ?? null);
-
-	const isOurTeamPost = true;
+	const [isLiked, setIsLiked] = useState(data.isKicked);
 	const [likes, setLikes] = useState(data.likes);
-	const [isLiked, setIsLiked] = useState(false); // 좋아요 눌렀는지 여부
 	const [sanitizedContent, setSanitizedContent] = useState('');
 
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
@@ -34,37 +27,18 @@ const DetailContent = ({ data, type }) => {
 		}
 	}, [data.content]);
 
-	useEffect(() => {
-		// 저장된 좋아요 여부 불러오기
-		const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '{}');
-		setIsLiked(!!likedPosts[data.pk]); // 해당 게시글이 좋아요 눌린 상태인지 확인
-	}, [data.pk]);
-
 	const handleLikeButtonClick = async () => {
-		if (isLiked) {
-			// 좋아요 취소 로직
-			const success = await postContentLike(data.pk, isNews);
-			if (success) {
-				setLikes((prev) => prev - 1);
-				setIsLiked(false);
+		// UI 즉시 업데이트 (API 응답을 기다리지 않고 반영)
+		setIsLiked((prev) => !prev);
+		setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
 
-				// 로컬 스토리지 업데이트
-				const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '{}');
-				delete likedPosts[data.pk];
-				localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
-			}
-		} else {
-			// 좋아요 등록 로직
-			const success = await postContentLike(data.pk, isNews);
-			if (success) {
-				setLikes((prev) => prev + 1);
-				setIsLiked(true);
+		// 좋아요 요청 API 호출
+		const success = await postContentLike(data.pk, isNews);
 
-				// 로컬 스토리지 업데이트
-				const likedPosts = JSON.parse(localStorage.getItem('likedPosts') || '{}');
-				likedPosts[data.pk] = true;
-				localStorage.setItem('likedPosts', JSON.stringify(likedPosts));
-			}
+		// API 요청 실패 시 원래 상태로 롤백
+		if (!success) {
+			setIsLiked((prev) => !prev);
+			setLikes((prev) => (isLiked ? prev + 1 : prev - 1));
 		}
 	};
 
@@ -121,8 +95,8 @@ const DetailContent = ({ data, type }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-
 			<div className="mb-40 whitespace-pre-line body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+
 			{/* 좋아요 버튼 */}
 			<button
 				onClick={handleLikeButtonClick}
