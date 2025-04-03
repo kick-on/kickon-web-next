@@ -88,9 +88,10 @@ const CommentInput = ({
 		const sanitizedContent = mentionPattern.test(content) ? content.replace(mentionPattern, '') : content;
 
 		const requestBody = {
-			news: contentsId,
 			contents: sanitizedContent, // 멘션 제거한 내용만 전송
 			...(type === 'reply' && parentReplyId ? { parentReply: parentReplyId } : {}),
+			...(contentType === 'news' ? { news: contentsId } : {}),
+			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 		console.log(requestBody);
 

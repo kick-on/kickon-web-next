@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
 
 import ComponentFrame from '@/components/common/componentFrame';
@@ -16,6 +16,7 @@ import { getCommentList } from '@/services/apis/detail/comment';
 import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { PostContentView } from '@/services/apis/detail/view';
 
 const DetailPage = () => {
 	const params = useParams();
@@ -24,7 +25,7 @@ const DetailPage = () => {
 
 	const [contents, setContents] = useState<GetDetailResponse | null>(null);
 	const [comments, setComments] = useState<GetCommentsResponse | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	const [, setIsLoading] = useState(true);
 
 	const type = params?.type as 'news' | 'board';
 	const id = Number(params?.id);
@@ -61,9 +62,19 @@ const DetailPage = () => {
 		getDetailContentData();
 	}, [type, id, currentPage, router, isNews]);
 
-	if (isLoading) {
-		return <div className="text-center">로딩 중...</div>;
-	}
+	const viewSent = useRef(false);
+
+	useEffect(() => {
+		if (!contents || viewSent.current) return; // 중복 호출 방지
+
+		console.log('👀 PostContentView 호출!');
+		PostContentView({
+			requestBody: { [type === 'news' ? 'news' : 'board']: id },
+			isNews: type === 'news',
+		}).then(console.log);
+
+		viewSent.current = true;
+	}, [contents, type, id]);
 
 	const totalComments = contents?.data.replies || 0;
 	const totalPages = Math.max(1, Math.ceil(totalComments / commentsPerPage));

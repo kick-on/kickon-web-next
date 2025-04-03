@@ -38,16 +38,22 @@ const CommentItem = ({
 						<div className="flex items-center gap-4">
 							<span className="body5-medium text-black-900">{content.user.nickname}</span>
 							<span className="body6-regular text-black-600">
-								{new Intl.DateTimeFormat('ko-KR', {
-									year: '2-digit',
-									month: '2-digit',
-									day: '2-digit',
-									hour: '2-digit',
-									minute: '2-digit',
-									hour12: false,
-								})
-									.format(new Date(content.createdAt))
-									.replace(/(\d{2})\.$/, '$1')}
+								{(() => {
+									const date = new Date(content.createdAt);
+									// 9시간 더하기
+									date.setHours(date.getHours() + 9);
+
+									return date
+										.toLocaleString('ko-KR', {
+											year: '2-digit',
+											month: '2-digit',
+											day: '2-digit',
+											hour: '2-digit',
+											minute: '2-digit',
+											hour12: false,
+										})
+										.replace(/\.$/, '');
+								})()}
 							</span>
 						</div>
 						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-1">
