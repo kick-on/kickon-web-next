@@ -1,7 +1,7 @@
 'use client';
 
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import RecommendedContent from '@/components/common/recommended-content-temp';
+import RecommendedContent from '@/components/common/recommended-content';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getGames } from '@/services/apis/user-game-gamble';

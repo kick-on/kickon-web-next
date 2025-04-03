@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useParams, useRouter } from 'next/navigation';
 
 import ComponentFrame from '@/components/common/componentFrame';
-import RecommendedContent from '@/components/common/recommended-content-temp';
+import RecommendedContent from '@/components/common/recommended-content';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/comment-section';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
