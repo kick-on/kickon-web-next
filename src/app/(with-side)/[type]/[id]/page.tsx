@@ -44,7 +44,7 @@ const DetailPage = () => {
 			return;
 		}
 
-		const fetchData = async () => {
+		const getDetailContentData = async () => {
 			try {
 				const contentData = await getDetailContent(type, id);
 				const commentData = await getCommentList(id, currentPage, commentsPerPage, isNews);
@@ -58,7 +58,7 @@ const DetailPage = () => {
 			}
 		};
 
-		fetchData();
+		getDetailContentData();
 	}, [type, id, currentPage, router, isNews]);
 
 	if (isLoading) {

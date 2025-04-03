@@ -135,7 +135,7 @@ const CommentInput = ({
 						isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
 					}`}
 				>
-					{isSubmitting ? '등록 중...' : '등록'}
+					등록
 				</button>
 			</div>
 		</div>
