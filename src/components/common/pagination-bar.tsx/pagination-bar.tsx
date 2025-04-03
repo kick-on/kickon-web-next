@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function PaginationBar({ totalPages, baseUrl }) {
+export default function PaginationBar({ totalPages, baseUrl }: { totalPages: number; baseUrl: string }) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const currentPage = Number(searchParams.get('page') || '1');
