@@ -35,9 +35,11 @@ export default function PredictCard({
 					<div
 						className={clsx('px-2 py-1 rounded-full text-black-000 caption2-regular text-center items-center', {
 							'bg-black-900': gameStatus === 'PENDING',
-							'bg-primary-900': myGambleResult?.gambleStatus === 'SUCCEED' || 'PERFECT',
-							'bg-black-700': myGambleResult?.gambleStatus === 'FAILED',
-							'bg-black-500': (gameStatus !== 'PENDING' && !myGambleResult) || gameStatus === 'CANCELED',
+							'bg-primary-900':
+								myGambleResult &&
+								(myGambleResult.gambleStatus === 'SUCCEED' || myGambleResult.gambleStatus === 'PERFECT'),
+							'bg-black-700': myGambleResult && myGambleResult.gambleStatus === 'FAILED',
+							'bg-black-500': !myGambleResult || gameStatus === 'CANCELED',
 						})}
 					>
 						{gameStatus === 'PENDING'

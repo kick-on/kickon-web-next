@@ -360,6 +360,8 @@ button {
 .banner-swiper .swiper-pagination-bullet-active {
 	width: 3.125rem;
 }
+
+// TODO: 에디터에서 사용하는 태그 설정 classname으로 감싸야 함
 h1 {
 	font-size: 20px;
 	font-weight: 700;

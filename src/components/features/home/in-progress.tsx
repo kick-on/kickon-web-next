@@ -79,6 +79,7 @@ export default function InProgress({
 					}
 				}
 				setIsClicked(false);
+				setIsCompleted(false);
 				setLeftScore(0);
 				setRightScore(0);
 			} else {

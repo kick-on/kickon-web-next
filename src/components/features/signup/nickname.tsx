@@ -24,8 +24,8 @@ export default function Nickname({ nickname, onChange }) {
 					className={`w-full px-4 py-3 border rounded-lg body3-regular outline-none
               ${isInvalidNickname ? 'border-negative' : 'border-black-300'}
               placeholder:[color:var(--color-black-600)]
-              placeholder:[font-size:var(--fs-16)]
-              placeholder:[font-weight:var(--fw-regular)]
+              placeholder:[font-size:var(--text-16)]
+              placeholder:[font-weight:var(--font-weight-regular)]
               placeholder:[line-height:var(--lh-24)]`}
 				/>
 				{nickname && (

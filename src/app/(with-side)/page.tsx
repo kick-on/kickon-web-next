@@ -9,7 +9,7 @@ import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/user-game-
 import { useCallback, useEffect, useState } from 'react';
 
 export default function Home() {
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo } = useCurrentUserInfoStore();
 	const [proceedingGames, setProceedingGames] = useState<GameTaggedLeagueDto | null>(null);
 	const [finishedGames, setFinishedGames] = useState<GameTaggedLeagueDto | null>(null);
 
@@ -44,7 +44,7 @@ export default function Home() {
 		return () => {
 			document.body.style.backgroundColor = 'var(--color-black-100)';
 		};
-	}, [currentUserInfo, setCurrentUserInfo]);
+	}, []);
 
 	return (
 		<div className="flex flex-col gap-8">
