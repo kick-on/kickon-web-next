@@ -19,7 +19,7 @@ export default function Home() {
 				status === 'proceeding' ? (value) => setProceedingGames(value) : (value) => setFinishedGames(value);
 
 			const request: GetGamesRequest = {
-				league: currentUserInfo?.leaguePk,
+				league: currentUserInfo?.leaguePk || 1,
 				status: status,
 			};
 			const response = await getGames(request);
