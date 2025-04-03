@@ -5,7 +5,6 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 export default async function MostReadNewsList() {
 	const response = await getHotNews();
-	console.log(response);
 
 	return (
 		<div id="most-read-news-list">

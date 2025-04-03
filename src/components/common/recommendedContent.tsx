@@ -7,7 +7,7 @@ import NewsItem from './category-tab/news-item';
 import ComponentFrame from './componentFrame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { RecommendedNewsDto } from '@/services/apis/news/dto';
 import { RecommendedBoardDto } from '@/services/apis/board/dto';
 import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
@@ -34,22 +34,22 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 			</>
 		);
 
+	const getDatas = useCallback(async () => {
+		const response = isNews
+			? await getRecommendedNews({ type: isHome ? 'all' : undefined })
+			: await getRecommendedBoards();
+
+		if (!response) {
+			setData(null);
+		} else {
+			setData(response.data);
+			console.log(response.data);
+		}
+	}, [isHome, isNews]);
+
 	useEffect(() => {
-		const getDatas = async () => {
-			const response = isNews
-				? await getRecommendedNews({ type: isHome ? 'all' : undefined })
-				: await getRecommendedBoards();
-
-			if (!response) {
-				setData(null);
-			} else {
-				setData(response.data);
-				console.log(response.data);
-			}
-		};
-
 		getDatas();
-	}, [isHome, isNews, isMyTeam]);
+	}, [isHome, isNews, isMyTeam, getDatas]);
 
 	return (
 		<ComponentFrame isMain={true}>
@@ -75,6 +75,7 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 			<div className="flex flex-col">
 				{!data ? (
 					<FetchingFailedCard
+						onClick={getDatas}
 						height={isNews ? '45.375rem' : '35.125rem'}
 						marginTop={isNews ? '14.4375rem' : '10.25rem'}
 					/>
