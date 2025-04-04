@@ -8,28 +8,26 @@ import AccountSelectBox from '@/components/common/account-selectbox';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { UpdateUserInfoRequest } from '@/services/auth/dto';
-import { updateUserInfo } from '@/services/auth';
+import { getUserInfo, updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getAccessToken } from '@/lib/utils/getAccessToken';
 
 export default function Page() {
-	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
-	console.log(currentUserInfo);
-
-	const [nickname, setNickname] = useState(currentUserInfo?.nickname);
+	const [nickname, setNickname] = useState('');
 	const [league, setLeague] = useState<LeagueDto>({
-		pk: currentUserInfo?.leaguePk ?? NO_CHEERING_TEAM_PK,
-		nameKr: currentUserInfo?.leagueName ?? '응원팀이 없어요.',
+		pk: NO_CHEERING_TEAM_PK,
+		nameKr: '응원팀이 없어요.',
 		nameEn: 'no cheering team',
-		logoUrl: currentUserInfo?.leagueLogoUrl ?? '/ban.svg',
+		logoUrl: '/ban.svg',
 	});
-
 	const [team, setTeam] = useState<TeamDto>({
-		pk: currentUserInfo?.teamPk ?? NO_CHEERING_TEAM_PK,
-		nameKr: currentUserInfo?.teamName ?? '응원팀이 없어요.',
+		pk: NO_CHEERING_TEAM_PK,
+		nameKr: '응원팀이 없어요.',
 		nameEn: 'no cheering team',
-		logoUrl: currentUserInfo?.teamLogoUrl ?? '/ban.svg',
+		logoUrl: '/ban.svg',
 	});
 
 	const route = useRouter();
@@ -77,11 +75,37 @@ export default function Page() {
 	};
 
 	useEffect(() => {
-		if (!currentUserInfo) {
+		if (!getAccessToken()) {
 			alert('로그인이 필요한 서비스입니다. 홈으로 이동합니다.');
 			route.push('/?login=true');
 		}
-	}, [currentUserInfo, route]);
+	}, [route]);
+
+	useEffect(() => {
+		// 새로고침해도 유저 정보 유지 -> persist로 대체 가능
+		const getCurrentUserInfo = async () => {
+			const response = await getUserInfo();
+
+			if (typeof response !== 'string') {
+				setCurrentUserInfo(response.data);
+
+				setNickname(response.data.nickname);
+				setLeague({
+					pk: response.data.leaguePk,
+					nameKr: response.data.leagueName,
+					nameEn: response.data.leagueName,
+					logoUrl: response.data.leagueLogoUrl,
+				});
+				setTeam({
+					pk: response.data.teamPk,
+					nameKr: response.data.teamName,
+					nameEn: response.data.teamName,
+					logoUrl: response.data.teamLogoUrl,
+				});
+			}
+		};
+		getCurrentUserInfo();
+	}, [setCurrentUserInfo]);
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
