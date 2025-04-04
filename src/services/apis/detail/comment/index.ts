@@ -1,9 +1,9 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { createNewReplyRequest, GetCommentsResponse, PostCommentKickRequest } from './dto';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
+import { getAccessToken } from '@/lib/utils/getAccessToken';
 
-const JWT = getAuthToken();
+const JWT = getAccessToken();
 
 export const getCommentList = async (
 	id: number,

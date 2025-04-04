@@ -1,8 +1,8 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { PostNewsContentsRequest } from './dto';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
+import { getAccessToken } from '@/lib/utils/getAccessToken';
 
-const JWT = getAuthToken();
+const JWT = getAccessToken();
 
 export async function postNewContents(data: PostNewsContentsRequest, isNews: boolean = false) {
 	const endpoint = isNews ? '/api/news' : '/api/board';

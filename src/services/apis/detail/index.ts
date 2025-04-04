@@ -1,9 +1,9 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { GetDetailResponse } from './dto';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
+import { getAccessToken } from '@/lib/utils/getAccessToken';
 
 export const getDetailContent = async (type: 'news' | 'board', id: number): Promise<GetDetailResponse | null> => {
-	const JWT = getAuthToken();
+	const JWT = getAccessToken();
 
 	// 헤더 동적 설정
 	const headers: HeadersInit = JWT ? { Authorization: `Bearer ${JWT}` } : {};
