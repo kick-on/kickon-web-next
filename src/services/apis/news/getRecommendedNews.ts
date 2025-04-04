@@ -1,25 +1,19 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { GetRecommendedNewsRequest, GetRecommendedNewsResponse } from './dto';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
+import axiosInstance from '@/services/config/axiosInstance';
 
-export const getRecommendedNews = async ({
-	type,
-}: GetRecommendedNewsRequest): Promise<GetRecommendedNewsResponse | null> => {
+export const getRecommendedNews = async ({ type }: GetRecommendedNewsRequest) => {
 	const params = new URLSearchParams();
-	const JWT = getAuthToken();
-
-	// 헤더 동적 설정
-	const headers: HeadersInit = JWT ? { Authorization: `Bearer ${JWT}` } : {};
 
 	if (type !== undefined) params.append('type', type);
-	const response = await fetch(`${SERVER_URL}/api/news/home?${params.toString()}`, {
-		method: 'GET',
-		headers,
-	});
 
-	if (!response.ok) {
-		console.error(await response.json());
+	const response = await axiosInstance.get<GetRecommendedNewsResponse | null>(
+		`${SERVER_URL}/api/news/home?${params.toString()}`,
+	);
+
+	if (!response.code.split('_').includes('SUCCESS')) {
+		console.error(response);
 		return null;
 	}
-	return response.json();
+	return response;
 };

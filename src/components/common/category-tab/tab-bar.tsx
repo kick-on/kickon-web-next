@@ -18,9 +18,10 @@ export default function TabBar({ mode, q }: { mode: 'news' | 'board'; q: string 
 					<Link
 						href={`/${mode}?q=${tab}` + (i === 2 ? `&type=team&id=${currentUserInfo?.teamPk}` : '')}
 						key={tab}
-						className={clsx('px-[0.5rem] py-[0.9375rem] border-b-2 border-transparent', {
-							'border-primary-900 text-primary-900 header-semibold': q === tab,
-						})}
+						className={clsx(
+							'px-[0.5rem] py-[0.9375rem] border-b-2',
+							q === tab ? 'border-primary-900 text-primary-900 header-semibold' : 'border-transparent',
+						)}
 					>
 						{tab}
 					</Link>
@@ -28,9 +29,10 @@ export default function TabBar({ mode, q }: { mode: 'news' | 'board'; q: string 
 			)}
 			{isNews && (
 				<div
-					className={clsx('border-b-2 border-transparent', {
-						'border-primary-900 text-primary-900 header-semibold': !tabs.includes(q),
-					})}
+					className={clsx(
+						'border-b-2',
+						tabs.includes(q) ? 'border-transparent' : 'border-primary-900 text-primary-900 header-semibold',
+					)}
 				>
 					<SelectBox isClickedOtherTab={tabs.includes(q)} />
 				</div>
