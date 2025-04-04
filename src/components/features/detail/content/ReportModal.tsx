@@ -27,7 +27,6 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 
 	const handleSubmitButtonClick = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
-			alert('로그인이 필요합니다.');
 			setIsLoginModalOpen(true);
 			return;
 		}

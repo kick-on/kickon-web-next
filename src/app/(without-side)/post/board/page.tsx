@@ -50,6 +50,13 @@ export default function Page() {
 	};
 
 	useEffect(() => {
+		const isLoggedIn = getAccessToken() && getRefreshToken();
+		if (!isLoggedIn) {
+			setIsLoginModalOpen(true);
+		}
+	}, []);
+
+	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setIsVisibleDropdown(false);
@@ -65,8 +72,6 @@ export default function Page() {
 
 	const postCommunityContents = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
-			alert('로그인이 필요합니다.');
-			setIsLoginModalOpen(true);
 			return;
 		}
 		if (!isFormValid) return;

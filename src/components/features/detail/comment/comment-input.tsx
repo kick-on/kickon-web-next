@@ -82,7 +82,6 @@ const CommentInput = ({
 	};
 	const handleSubmit = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
-			alert('로그인이 필요합니다.');
 			setIsLoginModalOpen(true);
 			return;
 		}

@@ -32,7 +32,6 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const handleLikeButtonClick = async () => {
 		// 비회원인 경우 클릭 차단 & 알림 표시
 		if (!getAccessToken() || !getRefreshToken()) {
-			alert('로그인이 필요합니다.');
 			setIsLoginModalOpen(true);
 			return;
 		}

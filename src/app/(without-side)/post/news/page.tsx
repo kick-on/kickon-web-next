@@ -38,6 +38,13 @@ export default function Page() {
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	useEffect(() => {
+		const isLoggedIn = getAccessToken() && getRefreshToken();
+		if (!isLoggedIn) {
+			setIsLoginModalOpen(true);
+		}
+	}, []);
+
+	useEffect(() => {
 		const getTeamList = async () => {
 			const response = await getTeam(12);
 
@@ -132,8 +139,6 @@ export default function Page() {
 
 	const postNewsContents = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
-			alert('로그인이 필요합니다.');
-			setIsLoginModalOpen(true);
 			return;
 		}
 		const requestBody: PostNewsContentsRequest = {

@@ -23,7 +23,6 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 
 	const toggleCommentLike = async (commentId: number) => {
 		if (!getAccessToken() || !getRefreshToken()) {
-			alert('로그인이 필요합니다.');
 			setIsLoginModalOpen(true);
 			return;
 		}
