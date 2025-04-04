@@ -20,6 +20,9 @@ jobs:
           node-version: 22
           cache: 'yarn'
 
+      - name: Set Next.js build timeout
+        run: echo "NEXT_BUILD_WORKER_MAX_IDLE_MS=300000" >> $GITHUB_ENV
+
       - name: 의존성 설치 및 빌드
         run: |
           yarn install
