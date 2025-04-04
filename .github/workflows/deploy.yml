@@ -22,6 +22,8 @@ jobs:
 
       - name: Set Next.js build timeout
         run: echo "NEXT_BUILD_WORKER_MAX_IDLE_MS=300000" >> $GITHUB_ENV
+      - name: Increase Node.js memory
+        run: echo "NODE_OPTIONS=--max-old-space-size=4096" >> $GITHUB_ENV
 
       - name: 의존성 설치 및 빌드
         run: |
