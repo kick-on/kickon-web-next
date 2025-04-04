@@ -3,12 +3,12 @@ import { BoardItemDto } from '@/services/apis/news/dto';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function CommunityItem({ pk, title, replies, user, createdAt, views, likes }: BoardItemDto) {
+export default function CommunityItem({ pk, title, replies, user, createdAt, hasImage, views, likes }: BoardItemDto) {
 	return (
 		<Link href={`/board/${pk}`} className="p-4 flex justify-between cursor-pointer">
 			<div className="flex gap-1 items-center">
 				<h2 className="subtitle1-medium max-w-3xs truncate">{title}</h2>
-				{/* {hasImage && <Image width={14} height={14} src="/image.svg" alt="사진" />} */}
+				{hasImage && <Image width={14} height={14} src="/image.svg" alt="사진" />}
 				<div className="body5-regular">{!!replies && `(${replies})`}</div>
 			</div>
 			<div className="flex gap-4 body6-regular text-black-600 items-center">

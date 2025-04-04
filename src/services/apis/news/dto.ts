@@ -52,6 +52,7 @@ export interface BoardItemDto {
 	title: string;
 	user: UserDto;
 	createdAt: string;
+	hasImage: boolean;
 	views: number;
 	likes: number;
 	replies: number;
