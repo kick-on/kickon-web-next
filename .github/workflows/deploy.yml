@@ -19,6 +19,9 @@ jobs:
         with:
           node-version: 22
           cache: 'yarn'
+      - name: 🔹 .env 파일 생성
+        run: |
+          echo "${{ secrets.DEV_ENV }}" | tr ' ' '\n' > .env
 
       - name: Set Next.js build timeout
         run: echo "NEXT_BUILD_WORKER_MAX_IDLE_MS=300000" >> $GITHUB_ENV
