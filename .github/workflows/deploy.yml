@@ -39,7 +39,7 @@ jobs:
           cd deploy && zip -r build.zip .
 
       - name: S3에 업로드
-        run: aws s3 cp build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
+        run: aws s3 cp deploy/build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -69,11 +69,20 @@ jobs:
           node-version: 22
           cache: 'yarn'
 
+      - name: 🔹 .env 파일 생성
+        run: |
+          echo "${{ secrets.DEV_ENV }}" | tr ' ' '\n' > .env
+
       - name: 의존성 설치 및 빌드
         run: |
           yarn install
           yarn build
-          zip -r deploy.zip . -x "node_modules/*" ".git/*"
+
+      - name: 파일 압축
+        run: |
+          mkdir -p deploy
+          cp -R .next package.json yarn.lock node_modules deploy/
+          cd deploy && zip -r build.zip .
 
       - name: Elastic Beanstalk 배포
         uses: einaregilsson/beanstalk-deploy@v21
@@ -84,4 +93,4 @@ jobs:
           environment_name: 'YourEBEnvName'
           version_label: 'v-${{ github.run_id }}'
           region: 'ap-northeast-2'
-          deployment_package: 'deploy.zip'
+          deployment_package: 'deploy/build.zip'
