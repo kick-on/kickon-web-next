@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/comment-input';
 import CommentItem from '@/components/features/detail/comment/comment-item';
 import { postCommentKick } from '@/services/apis/detail/comment';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
+import LoginModal from '@/components/common/login-modal/login-modal';
 
 const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplies }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
 	const isNews = type === 'news';
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	useEffect(() => {
 		const storedLikes = localStorage.getItem('likedComments');
@@ -19,11 +22,22 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 	}, []);
 
 	const toggleCommentLike = async (commentId: number) => {
+		if (!getAccessToken() || !getRefreshToken()) {
+			setIsLoginModalOpen(true);
+			return;
+		}
+
 		const result = await postCommentKick(commentId, isNews);
-		console.log('결과', result);
-		const updatedLikes = { ...likedComments, [commentId]: !likedComments[commentId] };
-		setLikedComments(updatedLikes);
-		localStorage.setItem('likedComments', JSON.stringify(updatedLikes));
+		if (result) {
+			setLikedComments((prev) => ({
+				...prev,
+				[commentId]: !prev[commentId],
+			}));
+			localStorage.setItem(
+				'likedComments',
+				JSON.stringify({ ...likedComments, [commentId]: !likedComments[commentId] }),
+			);
+		}
 	};
 
 	const toggleReplyInputVisibility = (commentId: string) => {
@@ -75,6 +89,7 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 					</div>
 				)}
 			</div>
+			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);
 };

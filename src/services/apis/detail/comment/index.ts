@@ -1,9 +1,7 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { createNewReplyRequest, GetCommentsResponse, PostCommentKickRequest } from './dto';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
-import { getAuthToken } from '@/lib/utils/getAccessToken';
-
-const JWT = getAuthToken();
+import axiosInstance from '@/services/config/axiosInstance';
 
 export const getCommentList = async (
 	id: number,
@@ -31,46 +29,31 @@ export const getCommentList = async (
 };
 
 export const postCommentKick = async (id: number, isNews: boolean = false): Promise<SuccessResponse<null>> => {
-	const endpoint = isNews ? 'news-reply-kick' : 'board-reply-kick';
+	try {
+		const endpoint = isNews ? 'news-reply-kick' : 'board-reply-kick';
 
-	const body: PostCommentKickRequest = { reply: id };
-	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${JWT}`,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(body),
-	});
+		const body: PostCommentKickRequest = { reply: id };
+		const response = await axiosInstance.post<SuccessResponse<null>>(`/api/${endpoint}`, body);
 
-	if (!response.ok) {
-		throw new Error(`Failed to kick comment: ${response.statusText}`);
+		return response;
+	} catch (error) {
+		console.error('댓글 킥 생성 실패:', error);
+		throw error;
 	}
-
-	return response.json();
 };
 
 export const postCreateReply = async (
 	type: 'news' | 'board',
 	requestBody: createNewReplyRequest,
 ): Promise<EmptySuccessResponse> => {
-	const endpoint = type === 'news' ? '/api/news-reply' : '/api/board-reply';
+	try {
+		const endpoint = type === 'news' ? '/api/news-reply' : '/api/board-reply';
 
-	const response = await fetch(`${SERVER_URL}${endpoint}`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${JWT}`,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(requestBody),
-	});
+		const response = await axiosInstance.post<EmptySuccessResponse>(endpoint, requestBody);
 
-	if (!response.ok) {
-		const errorText = await response.text();
-		console.error('댓글 작성 실패 - 응답 상태:', response.status, response.statusText);
-		console.error('응답 본문:', errorText);
-		throw new Error('댓글 작성 실패');
+		return response;
+	} catch (error) {
+		console.error('댓글 작성 실패:', error);
+		throw error;
 	}
-
-	return response.json(); // 성공하면 응답 데이터 반환
 };

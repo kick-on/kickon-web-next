@@ -67,7 +67,6 @@ const DetailPage = () => {
 	useEffect(() => {
 		if (!contents || viewSent.current) return; // 중복 호출 방지
 
-		console.log('👀 PostContentView 호출!');
 		PostContentView({
 			requestBody: { [type === 'news' ? 'news' : 'board']: id },
 			isNews: type === 'news',
@@ -105,7 +104,7 @@ const DetailPage = () => {
 				)}
 			</ComponentFrame>
 
-			<RecommendedContent mode={type} teamName={isOurTeamPost ? contents?.data.team.nameEn : ''} />
+			<RecommendedContent mode={type} teamName={isOurTeamPost ? contents?.data.team?.nameEn : ''} />
 		</div>
 	);
 };

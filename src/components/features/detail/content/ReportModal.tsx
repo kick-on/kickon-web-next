@@ -1,5 +1,7 @@
 'use client';
+import LoginModal from '@/components/common/login-modal/login-modal';
 import { reportOptions } from '@/lib/constants/options';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postReportDetail } from '@/services/apis/detail/report';
 import { PostReportDetailRequest } from '@/services/apis/detail/report/dto';
 import Image from 'next/image';
@@ -13,6 +15,7 @@ interface ReportModalProps {
 export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 	const [selectedReason, setSelectedReason] = useState<string | null>(null);
 	const [otherReason, setOtherReason] = useState('');
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	const handleOptionChange = (reason: string) => {
 		setSelectedReason(selectedReason === reason ? null : reason);
@@ -23,6 +26,11 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 	const isSubmitEnabled = selectedReason !== null && (selectedReason !== '기타' || otherReason.trim().length > 0);
 
 	const handleSubmitButtonClick = async () => {
+		if (!getAccessToken() || !getRefreshToken()) {
+			setIsLoginModalOpen(true);
+			return;
+		}
+
 		const isNews = type === 'news';
 
 		const reportData: PostReportDetailRequest = {
@@ -44,7 +52,10 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 	};
 
 	return (
-		<div className="fixed inset-0 flex items-center justify-center" style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}>
+		<div
+			className="fixed z-50 inset-0 flex items-center justify-center"
+			style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
+		>
 			<div className="bg-black-000 px-[2.1875rem] py-6 rounded-[0.625rem] w-[23.625rem]">
 				<div className="flex justify-between items-center mb-10.5">
 					<h2 className="title3-semibold text-black-900 text-center flex-grow">게시글 신고</h2>
@@ -92,6 +103,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 					</button>
 				</div>
 			</div>
+			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);
 }
