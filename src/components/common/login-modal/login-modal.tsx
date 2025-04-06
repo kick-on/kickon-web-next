@@ -4,7 +4,7 @@ import Image from 'next/image';
 import LoginButton from './login-button';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
-import { SERVER_URL } from '@/services/config/constants';
+import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 
 export default function LoginModal({ onClose }) {
 	const router = useRouter();
@@ -17,7 +17,9 @@ export default function LoginModal({ onClose }) {
 	};
 
 	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
-		router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=http://localhost:3000/login/${provider}`);
+		router.push(
+			`${SERVER_URL}/oauth2/authorization/${provider}?state=${DOMAIN_URL || 'http://localhost:3000'}/login/${provider}`,
+		);
 	};
 
 	useEffect(() => {
