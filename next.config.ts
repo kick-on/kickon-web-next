@@ -43,7 +43,6 @@ const nextConfig: NextConfig = {
 		dangerouslyAllowSVG: true, // SVG 허용 (보안 주의)
 		unoptimized: true, // 모든 이미지 최적화 비활성화 → 외부 이미지 무제한 허용
 	},
-	output: 'standalone',
 };
 
 module.exports = nextConfig;
