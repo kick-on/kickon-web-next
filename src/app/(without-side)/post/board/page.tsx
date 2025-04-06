@@ -8,10 +8,13 @@ import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import LoginModal from '@/components/common/login-modal/login-modal';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 
 export default function Page() {
 	const navigate = useRouter();
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	const userTeams = currentUserInfo?.teamPk
 		? [
@@ -47,6 +50,13 @@ export default function Page() {
 	};
 
 	useEffect(() => {
+		const isLoggedIn = getAccessToken() && getRefreshToken();
+		if (!isLoggedIn) {
+			setIsLoginModalOpen(true);
+		}
+	}, []);
+
+	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setIsVisibleDropdown(false);
@@ -61,6 +71,9 @@ export default function Page() {
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
 	const postCommunityContents = async () => {
+		if (!getAccessToken() || !getRefreshToken()) {
+			return;
+		}
 		if (!isFormValid) return;
 
 		const requestBody: PostNewsContentsRequest = {
@@ -136,6 +149,7 @@ export default function Page() {
 				>
 					작성 완료
 				</button>
+				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 			</div>
 		</div>
 	);

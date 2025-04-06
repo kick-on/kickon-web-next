@@ -1,28 +1,17 @@
-import { SERVER_URL } from '@/services/config/constants';
+import axiosInstance from '@/services/config/axiosInstance';
 import { PostNewsContentsRequest } from './dto';
-import { getAccessToken } from '@/lib/utils/getAccessToken';
-
-const JWT = getAccessToken();
 
 export async function postNewContents(data: PostNewsContentsRequest, isNews: boolean = false) {
-	const endpoint = isNews ? '/api/news' : '/api/board';
-	console.log(data); // 디버깅
+	try {
+		const endpoint = isNews ? '/api/news' : '/api/board';
 
-	const response = await fetch(`${SERVER_URL}${endpoint}`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${JWT}`,
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(data),
-	});
+		console.log(data);
 
-	if (!response.ok) {
-		const errorText = await response.text();
-		console.error('API 요청 실패 - 응답 상태:', response.status, response.statusText);
-		console.error('서버 응답 본문:', errorText);
-		throw new Error('API 요청 실패');
+		const response = await axiosInstance.post(endpoint, data);
+
+		return response;
+	} catch (error) {
+		console.error('API 요청 실패:', error);
+		throw error;
 	}
-
-	return response;
 }

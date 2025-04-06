@@ -6,6 +6,8 @@ import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
+import LoginModal from '@/components/common/login-modal/login-modal';
 
 const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const isNews = type === 'news';
@@ -14,6 +16,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 	const [likes, setLikes] = useState(data.likes);
 	const [sanitizedContent, setSanitizedContent] = useState('');
 
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
 	useEffect(() => {
@@ -27,17 +30,24 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 	}, [data.content]);
 
 	const handleLikeButtonClick = async () => {
-		// UI 즉시 업데이트 (API 응답을 기다리지 않고 반영)
-		setIsLiked((prev) => !prev);
-		setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+		// 비회원인 경우 클릭 차단 & 알림 표시
+		if (!getAccessToken() || !getRefreshToken()) {
+			setIsLoginModalOpen(true);
+			return;
+		}
 
-		// 좋아요 요청 API 호출
-		const success = await postContentLike(data.pk, isNews);
-
-		// API 요청 실패 시 원래 상태로 롤백
-		if (!success) {
-			setIsLiked((prev) => !prev);
-			setLikes((prev) => (isLiked ? prev + 1 : prev - 1));
+		try {
+			const success = await postContentLike(data.pk, isNews);
+			if (success) {
+				// API 응답이 성공하면 UI 업데이트
+				setIsLiked((prev) => !prev);
+				setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+			} else {
+				alert('좋아요 요청에 실패했습니다. 다시 시도해주세요.');
+			}
+		} catch (error) {
+			console.error('좋아요 요청 중 오류 발생:', error);
+			alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
 		}
 	};
 
@@ -57,7 +67,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
-					{isOurTeamPost && <Image src="/team-logo/liverpool.svg" alt="팀 로고" width={24} height={24} />}
+					{isOurTeamPost && <Image src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{categoryLabel}
 					</span>
@@ -108,6 +118,7 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 				<span className="mr-0.5">킥</span>
 				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
 			</button>
+			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);
 };

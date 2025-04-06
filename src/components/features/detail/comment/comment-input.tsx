@@ -1,4 +1,6 @@
 'use clinet';
+import LoginModal from '@/components/common/login-modal/login-modal';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
 import { useEffect, useRef, useState } from 'react';
 
@@ -23,6 +25,7 @@ const CommentInput = ({
 	const [content, setContent] = useState('');
 	const [, setCharCount] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	useEffect(() => {
 		if (type === 'reply' && mentionNickname && inputRef.current) {
@@ -78,6 +81,10 @@ const CommentInput = ({
 		}
 	};
 	const handleSubmit = async () => {
+		if (!getAccessToken() || !getRefreshToken()) {
+			setIsLoginModalOpen(true);
+			return;
+		}
 		if (!content.trim()) return alert('내용을 입력해주세요!');
 		if (isSubmitting) return;
 
@@ -146,6 +153,7 @@ const CommentInput = ({
 					등록
 				</button>
 			</div>
+			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);
 };

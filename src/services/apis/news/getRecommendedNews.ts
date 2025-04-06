@@ -1,6 +1,6 @@
-import { SERVER_URL } from '@/services/config/constants';
-import { GetRecommendedNewsRequest, GetRecommendedNewsResponse } from './dto';
 import axiosInstance from '@/services/config/axiosInstance';
+import { GetRecommendedNewsRequest, GetRecommendedNewsResponse } from './dto';
+import { SERVER_URL } from '@/services/config/constants';
 
 export const getRecommendedNews = async ({ type }: GetRecommendedNewsRequest) => {
 	const params = new URLSearchParams();

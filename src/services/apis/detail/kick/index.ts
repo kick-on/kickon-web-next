@@ -1,29 +1,18 @@
-import { SERVER_URL } from '@/services/config/constants';
+import axiosInstance from '@/services/config/axiosInstance';
 import { EmptySuccessResponse } from '@/services/config/dto';
-import { getAccessToken } from '@/lib/utils/getAccessToken';
-
-const JWT = getAccessToken();
 
 export const postContentLike = async (id: number, isNews: boolean = false): Promise<EmptySuccessResponse> => {
-	const body = JSON.stringify({ [isNews ? 'news' : 'board']: id });
+	try {
+		const body = { [isNews ? 'news' : 'board']: id };
+		const endpoint = isNews ? '/api/news-kick' : '/api/board-kick';
 
-	const endpoint = isNews ? 'news-kick' : 'board-kick';
-	console.log(body);
-	const response = await fetch(`${SERVER_URL}/api/${endpoint}`, {
-		method: 'POST',
-		headers: {
-			Authorization: `Bearer ${JWT}`,
-			'Content-Type': 'application/json',
-		},
-		body,
-	});
+		console.log(body);
 
-	if (!response.ok) {
-		const errorText = await response.text();
-		console.error('상세페이지 킥 요청 실패 - 응답 상태:', response.status, response.statusText);
-		console.error('서버 응답 본문:', errorText);
-		throw new Error('상세페이지 킥 요청 실패');
+		const response = await axiosInstance.post<EmptySuccessResponse>(endpoint, body);
+
+		return response;
+	} catch (error) {
+		console.error('상세페이지 킥 생성 실패:', error);
+		throw error;
 	}
-
-	return response.json();
 };
