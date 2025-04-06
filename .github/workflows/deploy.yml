@@ -64,7 +64,7 @@ jobs:
 
       - name: 🔹 .env 파일 생성
         run: |
-          echo "${{ secrets.DEV_ENV }}" | tr ' ' '\n' > .env
+          echo "${{ secrets.PROD_ENV }}" | tr ' ' '\n' > .env
 
       - name: 의존성 설치 및 빌드
         run: |
