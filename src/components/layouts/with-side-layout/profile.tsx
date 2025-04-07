@@ -15,10 +15,12 @@ export default function Profile() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
+
+	const previousPage = sessionStorage.getItem('previousPage');
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
 
+	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const { currentUserInfo, setCurrentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const fullUrl = !!searchParams.get('login')
@@ -31,6 +33,9 @@ export default function Profile() {
 
 	const handleLoginModalClose = () => {
 		setIsLoginModalOpen(false);
+		if (previousPage === '/') {
+			router.replace(previousPage);
+		}
 	};
 
 	const handleLogoutButtonClick = () => {
