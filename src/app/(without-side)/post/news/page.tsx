@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { getTeam } from '@/services/apis/team';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function Page() {
 	const navigate = useRouter();
@@ -37,6 +38,8 @@ export default function Page() {
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+	const { currentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
+
 	useEffect(() => {
 		const isLoggedIn = getAccessToken() && getRefreshToken();
 		if (!isLoggedIn) {
@@ -46,25 +49,25 @@ export default function Page() {
 
 	useEffect(() => {
 		const getTeamList = async () => {
-			const response = await getTeam(12);
+			const response = await getTeam(currentUserInfo?.leaguePk);
 
 			const teamData = response.data.map((team) => ({
 				id: team.pk,
-				name: team.nameEn,
+				name: team.nameKr ?? team.nameEn,
 				logo: team.logoUrl,
 			}));
 
 			setTeams(teamData);
 		};
 		getTeamList();
-	}, []);
+	}, [currentUserInfo?.leaguePk]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
 		setSearchTerm(value);
 		setSelectedTeam(null);
 
-		const filtered = teams.filter((team) => team.name.toLowerCase().includes(value.toLowerCase()));
+		const filtered = teams.filter((team) => team?.name.toLowerCase().includes(value.toLowerCase()));
 
 		setFilteredResults(filtered);
 		setIsVisibleSearchResults(value.length > 0);

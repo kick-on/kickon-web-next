@@ -13,7 +13,7 @@ const CommentItem = ({
 	replyingTo,
 	replyVisibilities,
 	isReply = false,
-	isOurTeamPost,
+	isCommentAllowed,
 	parentReply,
 	contentsId,
 }) => {
@@ -75,7 +75,7 @@ const CommentItem = ({
 					</p>
 
 					<div className="flex flex-col gap-3.5">
-						{isOurTeamPost && (
+						{isCommentAllowed && (
 							<button
 								className="button5-regular text-black-700 bg-black-200 rounded-sm px-2 py-1 w-fit"
 								onClick={() => handleReply(content.pk)}

@@ -87,6 +87,11 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 						</div>
 					))
 				)}
+				{Array.isArray(data) && data.length === 0 && (
+					<p className="h-74 text-center body4-regular text-black-500 pt-32.5">
+						추천할 {isNews ? '뉴스가' : '게시글이'} 아직 없어요.
+					</p>
+				)}
 			</div>
 		</ComponentFrame>
 	);

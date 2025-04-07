@@ -32,9 +32,22 @@ export default function Toolbar({
 		{ key: 'italic', icon: <Image src="/italic.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'bulletList', icon: <Image src="/ellipsis.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'orderedList', icon: <Image src="/sort-numeric.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'blockquote', icon: <Image src="/quote.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'horizontalRule', icon: <Image src="/line.svg" alt="Bold" width={20} height={20} /> },
 	];
+
+	const quoteAndRuleButtons = [
+		{
+			key: 'blockquote',
+			icon: <Image src="/quote.svg" alt="인용구" width={20} height={20} />,
+			onClick: () => handleTextFormatToggle('blockquote'),
+		},
+		{
+			key: 'horizontalRule',
+			icon: <Image src="/line.svg" alt="구분선" width={20} height={20} />,
+			onClick: () => handleTextFormatToggle('horizontalRule'),
+		},
+	];
+
+	//TODO: 대표이미지 안 넣으면 모달 띄우기, 커뮤니티 글 작성에서도 이미지 안 넣으면 못 올리게? 이미지 없으면 동일한 모달 띄우기
 
 	const mediaButtons = [
 		{
@@ -58,8 +71,6 @@ export default function Toolbar({
 		},
 	];
 
-	// 홈 드롭다운 코드 참고
-
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown(!isVisibleDropdown);
 	};
@@ -81,6 +92,7 @@ export default function Toolbar({
 	}, []);
 
 	const Divider = () => <div className="text-[#E0E0E0] px-2"> | </div>;
+
 	return (
 		<div className="flex flex-wrap items-center gap-2 pb-4">
 			<div ref={dropdownRef} className="relative w-fit">
@@ -118,6 +130,16 @@ export default function Toolbar({
 						className={clsx('w-5 rounded-xs', editor?.isActive(btn.key) && 'bg-black-300')}
 						onClick={() => handleTextFormatToggle(btn.key)}
 					>
+						{btn.icon}
+					</button>
+				))}
+			</div>
+			<Divider />
+
+			{/* 인용구 & 구분선 버튼 (미디어 스타일) */}
+			<div className="flex gap-2">
+				{quoteAndRuleButtons.map((btn) => (
+					<button key={btn.key} className="p-[7px] border border-[#D9D9D9] rounded-sm" onClick={btn.onClick}>
 						{btn.icon}
 					</button>
 				))}

@@ -34,10 +34,10 @@ const DetailPage = () => {
 	const commentsPerPage = 10;
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const isOurTeamPost = currentUserInfo?.teamPk == contents?.data?.team?.pk;
-	console.log(currentUserInfo);
-	console.log(currentUserInfo?.teamPk);
-	console.log(contents?.data?.team?.pk);
+
+	const isTeamNull = contents?.data?.team == null;
+	const isOurTeam = currentUserInfo?.teamPk === contents?.data?.team?.pk;
+	const isCommentAllowed = isTeamNull || isOurTeam;
 
 	useEffect(() => {
 		if (!type || !id) {
@@ -83,15 +83,21 @@ const DetailPage = () => {
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
 				{contents?.data ? (
-					<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
+					<DetailContent data={contents.data} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
-					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
+					<FetchingFailedCard
+						height="800px"
+						marginTop="200px"
+						onClick={() => {
+							getDetailContent(type, id);
+						}}
+					/>
 				)}
 
 				{comments?.data ? (
 					<>
 						<CommentSection
-							isOurTeamPost={isOurTeamPost}
+							isCommentAllowed={isCommentAllowed}
 							type={type}
 							comments={comments.data}
 							contentsId={contents?.data?.pk || 0}
@@ -100,11 +106,17 @@ const DetailPage = () => {
 						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
 					</>
 				) : (
-					<FetchingFailedCard height="300px" marginTop="50px" />
+					<FetchingFailedCard
+						height="300px"
+						marginTop="50px"
+						onClick={() => {
+							getCommentList(id, currentPage, commentsPerPage, isNews);
+						}}
+					/>
 				)}
 			</ComponentFrame>
 
-			<RecommendedContent mode={type} teamName={isOurTeamPost ? contents?.data.team?.nameEn : ''} />
+			<RecommendedContent mode={type} teamName={isOurTeam ? contents?.data.team?.nameEn : ''} />
 		</div>
 	);
 };

@@ -7,7 +7,7 @@ import { postCommentKick } from '@/services/apis/detail/comment';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
 
-const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplies }) => {
+const CommentSection = ({ type, comments, isCommentAllowed, contentsId, totalreplies }) => {
 	const [likedComments, setLikedComments] = useState<{ [key: string]: boolean }>({});
 	const [replyingTo, setReplyingTo] = useState<string[]>([]);
 	const [replyVisibilities, setReplyVisibilities] = useState<{ [key: string]: boolean }>({});
@@ -56,13 +56,13 @@ const CommentSection = ({ type, comments, isOurTeamPost, contentsId, totalreplie
 		toggleReplyVisibility: toggleReplyListVisibility,
 		replyingTo,
 		replyVisibilities,
-		isOurTeamPost,
+		isCommentAllowed,
 		contentsId,
 	};
 
 	return (
 		<div className="px-4 mb-12">
-			{isOurTeamPost && <CommentInput contentType={type} contentsId={contentsId} />}
+			{isCommentAllowed && <CommentInput contentType={type} contentsId={contentsId} />}
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개
 			</p>
