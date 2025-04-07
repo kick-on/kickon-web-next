@@ -16,7 +16,7 @@ export default function Profile() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const previousPage = sessionStorage.getItem('previousPage');
+	const previousPage = window ? sessionStorage.getItem('previousPage') : null;
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
 
