@@ -47,7 +47,7 @@ export default function Closed({
 			>
 				<div
 					className={clsx(
-						'w-8 h-8 absolute z-20 -left-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
+						'w-9 h-9 absolute z-20 -left-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
 						{
 							'bg-primary-900': isParticipated && leftScore >= rightScore,
 							'bg-black-500': !isParticipated || leftScore < rightScore,
@@ -58,7 +58,7 @@ export default function Closed({
 				</div>
 				<div
 					className={clsx(
-						'w-8 h-8 absolute z-20 -right-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
+						'w-9 h-9 absolute z-20 -right-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
 						{
 							'bg-primary-900': isParticipated && leftScore <= rightScore,
 							'bg-black-500': !isParticipated || leftScore > rightScore,
