@@ -6,6 +6,7 @@ import { ChangeEvent, useState } from 'react';
 import clsx from 'clsx';
 import { GameDto, PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
 import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
+import { getAccessToken } from '@/lib/utils/getAccessToken';
 
 type SelectedButton = 'none' | 'left' | 'center' | 'right';
 
@@ -60,6 +61,12 @@ export default function InProgress({
 	};
 
 	const handleTeamButtonClick = async (button: SelectedButton) => {
+		// 로그인 하지 않은 경우 사용 제한
+		if (!getAccessToken()) {
+			alert(`로그인이 필요한 서비스입니다.\n로그인 후 이용해 주세요.`);
+			return;
+		}
+
 		// 선택이 완료된 상태에서 다시 클릭 시 득점 업다운 버튼 활성화
 		if (isCompleted) {
 			setIsCompleted(false);

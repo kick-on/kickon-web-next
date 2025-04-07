@@ -7,6 +7,7 @@ import axios, {
 } from 'axios';
 import { SERVER_URL } from './constants';
 import { postNewToken } from '../auth';
+import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 
 interface CustomInstance extends AxiosInstance {
 	interceptors: {
@@ -34,7 +35,7 @@ const axiosInstance: CustomInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
 	(config) => {
-		const token = localStorage.getItem('accessToken');
+		const token = getAccessToken();
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`;
 		}
@@ -55,7 +56,7 @@ axiosInstance.interceptors.response.use(
 			if ((error.response.status === 401 || error.response.status === 403) && !originalRequest._retry) {
 				originalRequest._retry = true; // 무한 루프 방지
 
-				const prevRefreshToken = localStorage.getItem('refreshToken');
+				const prevRefreshToken = getRefreshToken();
 
 				// 리프레시 토큰이 있으면 토큰 재발급 후 다시 시도
 				if (prevRefreshToken) {
