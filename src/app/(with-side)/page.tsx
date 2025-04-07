@@ -84,7 +84,7 @@ export default function Home() {
 					finishedGames.games.map((game) => <PredictCard key={game.pk} leagueName={finishedGames.name} {...game} />)
 				)}
 			</div>
-			<RecommendedContent mode={'news'} />
+			<RecommendedContent mode={'news'} teamName={currentUserInfo?.teamName || undefined} />
 			<RecommendedContent mode={'board'} />
 		</div>
 	);
