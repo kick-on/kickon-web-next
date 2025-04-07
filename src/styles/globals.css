@@ -335,6 +335,9 @@ body {
 
 button {
 	cursor: pointer;
+	&:disabled {
+		pointer-events: none;
+	}
 }
 
 .banner-swiper .swiper-pagination {
