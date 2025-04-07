@@ -196,7 +196,13 @@ export default function InProgress({
 					[hoveredButtonClass(side)]: !(isClicked || isCompleted),
 				})}
 			>
-				<Image className="relative z-20" width={22} height={22} src={teamLogoUrl} alt={`${teamName} 로고 이미지`} />
+				<Image
+					className="relative z-20 w-[1.375rem] h-[1.375rem] object-contain"
+					width={22}
+					height={22}
+					src={teamLogoUrl}
+					alt={`${teamName} 로고 이미지`}
+				/>
 				<div>
 					<div className="relative z-20">{teamName || '팀 이름'}</div>
 					{isClicked && <div className="relative z-20 caption2-medium text-black-800">{`${ratio}%`}</div>}
@@ -207,7 +213,12 @@ export default function InProgress({
 
 	return (
 		<div className="flex flex-col gap-4 w-[36rem] cursor-pointer">
-			<div className="relative w-full h-[4.625rem] grid grid-cols-3 border border-black-200 rounded-[0.625rem] button3-semibold shadow-predict-button">
+			<div
+				className={clsx(
+					'relative w-full h-[4.625rem] grid grid-cols-3 border border-black-200 rounded-[0.625rem] shadow-predict-button',
+					isClicked ? 'subtitle1-semibold' : 'button3-semibold',
+				)}
+			>
 				{/* 왼쪽 팀 */}
 				{renderTeamButton('left')}
 
