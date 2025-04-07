@@ -16,7 +16,8 @@ export default function InProgress({
 	awayTeam,
 	gambleResult,
 	myGambleResult,
-}: Pick<GameDto, 'pk' | 'homeTeam' | 'awayTeam' | 'gambleResult' | 'myGambleResult'>) {
+	refetchGames,
+}: Pick<GameDto, 'pk' | 'homeTeam' | 'awayTeam' | 'gambleResult' | 'myGambleResult'> & { refetchGames: () => void }) {
 	const [isClicked, setIsClicked] = useState(false);
 	const [isCompleted, setIsCompleted] = useState(!!myGambleResult);
 	const [isEditing, setIsEditing] = useState(false);
@@ -78,6 +79,7 @@ export default function InProgress({
 				// 기존 예측이 있는 경우에는 예측 삭제
 				if (myGambleResult) {
 					const response = await deleteGameGamble(myGambleResult.id);
+					console.log('delete', response);
 
 					// 삭제 실패 시 현재 상태 유지
 					if (typeof response === 'string') {
@@ -87,8 +89,10 @@ export default function InProgress({
 				}
 				setIsClicked(false);
 				setIsCompleted(false);
+				setIsEditing(false);
 				setLeftScore(0);
 				setRightScore(0);
+				refetchGames();
 			} else {
 				switch (button) {
 					case 'left':
@@ -152,6 +156,7 @@ export default function InProgress({
 				predictedAwayScore: rightScore,
 			};
 			const response = await patchGameGamble(request);
+			console.log('patch', response);
 
 			if (typeof response === 'string') {
 				console.error(response);
@@ -159,6 +164,7 @@ export default function InProgress({
 				setIsClicked(false);
 				setIsEditing(false);
 				setIsCompleted(true);
+				refetchGames();
 			}
 		} else {
 			// 새로 생성하는 경우 post 함수 호출
@@ -168,12 +174,14 @@ export default function InProgress({
 				predictedAwayScore: rightScore,
 			};
 			const response = await postGameGamble(request);
+			console.log('post', response);
 
 			if (typeof response === 'string') {
 				console.error(response);
 			} else {
 				setIsClicked(false);
 				setIsCompleted(true);
+				refetchGames();
 			}
 		}
 	};

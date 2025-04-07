@@ -17,7 +17,8 @@ export default function PredictCard({
 	gameStatus,
 	startAt,
 	leagueName,
-}: GameDto & { leagueName: string }) {
+	refetchGames,
+}: GameDto & { leagueName: string; refetchGames?: () => void }) {
 	const [startDate, startTime] = formatGameStartDate(startAt);
 	const participations = formatGambleParticipations(gambleResult.participationNumber);
 	const timeBefore = getGameStartTimeBefore(startAt);
@@ -81,6 +82,7 @@ export default function PredictCard({
 						awayTeam={awayTeam}
 						gambleResult={gambleResult}
 						myGambleResult={myGambleResult}
+						refetchGames={refetchGames}
 					/>
 				) : (
 					<Closed
