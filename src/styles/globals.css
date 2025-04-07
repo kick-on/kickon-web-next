@@ -328,7 +328,7 @@
 body {
 	background-color: var(--color-black-100);
 	color: var(--color-black-900);
-	min-width: 1360px; /* body 최소 width를 side-layout 최소 width로 설정해 디자인 일관성 줌 */
+	min-width: 1440px; /* body 최소 width를 side-layout 최소 width로 설정해 디자인 일관성 줌 */
 	display: flex;
 	flex-direction: column;
 }
