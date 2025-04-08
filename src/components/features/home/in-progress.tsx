@@ -186,7 +186,6 @@ export default function InProgress({
 		}
 	};
 
-	// TODO: data 매개변수로 받아서 뿌리기
 	const renderTeamButton = (side: 'left' | 'right') => {
 		const isLeft = side === 'left';
 		const teamName = isLeft ? homeTeam.name : awayTeam.name;
@@ -272,7 +271,7 @@ export default function InProgress({
 			{isClicked && (
 				<button
 					onClick={handleCompleteButtonClick}
-					className="w-full h-[2.125rem] border border-black-200 rounded-[0.625rem]
+					className="w-full h-[2.125rem] border border-black-200 rounded-md
 						flex justify-center items-center button5-medium shadow-predict-button transition-colors
 						hover:bg-primary-700 hover:border-0 hover:shadow-kick-button-active active:bg-primary-900 active:text-white"
 				>

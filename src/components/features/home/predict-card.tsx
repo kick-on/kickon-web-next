@@ -56,7 +56,7 @@ export default function PredictCard({
 				</div>
 				{gameStatus === 'PENDING' && <div className="caption1-regular text-black-700">마감 {timeBefore}</div>}
 			</div>
-			<div className="flex gap-1.5 items-center">
+			<div className="flex gap-1.5 items-start">
 				<div
 					className={clsx('w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
 						'border-black-200': gameStatus === 'PENDING',
