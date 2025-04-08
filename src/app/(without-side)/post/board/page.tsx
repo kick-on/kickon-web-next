@@ -86,8 +86,8 @@ export default function Page() {
 		console.log(requestBody);
 		try {
 			const response = await postNewContents(requestBody);
-			console.log(response);
-			navigate.back();
+
+			navigate.push(`/board/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}

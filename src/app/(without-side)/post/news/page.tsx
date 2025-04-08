@@ -154,9 +154,8 @@ export default function Page() {
 
 		try {
 			const response = await postNewContents(requestBody, true);
-			console.log(response);
 
-			navigate.back();
+			navigate.push(`/news/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
