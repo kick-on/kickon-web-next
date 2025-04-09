@@ -93,7 +93,7 @@ const DetailPage = () => {
 				/>
 			</ComponentFrame>
 
-			<RecommendedContent mode={type} teamName={isOurTeam ? contents?.data.team?.nameEn : ''} />
+			<RecommendedContent mode={type} teamName={isOurTeam ? contents?.data.team?.nameKr : ''} />
 		</div>
 	);
 };

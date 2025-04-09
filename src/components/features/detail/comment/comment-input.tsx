@@ -107,13 +107,6 @@ const CommentInput = ({
 		setIsSubmitting(false);
 	};
 
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		if (e.key === 'Enter' && !e.shiftKey) {
-			e.preventDefault();
-			handleSubmit();
-		}
-	};
-
 	return (
 		<div className={type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4'}>
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
@@ -122,7 +115,6 @@ const CommentInput = ({
 					<div
 						ref={inputRef}
 						contentEditable
-						onKeyDown={handleKeyDown}
 						onInput={handleInput}
 						className={clsx(
 							'relative w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left',
