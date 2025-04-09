@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { getTeam } from '@/services/apis/team';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function Page() {
 	const navigate = useRouter();
@@ -37,6 +38,8 @@ export default function Page() {
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
+	const { currentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
+
 	useEffect(() => {
 		const isLoggedIn = getAccessToken() && getRefreshToken();
 		if (!isLoggedIn) {
@@ -46,25 +49,25 @@ export default function Page() {
 
 	useEffect(() => {
 		const getTeamList = async () => {
-			const response = await getTeam(12);
+			const response = await getTeam(currentUserInfo?.leaguePk);
 
 			const teamData = response.data.map((team) => ({
 				id: team.pk,
-				name: team.nameEn,
+				name: team.nameKr ?? team.nameEn,
 				logo: team.logoUrl,
 			}));
 
 			setTeams(teamData);
 		};
 		getTeamList();
-	}, []);
+	}, [currentUserInfo?.leaguePk]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
 		setSearchTerm(value);
 		setSelectedTeam(null);
 
-		const filtered = teams.filter((team) => team.name.toLowerCase().includes(value.toLowerCase()));
+		const filtered = teams.filter((team) => team?.name.toLowerCase().includes(value.toLowerCase()));
 
 		setFilteredResults(filtered);
 		setIsVisibleSearchResults(value.length > 0);
@@ -151,9 +154,8 @@ export default function Page() {
 
 		try {
 			const response = await postNewContents(requestBody, true);
-			console.log(response);
 
-			navigate.back();
+			navigate.push(`/news/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
@@ -297,7 +299,7 @@ export default function Page() {
 					disabled={!isFormValid}
 					className={clsx(
 						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
-						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000 pointer-events-none',
+						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
 					작성 완료

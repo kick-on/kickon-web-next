@@ -133,8 +133,23 @@ const PostEditor = ({
 		}
 	};
 
+	const isValidUrl = (url: string) => {
+		try {
+			new URL(url);
+			return true;
+		} catch {
+			return false;
+		}
+	};
+
 	const handleInsertLink = () => {
 		if (!linkUrl || !editor) return;
+
+		if (!isValidUrl(linkUrl)) {
+			alert('유효한 링크를 입력해주세요.');
+			return;
+		}
+
 		editor?.chain().focus().setLink({ href: linkUrl }).run();
 		setLinkUrl('');
 		setShowLinkInput(false);
@@ -144,7 +159,7 @@ const PostEditor = ({
 		if (!youtubeUrl || !editor) return;
 		const youtubeId = getYoutubeId(youtubeUrl);
 		if (!youtubeId) {
-			alert('유효한 유튜브 링크가 아닙니다.');
+			alert('유효한 유튜브 링크를 입력해주세요.');
 			return;
 		}
 		editor
@@ -190,10 +205,12 @@ const PostEditor = ({
 				onChange={(e) => setTitle(e.target.value)}
 			/>
 			<Toolbar {...toolbarProps} />
-			<EditorContent
-				editor={editor}
-				className="tiptap rounded-lg overflow-y-auto minimal-scrollbar border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
-			/>
+			<div className="tiptap">
+				<EditorContent
+					editor={editor}
+					className="rounded-lg overflow-y-auto minimal-scrollbar border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
+				/>
+			</div>
 		</div>
 	);
 };

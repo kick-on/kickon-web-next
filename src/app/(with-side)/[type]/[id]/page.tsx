@@ -8,13 +8,10 @@ import RecommendedContent from '@/components/common/recommended-content';
 import DetailContent from '@/components/features/detail/content/DetailContent';
 import CommentSection from '@/components/features/detail/comment/comment-section';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
 
 import { getDetailContent } from '@/services/apis/detail';
-import { getCommentList } from '@/services/apis/detail/comment';
 
 import { GetDetailResponse } from '@/services/apis/detail/dto';
-import { GetCommentsResponse } from '@/services/apis/detail/comment/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { PostContentView } from '@/services/apis/detail/view';
 
@@ -24,20 +21,19 @@ const DetailPage = () => {
 	const router = useRouter();
 
 	const [contents, setContents] = useState<GetDetailResponse | null>(null);
-	const [comments, setComments] = useState<GetCommentsResponse | null>(null);
 	const [, setIsLoading] = useState(true);
+	const [totalReplies, setTotalReplies] = useState(0);
 
 	const type = params?.type as 'news' | 'board';
 	const id = Number(params?.id);
 	const isNews = type == 'news';
 	const currentPage = Number(searchParams.get('page') || '1');
-	const commentsPerPage = 10;
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const isOurTeamPost = currentUserInfo?.teamPk == contents?.data?.team?.pk;
-	console.log(currentUserInfo);
-	console.log(currentUserInfo?.teamPk);
-	console.log(contents?.data?.team?.pk);
+
+	const isTeamNull = contents?.data?.team == null;
+	const isOurTeam = currentUserInfo?.teamPk === contents?.data?.team?.pk;
+	const isCommentAllowed = isTeamNull || isOurTeam;
 
 	useEffect(() => {
 		if (!type || !id) {
@@ -48,10 +44,8 @@ const DetailPage = () => {
 		const getDetailContentData = async () => {
 			try {
 				const contentData = await getDetailContent(type, id);
-				const commentData = await getCommentList(id, currentPage, commentsPerPage, isNews);
-				console.log(contentData);
+				setTotalReplies(contentData.data.replies);
 				setContents(contentData);
-				setComments(commentData);
 			} catch (error) {
 				console.error('데이터 불러오기 실패:', error);
 			} finally {
@@ -75,36 +69,31 @@ const DetailPage = () => {
 		viewSent.current = true;
 	}, [contents, type, id]);
 
-	const totalComments = contents?.data.replies || 0;
-	const totalPages = Math.max(1, Math.ceil(totalComments / commentsPerPage));
-	const baseUrl = `/${type}/${id}`;
-
 	return (
 		<div className="flex flex-col gap-4">
 			<ComponentFrame isMain={true}>
 				{contents?.data ? (
-					<DetailContent data={contents.data} type={type} isOurTeamPost={isOurTeamPost} />
+					<DetailContent data={contents.data} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
-					<FetchingFailedCard height="800px" marginTop="200px" onClick={() => {}} />
+					<FetchingFailedCard
+						height="800px"
+						marginTop="200px"
+						onClick={() => {
+							getDetailContent(type, id);
+						}}
+					/>
 				)}
 
-				{comments?.data ? (
-					<>
-						<CommentSection
-							isOurTeamPost={isOurTeamPost}
-							type={type}
-							comments={comments.data}
-							contentsId={contents?.data?.pk || 0}
-							totalreplies={contents?.data?.replies}
-						/>
-						{totalComments > 0 && <PaginationBar totalPages={totalPages} baseUrl={baseUrl} />}
-					</>
-				) : (
-					<FetchingFailedCard height="300px" marginTop="50px" />
-				)}
+				<CommentSection
+					isCommentAllowed={isCommentAllowed}
+					type={type}
+					contentsId={contents?.data?.pk || 0}
+					totalreplies={totalReplies}
+					setTotalReplies={setTotalReplies}
+				/>
 			</ComponentFrame>
 
-			<RecommendedContent mode={type} teamName={isOurTeamPost ? contents?.data.team?.nameEn : ''} />
+			<RecommendedContent mode={type} teamName={isOurTeam ? contents?.data.team?.nameKr : ''} />
 		</div>
 	);
 };

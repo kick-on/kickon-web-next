@@ -9,7 +9,7 @@ import { categories } from '@/lib/constants/options';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
 
-const DetailContent = ({ data, type, isOurTeamPost }) => {
+const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const isNews = type === 'news';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
 	const [isLiked, setIsLiked] = useState(data.isKicked);
@@ -67,19 +67,27 @@ const DetailContent = ({ data, type, isOurTeamPost }) => {
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
-					{isOurTeamPost && <Image src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />}
+					{!isCommentAllowed && <Image src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{categoryLabel}
 					</span>
 				</div>
 			)}
 
-			<h1 className={`title1-bold ${titleMargin}`}>{data.title}</h1>
+			<p className={`title1-bold ${titleMargin}`}>{data.title}</p>
 
 			{/* 작성자 & 액션 카운터 */}
 			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular">
 				<div className="flex items-center gap-2">
-					<Image src="/default-profile.svg" alt="작성자 프로필" width={24} height={24} className="rounded-full" />
+					<div className="w-6 h-6 overflow-hidden">
+						<Image
+							src={data.user.profileImageUrl}
+							alt="작성자 프로필"
+							width={24}
+							height={24}
+							className="w-full h-full rounded-full object-cover"
+						/>
+					</div>
 					<span className="flex items-center gap-1.5 text-black-900">
 						{data.user.nickname}
 						<Image width={12} height={12} src="/certification-mark.svg" alt="인증" />

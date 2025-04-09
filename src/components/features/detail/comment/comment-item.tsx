@@ -2,21 +2,23 @@ import Image from 'next/image';
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
+import { CommentItemProps } from '@/services/apis/detail/comment/dto';
 
-const CommentItem = ({
-	type,
+function CommentItem({
 	content,
+	type,
 	likedComments,
 	handleLikeToggle,
 	handleReply,
 	toggleReplyVisibility,
 	replyingTo,
 	replyVisibilities,
-	isReply = false,
-	isOurTeamPost,
-	parentReply,
+	isCommentAllowed,
 	contentsId,
-}) => {
+	parentReply,
+	isReply = false,
+	onCommentSubmit,
+}: CommentItemProps) {
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
@@ -75,7 +77,7 @@ const CommentItem = ({
 					</p>
 
 					<div className="flex flex-col gap-3.5">
-						{isOurTeamPost && (
+						{isCommentAllowed && (
 							<button
 								className="button5-regular text-black-700 bg-black-200 rounded-sm px-2 py-1 w-fit"
 								onClick={() => handleReply(content.pk)}
@@ -107,6 +109,7 @@ const CommentItem = ({
 							parentReplyId={content.pk}
 							contentType={type}
 							mentionNickname={content.user.nickname}
+							onCommentSubmit={onCommentSubmit}
 						/>
 					)}
 				</div>
@@ -114,6 +117,6 @@ const CommentItem = ({
 			<hr className="border-t border-black-300 -mx-4" />
 		</>
 	);
-};
+}
 
 export default CommentItem;
