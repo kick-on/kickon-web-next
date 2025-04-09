@@ -62,7 +62,7 @@ export default function Score({
 				type="text"
 				value={score}
 				onChange={(e) => onChange(e, side)}
-				className={clsx('w-8 h-8 flex justify-center text-center rounded-lg body1-bold text-black-000', {
+				className={clsx('w-9 h-9 flex justify-center text-center rounded-lg body1-bold text-black-000', {
 					'bg-primary-900': isActive,
 					'bg-black-500': !isActive,
 				})}

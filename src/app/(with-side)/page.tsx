@@ -59,7 +59,14 @@ export default function Home() {
 						/>
 					</div>
 				) : (
-					proceedingGames.games.map((game) => <PredictCard key={game.pk} leagueName={proceedingGames.name} {...game} />)
+					proceedingGames.games.map((game) => (
+						<PredictCard
+							key={game.pk}
+							leagueName={proceedingGames.name}
+							refetchGames={() => getGamesByStatus('proceeding')}
+							{...game}
+						/>
+					))
 				)}
 			</div>
 			<hr className="mx-6 border-black-600" />
@@ -77,7 +84,7 @@ export default function Home() {
 					finishedGames.games.map((game) => <PredictCard key={game.pk} leagueName={finishedGames.name} {...game} />)
 				)}
 			</div>
-			<RecommendedContent mode={'news'} />
+			<RecommendedContent mode={'news'} teamName={currentUserInfo?.teamName || undefined} />
 			<RecommendedContent mode={'board'} />
 		</div>
 	);

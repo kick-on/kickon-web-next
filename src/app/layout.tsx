@@ -8,6 +8,9 @@ import Banner from '@/components/layouts/root-layout/banner';
 export const metadata: Metadata = {
 	title: '킥온',
 	description: '',
+	icons: {
+		icon: '/favicon.svg',
+	},
 };
 
 const pretendard = localFont({

@@ -19,8 +19,27 @@ export default function Footer() {
 
 					<div className="flex flex-col gap-4">
 						<div className="flex gap-4">
-							<span className="cursor-pointer">서비스 이용약관</span>|
-							<span className="cursor-pointer">개인정보처리방침</span>
+							<span
+								className="cursor-pointer"
+								onClick={() => {
+									if (window) {
+										window.open('https://www.notion.so/devbob/1c3e7fdb8ed1803798c4cd8fc15b13d7', '_blank');
+									}
+								}}
+							>
+								서비스 이용약관
+							</span>
+							|
+							<span
+								className="cursor-pointer"
+								onClick={() => {
+									if (window) {
+										window.open('https://www.notion.so/devbob/1c3e7fdb8ed180f39725d9aa9a6f1011', '_blank');
+									}
+								}}
+							>
+								개인정보처리방침
+							</span>
 						</div>
 
 						<div className="flex gap-4">

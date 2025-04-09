@@ -21,14 +21,14 @@ export default function Closed({
 		${side === 'left' ? 'before:rounded-l-[0.5625rem]' : side === 'right' ? 'before:rounded-r-[0.5625rem]' : ''}`;
 
 	return (
-		<div className="w-[36rem] h-[4.625rem] grid grid-cols-3 bg-black-200 border border-black-300 rounded-[0.625rem] button3-semibold text-black-700">
+		<div className="w-[36rem] h-[4.625rem] grid grid-cols-3 bg-black-200 border border-black-300 rounded-[0.625rem] subtitle1-semibold text-black-700">
 			<div
 				className={clsx('relative pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]', {
 					[selectedButtonClass('left')]: isParticipated && leftScore > rightScore,
 				})}
 			>
 				<Image
-					className="relative z-20"
+					className="relative z-20 w-[1.375rem] h-[1.375rem] object-contain"
 					width={22}
 					height={22}
 					src={homeTeam.logoUrl}
@@ -47,7 +47,7 @@ export default function Closed({
 			>
 				<div
 					className={clsx(
-						'w-8 h-8 absolute z-20 -left-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
+						'w-9 h-9 absolute z-20 -left-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
 						{
 							'bg-primary-900': isParticipated && leftScore >= rightScore,
 							'bg-black-500': !isParticipated || leftScore < rightScore,
@@ -58,7 +58,7 @@ export default function Closed({
 				</div>
 				<div
 					className={clsx(
-						'w-8 h-8 absolute z-20 -right-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
+						'w-9 h-9 absolute z-20 -right-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
 						{
 							'bg-primary-900': isParticipated && leftScore <= rightScore,
 							'bg-black-500': !isParticipated || leftScore > rightScore,
@@ -81,7 +81,7 @@ export default function Closed({
 					<div className="relative z-20 caption2-medium">{`${gambleResult.away}%`}</div>
 				</div>
 				<Image
-					className="relative z-20"
+					className="relative z-20 w-[1.375rem] h-[1.375rem] object-contain"
 					width={22}
 					height={22}
 					src={awayTeam.logoUrl}
