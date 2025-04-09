@@ -9,11 +9,9 @@ import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 export default function LoginModal({ onClose }) {
 	const router = useRouter();
 	const modalRef = useRef<HTMLDivElement | null>(null);
-	const previousPage = sessionStorage.getItem('previousPage');
 
 	const handleXButtonClick = () => {
 		onClose();
-		router.replace(previousPage);
 	};
 
 	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
@@ -26,7 +24,6 @@ export default function LoginModal({ onClose }) {
 		const handleOutsideClick = (e: MouseEvent) => {
 			if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
 				onClose();
-				router.replace(previousPage);
 			}
 		};
 
@@ -37,7 +34,7 @@ export default function LoginModal({ onClose }) {
 			document.removeEventListener('click', handleOutsideClick);
 			document.body.style.overflow = 'unset';
 		};
-	}, [onClose, router, previousPage]);
+	}, [onClose, router]);
 
 	return (
 		<div className="fixed z-50 flex justify-center items-center top-0 left-0 w-full h-full bg-black/40">

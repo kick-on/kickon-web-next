@@ -30,7 +30,9 @@ export default function NewsItem({
 
 				<section className="flex justify-between">
 					<div className="w-[28rem]">
-						<h2 className="title3-semibold mb-2">{title.length > 33 ? `${title.substring(0, 33)}...` : title}</h2>
+						<h2 className="title3-semibold mb-2">
+							{title.length > 33 ? `${title.substring(0, 30).trim()}...` : title}
+						</h2>
 						<SanitizedContent content={content} />
 					</div>
 					<Image
