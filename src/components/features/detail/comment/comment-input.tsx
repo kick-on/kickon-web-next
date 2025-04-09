@@ -2,15 +2,9 @@
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
+import { CommentInputProps } from '@/services/apis/detail/comment/dto';
+import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
-
-interface CommentInputProps {
-	type?: 'comment' | 'reply';
-	mentionNickname?: string;
-	parentReplyId?: number;
-	contentType: 'news' | 'board';
-	contentsId: number;
-}
 
 const CommentInput = ({
 	type = 'comment',
@@ -18,6 +12,7 @@ const CommentInput = ({
 	contentsId,
 	parentReplyId,
 	contentType,
+	onCommentSubmit,
 }: CommentInputProps) => {
 	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
@@ -89,6 +84,9 @@ const CommentInput = ({
 		if (isSubmitting) return;
 
 		setIsSubmitting(true);
+		setTimeout(() => {
+			onCommentSubmit?.();
+		}, 300);
 
 		// request 보내기 전에 @mentionNickname 제거
 		const mentionPattern = new RegExp(`^@${mentionNickname}&nbsp;`);
@@ -108,6 +106,7 @@ const CommentInput = ({
 		if (inputRef.current) inputRef.current.innerHTML = '';
 		setIsSubmitting(false);
 	};
+
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
 		if (e.key === 'Enter' && !e.shiftKey) {
 			e.preventDefault();
@@ -125,8 +124,12 @@ const CommentInput = ({
 						contentEditable
 						onKeyDown={handleKeyDown}
 						onInput={handleInput}
-						className={`w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular
-              ${type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full'} text-left`}
+						className={clsx(
+							'relative w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left',
+							type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full',
+							content.trim().length === 0 && 'empty-placeholder',
+						)}
+						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning={true}
 					/>
 				</div>
@@ -145,10 +148,11 @@ const CommentInput = ({
 				{/* 등록 버튼 */}
 				<button
 					onClick={handleSubmit}
-					disabled={isSubmitting}
-					className={`w-13.5 h-full bg-primary-900 border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem] ${
-						isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-					}`}
+					disabled={isSubmitting || content.trim().length === 0}
+					className={clsx(
+						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem]',
+						isSubmitting || content.trim().length === 0 ? 'bg-black-300 cursor-not-allowed ' : 'bg-primary-900',
+					)}
 				>
 					등록
 				</button>

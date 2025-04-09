@@ -11,8 +11,8 @@ export const categories = [
 ];
 
 export const headingOptions = [
-	{ label: '제목1', value: 'Header1' },
-	{ label: '제목2', value: 'Header2' },
+	{ label: '제목1', value: '1' },
+	{ label: '제목2', value: '2' },
 	{ label: '본문', value: 'paragraph' },
 ];
 

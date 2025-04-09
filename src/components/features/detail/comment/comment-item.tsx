@@ -2,21 +2,23 @@ import Image from 'next/image';
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
+import { CommentItemProps } from '@/services/apis/detail/comment/dto';
 
-const CommentItem = ({
-	type,
+function CommentItem({
 	content,
+	type,
 	likedComments,
 	handleLikeToggle,
 	handleReply,
 	toggleReplyVisibility,
 	replyingTo,
 	replyVisibilities,
-	isReply = false,
 	isCommentAllowed,
-	parentReply,
 	contentsId,
-}) => {
+	parentReply,
+	isReply = false,
+	onCommentSubmit,
+}: CommentItemProps) {
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
@@ -107,6 +109,7 @@ const CommentItem = ({
 							parentReplyId={content.pk}
 							contentType={type}
 							mentionNickname={content.user.nickname}
+							onCommentSubmit={onCommentSubmit}
 						/>
 					)}
 				</div>
@@ -114,6 +117,6 @@ const CommentItem = ({
 			<hr className="border-t border-black-300 -mx-4" />
 		</>
 	);
-};
+}
 
 export default CommentItem;

@@ -1,12 +1,15 @@
 'use client';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export default function PaginationBar({ totalPages, baseUrl }: { totalPages: number; baseUrl: string }) {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const currentPage = Number(searchParams.get('page') || '1');
 
+	const pathname = usePathname();
+	const isDetailPage = /^\/(news|board)\/\d+/.test(pathname || '');
+
+	const currentPage = Number(searchParams.get('page') || '1');
 	const pageGroupSize = 10;
 	const currentGroup = Math.floor((currentPage - 1) / pageGroupSize);
 	const startPage = currentGroup * pageGroupSize + 1;
@@ -16,7 +19,11 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 		if (page >= 1 && page <= totalPages) {
 			const params = new URLSearchParams(searchParams.toString());
 			params.set('page', page.toString());
-			router.push(`${baseUrl}?${params.toString()}`, { scroll: false });
+
+			// 상세 페이지일 때만 scroll: false
+			router.push(`${baseUrl}?${params.toString()}`, {
+				scroll: !isDetailPage, // true일 경우 스크롤됨, false면 스크롤 안 됨
+			});
 		}
 	};
 
@@ -24,7 +31,7 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 	const isLastGroup = endPage === totalPages;
 
 	return (
-		<div className="flex gap-3 body6-regular items-center mx-auto mb-10">
+		<div className="flex gap-3 body6-regular items-center mx-auto">
 			{/* 이전 그룹 버튼 */}
 			<button
 				onClick={() => handlePageClick(startPage - 1)}

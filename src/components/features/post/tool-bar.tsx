@@ -162,7 +162,7 @@ export default function Toolbar({
 				)}
 
 				{showLinkInput && (
-					<div className="absolute top-full left-0 mt-2 flex gap-2 w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50">
+					<div className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50">
 						<input
 							className="flex-1 p-2 focus:outline-none"
 							type="text"
@@ -187,7 +187,7 @@ export default function Toolbar({
 				)}
 
 				{showYoutubeInput && (
-					<div className="absolute top-full left-0 mt-2 flex gap-2 w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50">
+					<div className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50">
 						<input
 							className="flex-1 p-2 focus:outline-none"
 							type="text"
