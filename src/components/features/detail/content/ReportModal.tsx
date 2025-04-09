@@ -96,7 +96,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 						onClick={handleSubmitButtonClick}
 						disabled={!isSubmitEnabled}
 						className={`w-77 px-4 py-[0.625rem] rounded-lg ${
-							isSubmitEnabled ? 'bg-black-900 text-black-000' : 'bg-black-300 text-black-500 cursor-not-allowed'
+							isSubmitEnabled ? 'bg-black-900 text-black-000' : 'bg-black-300 text-black-500'
 						}`}
 					>
 						신고하기

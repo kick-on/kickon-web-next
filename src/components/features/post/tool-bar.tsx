@@ -172,7 +172,7 @@ export default function Toolbar({
 						/>
 						<button
 							className={`button4-medium px-3 py-1 rounded-lg shadow-md whitespace-nowrap flex items-center 
-		${linkUrl ? 'bg-primary-900 text-black-000' : 'bg-black-000 text-black-600 border border-black-300 cursor-not-allowed'}`}
+		${linkUrl ? 'bg-primary-900 text-black-000' : 'bg-black-000 text-black-600 border border-black-300'}`}
 							onClick={() => {
 								if (!linkUrl) return;
 								handleInsertLink();

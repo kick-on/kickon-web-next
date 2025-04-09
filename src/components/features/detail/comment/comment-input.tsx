@@ -154,7 +154,7 @@ const CommentInput = ({
 					disabled={isSubmitting || content.trim().length === 0}
 					className={clsx(
 						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem]',
-						isSubmitting || content.trim().length === 0 ? 'bg-black-300 cursor-not-allowed ' : 'bg-primary-900',
+						isSubmitting || content.trim().length === 0 ? 'bg-black-300' : 'bg-primary-900',
 					)}
 				>
 					등록
