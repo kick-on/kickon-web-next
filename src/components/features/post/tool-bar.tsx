@@ -24,8 +24,10 @@ export default function Toolbar({
 }) {
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const [selectedOption, setSelectedOption] = useState(headingOptions[0]);
-	const dropdownRef = useRef<HTMLDivElement>(null);
 
+	const dropdownRef = useRef<HTMLDivElement>(null);
+	const linkInputRef = useRef<HTMLDivElement>(null);
+	const youtubeInputRef = useRef<HTMLDivElement>(null);
 	const textFormatButtons = [
 		{ key: 'bold', icon: <Image src="/bold.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'underline', icon: <Image src="/underline.svg" alt="Bold" width={20} height={20} /> },
@@ -83,13 +85,24 @@ export default function Toolbar({
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+			const target = event.target as Node;
+
+			// Heading Dropdown
+			if (dropdownRef.current && !dropdownRef.current.contains(target)) {
 				setIsVisibleDropdown(false);
 			}
+			// Link Input
+			if (linkInputRef.current && !linkInputRef.current.contains(target)) {
+				setShowLinkInput(false);
+			}
+			// Youtube Input
+			if (youtubeInputRef.current && !youtubeInputRef.current.contains(target)) {
+				setShowYoutubeInput(false);
+			}
 		};
-		document.addEventListener('click', handleClickOutside);
-		return () => document.removeEventListener('click', handleClickOutside);
-	}, []);
+		document.addEventListener('mousedown', handleClickOutside);
+		return () => document.removeEventListener('mousedown', handleClickOutside);
+	}, [setShowLinkInput, setShowYoutubeInput]);
 
 	const Divider = () => <div className="text-[#E0E0E0] px-2"> | </div>;
 
@@ -162,7 +175,10 @@ export default function Toolbar({
 				)}
 
 				{showLinkInput && (
-					<div className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50">
+					<div
+						ref={linkInputRef}
+						className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50"
+					>
 						<input
 							className="flex-1 p-2 focus:outline-none"
 							type="text"
@@ -187,7 +203,10 @@ export default function Toolbar({
 				)}
 
 				{showYoutubeInput && (
-					<div className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50">
+					<div
+						ref={youtubeInputRef}
+						className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50"
+					>
 						<input
 							className="flex-1 p-2 focus:outline-none"
 							type="text"
