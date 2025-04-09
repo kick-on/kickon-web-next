@@ -17,7 +17,8 @@ export default function PredictCard({
 	gameStatus,
 	startAt,
 	leagueName,
-}: GameDto & { leagueName: string }) {
+	refetchGames,
+}: GameDto & { leagueName: string; refetchGames?: () => void }) {
 	const [startDate, startTime] = formatGameStartDate(startAt);
 	const participations = formatGambleParticipations(gambleResult.participationNumber);
 	const timeBefore = getGameStartTimeBefore(startAt);
@@ -55,7 +56,7 @@ export default function PredictCard({
 				</div>
 				{gameStatus === 'PENDING' && <div className="caption1-regular text-black-700">마감 {timeBefore}</div>}
 			</div>
-			<div className="flex gap-1.5 items-center">
+			<div className="flex gap-1.5 items-start">
 				<div
 					className={clsx('w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
 						'border-black-200': gameStatus === 'PENDING',
@@ -81,6 +82,7 @@ export default function PredictCard({
 						awayTeam={awayTeam}
 						gambleResult={gambleResult}
 						myGambleResult={myGambleResult}
+						refetchGames={refetchGames}
 					/>
 				) : (
 					<Closed

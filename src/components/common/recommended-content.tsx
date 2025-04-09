@@ -36,7 +36,7 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 
 	const getDatas = useCallback(async () => {
 		const response = isNews
-			? await getRecommendedNews({ type: isHome ? 'all' : undefined })
+			? await getRecommendedNews({ type: teamName ? undefined : 'all' })
 			: await getRecommendedBoards();
 
 		if (!response) {
@@ -45,7 +45,7 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 			setData(response.data);
 			console.log(response.data);
 		}
-	}, [isHome, isNews]);
+	}, [isNews, teamName]);
 
 	useEffect(() => {
 		getDatas();
