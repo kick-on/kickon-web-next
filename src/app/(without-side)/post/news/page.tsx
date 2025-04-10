@@ -49,7 +49,9 @@ export default function Page() {
 
 	useEffect(() => {
 		const getTeamList = async () => {
-			const response = await getTeam(currentUserInfo?.leaguePk);
+			if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;
+
+			const response = await getTeam(currentUserInfo.leaguePk, searchTerm);
 
 			const teamData = response.data.map((team) => ({
 				id: team.pk,
@@ -60,7 +62,7 @@ export default function Page() {
 			setTeams(teamData);
 		};
 		getTeamList();
-	}, [currentUserInfo?.leaguePk]);
+	}, [currentUserInfo?.leaguePk, searchTerm]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
