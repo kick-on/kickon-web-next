@@ -145,14 +145,12 @@ export default function Profile() {
 								<div className="mx-auto my-[0.5625rem] text-center">
 									<div className="flex gap-1 items-center caption2-regular h-4">
 										지금까지 모은 포인트
-										<button>
-											<Image
-												title={`포인트는 승부 예측 기반으로,\n가상의 킥온 리그 순위를 정하는 데 쓰여요.`}
-												width={12}
-												height={12}
-												src="/help-circle.svg"
-												alt="도움말"
-											/>
+										<button
+											onClick={() =>
+												window.open('https://www.notion.so/devbob/1d0e7fdb8ed18034a779ee0f30e87a35', '_blank')
+											}
+										>
+											<Image width={12} height={12} src="/help-circle.svg" alt="도움말" />
 										</button>
 									</div>
 									<div className="body4-semibold">{extraUserInfo?.totalPoints || '-'} P</div>
