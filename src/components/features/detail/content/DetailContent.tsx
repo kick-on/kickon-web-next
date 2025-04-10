@@ -89,7 +89,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 					</div>
 					<span className="flex items-center gap-1.5 text-black-900">
 						{data.user.nickname}
-						<Image width={12} height={12} src="/certification-mark.svg" alt="인증" />
+						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
 					</span>
 					<span className="ml-2">{getRelativeTime(data.createdAt)}</span>
 					<span>|</span>
