@@ -59,6 +59,7 @@ export default function Score({
 			</div>
 
 			<input
+				disabled={isCompleted}
 				type="text"
 				value={score}
 				onChange={(e) => onChange(e, side)}
