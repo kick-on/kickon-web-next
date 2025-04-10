@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import Image from 'next/image';
@@ -13,7 +13,6 @@ import { getBanner } from '@/services/apis/event-board';
 import clsx from 'clsx';
 
 export default function Banner() {
-	const router = useRouter();
 	const pathname = usePathname();
 	const [banners, setBanners] = useState<BannerDto[]>([]);
 
@@ -75,7 +74,7 @@ export default function Banner() {
 					<SwiperSlide key={banner.id} className="w-full h-full">
 						<Image
 							onClick={() => {
-								if (banner.embeddedUrl) router.push(banner.embeddedUrl);
+								if (banner.embeddedUrl) window.open(banner.embeddedUrl, '_blank');
 							}}
 							className={clsx('w-full h-full object-cover', { 'cursor-pointer': banner.embeddedUrl })}
 							width={1920}
