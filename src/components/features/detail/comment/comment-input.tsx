@@ -26,7 +26,9 @@ const CommentInput = ({
 
 	useEffect(() => {
 		if (type === 'reply' && mentionNickname && inputRef.current) {
-			inputRef.current.innerHTML = `<span style="color: #890f0e">@${mentionNickname}</span>&nbsp;`;
+			inputRef.current.innerHTML = `
+		  <span contenteditable="false" style="color: #890f0e">@${mentionNickname}</span>&nbsp;
+		`;
 		}
 	}, [mentionNickname, type]);
 
@@ -72,21 +74,31 @@ const CommentInput = ({
 	const handleInput = () => {
 		if (inputRef.current) {
 			const inputText = inputRef.current.innerHTML;
-			const plainText = inputText
-				.replace(/<[^>]*>/g, '') // HTML 태그 제거
-				.replace(/&nbsp;/g, ' '); // &nbsp; → 일반 공백으로
+			const plainText = inputText.replace(/<[^>]*>/g, '').trim(); // HTML 태그 제거
 
-			const mentionPattern = new RegExp(`^@${mentionNickname} `); // 공백도 포함 (이미 &nbsp; → 공백 됐으니까)
-			const textWithoutMention = mentionPattern.test(plainText) ? plainText.replace(mentionPattern, '') : plainText;
+			const fullMention = `@${mentionNickname}`;
+			let textWithoutMention = plainText;
 
-			const trimmedText = textWithoutMention.trim(); // 텍스트만 남음
-
-			if (trimmedText.length <= 1000) {
-				setContent(trimmedText);
-				setCharCount(trimmedText.length);
+			// 만약 멘션만 있고 그 외 내용이 없을 경우 → 등록 비활성화
+			if (plainText === fullMention) {
+				setContent('');
+				setCharCount(0);
+				return;
 			}
+
+			// 멘션으로 시작하는 경우 멘션 제거
+			if (plainText.startsWith(fullMention)) {
+				textWithoutMention = plainText.slice(fullMention.length).trim();
+			}
+
+			// 여기서 최종적으로 진짜 내용 있는지 체크
+			const isContentEmpty = textWithoutMention === '';
+
+			setContent(isContentEmpty ? '' : textWithoutMention);
+			setCharCount(textWithoutMention.length);
 		}
 	};
+
 	const handleSubmit = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
 			setIsLoginModalOpen(true);

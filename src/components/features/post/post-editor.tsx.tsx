@@ -53,12 +53,15 @@ const PostEditor = ({
 			},
 		},
 		onUpdate: ({ editor }) => {
-			const content = editor.getHTML().trim();
+			const html = editor.getHTML().trim();
+			const text = editor
+				.getText()
+				.replace(/\u00A0/g, ' ')
+				.trim(); // &nbsp; = \u00A0
 
-			// HTML 내부의 텍스트가 완전히 비어 있는지 확인!!
-			const isEmpty = content === '' || content === '<p></p>' || content === '<p><br></p>';
+			const isTrulyEmpty = text === ''; // 텍스트 기준으로 완전 공백인지 확인
 
-			setBody(isEmpty ? '' : content);
+			setBody(isTrulyEmpty ? '' : html);
 		},
 	});
 

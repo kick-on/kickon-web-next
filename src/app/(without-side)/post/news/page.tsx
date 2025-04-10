@@ -48,21 +48,29 @@ export default function Page() {
 	}, []);
 
 	useEffect(() => {
-		const getTeamList = async () => {
-			if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;
+		if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;
 
-			const response = await getTeam(currentUserInfo.leaguePk, searchTerm);
+		const handler = setTimeout(async () => {
+			try {
+				const response = await getTeam(currentUserInfo.leaguePk, searchTerm);
 
-			const teamData = response.data.map((team) => ({
-				id: team.pk,
-				name: team.nameKr ?? team.nameEn,
-				logo: team.logoUrl,
-			}));
+				const teamData = response.data.map((team) => ({
+					id: team.pk,
+					name: team.nameKr ?? team.nameEn,
+					logo: team.logoUrl,
+				}));
 
-			setTeams(teamData);
+				setTeams(teamData);
+				setFilteredResults(teamData.filter((team) => team.name.toLowerCase().includes(searchTerm.toLowerCase())));
+			} catch (error) {
+				console.error('팀 리스트 가져오기 실패:', error);
+			}
+		}, 300); // 300ms 디바운스
+
+		return () => {
+			clearTimeout(handler);
 		};
-		getTeamList();
-	}, [currentUserInfo?.leaguePk, searchTerm]);
+	}, [searchTerm, currentUserInfo?.leaguePk]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
