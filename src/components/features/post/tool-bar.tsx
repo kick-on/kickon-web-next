@@ -28,6 +28,8 @@ export default function Toolbar({
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const linkInputRef = useRef<HTMLDivElement>(null);
 	const youtubeInputRef = useRef<HTMLDivElement>(null);
+	const mediaButtonRef = showLinkInput ? linkInputRef : showYoutubeInput ? youtubeInputRef : null;
+
 	const textFormatButtons = [
 		{ key: 'bold', icon: <Image src="/bold.svg" alt="Bold" width={20} height={20} /> },
 		{ key: 'underline', icon: <Image src="/underline.svg" alt="Bold" width={20} height={20} /> },
@@ -49,18 +51,23 @@ export default function Toolbar({
 		},
 	];
 
-	//TODO: 대표이미지 안 넣으면 모달 띄우기, 커뮤니티 글 작성에서도 이미지 안 넣으면 못 올리게? 이미지 없으면 동일한 모달 띄우기
-
 	const mediaButtons = [
 		{
 			key: 'link',
 			icon: <Image src="/link.svg" alt="링크 붙여넣기" width={20} height={20} />,
-			onClick: () => setShowLinkInput((prev) => !prev),
+			onClick: () => {
+				if (showYoutubeInput) setShowYoutubeInput(false);
+				setShowLinkInput(!showLinkInput);
+			},
 			isLabel: false,
 		},
 		{
 			key: 'image',
 			icon: <Image src="/image.svg" alt="사진 붙여넣기" width={20} height={20} />,
+			onClick: () => {
+				if (showLinkInput) setShowLinkInput(false);
+				if (showYoutubeInput) setShowYoutubeInput(false);
+			},
 			onChange: handleAddImage,
 			accept: 'image/*',
 			isLabel: true,
@@ -68,7 +75,10 @@ export default function Toolbar({
 		{
 			key: 'youtube',
 			icon: <Image src="/video.svg" alt="유튜브 영상 붙여넣기" width={20} height={20} />,
-			onClick: () => setShowYoutubeInput((prev) => !prev),
+			onClick: () => {
+				if (showLinkInput) setShowLinkInput(false);
+				setShowYoutubeInput(!showYoutubeInput);
+			},
 			isLabel: false,
 		},
 	];
@@ -100,8 +110,8 @@ export default function Toolbar({
 				setShowYoutubeInput(false);
 			}
 		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
 	}, [setShowLinkInput, setShowYoutubeInput]);
 
 	const Divider = () => <div className="text-[#E0E0E0] px-2"> | </div>;
@@ -160,27 +170,32 @@ export default function Toolbar({
 
 			<Divider />
 
-			<div className="relative flex gap-2">
+			<div ref={mediaButtonRef} className="relative flex gap-2">
 				{mediaButtons.map((btn) =>
 					btn.isLabel ? (
-						<label key={btn.key} className="cursor-pointer p-[7px] border border-[#D9D9D9] rounded-sm">
+						<label
+							onClick={btn.onClick}
+							key={btn.key}
+							className="cursor-pointer p-[7px] border border-[#D9D9D9] rounded-sm"
+						>
 							{btn.icon}
 							<input type="file" accept={btn.accept} className="hidden" onChange={btn.onChange} />
 						</label>
 					) : (
-						<button key={btn.key} className="p-[7px] border border-[#D9D9D9] rounded-sm relative" onClick={btn.onClick}>
+						<button
+							key={btn.key}
+							className={`p-[7px] border border-[#D9D9D9] rounded-sm relative ${btn.key}`}
+							onClick={btn.onClick}
+						>
 							{btn.icon}
 						</button>
 					),
 				)}
 
 				{showLinkInput && (
-					<div
-						ref={linkInputRef}
-						className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50"
-					>
+					<div className="absolute top-full left-0 mt-1 flex gap-0.5 h-10 z-50">
 						<input
-							className="flex-1 p-2 focus:outline-none"
+							className="flex-1 p-2 w-60 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md focus:outline-none"
 							type="text"
 							placeholder="URL을 입력하세요."
 							value={linkUrl}
@@ -203,12 +218,9 @@ export default function Toolbar({
 				)}
 
 				{showYoutubeInput && (
-					<div
-						ref={youtubeInputRef}
-						className="absolute top-full left-0 mt-2 flex gap-2 max-w-60 h-10 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md z-50"
-					>
+					<div className="absolute top-full left-0 mt-1 flex gap-0.5 h-10 z-50">
 						<input
-							className="flex-1 p-2 focus:outline-none"
+							className="flex-1 p-2 w-60 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md focus:outline-none"
 							type="text"
 							placeholder="유튜브 링크를 입력하세요."
 							value={youtubeUrl}

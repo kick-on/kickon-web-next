@@ -36,9 +36,15 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 			<button
 				onClick={() => handlePageClick(startPage - 1)}
 				disabled={isFirstGroup}
-				className={`px-3 py-1 flex gap-2 rounded-full ${isFirstGroup ? 'text-black-400' : 'text-black-600'}`}
+				className={`group px-3 py-1 flex gap-2 rounded-full ${isFirstGroup ? 'text-black-400' : 'text-black-600'}`}
 			>
-				<Image src="/chevron/pagenation-left.svg" alt="이전 버튼" width={16} height={16} />
+				<Image
+					className="group-disabled:opacity-[45%]"
+					src="/chevron/pagenation-left.svg"
+					alt="이전 버튼"
+					width={16}
+					height={16}
+				/>
 				이전
 			</button>
 
@@ -47,7 +53,7 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 				{Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map((page) => (
 					<button key={page} onClick={() => handlePageClick(page)} className="py-1">
 						<span
-							className={`pb-1.5 border-b-2 ${
+							className={`px-[0.2rem] pb-1.5 border-b-2 ${
 								currentPage === page ? 'border-black text-black-900' : 'border-transparent text-black-600'
 							}`}
 						>
@@ -61,10 +67,16 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 			<button
 				onClick={() => handlePageClick(endPage + 1)}
 				disabled={isLastGroup}
-				className={`px-3 py-1 rounded-full flex gap-2 items-center ${isLastGroup ? 'text-black-400' : 'text-black-600'}`}
+				className={`group px-3 py-1 rounded-full flex gap-2 items-center ${isLastGroup ? 'text-black-400' : 'text-black-600'}`}
 			>
 				다음
-				<Image src="/chevron/pagenation-right.svg" alt="다음 버튼" width={16} height={16} />
+				<Image
+					className="group-disabled:opacity-[45%]"
+					src="/chevron/pagenation-right.svg"
+					alt="다음 버튼"
+					width={16}
+					height={16}
+				/>
 			</button>
 		</div>
 	);

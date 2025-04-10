@@ -65,10 +65,10 @@ export default async function CategoryTab({
 					</Link>
 				</div>
 			) : (
-				<>
+				<div className="flex flex-col w-full pb-10">
 					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />
-				</>
+				</div>
 			)}
 		</div>
 	);

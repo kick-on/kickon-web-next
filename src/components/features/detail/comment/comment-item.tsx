@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
 import { CommentItemProps } from '@/services/apis/detail/comment/dto';
+import { formatStringToDate } from '@/lib/utils/formatStringToDate';
 
 function CommentItem({
 	content,
@@ -40,22 +41,7 @@ function CommentItem({
 						<div className="flex items-center gap-4">
 							<span className="body5-medium text-black-900">{content.user.nickname}</span>
 							<span className="body6-regular text-black-600">
-								{(() => {
-									const date = new Date(content.createdAt);
-									// 9시간 더하기
-									date.setHours(date.getHours() + 9);
-
-									return date
-										.toLocaleString('ko-KR', {
-											year: '2-digit',
-											month: '2-digit',
-											day: '2-digit',
-											hour: '2-digit',
-											minute: '2-digit',
-											hour12: false,
-										})
-										.replace(/\.$/, '');
-								})()}
+								{formatStringToDate(content.createdAt, '2-digit', true)}
 							</span>
 						</div>
 						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-1">
