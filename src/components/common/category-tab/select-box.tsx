@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { getLeague } from '@/services/apis/league';
 
-export default function SelectBox({ isClickedOtherTab = false }: { isClickedOtherTab: boolean }) {
+export default function SelectBox({ q, isClickedOtherTab = false }: { q: string; isClickedOtherTab: boolean }) {
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const [options, setOptions] = useState<LeagueDto[] | null>(null);
 	const [league, setLeague] = useState<LeagueDto | null>(null);
@@ -42,6 +42,17 @@ export default function SelectBox({ isClickedOtherTab = false }: { isClickedOthe
 
 		getOptions();
 	}, []);
+
+	useEffect(() => {
+		if (q) {
+			setLeague({
+				nameKr: q,
+				nameEn: q,
+				pk: -1,
+				logoUrl: '',
+			});
+		}
+	}, [q]);
 
 	useEffect(() => {
 		// isVisibleOptions가 true일 때만 리스너 등록

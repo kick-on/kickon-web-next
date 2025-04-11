@@ -42,9 +42,7 @@ export default async function CategoryTab({
 		order: q === '인기' ? 'hot' : 'recent',
 		league: type === 'league' ? parseInt(id) : undefined,
 	};
-	console.log('request', request);
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
-	console.log('response', response);
 
 	return (
 		<div className="flex flex-col w-full">

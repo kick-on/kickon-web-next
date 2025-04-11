@@ -34,7 +34,7 @@ export default function TabBar({ mode, q }: { mode: 'news' | 'board'; q: string 
 						tabs.includes(q) ? 'border-transparent' : 'border-primary-900 text-primary-900 header-semibold',
 					)}
 				>
-					<SelectBox isClickedOtherTab={tabs.includes(q)} />
+					<SelectBox q={q} isClickedOtherTab={tabs.includes(q)} />
 				</div>
 			)}
 		</div>
