@@ -36,7 +36,7 @@ export default function Page() {
 
 	const isValidNickname = nickname.length > 0 && nickname.length < 9;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
-	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && team);
+	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);

@@ -110,7 +110,15 @@ export default function AccountSelectBox({
 						${content ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
-					{content && <Image width={18} height={18} src={content.logoUrl} alt={content.nameKr} />}
+					{content && (
+						<Image
+							className="w-[1.125rem] h-[1.125rem] object-contain"
+							width={18}
+							height={18}
+							src={content.logoUrl}
+							alt={content.nameKr}
+						/>
+					)}
 					{content ? content.nameKr : '선택해 주세요.'}
 					{isEditable && (
 						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
