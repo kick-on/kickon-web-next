@@ -46,7 +46,7 @@ export default async function CategoryTab({
 
 	return (
 		<div className="flex flex-col w-full">
-			<TabBar mode={mode} q={q} />
+			<TabBar mode={mode} q={q} type={type} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />

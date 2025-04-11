@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import SelectBox from './select-box';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
-export default function TabBar({ mode, q }: { mode: 'news' | 'board'; q: string }) {
+export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: string; type: string }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	const tabs = ['전체', '인기', currentUserInfo ? currentUserInfo.teamName : null];
@@ -34,7 +34,7 @@ export default function TabBar({ mode, q }: { mode: 'news' | 'board'; q: string 
 						tabs.includes(q) ? 'border-transparent' : 'border-primary-900 text-primary-900 header-semibold',
 					)}
 				>
-					<SelectBox q={q} isClickedOtherTab={tabs.includes(q)} />
+					<SelectBox q={q} type={type} isClickedOtherTab={tabs.includes(q)} />
 				</div>
 			)}
 		</div>
