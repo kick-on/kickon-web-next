@@ -95,7 +95,7 @@ function CommentItem({
 							parentReplyId={content.pk}
 							contentType={type}
 							mentionNickname={content.user.nickname}
-							onCommentSubmit={onCommentSubmit}
+							onCommentSubmit={(isReply) => onCommentSubmit(isReply, content.pk)}
 						/>
 					)}
 				</div>

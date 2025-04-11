@@ -46,7 +46,7 @@ const DetailPage = () => {
 				const contentData = await getDetailContent(type, id);
 				setTotalReplies(contentData.data.replies);
 				setContents(contentData);
-				console.log(contentData);
+				console.log('상세조회', contentData);
 			} catch (error) {
 				console.error('데이터 불러오기 실패:', error);
 			} finally {

@@ -25,22 +25,27 @@ function CommentSection({
 	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const [hasError, setHasError] = useState(false);
+	const [totalPages, setTotalPages] = useState(1);
 
 	const searchParams = useSearchParams();
 	const commentsPerPage = 10;
 	const currentPage = Number(searchParams.get('page') || '1');
-	const totalPages = Math.max(1, Math.ceil(totalreplies / commentsPerPage));
+
 	const baseUrl = `/${type}/${contentsId}`;
 
 	const fetchCommentsListData = useCallback(async () => {
-		if (!contentsId || contentsId < 1) return;
+		if (!contentsId || contentsId < 1) return null;
 		try {
 			const response = await getCommentList(contentsId, currentPage, commentsPerPage, isNews);
 			setComments(response?.data || []);
+			setTotalPages(response.meta?.totalPages || 1);
+			console.log('댓글 리스트', response.data);
 			setHasError(false);
+			return response.meta?.totalPages; // 바로 반환해버려
 		} catch (e) {
 			console.error('댓글 불러오기 실패:', e);
 			setHasError(true);
+			return null;
 		}
 	}, [contentsId, currentPage, isNews]);
 
@@ -48,19 +53,17 @@ function CommentSection({
 		fetchCommentsListData();
 	}, [fetchCommentsListData]);
 
-	// 댓글 작성 시 해당 페이지로 이동하는 함수
-	const handleCommentSubmit = async () => {
-		const newTotalReplies = totalreplies + 1;
-		const newTotalPages = Math.ceil(newTotalReplies / commentsPerPage);
+	const handleCommentSubmit = async (isReply: boolean, pk?: number) => {
+		setTotalReplies(totalreplies + 1);
+		const updatedTotalPages = await fetchCommentsListData(); // 최신 페이지 수 받아와라
 
-		setTotalReplies?.(newTotalReplies);
+		if (isReply && pk !== undefined) {
+			setReplyingTo((prev) => prev.filter((id) => id !== pk));
+			return;
+		}
 
-		// 마지막 페이지로 이동
-		if (newTotalPages !== currentPage) {
-			router.push(`${baseUrl}?page=${newTotalPages}`, { scroll: false });
-		} else {
-			// 현재가 마지막 페이지면 그냥 새로 fetch
-			await fetchCommentsListData();
+		if (updatedTotalPages && updatedTotalPages !== currentPage) {
+			router.push(`${baseUrl}?page=${updatedTotalPages}`, { scroll: false });
 		}
 	};
 
@@ -119,7 +122,11 @@ function CommentSection({
 	return (
 		<div className="px-4 mb-10.5">
 			{isCommentAllowed && (
-				<CommentInput contentType={type} contentsId={contentsId} onCommentSubmit={handleCommentSubmit} />
+				<CommentInput
+					contentType={type}
+					contentsId={contentsId}
+					onCommentSubmit={(isReply) => handleCommentSubmit(isReply)}
+				/>
 			)}
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개

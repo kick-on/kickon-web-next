@@ -55,7 +55,7 @@ export interface CommentItemProps {
 	contentsId: number;
 	parentReply?: string;
 	isReply?: boolean;
-	onCommentSubmit: () => void;
+	onCommentSubmit: (isReply: boolean, pk?: number) => void;
 }
 
 // 코멘트 입력 props
@@ -65,5 +65,5 @@ export interface CommentInputProps {
 	parentReplyId?: number;
 	contentType: 'news' | 'board';
 	contentsId: number;
-	onCommentSubmit?: () => void;
+	onCommentSubmit?: (isReply: boolean) => void;
 }
