@@ -13,6 +13,7 @@ import { getTeam } from '@/services/apis/team';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getUserInfo } from '@/services/auth';
 
 export default function Page() {
 	const navigate = useRouter();
@@ -38,14 +39,24 @@ export default function Page() {
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-	const { currentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
 
 	useEffect(() => {
 		const isLoggedIn = getAccessToken() && getRefreshToken();
 		if (!isLoggedIn) {
 			setIsLoginModalOpen(true);
 		}
-	}, []);
+		const fetchUserInfo = async () => {
+			const user = await getUserInfo();
+			if (typeof user !== 'string' && user?.data) {
+				setCurrentUserInfo(user.data);
+			}
+		};
+
+		if (!currentUserInfo) {
+			fetchUserInfo();
+		}
+	}, [currentUserInfo, setCurrentUserInfo]);
 
 	useEffect(() => {
 		if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;

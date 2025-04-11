@@ -10,26 +10,25 @@ import { useRouter } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
+import { getUserInfo } from '@/services/auth';
 
 export default function Page() {
 	const navigate = useRouter();
-	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-	const userTeams = currentUserInfo?.teamPk
-		? [
-				{
-					label: currentUserInfo.teamName ?? '내 팀',
-					value: String(currentUserInfo.teamPk),
-					logo: currentUserInfo.teamLogoUrl,
-				},
-			]
-		: [];
-
-	const [teams] = useState<{ label: string; value: string; logo?: string }[]>([
+	const teams: { label: string; value: string; logo?: string }[] = [
 		{ label: '전체', value: '' },
-		...userTeams,
-	]);
+		...(currentUserInfo?.teamPk
+			? [
+					{
+						label: currentUserInfo.teamName ?? '내 팀',
+						value: String(currentUserInfo.teamPk),
+						logo: currentUserInfo.teamLogoUrl,
+					},
+				]
+			: []),
+	];
 
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string; logo?: string }>(teams[0]);
 
@@ -54,7 +53,17 @@ export default function Page() {
 		if (!isLoggedIn) {
 			setIsLoginModalOpen(true);
 		}
-	}, []);
+		const fetchUserInfo = async () => {
+			const user = await getUserInfo();
+			if (typeof user !== 'string' && user?.data) {
+				setCurrentUserInfo(user.data);
+			}
+		};
+
+		if (!currentUserInfo) {
+			fetchUserInfo();
+		}
+	}, [currentUserInfo, setCurrentUserInfo]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {

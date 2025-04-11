@@ -94,10 +94,35 @@ export default function Toolbar({
 	};
 
 	useEffect(() => {
+		if (!editor) return;
+
+		const updateHeadingOption = () => {
+			if (editor.isActive('heading', { level: 1 })) {
+				setSelectedOption(headingOptions.find((opt) => opt.value === '1')!);
+			} else if (editor.isActive('heading', { level: 2 })) {
+				setSelectedOption(headingOptions.find((opt) => opt.value === '2')!);
+			} else if (editor.isActive('heading', { level: 3 })) {
+				setSelectedOption(headingOptions.find((opt) => opt.value === '3')!);
+			} else {
+				setSelectedOption(headingOptions.find((opt) => opt.value === 'paragraph')!);
+			}
+		};
+
+		editor.on('selectionUpdate', updateHeadingOption);
+
+		// 초기 실행
+		updateHeadingOption();
+
+		return () => {
+			editor.off('selectionUpdate', updateHeadingOption);
+		};
+	}, [editor]);
+
+	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			const target = event.target as Node;
 
-			// Heading Dropdown
+			// Heading 드롭다운
 			if (dropdownRef.current && !dropdownRef.current.contains(target)) {
 				setIsVisibleDropdown(false);
 			}
@@ -121,7 +146,7 @@ export default function Toolbar({
 			<div ref={dropdownRef} className="relative w-fit">
 				<button
 					onClick={handleDropdownToggle}
-					className="flex items-center gap-1.5 px-2 py-[9px] border border-[#D9D9D9] rounded-sm"
+					className="flex items-center justify-between px-2 py-[9px] border border-[#D9D9D9] rounded-sm w-17"
 				>
 					<div className="text-[#8C8C8C] body5-regular">{selectedOption.label}</div>
 					<ImageIcon width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
