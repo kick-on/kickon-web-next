@@ -76,13 +76,11 @@ export default function PredictCard({
 					<div className="body7-medium">
 						{gameStatus === 'PENDING'
 							? '경기 전'
-							: gameStatus === 'AWAY' || 'HOME' || 'DRAW'
+							: gameStatus === 'AWAY' || gameStatus === 'HOME' || gameStatus === 'DRAW'
 								? '풀타임'
-								: gameStatus === 'CANCELED'
+								: gameStatus === 'CANCELED' || gameStatus === 'POSTPONED'
 									? '경기 취소'
-									: gameStatus === 'POSTPONED'
-										? '경기 지연'
-										: '기타'}
+									: '기타'}
 					</div>
 					<div className={clsx('button6-regular', { 'line-through': gameStatus === 'CANCELED' })}>{startDate}</div>
 					<div className={clsx('button6-regular', { 'line-through': gameStatus === 'CANCELED' })}>{startTime}</div>
