@@ -100,7 +100,7 @@ function CommentItem({
 					)}
 				</div>
 			</div>
-			<hr className="border-t border-black-300 -mx-4" />
+			<hr className="border-t border-black-300 -mx-6 -ml-4" />
 		</>
 	);
 }
