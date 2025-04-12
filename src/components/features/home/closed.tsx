@@ -8,12 +8,14 @@ export default function Closed({
 	homeScore,
 	awayScore,
 	gambleResult,
+	isGameInProgress,
 	isParticipated,
 }: Pick<GameDto, 'homeTeam' | 'awayTeam' | 'homeScore' | 'awayScore' | 'gambleResult'> & {
+	isGameInProgress: boolean;
 	isParticipated: boolean;
 }) {
-	const leftScore = homeScore;
-	const rightScore = awayScore;
+	const leftScore = homeScore ?? '-';
+	const rightScore = awayScore ?? '-';
 
 	const selectedButtonClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
@@ -24,7 +26,7 @@ export default function Closed({
 		<div className="w-[36rem] h-[4.625rem] grid grid-cols-3 bg-black-200 border border-black-300 rounded-[0.625rem] subtitle1-semibold text-black-700">
 			<div
 				className={clsx('relative pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]', {
-					[selectedButtonClass('left')]: isParticipated && leftScore > rightScore,
+					[selectedButtonClass('left')]: isParticipated && !isGameInProgress && leftScore > rightScore,
 				})}
 			>
 				<Image
@@ -42,14 +44,14 @@ export default function Closed({
 
 			<div
 				className={clsx('relative h-full flex flex-col justify-center items-center border-x border-black-300', {
-					[selectedButtonClass('center')]: isParticipated && leftScore === rightScore,
+					[selectedButtonClass('center')]: isParticipated && !isGameInProgress && leftScore === rightScore,
 				})}
 			>
 				<div
 					className={clsx(
 						'w-9 h-9 absolute z-20 -left-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
 						{
-							'bg-primary-900': isParticipated && leftScore >= rightScore,
+							'bg-primary-900': isParticipated && !isGameInProgress && leftScore >= rightScore,
 							'bg-black-500': !isParticipated || leftScore < rightScore,
 						},
 					)}
@@ -60,7 +62,7 @@ export default function Closed({
 					className={clsx(
 						'w-9 h-9 absolute z-20 -right-4 flex justify-center items-center rounded-lg body1-bold text-black-000',
 						{
-							'bg-primary-900': isParticipated && leftScore <= rightScore,
+							'bg-primary-900': isParticipated && !isGameInProgress && leftScore <= rightScore,
 							'bg-black-500': !isParticipated || leftScore > rightScore,
 						},
 					)}
@@ -73,7 +75,7 @@ export default function Closed({
 
 			<div
 				className={clsx('relative pr-4 h-full flex gap-2 justify-end items-center text-right rounded-r-[0.5625rem]', {
-					[selectedButtonClass('right')]: isParticipated && leftScore < rightScore,
+					[selectedButtonClass('right')]: isParticipated && !isGameInProgress && leftScore < rightScore,
 				})}
 			>
 				<div>

@@ -23,6 +23,7 @@ export default function Home() {
 				status: status,
 			};
 			const response = await getGames(request);
+			console.log(response);
 
 			if (!response) {
 				setter(null);
@@ -62,6 +63,7 @@ export default function Home() {
 					proceedingGames.games.map((game) => (
 						<PredictCard
 							key={game.pk}
+							type={'proceeding'}
 							leagueName={proceedingGames.name}
 							refetchGames={() => getGamesByStatus('proceeding')}
 							{...game}
@@ -81,7 +83,9 @@ export default function Home() {
 						/>
 					</div>
 				) : (
-					finishedGames.games.map((game) => <PredictCard key={game.pk} leagueName={finishedGames.name} {...game} />)
+					finishedGames.games.map((game) => (
+						<PredictCard key={game.pk} type={'finished'} leagueName={finishedGames.name} {...game} />
+					))
 				)}
 			</div>
 			<RecommendedContent mode={'news'} teamName={currentUserInfo?.teamName || undefined} />

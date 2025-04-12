@@ -33,13 +33,13 @@ export interface GameDto {
 	homeTeam: GambleTeamDto;
 	awayTeam: GambleTeamDto;
 	gambleResult: GambleResultDto;
-	myGambleResult: MyGambleResultDto;
+	myGambleResult: MyGambleResultDto | null;
 	pk: number;
-	homeScore: number;
-	awayScore: number;
+	homeScore: number | null;
+	awayScore: number | null;
 	round: string;
-	homePenaltyScore: number;
-	awayPenaltyScore: number;
+	homePenaltyScore: number | null;
+	awayPenaltyScore: number | null;
 	gameStatus: 'PENDING' | 'PROCEEDING' | 'CANCELED' | 'HOME' | 'AWAY' | 'DRAW' | 'POSTPONED';
 	startAt: string;
 }
