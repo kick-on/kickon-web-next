@@ -1,3 +1,144 @@
+'use client';
+
+import Checkbox from '@/components/features/signup/checkbox';
+import AccountSelectbox from '@/components/common/account-selectbox';
+import Image from 'next/image';
+import { useState } from 'react';
+import Nickname from '@/components/features/signup/nickname';
+import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
+import { getUserInfo, updatePrivacy, updateUserInfo } from '@/services/auth';
+import { agreementDatas } from '@/lib/constants/agreementDatas';
+import { LeagueDto } from '@/services/apis/league/dto';
+import { TeamDto } from '@/services/apis/team/dto';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+
 export default function Page() {
-	return <div>회원가입 페이지</div>;
+	const router = useRouter();
+	const searchParams = useSearchParams();
+	const provider = searchParams.get('provider');
+	const socialLogoUrl = provider === 'naver' ? '/sns/naver-small.svg' : '/sns/kakao-small.svg';
+	const socialLogoAlt = provider === 'naver' ? '네이버 로고 이미지' : '카카오 로고 이미지';
+
+	const [nickname, setNickname] = useState('');
+	const [league, setLeague] = useState<LeagueDto | null>(null);
+	const [team, setTeam] = useState<TeamDto | null>(null);
+	const [agreements, setAgreements] = useState({
+		all: false,
+		age: false,
+		term: false,
+		privacy: false,
+		marketing: false,
+	});
+
+	const { setCurrentUserInfo } = useCurrentUserInfoStore();
+
+	const isValidNickname = nickname.length > 0 && nickname.length < 9;
+	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
+	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
+
+	const handleNicknameChange = (e) => {
+		setNickname(e.target.value);
+	};
+
+	const handleLeagueChange = (selectedLeague) => {
+		if (selectedLeague === league) return;
+		setLeague(selectedLeague);
+	};
+
+	const handleTeamChange = (selectedTeam) => {
+		if (selectedTeam === team) return;
+		setTeam(selectedTeam);
+	};
+
+	const handleCheckboxChange = (key) => {
+		const prev = agreements[key];
+
+		if (key === 'all') {
+			setAgreements({
+				all: !prev,
+				age: !prev,
+				term: !prev,
+				privacy: !prev,
+				marketing: !prev,
+			});
+		} else {
+			const updated = { ...agreements, [key]: !prev };
+			updated.all = updated.age && updated.term && updated.privacy && updated.marketing;
+			setAgreements(updated);
+		}
+	};
+
+	const handleSignupButtonClick = async () => {
+		const privacyRequest: UpdatePrivacyRequest = {
+			privacyAgreedAt: agreements.privacy && new Date().toISOString().split('.')[0] + 'Z',
+			marketingAgreedAt: agreements.marketing ? new Date().toISOString().split('.')[0] + 'Z' : undefined,
+		};
+		const privacyResponse = await updatePrivacy(privacyRequest);
+
+		if (typeof privacyResponse === 'string') {
+			console.log(privacyResponse);
+		} else {
+			// 회원가입 성공 시 유저 정보 수정 후 홈으로 이동
+			const updateUserInfoRequest: UpdateUserInfoRequest = {
+				nickname: nickname,
+				team: team.pk === -1 ? undefined : team.pk,
+			};
+			const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
+
+			if (typeof updateUserInfoResponse === 'string') {
+				console.log(updateUserInfoResponse);
+			} else {
+				const getUserInfoResponse = await getUserInfo();
+
+				if (typeof getUserInfoResponse === 'string') {
+					return getUserInfoResponse;
+				} else {
+					setCurrentUserInfo(getUserInfoResponse.data);
+				}
+				router.push('/');
+			}
+		}
+	};
+
+	return (
+		<div className="w-[21.5rem] m-auto flex flex-col items-center">
+			<div className="mb-8 title1-bold">회원가입</div>
+			<div className="flex gap-2">
+				{/* TODO: 로그인 버튼 클릭 시 query에 provider type을 담아 소셜 이미지 렌더링 */}
+				<Image width={24} height={24} src={socialLogoUrl} alt={socialLogoAlt} />
+				<div className="body3-regular">계정으로 가입을 진행하고 있어요.</div>
+			</div>
+
+			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
+				<Nickname nickname={nickname} onChange={handleNicknameChange} />
+				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
+				{league && league.pk !== NO_CHEERING_TEAM_PK && (
+					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
+				)}
+			</div>
+
+			<div className="p-2.5 w-full flex flex-col gap-4">
+				{agreementDatas.map(({ key, content, hasTerm, documentUrl }) => (
+					<Checkbox
+						key={key}
+						content={content}
+						hasTerm={hasTerm}
+						documentUrl={documentUrl}
+						checked={agreements[key]}
+						onChange={() => handleCheckboxChange(key)}
+					/>
+				))}
+				<button
+					onClick={handleSignupButtonClick}
+					disabled={isButtonDisabled}
+					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
+										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
+				>
+					회원가입
+				</button>
+			</div>
+		</div>
+	);
 }

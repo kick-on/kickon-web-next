@@ -1,138 +1,67 @@
 @import 'tailwindcss';
 
-/* 배경색 유틸리티 클래스 */
-.bg-primary-900 {
-	background-color: var(--color-primary-900);
-}
-.bg-primary-800 {
-	background-color: var(--color-primary-800);
-}
-.bg-primary-700 {
-	background-color: var(--color-primary-700);
-}
-.bg-primary-300 {
-	background-color: var(--color-primary-300);
-}
-.bg-primary-200 {
-	background-color: var(--color-primary-200);
-}
-.bg-primary-100 {
-	background-color: var(--color-primary-100);
-}
-.bg-black-900 {
-	background-color: var(--color-black-900);
-}
-.bg-black-800 {
-	background-color: var(--color-black-800);
-}
-.bg-black-700 {
-	background-color: var(--color-black-700);
-}
-.bg-black-600 {
-	background-color: var(--color-black-600);
-}
-.bg-black-500 {
-	background-color: var(--color-black-500);
-}
-.bg-black-300 {
-	background-color: var(--color-black-300);
-}
-.bg-black-200 {
-	background-color: var(--color-black-200);
-}
-.bg-black-100 {
-	background-color: var(--color-black-100);
-}
-.bg-black-000 {
-	background-color: var(--color-black-000);
-}
+@theme {
+	--color-negative: #ff0005;
 
-/* 텍스트 색상 유틸리티 클래스 */
-.text-negative {
-	color: var(--color-negative);
-}
-.text-primary-900 {
-	color: var(--color-primary-900);
-}
-.text-black-900 {
-	color: var(--color-black-900);
-}
-.text-black-800 {
-	color: var(--color-black-800);
-}
-.text-black-700 {
-	color: var(--color-black-700);
-}
-.text-black-600 {
-	color: var(--color-black-600);
-}
-.text-black-500 {
-	color: var(--color-black-500);
-}
-.text-black-300 {
-	color: var(--color-black-300);
-}
-.text-black-200 {
-	color: var(--color-black-200);
-}
-.text-black-100 {
-	color: var(--color-black-100);
-}
-.text-black-000 {
-	color: var(--color-black-000);
-}
+	--color-primary-900: #c00c0b;
+	--color-primary-800: #c00c0be5;
+	--color-primary-700: #c00c0bb2;
+	--color-primary-300: #c00c0b4d;
+	--color-primary-200: #c00c0b33;
+	--color-primary-50: #c00c0b0d;
+	--color-secondary: #890f0e;
 
-/* 테두리 색상 유틸리티 클래스 */
-.border-negative {
-	border-color: var(--color-negative);
-}
-.border-black-900 {
-	border-color: var(--color-black-900);
-}
-.border-black-800 {
-	border-color: var(--color-black-800);
-}
-.border-black-700 {
-	border-color: var(--color-black-700);
-}
-.border-black-600 {
-	border-color: var(--color-black-600);
-}
-.border-black-500 {
-	border-color: var(--color-black-500);
-}
-.border-black-300 {
-	border-color: var(--color-black-300);
-}
-.border-black-200 {
-	border-color: var(--color-black-200);
-}
-.border-black-100 {
-	border-color: var(--color-black-100);
-}
-.border-black-000 {
-	border-color: var(--color-black-000);
-}
+	--color-black-900: #000000;
+	--color-black-800: #363636;
+	--color-black-700: #676767;
+	--color-black-600: #8f8f8f;
+	--color-black-500: #afafaf;
+	--color-black-400: #cccccc;
+	--color-black-300: #dcdcdc;
+	--color-black-200: #f0f0f0;
+	--color-black-150: #f6f6f6;
+	--color-black-100: #f8f8f8;
+	--color-black-000: #ffffff;
 
-/* 그림자 유틸리티 클래스 */
-.shadow-login-button {
-	box-shadow: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
-}
-.shadow-floating-button {
-	box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
-}
-.shadow-select-button {
-	box-shadow: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
-}
-.shadow-predict-button {
-	box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
-}
-.shadow-predict-button-active {
-	box-shadow: 0px 2px 10px 0px rgba(217, 25, 32, 0.4);
-}
-.shadow-kick-button {
-	box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
-}
-.shadow-kick-button-active {
-	box-shadow: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);
+	--shadow-select-options: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
+	--shadow-login-button: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
+	--shadow-floating-button: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
+	--shadow-predict-button: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
+	--shadow-predict-button-active: 0px 2px 10px 0px rgba(217, 25, 32, 0.4);
+	--shadow-closed-button-active: 0 0 0 0.5px var(--color-primary-200);
+	--shadow-kick-button: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
+	--shadow-kick-button-active: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);
+
+	--drop-shadow-score: (0px 0px 4px rgba(0, 0, 0, 0.1));
+
+	--font-pretendard: 'pretendard', 'sans-serif';
+
+	/* font sizes */
+	--text-10: 10px;
+	--text-12: 12px;
+	--text-13: 13px;
+	--text-14: 14px;
+	--text-15: 15px;
+	--text-16: 16px;
+	--text-18: 18px;
+	--text-20: 20px;
+	--text-24: 24px;
+	--text-28: 28px;
+
+	/* font weights */
+	--font-weight-regular: 400;
+	--font-weight-medium: 500;
+	--font-weight-semibold: 600;
+	--font-weight-bold: 700;
+	--font-weight-black: 900;
+
+	/* line heights */
+	--lh-normal: normal;
+	--lh-16: 16px;
+	--lh-18: 18px;
+	--lh-20: 20px;
+	--lh-24: 24px;
+	--lh-26: 26px;
+	--lh-28: 28px;
+	--lh-36: 36px;
 }
