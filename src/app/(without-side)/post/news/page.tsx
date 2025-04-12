@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { getTeam } from '@/services/apis/team';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getUserInfo } from '@/services/auth';
 
 export default function Page() {
 	const navigate = useRouter();
@@ -37,7 +38,7 @@ export default function Page() {
 	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
 	const [filteredResults, setFilteredResults] = useState(teams);
 
-	const { currentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
 
 	useEffect(() => {
 		if (hasShownAlert.current) return;
@@ -49,22 +50,42 @@ export default function Page() {
 			const previousPage = sessionStorage.getItem('previousPage');
 			navigate.replace(previousPage);
 		}
-	}, [navigate]);
+		const fetchUserInfo = async () => {
+			const user = await getUserInfo();
+			if (typeof user !== 'string' && user?.data) {
+				setCurrentUserInfo(user.data);
+			}
+		};
+
+		if (!currentUserInfo) {
+			fetchUserInfo();
+		}
+	}, [currentUserInfo, setCurrentUserInfo, navigate]);
 
 	useEffect(() => {
-		const getTeamList = async () => {
-			const response = await getTeam(currentUserInfo?.leaguePk);
+		if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;
 
-			const teamData = response.data.map((team) => ({
-				id: team.pk,
-				name: team.nameKr ?? team.nameEn,
-				logo: team.logoUrl,
-			}));
+		const handler = setTimeout(async () => {
+			try {
+				const response = await getTeam(currentUserInfo.leaguePk, searchTerm);
 
-			setTeams(teamData);
+				const teamData = response.data.map((team) => ({
+					id: team.pk,
+					name: team.nameKr ?? team.nameEn,
+					logo: team.logoUrl,
+				}));
+
+				setTeams(teamData);
+				setFilteredResults(teamData.filter((team) => team.name.toLowerCase().includes(searchTerm.toLowerCase())));
+			} catch (error) {
+				console.error('팀 리스트 가져오기 실패:', error);
+			}
+		}, 300); // 300ms 디바운스
+
+		return () => {
+			clearTimeout(handler);
 		};
-		getTeamList();
-	}, [currentUserInfo?.leaguePk]);
+	}, [searchTerm, currentUserInfo?.leaguePk]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();

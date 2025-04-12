@@ -20,13 +20,12 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
 	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			const sanitized = DOMPurify.sanitize(data.content, {
-				ADD_TAGS: ['iframe'],
-				ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling'],
-			});
-			setSanitizedContent(sanitized);
-		}
+		if (typeof window === 'undefined') return;
+		const sanitized = DOMPurify.sanitize(data.content, {
+			ADD_TAGS: ['iframe'],
+			ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target'],
+		});
+		setSanitizedContent(sanitized);
 	}, [data.content]);
 
 	const handleLikeButtonClick = async () => {
@@ -74,7 +73,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 			)}
 
-			<p className={`title1-bold ${titleMargin}`}>{data.title}</p>
+			<h1 className={`title1-bold ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
 			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular">
@@ -90,7 +89,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 					</div>
 					<span className="flex items-center gap-1.5 text-black-900">
 						{data.user.nickname}
-						<Image width={12} height={12} src="/certification-mark.svg" alt="인증" />
+						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
 					</span>
 					<span className="ml-2">{getRelativeTime(data.createdAt)}</span>
 					<span>|</span>

@@ -63,7 +63,7 @@ function CommentItem({
 					</p>
 
 					<div className="flex flex-col gap-3.5">
-						{isCommentAllowed && (
+						{isCommentAllowed && !isReply && (
 							<button
 								className="button5-regular text-black-700 bg-black-200 rounded-sm px-2 py-1 w-fit"
 								onClick={() => handleReply(content.pk)}
@@ -95,12 +95,12 @@ function CommentItem({
 							parentReplyId={content.pk}
 							contentType={type}
 							mentionNickname={content.user.nickname}
-							onCommentSubmit={onCommentSubmit}
+							onCommentSubmit={(isReply) => onCommentSubmit(isReply, content.pk)}
 						/>
 					)}
 				</div>
 			</div>
-			<hr className="border-t border-black-300 -mx-4" />
+			<hr className="border-t border-black-300 -mx-6 -ml-4" />
 		</>
 	);
 }
