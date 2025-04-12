@@ -2,9 +2,9 @@ import { spawn } from 'child_process';
 import axios from 'axios';
 
 // Slack 정보 (환경 변수에서 가져오기 권장)
-const DEPLOY_TYPE = process.env.DEPLOY_TYPE;
-const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN;
-const SLACK_CHANNEL = process.env.SLACK_CHANNEL_ID;
+const DEPLOY_TYPE = process.env.NEXT_PUBLIC_DEPLOY_TYPE;
+const SLACK_TOKEN = process.env.NEXT_PUBLIC_SLACK_BOT_TOKEN;
+const SLACK_CHANNEL = process.env.NEXT_PUBLIC_SLACK_CHANNEL_ID;
 
 const nextProcess = spawn('node', ['node_modules/next/dist/bin/next', 'start'], {
 	stdio: 'inherit',
