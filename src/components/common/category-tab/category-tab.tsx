@@ -42,13 +42,11 @@ export default async function CategoryTab({
 		order: q === '인기' ? 'hot' : 'recent',
 		league: type === 'league' ? parseInt(id) : undefined,
 	};
-	console.log('request', request);
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
-	console.log('response', response);
 
 	return (
 		<div className="flex flex-col w-full">
-			<TabBar mode={mode} q={q} />
+			<TabBar mode={mode} q={q} type={type} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />
