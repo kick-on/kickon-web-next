@@ -23,8 +23,8 @@ export default function Score({
 		<div
 			onClick={(e) => e.stopPropagation()}
 			className={clsx('absolute z-20 flex gap-2 items-center', {
-				'-left-10': side === 'left',
-				'flex-row-reverse -right-10': side === 'right',
+				'-left-[2.625rem]': side === 'left',
+				'flex-row-reverse -right-[2.625rem]': side === 'right',
 			})}
 		>
 			<div className={clsx('flex flex-col gap-1.5', { invisible: isCompleted })}>
