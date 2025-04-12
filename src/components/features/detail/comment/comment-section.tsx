@@ -59,6 +59,11 @@ function CommentSection({
 
 		if (isReply && pk !== undefined) {
 			setReplyingTo((prev) => prev.filter((id) => id !== pk));
+			setReplyVisibilities((prev) => ({
+				...prev,
+				[pk]: true,
+			}));
+
 			return;
 		}
 
