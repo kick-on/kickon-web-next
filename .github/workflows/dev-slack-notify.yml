@@ -1,0 +1,23 @@
+name: Notify via Slack Bot
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  notify-dev:
+    if: github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send message to Slack with API token
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+          curl -X POST https://slack.com/api/chat.postMessage \
+            -H "Authorization: Bearer ${{ secrets.SLACK_BOT_TOKEN }}" \
+            -H 'Content-type: application/json' \
+            --data "{
+              \"channel\": \"${{ secrets.DEV_SLACK_CHANNEL_ID }}\",
+              \"text\": \":ballot_box_with_check: [dev] 로그 알림! :ballot_box_with_check:\nmessage : 프론트 배포가 완료됐습니다!\"
+            }"
