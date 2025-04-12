@@ -50,9 +50,13 @@ export default function Closed({
 			</div>
 
 			<div
-				className={clsx('relative h-full flex flex-col justify-center items-center border-x border-black-300', {
-					[selectedButtonClass('center')]: isParticipated && !isGameInProgress && leftScore === rightScore,
-				})}
+				className={clsx(
+					'relative h-full flex flex-col justify-center items-center border-x',
+					isGameInProgress ? 'border-black-200' : 'border-black-300',
+					{
+						[selectedButtonClass('center')]: isParticipated && !isGameInProgress && leftScore === rightScore,
+					},
+				)}
 			>
 				<div
 					className={clsx(
