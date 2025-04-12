@@ -42,7 +42,7 @@ jobs:
           aws deploy create-deployment \
             --application-name kickon-prod-frontend \
             --deployment-group-name kickon-prod-frontend-group \
-            --s3-location bucket=kickon-frontend-bucket,key=dev/latest-build.zip,bundleType=zip
+            --s3-location bucket=kickon-frontend-bucket,key=prod/latest-build.zip,bundleType=zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
