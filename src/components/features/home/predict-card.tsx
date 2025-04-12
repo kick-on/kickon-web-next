@@ -33,7 +33,7 @@ export default function PredictCard({
 		<div
 			className={clsx(
 				'w-[41.75rem] min-h-[11rem] bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] gap-[0.625rem] transition-all',
-				{ 'text-black-700': !isGambleInProgress },
+				{ 'text-black-700': !isGambleInProgress && !isGameInProgress },
 			)}
 		>
 			<div className="flex justify-between items-center">
@@ -75,8 +75,8 @@ export default function PredictCard({
 			<div className="flex gap-1.5 items-start">
 				<div
 					className={clsx('w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
-						'border-black-200': isGambleInProgress,
-						'bg-black-200 border-black-100': !isGambleInProgress,
+						'border-black-200': isGambleInProgress || isGameInProgress,
+						'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
 					})}
 				>
 					<div className="body7-medium">

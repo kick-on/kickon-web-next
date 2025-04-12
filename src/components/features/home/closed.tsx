@@ -23,7 +23,14 @@ export default function Closed({
 		${side === 'left' ? 'before:rounded-l-[0.5625rem]' : side === 'right' ? 'before:rounded-r-[0.5625rem]' : ''}`;
 
 	return (
-		<div className="w-[36rem] h-[4.625rem] grid grid-cols-3 bg-black-200 border border-black-300 rounded-[0.625rem] subtitle1-semibold text-black-700">
+		<div
+			className={clsx(
+				'w-[36rem] h-[4.625rem] grid grid-cols-3 border rounded-[0.625rem] subtitle1-semibold',
+				isGameInProgress
+					? 'text-black-900 bg-black-000 border-black-200'
+					: ' text-black-700 bg-black-200 border-black-300',
+			)}
+		>
 			<div
 				className={clsx('relative pl-4 h-full flex gap-2 items-center rounded-l-[0.5625rem]', {
 					[selectedButtonClass('left')]: isParticipated && !isGameInProgress && leftScore > rightScore,
