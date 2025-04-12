@@ -23,6 +23,7 @@ export default function Home() {
 				status: status,
 			};
 			const response = await getGames(request);
+			console.log(response);
 
 			if (!response) {
 				setter(null);

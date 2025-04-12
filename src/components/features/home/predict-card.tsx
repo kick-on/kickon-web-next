@@ -109,6 +109,7 @@ export default function PredictCard({
 						homeScore={homeScore}
 						awayScore={awayScore}
 						gambleResult={gambleResult}
+						isGameInProgress={isGameInProgress}
 						isParticipated={!!myGambleResult}
 					/>
 				)}
