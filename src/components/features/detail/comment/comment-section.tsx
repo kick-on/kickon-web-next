@@ -124,7 +124,7 @@ function CommentSection({
 			{isCommentAllowed && (
 				<CommentInput
 					contentType={type}
-					contentsId={contentsId}
+					contentsId={contentsId} // 게시글 댓글이기에 게시글 아이디
 					onCommentSubmit={(isReply) => handleCommentSubmit(isReply)}
 				/>
 			)}

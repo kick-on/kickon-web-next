@@ -11,12 +11,12 @@ import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { useRouter } from 'next/navigation';
 import { getTeam } from '@/services/apis/team';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
-import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 
 export default function Page() {
 	const navigate = useRouter();
+
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
@@ -28,6 +28,7 @@ export default function Page() {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const searchRef = useRef<HTMLDivElement>(null);
 	const fileInputRef = useRef(null);
+	const hasShownAlert = useRef(false);
 
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -37,14 +38,17 @@ export default function Page() {
 	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
 	const [filteredResults, setFilteredResults] = useState(teams);
 
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
 
 	useEffect(() => {
+		if (hasShownAlert.current) return;
+		hasShownAlert.current = true;
+
 		const isLoggedIn = getAccessToken() && getRefreshToken();
 		if (!isLoggedIn) {
-			setIsLoginModalOpen(true);
+			alert('로그인 후 작성 가능합니다.');
+			const previousPage = sessionStorage.getItem('previousPage');
+			navigate.replace(previousPage);
 		}
 		const fetchUserInfo = async () => {
 			const user = await getUserInfo();
@@ -56,7 +60,7 @@ export default function Page() {
 		if (!currentUserInfo) {
 			fetchUserInfo();
 		}
-	}, [currentUserInfo, setCurrentUserInfo]);
+	}, [currentUserInfo, setCurrentUserInfo, navigate]);
 
 	useEffect(() => {
 		if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;
@@ -325,7 +329,6 @@ export default function Page() {
 				>
 					작성 완료
 				</button>
-				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 			</div>
 		</div>
 	);

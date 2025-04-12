@@ -8,14 +8,12 @@ import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { getUserInfo } from '@/services/auth';
 
 export default function Page() {
 	const navigate = useRouter();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	const teams: { label: string; value: string; logo?: string }[] = [
 		{ label: '전체', value: '' },
@@ -48,10 +46,17 @@ export default function Page() {
 		setIsVisibleDropdown(false);
 	};
 
+	const hasShownAlert = useRef(false);
+
 	useEffect(() => {
+		if (hasShownAlert.current) return;
+		hasShownAlert.current = true;
+
 		const isLoggedIn = getAccessToken() && getRefreshToken();
 		if (!isLoggedIn) {
-			setIsLoginModalOpen(true);
+			alert('로그인 후 작성 가능합니다.');
+			const previousPage = sessionStorage.getItem('previousPage');
+			navigate.replace(previousPage);
 		}
 		const fetchUserInfo = async () => {
 			const user = await getUserInfo();
@@ -63,7 +68,7 @@ export default function Page() {
 		if (!currentUserInfo) {
 			fetchUserInfo();
 		}
-	}, [currentUserInfo, setCurrentUserInfo]);
+	}, [currentUserInfo, setCurrentUserInfo, navigate]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -158,7 +163,6 @@ export default function Page() {
 				>
 					작성 완료
 				</button>
-				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 			</div>
 		</div>
 	);
