@@ -16,9 +16,10 @@ export default function PredictCard({
 	awayScore,
 	gameStatus,
 	startAt,
+	type,
 	leagueName,
 	refetchGames,
-}: GameDto & { leagueName: string; refetchGames?: () => void }) {
+}: GameDto & { type: 'proceeding' | 'finished'; leagueName: string; refetchGames?: () => void }) {
 	const [startDate, startTime] = formatGameStartDate(startAt);
 	const participations = formatGambleParticipations(gambleResult.participationNumber);
 	const timeBefore = getGameStartTimeBefore(startAt);
@@ -39,7 +40,7 @@ export default function PredictCard({
 						className={clsx(
 							'px-2 py-1 ml-2 mr-0.5 rounded-full text-black-000 caption2-regular text-center items-center',
 							{
-								'bg-black-900': gameStatus === 'PENDING',
+								'bg-black-900': gameStatus === 'PENDING' || gameStatus === 'PROCEEDING',
 								'bg-primary-900':
 									myGambleResult &&
 									(myGambleResult.gambleStatus === 'SUCCEED' || myGambleResult.gambleStatus === 'PERFECT'),
@@ -48,15 +49,17 @@ export default function PredictCard({
 							},
 						)}
 					>
-						{gameStatus === 'PENDING'
+						{type === 'proceeding'
 							? '예측 진행 중'
-							: !myGambleResult
-								? '미참여'
-								: myGambleResult.gambleStatus === 'SUCCEED'
-									? '예측 성공'
-									: myGambleResult.gambleStatus === 'FAILED'
-										? `예측 실패`
-										: ''}
+							: type === 'finished' && (gameStatus === 'PENDING' || gameStatus === 'PROCEEDING') && myGambleResult
+								? '참여 완료'
+								: !myGambleResult
+									? '미참여'
+									: myGambleResult.gambleStatus === 'SUCCEED'
+										? '예측 성공'
+										: myGambleResult.gambleStatus === 'FAILED'
+											? `예측 실패`
+											: ''}
 					</div>
 					{isGameCompleted && myGambleResult && (
 						<div className="caption2-regular text-black-700">
@@ -74,18 +77,20 @@ export default function PredictCard({
 					})}
 				>
 					<div className="body7-medium">
-						{gameStatus === 'PENDING'
+						{type === 'proceeding'
 							? '경기 전'
-							: gameStatus === 'AWAY' || gameStatus === 'HOME' || gameStatus === 'DRAW'
-								? '풀타임'
-								: gameStatus === 'CANCELED' || gameStatus === 'POSTPONED'
-									? '경기 취소'
-									: '기타'}
+							: type === 'finished' && (gameStatus === 'PENDING' || gameStatus === 'PROCEEDING')
+								? '경기 중'
+								: gameStatus === 'AWAY' || gameStatus === 'HOME' || gameStatus === 'DRAW'
+									? '풀타임'
+									: gameStatus === 'CANCELED' || gameStatus === 'POSTPONED'
+										? '경기 취소'
+										: '기타'}
 					</div>
 					<div className={clsx('button6-regular', { 'line-through': gameStatus === 'CANCELED' })}>{startDate}</div>
 					<div className={clsx('button6-regular', { 'line-through': gameStatus === 'CANCELED' })}>{startTime}</div>
 				</div>
-				{gameStatus === 'PENDING' ? (
+				{type === 'proceeding' ? (
 					<InProgress
 						pk={pk}
 						homeTeam={homeTeam}
