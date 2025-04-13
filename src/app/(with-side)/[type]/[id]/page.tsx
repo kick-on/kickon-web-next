@@ -14,6 +14,9 @@ import { getDetailContent } from '@/services/apis/detail';
 import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { PostContentView } from '@/services/apis/detail/view';
+import { getCookie, setCookie } from '@/lib/utils/cookie';
+
+const POST_VIEW_EXPIRY = 60 * 60 * 24 * 1000;
 
 const DetailPage = () => {
 	const params = useParams();
@@ -34,6 +37,32 @@ const DetailPage = () => {
 	const isTeamNull = contents?.data?.team == null;
 	const isOurTeam = currentUserInfo?.teamPk === contents?.data?.team?.pk;
 	const isCommentAllowed = isTeamNull || isOurTeam;
+
+	const [shouldCallApi, setShouldCallApi] = useState(false);
+
+	useEffect(() => {
+		// (24시간 이내 열람한 게시글 id):(열람 시각) 쌍의 객체
+		const cookieValue = getCookie('viewedPosts');
+		let viewedPosts: Record<string, number> = {};
+
+		if (cookieValue) {
+			try {
+				viewedPosts = JSON.parse(cookieValue);
+			} catch {
+				viewedPosts = {};
+			}
+		}
+
+		const now = Date.now();
+		const lastViewed = viewedPosts[id];
+
+		// 24시간이 지났거나, 처음 보는 글이면 API 호출
+		if (!lastViewed || now - lastViewed > POST_VIEW_EXPIRY) {
+			setShouldCallApi(true);
+			viewedPosts[id] = now;
+			setCookie('viewedPosts', JSON.stringify(viewedPosts), 60 * 60 * 24); // max-age(24시간) in seconds
+		}
+	}, [id]);
 
 	useEffect(() => {
 		if (!type || !id) {
@@ -60,7 +89,7 @@ const DetailPage = () => {
 	const viewSent = useRef(false);
 
 	useEffect(() => {
-		if (!contents || viewSent.current) return; // 중복 호출 방지
+		if (!contents || viewSent.current || !shouldCallApi) return; // 중복 호출 방지
 
 		PostContentView({
 			requestBody: { [type === 'news' ? 'news' : 'board']: id },
@@ -68,7 +97,7 @@ const DetailPage = () => {
 		}).then(console.log);
 
 		viewSent.current = true;
-	}, [contents, type, id]);
+	}, [contents, type, id, shouldCallApi]);
 
 	return (
 		<div className="flex flex-col gap-4">
