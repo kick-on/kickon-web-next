@@ -3,7 +3,7 @@
 import Checkbox from '@/components/features/signup/checkbox';
 import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
 import { getUserInfo, updatePrivacy, updateUserInfo } from '@/services/auth';
@@ -102,11 +102,21 @@ export default function Page() {
 		}
 	};
 
+	// 소셜 로그인을 통한 접근이 아닌 경우 홈으로 리디렉션
+	useEffect(() => {
+		// 이전 경로
+		const from = document.referrer;
+
+		if (!(from.includes('/login/kakao') || from.includes('/login/naver'))) {
+			alert('잘못된 접근입니다.');
+			router.replace('/');
+		}
+	}, [router]);
+
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
 			<div className="mb-8 title1-bold">회원가입</div>
 			<div className="flex gap-2">
-				{/* TODO: 로그인 버튼 클릭 시 query에 provider type을 담아 소셜 이미지 렌더링 */}
 				<Image width={24} height={24} src={socialLogoUrl} alt={socialLogoAlt} />
 				<div className="body3-regular">계정으로 가입을 진행하고 있어요.</div>
 			</div>
