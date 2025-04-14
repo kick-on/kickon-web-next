@@ -264,7 +264,7 @@ export default function Page() {
 											handleSelectTeam(team);
 										}}
 									>
-										<Image src={team.logo} alt={team.name} width={20} height={20} />
+										<Image className="w-4 h-4 object-contain" src={team.logo} alt={team.name} width={16} height={16} />
 										{team.name}
 									</div>
 								))

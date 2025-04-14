@@ -143,7 +143,15 @@ export default function Page() {
 								onClick={() => handleOptionClick(option)}
 							>
 								<div className="flex items-center gap-2">
-									{option.logo && <Image src={option.logo} alt={option.label} width={16} height={16} />}
+									{option.logo && (
+										<Image
+											className="w-4 h-4 object-contain"
+											src={option.logo}
+											alt={option.label}
+											width={16}
+											height={16}
+										/>
+									)}
 									<span>{option.label}</span>
 								</div>
 							</div>
