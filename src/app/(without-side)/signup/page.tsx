@@ -6,13 +6,13 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
-import { getUserInfo, updatePrivacy, updateUserInfo } from '@/services/auth';
+import { updatePrivacy, updateUserInfo } from '@/services/auth';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getCookie, setCookie } from '@/lib/utils/cookie';
 
 export default function Page() {
 	const router = useRouter();
@@ -20,6 +20,8 @@ export default function Page() {
 	const provider = searchParams.get('provider');
 	const socialLogoUrl = provider === 'naver' ? '/sns/naver-small.svg' : '/sns/kakao-small.svg';
 	const socialLogoAlt = provider === 'naver' ? '네이버 로고 이미지' : '카카오 로고 이미지';
+
+	const [isValidAccess, setIsValidAccess] = useState(false);
 
 	const [nickname, setNickname] = useState('');
 	const [league, setLeague] = useState<LeagueDto | null>(null);
@@ -31,8 +33,6 @@ export default function Page() {
 		privacy: false,
 		marketing: false,
 	});
-
-	const { setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const isValidNickname = nickname.length > 0 && nickname.length < 9;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
@@ -90,13 +90,14 @@ export default function Page() {
 			if (typeof updateUserInfoResponse === 'string') {
 				console.log(updateUserInfoResponse);
 			} else {
-				const getUserInfoResponse = await getUserInfo();
+				// 유저 정보 조회 로직에서 문제??...
+				// const getUserInfoResponse = await getUserInfo();
 
-				if (typeof getUserInfoResponse === 'string') {
-					return getUserInfoResponse;
-				} else {
-					setCurrentUserInfo(getUserInfoResponse.data);
-				}
+				// if (typeof getUserInfoResponse === 'string') {
+				// 	return getUserInfoResponse;
+				// } else {
+				// 	setCurrentUserInfo(getUserInfoResponse.data);
+				// }
 				router.push('/');
 			}
 		}
@@ -104,14 +105,23 @@ export default function Page() {
 
 	// 소셜 로그인을 통한 접근이 아닌 경우 홈으로 리디렉션
 	useEffect(() => {
-		// 이전 경로
-		const from = document.referrer;
+		const fromLogin = getCookie('fromLogin');
 
-		if (!(from.includes('/login/kakao') || from.includes('/login/naver'))) {
+		if (fromLogin === 'true') {
+			setIsValidAccess(true);
+		} else {
 			alert('잘못된 접근입니다.');
 			router.replace('/');
 		}
 	}, [router]);
+
+	useEffect(() => {
+		return () => {
+			if (isValidAccess) {
+				setCookie('fromLogin', '', 0);
+			}
+		};
+	}, [isValidAccess]);
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
