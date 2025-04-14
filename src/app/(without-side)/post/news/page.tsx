@@ -217,7 +217,13 @@ export default function Page() {
 				<div ref={searchRef} className="relative w-[17.75rem]">
 					<div className="relative button4-medium flex items-center border border-black-300 rounded-lg h-9 px-4 py-[0.5625rem]">
 						{selectedTeam && (
-							<Image src={selectedTeam.logo} alt={selectedTeam.name} width={20} height={20} className="mr-2" />
+							<Image
+								src={selectedTeam.logo}
+								alt={selectedTeam.name}
+								width={16}
+								height={16}
+								className="mr-2 w-4 h-4 object-contain"
+							/>
 						)}
 
 						<input
