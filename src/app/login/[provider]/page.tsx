@@ -1,6 +1,7 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { setCookie } from '@/lib/utils/cookie';
 import { getUserInfo } from '@/services/auth';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect } from 'react';
@@ -16,7 +17,6 @@ export default function Page() {
 	useEffect(() => {
 		const accessToken = searchParams.get('accessToken');
 		const refreshToken = searchParams.get('refreshToken');
-		console.log('accesstoken: ', accessToken);
 
 		if (accessToken && refreshToken) {
 			localStorage.setItem('accessToken', accessToken);
@@ -28,6 +28,7 @@ export default function Page() {
 
 			if (typeof response === 'string') {
 				// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
+				setCookie('fromLogin', 'true', 30);
 				router.push(`/signup?provider=${provider}`);
 			} else {
 				// 유저 정보 불러오기 성공 시 이전 페이지로

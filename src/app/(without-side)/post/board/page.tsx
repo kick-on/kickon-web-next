@@ -117,7 +117,15 @@ export default function Page() {
 						isVisibleDropdown ? 'mb-[5.75rem]' : 'mb-4',
 					)}
 				>
-					{selectedOption.logo && <Image src={selectedOption.logo} alt={selectedOption.label} width={16} height={16} />}
+					{selectedOption.logo && (
+						<Image
+							className="w-4 h-4 object-contain"
+							src={selectedOption.logo}
+							alt={selectedOption.label}
+							width={16}
+							height={16}
+						/>
+					)}
 					<div className={clsx('button4-medium', selectedOption.value !== '' ? 'text-black-900' : 'text-black-900')}>
 						{selectedOption.label}
 					</div>
@@ -135,7 +143,15 @@ export default function Page() {
 								onClick={() => handleOptionClick(option)}
 							>
 								<div className="flex items-center gap-2">
-									{option.logo && <Image src={option.logo} alt={option.label} width={16} height={16} />}
+									{option.logo && (
+										<Image
+											className="w-4 h-4 object-contain"
+											src={option.logo}
+											alt={option.label}
+											width={16}
+											height={16}
+										/>
+									)}
 									<span>{option.label}</span>
 								</div>
 							</div>

@@ -1,343 +1,47 @@
 @import 'tailwindcss';
+@import './theme.css';
+@import './font.css';
 
-@theme {
-	--color-negative: #ff0005;
-
-	--color-primary-900: #c00c0b;
-	--color-primary-800: #c00c0be5;
-	--color-primary-700: #c00c0bb2;
-	--color-primary-300: #c00c0b4d;
-	--color-primary-200: #c00c0b33;
-	--color-primary-50: #c00c0b0d;
-	--color-secondary: #890f0e;
-
-	--color-black-900: #000000;
-	--color-black-800: #363636;
-	--color-black-700: #676767;
-	--color-black-600: #8f8f8f;
-	--color-black-500: #afafaf;
-	--color-black-400: #cccccc;
-	--color-black-300: #dcdcdc;
-	--color-black-200: #f0f0f0;
-	--color-black-150: #f6f6f6;
-	--color-black-100: #f8f8f8;
-	--color-black-000: #ffffff;
-
-	--shadow-select-options: 0px 4px 16px 0px rgba(0, 0, 0, 0.2);
-	--shadow-login-button: 0px 4px 8px 0px rgba(0, 0, 0, 0.2);
-	--shadow-floating-button: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
-	--shadow-predict-button: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
-	--shadow-predict-button-active: 0px 2px 10px 0px rgba(217, 25, 32, 0.4);
-	--shadow-closed-button-active: 0 0 0 0.5px var(--color-primary-200);
-	--shadow-kick-button: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
-	--shadow-kick-button-active: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);
-
-	--drop-shadow-score: (0px 0px 4px rgba(0, 0, 0, 0.1));
-
-	--font-pretendard: 'pretendard', 'sans-serif';
-
-	/* font sizes */
-	--text-10: 10px;
-	--text-12: 12px;
-	--text-13: 13px;
-	--text-14: 14px;
-	--text-15: 15px;
-	--text-16: 16px;
-	--text-18: 18px;
-	--text-20: 20px;
-	--text-24: 24px;
-	--text-28: 28px;
-
-	/* font weights */
-	--font-weight-regular: 400;
-	--font-weight-medium: 500;
-	--font-weight-semibold: 600;
-	--font-weight-bold: 700;
-	--font-weight-black: 900;
-
-	/* line heights */
-	--lh-normal: normal;
-	--lh-12: 12px;
-	--lh-16: 16px;
-	--lh-18: 18px;
-	--lh-20: 20px;
-	--lh-24: 24px;
-	--lh-26: 26px;
-	--lh-28: 28px;
-	--lh-36: 36px;
-}
-
-@layer components {
-	/* Base Typography */
-	[class*='-'] {
-		font-family: var(--font-pretendard);
+@layer base {
+	body {
+		background-color: var(--color-black-100);
+		color: var(--color-black-900);
+		min-width: 1440px; /* body 최소 width를 side-layout 최소 width로 설정해 디자인 일관성 줌 */
+		display: flex;
+		flex-direction: column;
 	}
 
-	/* Headers */
-	.header-semibold,
-	.header-medium,
-	.header-regular {
-		font-size: var(--text-15);
-		line-height: var(--lh-16);
+	button {
+		cursor: pointer;
+		&:disabled {
+			pointer-events: none;
+		}
 	}
 
-	.header-semibold {
-		font-weight: var(--font-weight-semibold);
-	}
-	.header-medium {
-		font-weight: var(--font-weight-medium);
-	}
-	.header-regular {
-		font-weight: var(--font-weight-regular);
+	h1 {
+		font-size: 20px;
+		font-weight: 700;
 	}
 
-	/* Display */
-	.display-semibold {
-		font-size: var(--text-24);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-36);
+	h2 {
+		font-size: 18px;
+		font-weight: 600;
 	}
 
-	/* Titles */
-	.title1-bold {
-		font-size: var(--text-28);
-		font-weight: var(--font-weight-bold);
-		line-height: var(--lh-36);
+	ul {
+		list-style: disc;
+		padding-left: 1.5rem;
 	}
 
-	.title2-semibold {
-		font-size: var(--text-24);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-26);
+	blockquote {
+		border-left: 4px solid var(--color-black-800);
+		padding-left: 1rem;
+		margin: 1rem 0;
 	}
 
-	.title3-semibold {
-		font-size: var(--text-20);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-normal);
-	}
-
-	.title4-semibold {
-		font-size: var(--text-18);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-20);
-	}
-
-	.title5-semibold {
-		font-size: var(--text-16);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-16);
-	}
-
-	/* Subtitles */
-	.subtitle1-semibold,
-	.subtitle1-medium {
-		font-size: var(--text-14);
-		line-height: var(--lh-16);
-	}
-
-	.subtitle1-semibold {
-		font-weight: var(--font-weight-semibold);
-	}
-	.subtitle1-medium {
-		font-weight: var(--font-weight-medium);
-	}
-
-	.subtitle2-medium {
-		font-size: var(--text-13);
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-18);
-	}
-
-	.subtitle2-regular {
-		font-size: var(--text-13);
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-24);
-	}
-
-	/* Bodies */
-	.body1-bold {
-		font-size: var(--text-24);
-		font-weight: var(--font-weight-black);
-		line-height: var(--lh-24);
-	}
-
-	.body2-semibold,
-	.body2-regular {
-		font-size: var(--text-20);
-		line-height: var(--lh-24);
-	}
-
-	.body2-semibold {
-		font-weight: var(--font-weight-semibold);
-	}
-	.body2-regular {
-		font-weight: var(--font-weight-regular);
-	}
-
-	.body3-regular {
-		font-size: var(--text-16);
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-24);
-	}
-
-	.body4-semibold {
-		font-size: var(--text-15);
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-16);
-	}
-
-	.body5-medium,
-	.body5-regular {
-		font-size: var(--text-14);
-		line-height: var(--lh-16);
-	}
-
-	.body5-medium {
-		font-weight: var(--font-weight-medium);
-	}
-	.body5-regular {
-		font-weight: var(--font-weight-regular);
-	}
-
-	.body6-medium,
-	.body6-regular {
-		font-size: var(--text-13);
-	}
-
-	.body6-medium {
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-18);
-	}
-
-	.body6-regular {
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-16);
-	}
-
-	.body7-medium {
-		font-size: var(--text-12);
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-16);
-	}
-
-	.body8-regular {
-		font-size: var(--text-10);
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-16);
-	}
-
-	/* Buttons */
-	.button1-medium {
-		font-size: var(--text-18);
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-24);
-	}
-
-	.button2-semibold,
-	.button2-medium {
-		font-size: var(--text-16);
-	}
-
-	.button2-semibold {
-		font-weight: var(--font-weight-semibold);
-		line-height: var(--lh-28);
-	}
-
-	.button2-medium {
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-24);
-	}
-
-	.button3-semibold,
-	.button3-regular {
-		font-size: var(--text-15);
-		line-height: var(--lh-16);
-	}
-
-	.button3-semibold {
-		font-weight: var(--font-weight-semibold);
-	}
-	.button3-regular {
-		font-weight: var(--font-weight-regular);
-	}
-
-	.button4-medium {
-		font-size: var(--text-14);
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-16);
-	}
-
-	.button5-medium,
-	.button5-regular {
-		font-size: var(--text-12);
-		line-height: var(--lh-16);
-	}
-
-	.button5-medium {
-		font-weight: var(--font-weight-medium);
-	}
-	.button5-regular {
-		font-weight: var(--font-weight-regular);
-	}
-
-	.button6-regular {
-		font-size: var(--text-10);
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-16);
-	}
-
-	/* Captions */
-	.caption1-medium,
-	.caption1-regular {
-		font-size: var(--text-12);
-	}
-
-	.caption1-medium {
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-normal);
-	}
-
-	.caption1-regular {
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-16);
-	}
-
-	.caption2-medium,
-	.caption2-regular {
-		font-size: var(--text-10);
-	}
-
-	.caption2-medium {
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-12);
-	}
-
-	.caption2-regular {
-		font-weight: var(--font-weight-regular);
-		line-height: var(--lh-normal);
-	}
-
-	/* Navigation */
-	.nav1-medium {
-		font-size: var(--text-18);
-		font-weight: var(--font-weight-medium);
-		line-height: var(--lh-24);
-	}
-}
-
-body {
-	background-color: var(--color-black-100);
-	color: var(--color-black-900);
-	min-width: 1440px; /* body 최소 width를 side-layout 최소 width로 설정해 디자인 일관성 줌 */
-	display: flex;
-	flex-direction: column;
-}
-
-button {
-	cursor: pointer;
-	&:disabled {
-		pointer-events: none;
+	ol {
+		list-style-type: decimal;
+		padding-left: 1.5rem;
 	}
 }
 
@@ -364,34 +68,6 @@ button {
 
 .banner-swiper .swiper-pagination-bullet-active {
 	width: 3.125rem;
-}
-
-@layer base {
-	h1 {
-		font-size: 20px;
-		font-weight: 700;
-	}
-
-	h2 {
-		font-size: 18px;
-		font-weight: 600;
-	}
-
-	ul {
-		list-style: disc;
-		padding-left: 1.5rem;
-	}
-
-	blockquote {
-		border-left: 4px solid var(--color-black-800);
-		padding-left: 1rem;
-		margin: 1rem 0;
-	}
-
-	ol {
-		list-style-type: decimal;
-		padding-left: 1.5rem;
-	}
 }
 
 .tiptap hr {

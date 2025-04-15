@@ -3,16 +3,17 @@
 import Checkbox from '@/components/features/signup/checkbox';
 import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
-import { getUserInfo, updatePrivacy, updateUserInfo } from '@/services/auth';
+import { updatePrivacy, updateUserInfo } from '@/services/auth';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { getCookie, setCookie } from '@/lib/utils/cookie';
+import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 
 export default function Page() {
 	const router = useRouter();
@@ -20,6 +21,8 @@ export default function Page() {
 	const provider = searchParams.get('provider');
 	const socialLogoUrl = provider === 'naver' ? '/sns/naver-small.svg' : '/sns/kakao-small.svg';
 	const socialLogoAlt = provider === 'naver' ? '네이버 로고 이미지' : '카카오 로고 이미지';
+
+	const [isValidAccess, setIsValidAccess] = useState(false);
 
 	const [nickname, setNickname] = useState('');
 	const [league, setLeague] = useState<LeagueDto | null>(null);
@@ -31,8 +34,6 @@ export default function Page() {
 		privacy: false,
 		marketing: false,
 	});
-
-	const { setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const isValidNickname = nickname.length > 0 && nickname.length < 9;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
@@ -80,7 +81,7 @@ export default function Page() {
 		if (typeof privacyResponse === 'string') {
 			console.log(privacyResponse);
 		} else {
-			// 회원가입 성공 시 유저 정보 수정 후 홈으로 이동
+			// 회원가입 성공 시 유저 정보 수정 후 다시 로그인
 			const updateUserInfoRequest: UpdateUserInfoRequest = {
 				nickname: nickname,
 				team: team.pk === -1 ? undefined : team.pk,
@@ -90,23 +91,37 @@ export default function Page() {
 			if (typeof updateUserInfoResponse === 'string') {
 				console.log(updateUserInfoResponse);
 			} else {
-				const getUserInfoResponse = await getUserInfo();
-
-				if (typeof getUserInfoResponse === 'string') {
-					return getUserInfoResponse;
-				} else {
-					setCurrentUserInfo(getUserInfoResponse.data);
-				}
-				router.push('/');
+				router.push(
+					`${SERVER_URL}/oauth2/authorization/${provider}?state=${DOMAIN_URL || 'http://localhost:3000'}/login/${provider}`,
+				);
 			}
 		}
 	};
+
+	// 소셜 로그인을 통한 접근이 아닌 경우 홈으로 리디렉션
+	useEffect(() => {
+		const fromLogin = getCookie('fromLogin');
+
+		if (fromLogin === 'true') {
+			setIsValidAccess(true);
+		} else {
+			alert('잘못된 접근입니다.');
+			router.replace('/');
+		}
+	}, [router]);
+
+	useEffect(() => {
+		return () => {
+			if (isValidAccess) {
+				setCookie('fromLogin', '', 0);
+			}
+		};
+	}, [isValidAccess]);
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
 			<div className="mb-8 title1-bold">회원가입</div>
 			<div className="flex gap-2">
-				{/* TODO: 로그인 버튼 클릭 시 query에 provider type을 담아 소셜 이미지 렌더링 */}
 				<Image width={24} height={24} src={socialLogoUrl} alt={socialLogoAlt} />
 				<div className="body3-regular">계정으로 가입을 진행하고 있어요.</div>
 			</div>
