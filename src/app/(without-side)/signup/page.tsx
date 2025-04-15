@@ -13,6 +13,7 @@ import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
+import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 
 export default function Page() {
 	const router = useRouter();
@@ -80,7 +81,7 @@ export default function Page() {
 		if (typeof privacyResponse === 'string') {
 			console.log(privacyResponse);
 		} else {
-			// 회원가입 성공 시 유저 정보 수정 후 홈으로 이동
+			// 회원가입 성공 시 유저 정보 수정 후 다시 로그인
 			const updateUserInfoRequest: UpdateUserInfoRequest = {
 				nickname: nickname,
 				team: team.pk === -1 ? undefined : team.pk,
@@ -90,15 +91,9 @@ export default function Page() {
 			if (typeof updateUserInfoResponse === 'string') {
 				console.log(updateUserInfoResponse);
 			} else {
-				// 유저 정보 조회 로직에서 문제??...
-				// const getUserInfoResponse = await getUserInfo();
-
-				// if (typeof getUserInfoResponse === 'string') {
-				// 	return getUserInfoResponse;
-				// } else {
-				// 	setCurrentUserInfo(getUserInfoResponse.data);
-				// }
-				router.push('/');
+				router.push(
+					`${SERVER_URL}/oauth2/authorization/${provider}?state=${DOMAIN_URL || 'http://localhost:3000'}/login/${provider}`,
+				);
 			}
 		}
 	};
