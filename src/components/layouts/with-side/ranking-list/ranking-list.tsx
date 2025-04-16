@@ -1,6 +1,6 @@
 'use client';
 
-import ComponentFrame from '@/components/common/componentFrame';
+import ComponentFrame from '@/components/common/component-frame';
 import RankingItem from './ranking-item';
 import SelectBox from './select-box';
 import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/ranking';

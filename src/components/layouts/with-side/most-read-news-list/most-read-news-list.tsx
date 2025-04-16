@@ -1,4 +1,4 @@
-import ComponentFrame from '@/components/common/componentFrame';
+import ComponentFrame from '@/components/common/component-frame';
 import MostReadNewsItem from './most-read-news-item';
 import { getHotNews } from '@/services/apis/news/getHotNews';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
