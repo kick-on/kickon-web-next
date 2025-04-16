@@ -3,7 +3,7 @@ import CommentInput from '@/components/features/detail/comment/comment-input';
 import CommentItem from '@/components/features/detail/comment/comment-item';
 import { getCommentList, postCommentKick } from '@/services/apis/detail/comment';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import PaginationBar from '@/components/common/pagination-bar.tsx/pagination-bar';
+import PaginationBar from '@/components/common/pagination-bar';
 import { useRouter, useSearchParams } from 'next/navigation';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
