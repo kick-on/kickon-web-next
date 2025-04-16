@@ -1,7 +1,7 @@
 import FloatingWritingButton from '@/components/common/floating-writing-button';
-import MostReadNewsList from '@/components/layouts/with-side-layout/most-read-news-list/most-read-news-list';
-import Profile from '@/components/layouts/with-side-layout/profile';
-import RankingList from '@/components/layouts/with-side-layout/ranking-list/ranking-list';
+import MostReadNewsList from '@/components/layouts/with-side/most-read-news-list/most-read-news-list';
+import Profile from '@/components/layouts/with-side/profile';
+import RankingList from '@/components/layouts/with-side/ranking-list/ranking-list';
 import { ReactNode, Suspense } from 'react';
 
 export default function Layout({ children }: { children: ReactNode }) {
