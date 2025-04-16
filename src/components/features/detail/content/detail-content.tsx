@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import MoreActionsButton from '@/components/features/detail/content/MoreActionsButton';
+import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
 import { useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';

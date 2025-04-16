@@ -5,7 +5,7 @@ import { useSearchParams, useParams, useRouter } from 'next/navigation';
 
 import ComponentFrame from '@/components/common/component-frame';
 import RecommendedContent from '@/components/common/recommended-content';
-import DetailContent from '@/components/features/detail/content/DetailContent';
+import DetailContent from '@/components/features/detail/content/detail-content';
 import CommentSection from '@/components/features/detail/comment/comment-section';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
