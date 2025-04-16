@@ -1,6 +1,6 @@
 'use client';
 
-import ComponentFrame from '@/components/common/componentFrame';
+import ComponentFrame from '@/components/common/component-frame';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserPointRanking } from '@/services/apis/user-point-event';

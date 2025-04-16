@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect, FC } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
-import ReportModal from './ReportModal';
+import ReportModal from './report-modal';
 
 interface MoreActionsButtonProps {
 	type: 'news' | 'board';

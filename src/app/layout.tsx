@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
-import Navbar from '@/components/layouts/root-layout/navbar';
-import Footer from '@/components/layouts/root-layout/footer';
-import Banner from '@/components/layouts/root-layout/banner';
+import Navbar from '@/components/layouts/root/navbar';
+import Footer from '@/components/layouts/root/footer';
+import Banner from '@/components/layouts/root/banner';
 
 export const metadata: Metadata = {
 	title: '킥온',
