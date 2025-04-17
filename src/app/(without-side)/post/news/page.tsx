@@ -170,7 +170,7 @@ export default function Page() {
 			return;
 		}
 		const requestBody: PostNewsContentsRequest = {
-			team: selectedTeam.id,
+			team: selectedTeam?.id || null,
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
