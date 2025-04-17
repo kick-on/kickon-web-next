@@ -4,7 +4,7 @@ import Image from 'next/image';
 import CommunityDivisionBar from './category-tab/community-division-bar';
 import CommunityItem from './category-tab/community-item';
 import NewsItem from './category-tab/news-item';
-import ComponentFrame from './componentFrame';
+import ComponentFrame from './component-frame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';

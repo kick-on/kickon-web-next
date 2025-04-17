@@ -44,7 +44,7 @@ export interface NewsItemDto {
 	views: number;
 	likes: number;
 	replies: number;
-	team: TeamDto;
+	team: TeamDto | null;
 }
 
 export interface BoardItemDto {

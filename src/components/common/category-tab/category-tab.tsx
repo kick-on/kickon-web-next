@@ -5,7 +5,7 @@ import { getNewsList } from '@/services/apis/news/getNewsList';
 import { getBoardList } from '@/services/apis/news/getBoardList';
 import FetchingFailedCard from '../fetching-failed-card';
 import TabBar from './tab-bar';
-import PaginationBar from '../pagination-bar.tsx/pagination-bar';
+import PaginationBar from '../pagination-bar';
 import Image from 'next/image';
 import Link from 'next/link';
 

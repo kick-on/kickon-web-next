@@ -1,5 +1,5 @@
 import CategoryTab from '@/components/common/category-tab/category-tab';
-import ComponentFrame from '@/components/common/componentFrame';
+import ComponentFrame from '@/components/common/component-frame';
 
 export default async function Page({
 	searchParams,
