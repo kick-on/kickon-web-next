@@ -5,12 +5,17 @@ import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
 import useIsTablet from '@/lib/hooks/useIsTablet';
 import LoginButton from './login-button';
+import { UAParser } from 'ua-parser-js';
+import MobileNavbar from './mobile-navbar';
 
 export default function Navbar() {
-	const isTablet = useIsTablet();
 	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === '/';
+
+	const device = UAParser().device;
+	const isMobile = device.type === 'mobile';
+	const isTablet = useIsTablet();
 
 	const navButtonProps: NavButtonProps[] = [
 		{ href: '/news?q=전체', content: '뉴스' },
@@ -22,11 +27,9 @@ export default function Navbar() {
 		router.push('/');
 	};
 
-	const handleLoginButtonClick = () => {
-		router.push('/?login=true');
-	};
-
-	return (
+	return isMobile ? (
+		<MobileNavbar />
+	) : (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky transition-colors ease-out`}>
 			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] tablet:max-w-[49.125rem] m-auto">
 				<nav className="flex items-center">
@@ -40,7 +43,7 @@ export default function Navbar() {
 					/>
 					{navButtonProps.map((props) => props && <NavButton key={props.href} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTablet) && <LoginButton onClick={handleLoginButtonClick} />}
+				{(pathname === '/signup' || isTablet) && <LoginButton />}
 			</div>
 		</header>
 	);
