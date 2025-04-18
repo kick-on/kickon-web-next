@@ -2,14 +2,16 @@
 @import './theme.css';
 @import './font.css';
 
-@custom-variant tablet {
-	@media (min-width: 768px) and (max-width: 1439px) {
+/* 기본적으로 좁은 화면 UI에서 추가로 넓은 화면 레이아웃을 설정하는 경우 */
+@custom-variant desktop {
+	@media (min-width: 1440px) {
 		@slot;
 	}
 }
 
-@custom-variant not-tablet {
-	@media (max-width: 767px) or (min-width: 1440px) {
+/* 기본적으로 넓은 화면 UI에서 추가로 좁은 화면 레이아웃을 설정하는 경우 */
+@custom-variant tablet {
+	@media (max-width: 1439.9px) {
 		@slot;
 	}
 }
@@ -57,28 +59,48 @@
 }
 
 .banner-swiper .swiper-pagination {
+	@apply gap-4 bottom-[1.5625rem] desktop:gap-[0.9375rem] desktop:bottom-8;
 	position: absolute;
 	z-index: 20;
-	bottom: 2rem;
 	left: 50%;
 	transform: translateX(-50%);
 
 	display: flex;
 	width: fit-content;
-	gap: 0.4375rem;
 }
-
 .banner-swiper .swiper-pagination-bullet {
 	width: 0.5rem;
 	height: 0.5rem;
 	background-color: white;
-	border-radius: 4px;
+	border-radius: 0.25rem;
 	opacity: 1;
 	transition: width 0.3s ease;
 }
-
 .banner-swiper .swiper-pagination-bullet-active {
-	width: 3.125rem;
+	@apply w-[2.375rem] desktop:w-[3.125rem];
+}
+
+.mobile-banner-swiper .swiper-pagination {
+	position: absolute;
+	z-index: 20;
+	bottom: 0.6875rem;
+	left: 50%;
+	transform: translateX(-50%);
+
+	display: flex;
+	width: fit-content;
+	gap: 0.375rem;
+}
+.mobile-banner-swiper .swiper-pagination-bullet {
+	width: 0.5rem;
+	height: 0.5rem;
+	background-color: white;
+	border-radius: 0.25rem;
+	opacity: 1;
+	transition: width 0.3s ease;
+}
+.mobile-banner-swiper .swiper-pagination-bullet-active {
+	width: 1.5rem;
 }
 
 .tiptap hr {

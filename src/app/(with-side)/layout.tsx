@@ -10,7 +10,7 @@ export default async function Layout({ children }: { children: ReactNode }) {
 	const { isMobile } = await getServerDeviceType();
 
 	return (
-		<div className={clsx('pt-4 max-w-[85rem] m-auto grid gap-6 not-tablet:grid-cols-[1fr_auto_1fr]')}>
+		<div className={clsx('pt-4 max-w-[85rem] m-auto grid gap-6 desktop:grid-cols-[1fr_auto_1fr]')}>
 			{!isMobile && (
 				<aside className="tablet:hidden flex flex-col gap-4">
 					<RankingList mode="season" />
