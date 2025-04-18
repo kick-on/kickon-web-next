@@ -3,8 +3,11 @@
 import { usePathname, useRouter } from 'next/navigation';
 import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
+import useIsTablet from '@/lib/hooks/useIsTablet';
+import LoginButton from './login-button';
 
 export default function Navbar() {
+	const isTablet = useIsTablet();
 	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === '/';
@@ -12,6 +15,7 @@ export default function Navbar() {
 	const navButtonProps: NavButtonProps[] = [
 		{ href: '/news?q=전체', content: '뉴스' },
 		{ href: '/board?q=전체', content: '클럽 커뮤니티' },
+		isTablet ? { href: '/ranking', content: '랭킹' } : null,
 	];
 
 	const handleLogoClick = () => {
@@ -24,28 +28,19 @@ export default function Navbar() {
 
 	return (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky transition-colors ease-out`}>
-			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] m-auto">
+			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] tablet:max-w-[49.125rem] m-auto">
 				<nav className="flex items-center">
 					<Image
 						width={216}
 						height={48}
 						onClick={handleLogoClick}
-						className="px-6 py-3 ml-[1rem] mr-[4.125rem] box-content cursor-pointer"
+						className="px-6 py-3 ml-[1rem] mr-[4.125rem] tablet:px-2.5 tablet:mx-0 box-content cursor-pointer"
 						src={isHome ? '/logo/kick-on-black.svg' : '/logo/kick-on-white.svg'}
 						alt="킥온"
 					/>
-					{navButtonProps.map((props) => (
-						<NavButton key={props.href} {...props} />
-					))}
+					{navButtonProps.map((props) => props && <NavButton key={props.href} {...props} />)}
 				</nav>
-				{pathname === '/signup' && (
-					<button
-						onClick={handleLoginButtonClick}
-						className="w-[5.5rem] h-[2.25rem] mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900 button1-medium"
-					>
-						로그인
-					</button>
-				)}
+				{(pathname === '/signup' || isTablet) && <LoginButton onClick={handleLoginButtonClick} />}
 			</div>
 		</header>
 	);
