@@ -14,7 +14,7 @@ export default function RightSide() {
 	if (isMobile || isTablet) return null;
 
 	return (
-		<aside className="tablet:hidden flex flex-col gap-4 relative">
+		<aside className="flex flex-col gap-4 relative">
 			<Suspense>
 				<Profile />
 			</Suspense>

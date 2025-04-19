@@ -7,6 +7,7 @@ import useIsTablet from '@/lib/hooks/useIsTablet';
 import LoginButton from './login-button';
 import { UAParser } from 'ua-parser-js';
 import MobileNavbar from './mobile-navbar';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 
 export default function Navbar() {
 	const router = useRouter();
@@ -16,11 +17,12 @@ export default function Navbar() {
 	const device = UAParser().device;
 	const isMobile = device.type === 'mobile';
 	const isTablet = useIsTablet();
+	const isLeftSideBarVisible = useIsLeftSideVisible();
 
 	const navButtonProps: NavButtonProps[] = [
 		{ href: '/news?q=전체', content: '뉴스' },
 		{ href: '/board?q=전체', content: '클럽 커뮤니티' },
-		isTablet ? { href: '/ranking', content: '랭킹' } : null,
+		!isLeftSideBarVisible ? { href: '/ranking', content: '랭킹' } : null,
 	];
 
 	const handleLogoClick = () => {
@@ -31,7 +33,7 @@ export default function Navbar() {
 		<MobileNavbar />
 	) : (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky transition-colors ease-out`}>
-			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] tablet:max-w-[49.125rem] m-auto">
+			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] min-w-[48rem] max-[1094px]:w-[48rem] max-[1440px]:w-[62.5rem] m-auto">
 				<nav className="flex items-center">
 					<Image
 						width={216}
