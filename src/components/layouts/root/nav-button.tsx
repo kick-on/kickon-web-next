@@ -14,7 +14,7 @@ export default function NavButton({ href, content }: NavButtonProps) {
 	return (
 		<Link
 			href={href}
-			className={clsx('w-[9.375rem] h-[4.5rem] flex items-center justify-center nav1-medium', {
+			className={clsx('w-[9.375rem] tablet:w-[146px] h-[4.5rem] flex items-center justify-center nav1-medium', {
 				'text-black-900': pathname === '/',
 				'text-black-000':
 					(pathname !== '/' && !(pathname.startsWith('/news') || pathname.startsWith('/board'))) || isActive,

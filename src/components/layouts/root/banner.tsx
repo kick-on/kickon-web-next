@@ -11,10 +11,14 @@ import { BannerDto } from '@/services/apis/event-board/dto';
 import { useEffect, useState } from 'react';
 import { getBanner } from '@/services/apis/event-board';
 import clsx from 'clsx';
+import { UAParser } from 'ua-parser-js';
 
 export default function Banner() {
-	const pathname = usePathname();
 	const [banners, setBanners] = useState<BannerDto[]>([]);
+
+	const pathname = usePathname();
+	const device = UAParser().device;
+	const isMobile = device.type === 'mobile';
 
 	useEffect(() => {
 		const getBanners = async () => {
@@ -33,12 +37,12 @@ export default function Banner() {
 	const navigationButtons = [
 		{
 			src: '/chevron/banner-left.svg',
-			className: 'left-[5.5625rem] swiper-button-prev',
+			className: `${isMobile ? 'left-[1.625rem]' : 'left-[4.8125rem] desktop:left-[5.5625rem]'}  swiper-button-prev`,
 			alt: '왼쪽',
 		},
 		{
 			src: '/chevron/banner-right.svg',
-			className: 'right-[5.5625rem] swiper-button-next',
+			className: `${isMobile ? 'right-[1.625rem]' : 'right-[4.8125rem] desktop:right-[5.5625rem]'} swiper-button-next`,
 			alt: '오른쪽',
 		},
 	];
@@ -56,15 +60,18 @@ export default function Banner() {
 					clickable: true,
 				}}
 				loop
-				className={`relative w-full h-[35rem] banner-swiper`}
+				className={clsx(
+					`relative w-full`,
+					isMobile ? 'h-[12.8125rem] mobile-banner-swiper' : 'h-[clamp(18.6875rem,35vw,35rem)] banner-swiper',
+				)}
 			>
 				{navigationButtons.map((button) => (
 					<Image
 						key={button.alt}
 						className={`absolute z-20 top-1/2 -translate-y-1/2 cursor-pointer
 							opacity-30 hover:opacity-100 transition-opacity ${button.className}`}
-						width={30}
-						height={56}
+						width={isMobile ? 14 : 27}
+						height={isMobile ? 26 : 51}
 						src={button.src}
 						alt={button.alt}
 					/>

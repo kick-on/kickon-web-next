@@ -1,7 +1,9 @@
 'use client';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { UAParser } from 'ua-parser-js';
 
 export default function Footer() {
 	const pathname = usePathname();
@@ -12,9 +14,17 @@ export default function Footer() {
 		const textColor = isHome ? 'text-black-700' : 'text-black-200';
 		const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
 
+		const device = UAParser().device;
+		const isMobile = device.type === 'mobile';
+
 		return (
-			<div className={`${bgColor} h-[13.125rem] pl-[17.5rem] flex items-center`}>
-				<div className={`${textColor} flex items-start gap-[3.625rem] button4-medium`}>
+			<div className={`${bgColor} h-[13.125rem] flex items-center`}>
+				<div
+					className={clsx(
+						`${textColor} flex items-start button4-medium max-w-[85rem]`,
+						isMobile ? 'flex-col gap-6 pl-6' : 'gap-[3.625rem] mx-auto',
+					)}
+				>
 					<Image width={140} height={22} src={src} alt="킥온" />
 
 					<div className="flex flex-col gap-4">
@@ -42,8 +52,11 @@ export default function Footer() {
 							</span>
 						</div>
 
-						<div className="flex gap-4">
-							<span>Copyright 2025. Kick-on All pictures cannot be copied without permission</span>
+						<div className="flex gap-4 tablet:flex-col">
+							<span>
+								Copyright 2025. Kick-on {isMobile && <br />}All pictures cannot be copied {isMobile && <br />}without
+								permission
+							</span>
 							<span>E-mail: business.kickon@gmail.com</span>
 						</div>
 					</div>

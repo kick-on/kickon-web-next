@@ -4,6 +4,7 @@ import '@/styles/globals.css';
 import Navbar from '@/components/layouts/root/navbar';
 import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
+import MinWidth from '@/components/layouts/root/min-width';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<Banner />
 				<div className="pb-[9.375rem]">{children}</div>
 				<Footer />
+				<MinWidth />
 			</body>
 		</html>
 	);

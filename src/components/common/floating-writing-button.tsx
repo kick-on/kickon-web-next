@@ -3,10 +3,14 @@
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Icon from '../../../public/edit.svg';
+import { UAParser } from 'ua-parser-js';
+import clsx from 'clsx';
 
 const FloatingWritingButton = () => {
 	const router = useRouter();
 	const pathname = usePathname();
+	const device = UAParser().device;
+	const isMobile = device.type === 'mobile';
 
 	const handleEditButtonClick = () => {
 		if (pathname.startsWith('/news')) {
@@ -21,20 +25,27 @@ const FloatingWritingButton = () => {
 	if (pathname === '/') return null;
 
 	return (
-		<button
-			onClick={handleEditButtonClick}
-			className="z-50 flex items-center w-[3.625rem] h-[3.625rem] fixed 
-					  bottom-15 bg-black-700 text-white rounded-full shadow-lg 
-					  overflow-hidden group transition-all duration-300 ease-in-out 
-					  hover:w-[20.125rem] hover:pl-[3.75rem]"
+		<div
+			className="desktop:w-[20.125rem] w-fit h-fit z-50 flex items-center sticky 
+				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] max-[835px]:mr-8"
 		>
-			<div className="flex items-center gap-2 px-[15px] w-full">
-				<Image src={Icon} alt="아이콘" width={28} height={28} className="min-w-7" />
-				<span className="button2-semibold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-					새로운 글 작성하기
-				</span>
-			</div>
-		</button>
+			<button
+				onClick={handleEditButtonClick}
+				className={clsx(
+					`w-[3.625rem] h-[3.625rem] bg-black-700 text-white rounded-full shadow-lg 
+				overflow-hidden group transition-all duration-300 ease-in-out 
+				desktop:hover:w-[20.125rem] desktop:hover:pl-[3.75rem]`,
+					{ 'mr-8': isMobile },
+				)}
+			>
+				<div className="flex items-center gap-2 px-[15px] w-full">
+					<Image src={Icon} alt="아이콘" width={28} height={28} className="min-w-7" />
+					<span className="button2-semibold whitespace-nowrap opacity-0 desktop:group-hover:opacity-100 transition-opacity">
+						새로운 글 작성하기
+					</span>
+				</div>
+			</button>
+		</div>
 	);
 };
 

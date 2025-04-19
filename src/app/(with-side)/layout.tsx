@@ -1,24 +1,24 @@
 import FloatingWritingButton from '@/components/common/floating-writing-button';
-import MostReadNewsList from '@/components/layouts/with-side/most-read-news-list/most-read-news-list';
-import Profile from '@/components/layouts/with-side/profile';
-import RankingList from '@/components/layouts/with-side/ranking-list/ranking-list';
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
+import clsx from 'clsx';
+import LeftSide from '@/components/layouts/root/left-side';
+import RightSide from '@/components/layouts/root/right-side';
 
-export default function Layout({ children }: { children: ReactNode }) {
+export default async function Layout({ children }: { children: ReactNode }) {
 	return (
-		<div className="pt-4 max-w-[85rem] m-auto grid-cols-[1fr_auto_1fr] grid gap-6">
-			<aside className="flex flex-col gap-4">
-				<RankingList mode="season" />
-				<RankingList mode="predict" />
-			</aside>
-			<main className="flex flex-col gap-4">{children}</main>
-			<aside className="flex flex-col gap-4 relative">
-				<Suspense>
-					<Profile />
-				</Suspense>
-				<MostReadNewsList />
-				<FloatingWritingButton />
-			</aside>
+		<div
+			className={clsx(
+				'pt-4 max-w-[85rem] m-auto grid gap-6 min-[1094px]:grid-cols-[auto_auto] min-[1094px]:justify-center desktop:grid-cols-[1fr_auto_1fr]',
+			)}
+		>
+			<LeftSide />
+			<main className="flex flex-col items-center gap-4">
+				<div className="relative fit-content">
+					{children}
+					<FloatingWritingButton />
+				</div>
+			</main>
+			<RightSide />
 		</div>
 	);
 }
