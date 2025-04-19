@@ -33,10 +33,9 @@ export default function MobileNavbar() {
 					<button onClick={toggleMenu} className={isHome ? '' : 'invert'}>
 						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />
 					</button>
-					{/* 내비게이션 하면 Link로 변경 */}
-					<div className="w-auto h-full flex justify-center">
+					<Link href="/" className="w-auto h-full flex justify-center">
 						<Image src={'/logo/icon-red.svg'} alt="킥온 로고 이미지" width={45} height={36} />
-					</div>
+					</Link>
 					<LoginButton />
 				</div>
 			</header>
