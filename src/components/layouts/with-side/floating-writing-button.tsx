@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Icon from '../../../public/edit.svg';
+import Icon from '../../../../public/edit.svg';
 import { UAParser } from 'ua-parser-js';
 import clsx from 'clsx';
 
@@ -26,8 +26,8 @@ const FloatingWritingButton = () => {
 
 	return (
 		<div
-			className="desktop:w-[20.125rem] w-fit h-fit z-50 flex items-center sticky 
-				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] max-[835px]:mr-8"
+			className="desktop:w-[20.125rem] w-fit h-fit z-50 flex items-center sticky transition-all
+				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] max-[1200px]:mr-8"
 		>
 			<button
 				onClick={handleEditButtonClick}

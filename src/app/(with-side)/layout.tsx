@@ -1,8 +1,8 @@
-import FloatingWritingButton from '@/components/common/floating-writing-button';
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 import LeftSide from '@/components/layouts/root/left-side';
 import RightSide from '@/components/layouts/root/right-side';
+import FloatingWritingButton from '@/components/layouts/with-side/floating-writing-button';
 
 export default async function Layout({ children }: { children: ReactNode }) {
 	return (
