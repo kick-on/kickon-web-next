@@ -8,13 +8,16 @@ import TabBar from './tab-bar';
 import PaginationBar from '../pagination-bar';
 import Image from 'next/image';
 import Link from 'next/link';
+import clsx from 'clsx';
 
 const renderItems = (items, ItemComponent) => (
-	<div className="mb-12">
+	<div>
 		{items.map((item, index) => (
 			<div key={item.pk}>
 				<ItemComponent {...item} />
-				{index !== items.length - 1 && <hr className="border-black-300 mx-4" />}
+				{index !== items.length - 1 && (
+					<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': ItemComponent === CommunityItem })} />
+				)}
 			</div>
 		))}
 	</div>
@@ -63,7 +66,7 @@ export default async function CategoryTab({
 					</Link>
 				</div>
 			) : (
-				<div className="flex flex-col w-full pb-10">
+				<div className="flex flex-col w-full pb-10 @mobile:pb-0">
 					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />
 				</div>
