@@ -5,12 +5,13 @@ import Image from 'next/image';
 import Icon from '../../../../public/edit.svg';
 import { UAParser } from 'ua-parser-js';
 import clsx from 'clsx';
+import { useEffect, useState } from 'react';
 
 const FloatingWritingButton = () => {
 	const router = useRouter();
 	const pathname = usePathname();
-	const device = UAParser().device;
-	const isMobile = device.type === 'mobile';
+
+	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
 	const handleEditButtonClick = () => {
 		if (pathname.startsWith('/news')) {
@@ -22,7 +23,12 @@ const FloatingWritingButton = () => {
 		}
 	};
 
-	if (pathname === '/') return null;
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
+
+	if (isMobile === null || pathname === '/') return null;
 
 	return (
 		<div

@@ -3,19 +3,25 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { UAParser } from 'ua-parser-js';
 
 export default function Footer() {
+	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 	const pathname = usePathname();
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
+
+	if (isMobile === null) return null;
 
 	if (pathname === '/' || pathname === '/signup') {
 		const isHome = pathname === '/';
 		const bgColor = isHome ? 'bg-black-000' : 'bg-black-800';
 		const textColor = isHome ? 'text-black-700' : 'text-black-200';
 		const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
-
-		const device = UAParser().device;
-		const isMobile = device.type === 'mobile';
 
 		return (
 			<div className={`${bgColor} h-[13.125rem] flex items-center`}>

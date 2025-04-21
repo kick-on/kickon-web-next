@@ -8,14 +8,14 @@ import LoginButton from './login-button';
 import { UAParser } from 'ua-parser-js';
 import MobileNavbar from './mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 
-	const device = UAParser().device;
-	const isMobile = device.type === 'mobile';
+	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 	const isTablet = useIsTablet();
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
@@ -28,6 +28,13 @@ export default function Navbar() {
 	const handleLogoClick = () => {
 		router.push('/');
 	};
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
+
+	if (isMobile === null) return null;
 
 	return isMobile ? (
 		<MobileNavbar />

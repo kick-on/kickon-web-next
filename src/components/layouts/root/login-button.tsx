@@ -12,12 +12,12 @@ import { UAParser } from 'ua-parser-js';
 export default function LoginButton() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const { openLoginModal } = useIsLoginModalOpenStore();
+
 	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
+	const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
 	const router = useRouter();
 	const pathname = usePathname();
-
-	const device = UAParser().device;
-	const isMobile = device.type === 'mobile';
 
 	const handleLoginButtonClick = () => {
 		if (pathname.split('/').includes('signup')) {
@@ -26,6 +26,11 @@ export default function LoginButton() {
 			openLoginModal();
 		}
 	};
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -44,6 +49,8 @@ export default function LoginButton() {
 			getCurrentUserInfo();
 		}
 	}, [currentUserInfo, setCurrentUserInfo]);
+
+	if (isMobile === null) return null;
 
 	return (
 		<>

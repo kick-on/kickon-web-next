@@ -15,10 +15,14 @@ import { UAParser } from 'ua-parser-js';
 
 export default function Banner() {
 	const [banners, setBanners] = useState<BannerDto[]>([]);
+	const [isMobile, setIsMobile] = useState(false);
 
 	const pathname = usePathname();
-	const device = UAParser().device;
-	const isMobile = device.type === 'mobile';
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
 
 	useEffect(() => {
 		const getBanners = async () => {
@@ -86,7 +90,6 @@ export default function Banner() {
 							className={clsx('w-full h-full object-cover', { 'cursor-pointer': banner.embeddedUrl })}
 							width={1920}
 							height={560}
-							title={banner.title}
 							src={banner.thumbnailUrl}
 							alt="배너 이미지"
 						/>
