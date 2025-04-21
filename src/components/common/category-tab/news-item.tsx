@@ -35,7 +35,7 @@ export default async function NewsItem({
 				<section className={clsx('flex justify-between', { 'flex-col-reverse gap-4': isMobile })}>
 					<div className="grow">
 						<h2 className={isMobile ? 'title5-semibold mb-2' : 'title3-semibold mb-2'}>
-							{title.length > 33 ? `${title.substring(0, 30).trim()}...` : title}
+							{title.length > (isMobile ? 26 : 33) ? `${title.substring(0, isMobile ? 23 : 30).trim()}...` : title}
 						</h2>
 						<SanitizedContent isMobile={isMobile} content={content} />
 					</div>

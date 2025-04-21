@@ -11,7 +11,7 @@ export default function ComponentFrame({
 }) {
 	const width = (() => {
 		if (isMobile) {
-			return 'w-auto mx-4';
+			return 'grow mx-4';
 		} else {
 			return isMain ? 'w-[41.75rem]' : 'w-[20.125rem]';
 		}
