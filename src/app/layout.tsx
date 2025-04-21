@@ -8,7 +8,7 @@ import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/login-portal';
 
 export const metadata: Metadata = {
-	title: '킥온 - 내 손 안의 스타디움',
+	title: '킥온',
 	description: '',
 	icons: {
 		icon: '/favicon.svg',
