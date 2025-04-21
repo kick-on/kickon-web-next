@@ -4,7 +4,7 @@ import { JSDOM } from 'jsdom';
 const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
 
-export function sanitizeHTML(input: string): string {
+export function sanitizeHTML(input: string) {
 	let cleanText = DOMPurify.sanitize(input, { ALLOWED_TAGS: ['p'] })
 		.replace(/<p>\s*<\/p>/g, '') // 빈 p 제거
 		.replace(/<\/p>\s*<p>/g, '<br />') // 줄 바꿈 유지

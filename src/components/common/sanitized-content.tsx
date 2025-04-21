@@ -3,7 +3,7 @@ import { sanitizeHTML } from '@/lib/utils/sanitizeHTML';
 export default function SanitizedContent({ content, isMobile }: { content: string; isMobile: boolean }) {
 	const sanitizedContent = sanitizeHTML(content);
 
-	const className = isMobile ? 'body7-regular h-[3.75rem] mb-2.5' : 'subtitle2-regular h-[4.5rem] mb-[1.125rem]';
+	const className = isMobile ? 'body7-regular mb-2.5' : 'subtitle2-regular mb-[1.125rem]';
 
 	return (
 		<div
