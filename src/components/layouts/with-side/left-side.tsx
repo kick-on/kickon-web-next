@@ -1,7 +1,7 @@
 'use client';
 
 import { UAParser } from 'ua-parser-js';
-import RankingList from '../with-side/ranking-list/ranking-list';
+import RankingList from './ranking-list/ranking-list';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { useEffect, useState } from 'react';
 

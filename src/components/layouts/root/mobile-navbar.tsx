@@ -28,7 +28,7 @@ export default function MobileNavbar() {
 
 	return (
 		<>
-			<header className="sticky z-50 transition-colors ease-out">
+			<header className="sticky top-0 z-50 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
 					<button onClick={toggleMenu} className={isHome ? '' : 'invert'}>
 						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />

@@ -74,7 +74,10 @@ export default function LoginButton() {
 			) : (
 				<button
 					onClick={handleLoginButtonClick}
-					className="w-[5.5rem] h-[2.25rem] ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900 button1-medium"
+					className={clsx(
+						'ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900',
+						isMobile ? 'w-[3.8125rem] h-7 button4-medium' : 'w-[5.5rem] h-[2.25rem] button1-medium',
+					)}
 				>
 					로그인
 				</button>
