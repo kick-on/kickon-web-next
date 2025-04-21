@@ -1,5 +1,5 @@
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
-import { BoardItemDto } from '@/services/apis/news/dto';
+import { BoardItemDto } from '@/services/apis/board/dto';
 import Image from 'next/image';
 import Link from 'next/link';
 
