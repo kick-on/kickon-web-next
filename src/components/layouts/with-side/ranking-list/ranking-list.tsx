@@ -19,7 +19,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 		nameKr: '프리미어리그',
 		nameEn: 'Premier League',
 		logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
-		leagueType: 'League',
+		type: 'League',
 	});
 
 	// 렌더링 초기 currentUserInfo가 null인 문제 해결
@@ -30,7 +30,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 				nameKr: currentUserInfo?.leagueName || '프리미어리그',
 				nameEn: currentUserInfo?.leagueName || 'Premier League',
 				logoUrl: currentUserInfo?.leagueLogoUrl || 'https://media.api-sports.io/football/leagues/39.png',
-				leagueType: 'League',
+				type: 'League',
 			});
 		}
 	}, [currentUserInfo]);
