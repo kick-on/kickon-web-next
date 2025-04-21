@@ -188,7 +188,7 @@ export default function InProgress({
 
 	const renderTeamButton = (side: 'left' | 'right') => {
 		const isLeft = side === 'left';
-		const teamName = isLeft ? homeTeam.name : awayTeam.name;
+		const teamName = isLeft ? homeTeam.nameKr || homeTeam.nameEn : awayTeam.nameKr || awayTeam.nameEn;
 		const teamLogoUrl = isLeft ? homeTeam.logoUrl : awayTeam.logoUrl;
 		const ratio = isLeft ? gambleResult.home : gambleResult.away;
 

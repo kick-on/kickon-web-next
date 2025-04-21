@@ -26,10 +26,10 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	useEffect(() => {
 		if (currentUserInfo) {
 			setLeague({
-				pk: currentUserInfo?.leaguePk,
-				nameKr: currentUserInfo?.leagueName,
-				nameEn: currentUserInfo?.leagueName,
-				logoUrl: currentUserInfo?.leagueLogoUrl,
+				pk: currentUserInfo?.leaguePk || 1,
+				nameKr: currentUserInfo?.leagueName || '프리미어리그',
+				nameEn: currentUserInfo?.leagueName || 'Premier League',
+				logoUrl: currentUserInfo?.leagueLogoUrl || 'https://media.api-sports.io/football/leagues/39.png',
 				leagueType: 'League',
 			});
 		}

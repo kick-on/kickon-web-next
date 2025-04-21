@@ -64,7 +64,7 @@ export default function Home() {
 						<PredictCard
 							key={game.pk}
 							type={'proceeding'}
-							leagueName={proceedingGames.name}
+							leagueName={proceedingGames.league.nameKr || proceedingGames.league.nameEn}
 							refetchGames={() => getGamesByStatus('proceeding')}
 							{...game}
 						/>
@@ -84,7 +84,12 @@ export default function Home() {
 					</div>
 				) : (
 					finishedGames.games.map((game) => (
-						<PredictCard key={game.pk} type={'finished'} leagueName={finishedGames.name} {...game} />
+						<PredictCard
+							key={game.pk}
+							type={'finished'}
+							leagueName={finishedGames.league.nameKr || finishedGames.league.nameEn}
+							{...game}
+						/>
 					))
 				)}
 			</div>
