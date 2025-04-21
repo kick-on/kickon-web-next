@@ -16,7 +16,8 @@ import { getAccessToken } from '@/lib/utils/getAccessToken';
 export default function Page() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
-	const [nickname, setNickname] = useState('');
+	const [isDuplicated, setIsDuplicated] = useState(false);
+	const [nickname, setNickname] = useState<string | null>(null);
 	const [league, setLeague] = useState<LeagueDto>({
 		pk: NO_CHEERING_TEAM_PK,
 		nameKr: '응원팀이 없어요.',
@@ -38,6 +39,9 @@ export default function Page() {
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
+		if (isDuplicated) {
+			setIsDuplicated(false);
+		}
 	};
 
 	const handleLeagueChange = (selectedLeague) => {
@@ -67,8 +71,11 @@ export default function Page() {
 	const editUserInfo = async (body: UpdateUserInfoRequest) => {
 		const response = await updateUserInfo(body);
 
-		if (typeof response === 'string') {
+		if (response === 'DUPLICATED_NICKNAME') {
+			setIsDuplicated(true);
+		} else if (typeof response === 'string') {
 			alert(response);
+			setIsDuplicated(false);
 		} else {
 			route.push('/');
 		}
@@ -127,7 +134,7 @@ export default function Page() {
 			</div>
 
 			<div className="flex flex-col gap-6">
-				<Nickname nickname={nickname} onChange={handleNicknameChange} />
+				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 				<AccountSelectBox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
 				{hasTeam && (
 					<AccountSelectBox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
@@ -154,9 +161,10 @@ export default function Page() {
 					취소
 				</button>
 				<button
+					disabled={!nickname || isDuplicated}
 					onClick={handleCompleteButtonClick}
 					className="w-full h-11 flex justify-center items-center
-            rounded-lg bg-primary-900 button2-semibold text-black-000"
+            rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
 				>
 					수정 완료
 				</button>

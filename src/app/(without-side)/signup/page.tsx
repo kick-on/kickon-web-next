@@ -24,7 +24,8 @@ export default function Page() {
 
 	const [isValidAccess, setIsValidAccess] = useState(false);
 
-	const [nickname, setNickname] = useState('');
+	const [isDuplicated, setIsDuplicated] = useState(false);
+	const [nickname, setNickname] = useState<string | null>(null);
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
 	const [agreements, setAgreements] = useState({
@@ -35,12 +36,15 @@ export default function Page() {
 		marketing: false,
 	});
 
-	const isValidNickname = nickname.length > 0 && nickname.length < 9;
+	const isValidNickname = !nickname && !isDuplicated;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
 	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
+		if (isDuplicated) {
+			setIsDuplicated(false);
+		}
 	};
 
 	const handleLeagueChange = (selectedLeague) => {
@@ -88,7 +92,10 @@ export default function Page() {
 			};
 			const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
-			if (typeof updateUserInfoResponse === 'string') {
+			if (updateUserInfoResponse === 'DUPLICATED_NICKNAME') {
+				setIsDuplicated(true);
+			} else if (typeof updateUserInfoResponse === 'string') {
+				setIsDuplicated(false);
 				console.log(updateUserInfoResponse);
 			} else {
 				router.push(
@@ -127,7 +134,7 @@ export default function Page() {
 			</div>
 
 			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
-				<Nickname nickname={nickname} onChange={handleNicknameChange} />
+				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
 					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />

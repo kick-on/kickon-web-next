@@ -1,11 +1,9 @@
 import Image from 'next/image';
 
-export default function Nickname({ nickname, onChange }) {
-	const isDuplicatedNickname = false; // 현재 닉네임 중복 허용
-	const isInvalidNickname = !nickname || isDuplicatedNickname;
-	const invalidNicknameAlert = !nickname
-		? '닉네임을 입력해 주세요.'
-		: '이미 존재하는 닉네임입니다. 다른 닉네임을 입력해 주세요.';
+export default function Nickname({ nickname, isDuplicated, onChange }) {
+	const isInvalidNickname = nickname === '' || isDuplicated;
+	const invalidNicknameAlert =
+		nickname === '' ? '닉네임을 입력해 주세요.' : '이미 존재하는 닉네임입니다. 다른 닉네임을 입력해 주세요.';
 
 	const handleXbuttonClick = () => {
 		onChange({ target: { value: '' } });
