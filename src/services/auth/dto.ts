@@ -1,3 +1,5 @@
+import { LeagueDto } from '../apis/league/dto';
+import { TeamDto } from '../apis/team/dto';
 import { SuccessResponse } from '../config/dto';
 
 // 개인정보 동의
@@ -27,17 +29,13 @@ export type PostNewTokenResponse = SuccessResponse<NewTokenDto>;
 export interface UserInfoDto {
 	id: string;
 	nickname: string;
-	email: string;
 	profileImageUrl: string;
+	email: string;
 	providerType: string;
-	teamLogoUrl?: string;
-	teamName?: string;
-	teamPk?: number;
-	leagueLogoUrl?: string;
-	leagueName?: string;
-	leaguePk?: number;
 	privacyAgreedAt: string;
 	marketingAgreedAt: string;
+	favoriteTeam?: TeamDto;
+	league?: LeagueDto;
 }
 
 export interface NewTokenDto {

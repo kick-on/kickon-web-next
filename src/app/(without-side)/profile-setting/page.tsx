@@ -91,16 +91,16 @@ export default function Page() {
 
 				setNickname(response.data.nickname);
 				setLeague({
-					pk: response.data.leaguePk,
-					nameKr: response.data.leagueName,
-					nameEn: response.data.leagueName,
-					logoUrl: response.data.leagueLogoUrl,
+					pk: response.data.league.pk,
+					nameKr: response.data.league.nameKr,
+					nameEn: response.data.league.nameEn,
+					logoUrl: response.data.league.logoUrl,
 				});
 				setTeam({
-					pk: response.data.teamPk,
-					nameKr: response.data.teamName,
-					nameEn: response.data.teamName,
-					logoUrl: response.data.teamLogoUrl,
+					pk: response.data.favoriteTeam.pk,
+					nameKr: response.data.favoriteTeam.nameKr,
+					nameEn: response.data.favoriteTeam.nameEn,
+					logoUrl: response.data.favoriteTeam.logoUrl,
 				});
 			}
 		};

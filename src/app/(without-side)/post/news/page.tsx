@@ -63,11 +63,11 @@ export default function Page() {
 	}, [currentUserInfo, setCurrentUserInfo, navigate]);
 
 	useEffect(() => {
-		if (!currentUserInfo?.leaguePk || isNaN(currentUserInfo.leaguePk)) return;
+		if (!currentUserInfo?.league?.pk || isNaN(currentUserInfo.league.pk)) return;
 
 		const handler = setTimeout(async () => {
 			try {
-				const response = await getTeam(currentUserInfo.leaguePk, searchTerm);
+				const response = await getTeam(currentUserInfo.league.pk, searchTerm);
 
 				const teamData = response.data.map((team) => ({
 					id: team.pk,
@@ -85,7 +85,7 @@ export default function Page() {
 		return () => {
 			clearTimeout(handler);
 		};
-	}, [searchTerm, currentUserInfo?.leaguePk]);
+	}, [searchTerm, currentUserInfo?.league?.pk]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();

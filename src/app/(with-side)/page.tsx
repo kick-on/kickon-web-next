@@ -19,7 +19,7 @@ export default function Home() {
 				status === 'proceeding' ? (value) => setProceedingGames(value) : (value) => setFinishedGames(value);
 
 			const request: GetGamesRequest = {
-				league: currentUserInfo?.leaguePk || 1,
+				league: currentUserInfo?.league?.pk || 1,
 				status: status,
 			};
 			const response = await getGames(request);
@@ -31,13 +31,13 @@ export default function Home() {
 				setter(response.data);
 			}
 		},
-		[currentUserInfo?.leaguePk],
+		[currentUserInfo?.league?.pk],
 	);
 
 	useEffect(() => {
 		getGamesByStatus('proceeding');
 		getGamesByStatus('finished');
-	}, [currentUserInfo, currentUserInfo?.leagueName, getGamesByStatus]);
+	}, [currentUserInfo, getGamesByStatus]);
 
 	useEffect(() => {
 		document.body.style.backgroundColor = 'var(--color-black-800)';
@@ -93,7 +93,10 @@ export default function Home() {
 					))
 				)}
 			</div>
-			<RecommendedContent mode={'news'} teamName={currentUserInfo?.teamName || undefined} />
+			<RecommendedContent
+				mode={'news'}
+				teamName={currentUserInfo?.favoriteTeam?.nameKr || currentUserInfo?.favoriteTeam?.nameEn || undefined}
+			/>
 			<RecommendedContent mode={'board'} />
 		</div>
 	);

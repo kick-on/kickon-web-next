@@ -35,7 +35,7 @@ const DetailPage = () => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	const isTeamNull = contents?.data?.team == null;
-	const isOurTeam = currentUserInfo?.teamPk === contents?.data?.team?.pk;
+	const isOurTeam = currentUserInfo?.favoriteTeam?.pk === contents?.data?.team?.pk;
 	const isCommentAllowed = isTeamNull || isOurTeam;
 
 	const [shouldCallApi, setShouldCallApi] = useState(false);

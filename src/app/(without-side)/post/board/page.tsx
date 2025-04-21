@@ -17,12 +17,12 @@ export default function Page() {
 
 	const teams: { label: string; value: string; logo?: string }[] = [
 		{ label: '전체', value: '' },
-		...(currentUserInfo?.teamPk
+		...(currentUserInfo?.favoriteTeam?.pk
 			? [
 					{
-						label: currentUserInfo.teamName ?? '내 팀',
-						value: String(currentUserInfo.teamPk),
-						logo: currentUserInfo.teamLogoUrl,
+						label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
+						value: String(currentUserInfo.favoriteTeam.pk),
+						logo: currentUserInfo.favoriteTeam.logoUrl,
 					},
 				]
 			: []),
