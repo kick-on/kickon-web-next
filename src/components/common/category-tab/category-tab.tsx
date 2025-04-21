@@ -48,7 +48,7 @@ export default async function CategoryTab({
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
 
 	return (
-		<div className="flex flex-col w-full">
+		<div className="flex flex-col w-full @mobile:w-[calc(100vw-34px)]">
 			<TabBar mode={mode} q={q} type={type} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (

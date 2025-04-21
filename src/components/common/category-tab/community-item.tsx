@@ -8,7 +8,7 @@ export default function CommunityItem({ pk, title, replies, user, createdAt, has
 		<Link
 			href={`/board/${pk}`}
 			className="p-4 flex justify-between cursor-pointer
-				@mobile:w-[calc(100vw-34px)] @mobile:flex-col @mobile:gap-3"
+				@mobile:flex-col @mobile:gap-3"
 		>
 			<div className="flex gap-1 items-center pr-2">
 				<h2

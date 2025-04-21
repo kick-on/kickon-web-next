@@ -83,7 +83,9 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 					data.map((item, index) => (
 						<div key={item.pk}>
 							<Component {...item} isMyTeam={isMyTeam} />
-							{index !== data.length - 1 && <hr className="border-black-300 mx-4" />}
+							{index !== data.length - 1 && (
+								<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': Component === CommunityItem })} />
+							)}
 						</div>
 					))
 				)}

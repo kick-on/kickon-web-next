@@ -33,7 +33,7 @@ export default function NewsItem({
 					<div className={'w-[28rem] @mobile:grow @mobile:w-auto'}>
 						<h2
 							className="title3-semibold mb-2 pr-2 truncate
-								@mobile:w-[calc(100vw-66px)] @mobile:text-16 @mobile:font-semibold @mobile:leading-4"
+								@mobile:text-16 @mobile:font-semibold @mobile:leading-4"
 						>
 							{title}
 						</h2>
@@ -52,7 +52,7 @@ export default function NewsItem({
 					</div>
 				</section>
 
-				<footer className="flex flex-col w-full text-black-600 body6-regular">
+				<footer className="flex flex-col gap-0.5 w-full text-black-600 body6-regular">
 					<div className="flex items-center gap-2">
 						<Image
 							src={user.profileImageUrl}

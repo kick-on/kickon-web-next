@@ -13,7 +13,7 @@ export default async function Page({
 	const page = params.page;
 
 	return (
-		<ComponentFrame isMain={true}>
+		<ComponentFrame className="@mobile:mb-[80px]" isMain={true}>
 			<CategoryTab mode="news" q={q} type={type} id={id} page={page} />
 		</ComponentFrame>
 	);
