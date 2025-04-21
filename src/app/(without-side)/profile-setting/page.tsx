@@ -84,7 +84,7 @@ export default function Page() {
 	useEffect(() => {
 		if (!getAccessToken()) {
 			alert('로그인이 필요한 서비스입니다. 홈으로 이동합니다.');
-			route.push('/?login=true');
+			route.replace('/');
 		}
 	}, [route]);
 

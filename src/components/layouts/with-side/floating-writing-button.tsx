@@ -33,7 +33,7 @@ const FloatingWritingButton = () => {
 	return (
 		<div
 			className="desktop:w-[20.125rem] w-fit h-fit z-50 flex items-center sticky transition-all
-				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] max-[1200px]:mr-8"
+				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] min-[1094px]:max-[1200px]:mr-8 max-[848px]:mr-8"
 		>
 			<button
 				onClick={handleEditButtonClick}

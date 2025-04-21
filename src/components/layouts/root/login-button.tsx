@@ -5,7 +5,7 @@ import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { UAParser } from 'ua-parser-js';
 
@@ -18,13 +18,17 @@ export default function LoginButton() {
 
 	const router = useRouter();
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 
 	const handleLoginButtonClick = () => {
 		if (pathname.split('/').includes('signup')) {
+			sessionStorage.setItem('previousPage', '/');
 			router.push('/');
 		} else {
-			openLoginModal();
+			sessionStorage.setItem('previousPage', fullUrl);
 		}
+		openLoginModal();
 	};
 
 	useEffect(() => {
@@ -42,12 +46,12 @@ export default function LoginButton() {
 					console.log(response);
 				} else {
 					setCurrentUserInfo(response.data);
-					setIsLoggedIn(true);
 				}
 			};
 
 			getCurrentUserInfo();
 		}
+		setIsLoggedIn(!!currentUserInfo);
 	}, [currentUserInfo, setCurrentUserInfo]);
 
 	if (isMobile === null) return null;
@@ -64,7 +68,7 @@ export default function LoginButton() {
 						alt="프로필 이미지"
 						width={isMobile ? 28 : 38}
 						height={isMobile ? 28 : 38}
-						objectFit="cover"
+						className="rounded-full object-cover"
 					/>
 				</button>
 			) : (

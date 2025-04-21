@@ -29,7 +29,7 @@ export default function Page() {
 			if (typeof response === 'string') {
 				// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
 				setCookie('fromLogin', 'true', 30);
-				router.push(`/signup?provider=${provider}`);
+				router.replace(`/signup?provider=${provider}`);
 			} else {
 				// 유저 정보 불러오기 성공 시 이전 페이지로
 				setCurrentUserInfo(response.data);

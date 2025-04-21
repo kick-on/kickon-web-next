@@ -27,9 +27,11 @@ export default function Profile() {
 	const handleLoginButtonClick = () => {
 		if (pathname.split('/').includes('signup')) {
 			router.push('/');
+			sessionStorage.setItem('previousPage', '/');
 		} else {
-			openLoginModal();
+			sessionStorage.setItem('previousPage', fullUrl);
 		}
+		openLoginModal();
 	};
 
 	const handleLogoutButtonClick = () => {
@@ -39,10 +41,6 @@ export default function Profile() {
 
 		router.push('/');
 	};
-
-	useEffect(() => {
-		sessionStorage.setItem('previousPage', fullUrl);
-	}, [fullUrl]);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
