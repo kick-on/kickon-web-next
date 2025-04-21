@@ -3,8 +3,10 @@ import { NewsItemDto } from '@/services/apis/news/dto';
 import Image from 'next/image';
 import Link from 'next/link';
 import SanitizedContent from '../sanitized-content';
+import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import clsx from 'clsx';
 
-export default function NewsItem({
+export default async function NewsItem({
 	pk,
 	title,
 	content,
@@ -18,6 +20,8 @@ export default function NewsItem({
 	team,
 	isMyTeam = false,
 }: NewsItemDto & { isMyTeam?: boolean }) {
+	const { isMobile } = await getServerDeviceType();
+
 	return (
 		<Link href={`/news/${pk}`}>
 			<article className="flex flex-col py-6 px-4 cursor-pointer">
@@ -28,20 +32,23 @@ export default function NewsItem({
 					<div className="h-5 px-2.5 py-0.5 rounded-full bg-black-200 text-black-800 caption1-medium">{category}</div>
 				</header>
 
-				<section className="flex justify-between">
-					<div className="w-[28rem]">
-						<h2 className="title3-semibold mb-2">
+				<section className={clsx('flex justify-between', { 'flex-col-reverse gap-4': isMobile })}>
+					<div className="grow">
+						<h2 className={isMobile ? 'title5-semibold mb-2' : 'title3-semibold mb-2'}>
 							{title.length > 33 ? `${title.substring(0, 30).trim()}...` : title}
 						</h2>
-						<SanitizedContent content={content} />
+						<SanitizedContent isMobile={isMobile} content={content} />
 					</div>
-					<Image
-						width={160}
-						height={104}
-						src={thumbnailUrl}
-						alt="기사 썸네일 사진"
-						className="w-40 h-[6.5rem] rounded-lg my-auto object-cover"
-					/>
+					<div
+						className={clsx('relative my-auto', isMobile ? 'grow h-[9.5rem] rounded-md' : 'w-40 h-[6.5rem] rounded-lg')}
+					>
+						<Image
+							fill
+							className={clsx('w-auto h-auto object-cover', isMobile ? 'rounded-md' : 'rounded-lg')}
+							src={thumbnailUrl}
+							alt="기사 썸네일 사진"
+						/>
+					</div>
 				</section>
 
 				<footer className="flex flex-col w-full text-black-600 body6-regular">
@@ -54,7 +61,7 @@ export default function NewsItem({
 							className="w-6 h-6 rounded-full object-cover"
 						/>
 						<span className="flex gap-1.5 text-black-900">{user.nickname}</span>
-						<span className="ml-2">{getTimeAgo(createdAt)}</span>
+						<span className={isMobile ? 'ml-0.5' : 'ml-2'}>{getTimeAgo(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>
 					</div>

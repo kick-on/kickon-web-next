@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import CommunityDivisionBar from './category-tab/community-division-bar';
 import CommunityItem from './category-tab/community-item';
-import NewsItem from './category-tab/news-item';
 import ComponentFrame from './component-frame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
@@ -14,6 +13,11 @@ import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
 import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const NewsItem = dynamic(() => import('./category-tab/news-item'), {
+	ssr: false, // 클라이언트에서만 실행되도록 설정
+});
 
 const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();
