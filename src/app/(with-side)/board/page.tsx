@@ -1,14 +1,11 @@
 import CategoryTab from '@/components/common/category-tab/category-tab';
 import ComponentFrame from '@/components/common/component-frame';
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 
 export default async function Page({
 	searchParams,
 }: {
 	searchParams: Promise<{ q: string; type: string; id: string; page?: string }>;
 }) {
-	const { isMobile } = await getServerDeviceType();
-
 	const params = await searchParams;
 	const q = params.q;
 	const type = params.type;
@@ -16,7 +13,7 @@ export default async function Page({
 	const page = params.page;
 
 	return (
-		<ComponentFrame isMain={true} isMobile={isMobile}>
+		<ComponentFrame isMain={true}>
 			<CategoryTab mode="board" q={q} type={type} id={id} page={page} />
 		</ComponentFrame>
 	);

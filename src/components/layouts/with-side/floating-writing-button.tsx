@@ -3,17 +3,12 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Icon from '../../../../public/edit.svg';
-import { UAParser } from 'ua-parser-js';
-import clsx from 'clsx';
-import { useEffect, useState } from 'react';
 
 const FloatingWritingButton = () => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
-
-	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
 	const handleEditButtonClick = () => {
 		sessionStorage.setItem('previousPage', fullUrl);
@@ -27,26 +22,18 @@ const FloatingWritingButton = () => {
 		}
 	};
 
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
-
-	if (isMobile === null || pathname === '/') return null;
+	if (pathname === '/') return null;
 
 	return (
 		<div
 			className="desktop:w-[20.125rem] w-fit h-fit z-50 flex items-center sticky transition-all
-				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] min-[1094px]:max-[1200px]:mr-8 max-[848px]:mr-8"
+				bottom-15 ml-auto -mb-[20.125rem] desktop:-mr-[21.625rem] -mr-[5.125rem] min-[1094px]:max-[1200px]:mr-4 max-[848px]:mr-4"
 		>
 			<button
 				onClick={handleEditButtonClick}
-				className={clsx(
-					`w-[3.625rem] h-[3.625rem] bg-black-700 text-white rounded-full shadow-lg 
+				className="w-[3.625rem] h-[3.625rem] bg-black-700 text-white rounded-full shadow-lg 
 				overflow-hidden group transition-all duration-300 ease-in-out 
-				desktop:hover:w-[20.125rem] desktop:hover:pl-[3.75rem]`,
-					{ 'mr-8': isMobile },
-				)}
+				desktop:hover:w-[20.125rem] desktop:hover:pl-[3.75rem] @mobile:mr-[1.0625rem]"
 			>
 				<div className="flex items-center gap-2 px-[15px] w-full">
 					<Image src={Icon} alt="아이콘" width={28} height={28} className="min-w-7" />

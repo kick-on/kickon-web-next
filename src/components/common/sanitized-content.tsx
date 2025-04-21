@@ -1,13 +1,30 @@
-import { sanitizeHTML } from '@/lib/utils/sanitizeHTML';
+'use client';
 
-export default function SanitizedContent({ content, isMobile }: { content: string; isMobile: boolean }) {
-	const sanitizedContent = sanitizeHTML(content);
+import { useEffect, useState, useMemo } from 'react';
+import createDOMPurify from 'dompurify';
 
-	const className = isMobile ? 'body7-regular mb-2.5' : 'subtitle2-regular mb-[1.125rem]';
+export default function SanitizedContent({ content }: { content: string }) {
+	const DOMPurify = useMemo(() => createDOMPurify(), []);
+	const [sanitizedContent, setSanitizedContent] = useState('');
+
+	useEffect(() => {
+		let cleanText = DOMPurify.sanitize(content, { ALLOWED_TAGS: ['p'] })
+			.replace(/<p>\s*<\/p>/g, '') // 빈 p 제거
+			.replace(/<\/p>\s*<p>/g, '<br />') // 줄 바꿈 유지
+			.replace(/^<p>|<\/p>$/g, '') // 앞뒤 p 제거
+			.trim();
+
+		const maxLength = 120;
+		if (cleanText.length > maxLength) {
+			cleanText = cleanText.substring(0, maxLength - 3).trim() + '...';
+		}
+
+		setSanitizedContent(cleanText);
+	}, [content, DOMPurify]);
 
 	return (
 		<div
-			className={className}
+			className="@mobile:text-12 @mobile:font-regular @mobile:leading-5 @mobile:mb-2.5 subtitle2-regular mb-[1.125rem]"
 			style={{
 				display: '-webkit-box',
 				WebkitBoxOrient: 'vertical',

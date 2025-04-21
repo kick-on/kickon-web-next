@@ -13,11 +13,7 @@ import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
 import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-const NewsItem = dynamic(() => import('./category-tab/news-item'), {
-	ssr: false, // 클라이언트에서만 실행되도록 설정
-});
+import NewsItem from './category-tab/news-item';
 
 const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();

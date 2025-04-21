@@ -3,7 +3,6 @@
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
-import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -54,14 +53,12 @@ export default function LoginButton() {
 		setIsLoggedIn(!!currentUserInfo);
 	}, [currentUserInfo, setCurrentUserInfo]);
 
-	if (isMobile === null) return null;
-
 	return (
 		<>
 			{isLoggedIn ? (
 				<button
 					onClick={() => router.push('/profile-setting')}
-					className={clsx('ml-auto rounded-full', isMobile ? 'w-7 h-7' : 'w-[2.375rem] h-[2.375rem] mr-[0.3438rem]')}
+					className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
 				>
 					<Image
 						src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
@@ -74,10 +71,8 @@ export default function LoginButton() {
 			) : (
 				<button
 					onClick={handleLoginButtonClick}
-					className={clsx(
-						'ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900',
-						isMobile ? 'w-[3.8125rem] h-7 button4-medium' : 'w-[5.5rem] h-[2.25rem] button1-medium',
-					)}
+					className="ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900
+						w-[5.5rem] h-[2.25rem] button1-medium @mobile:w-[3.8125rem] @mobile:h-7 @mobile:text-14 @mobile:font-medium"
 				>
 					로그인
 				</button>

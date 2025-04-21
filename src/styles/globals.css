@@ -16,6 +16,12 @@
 	}
 }
 
+@custom-variant @mobile {
+	@container (max-width: 767px) {
+		@slot;
+	}
+}
+
 @layer base {
 	body {
 		background-color: var(--color-black-100);
