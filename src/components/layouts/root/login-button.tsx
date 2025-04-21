@@ -1,20 +1,31 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { UAParser } from 'ua-parser-js';
 
 export default function LoginButton() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { openLoginModal } = useIsLoginModalOpenStore();
 	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
 	const router = useRouter();
+	const pathname = usePathname();
 
 	const device = UAParser().device;
 	const isMobile = device.type === 'mobile';
+
+	const handleLoginButtonClick = () => {
+		if (pathname.split('/').includes('signup')) {
+			router.push('/');
+		} else {
+			openLoginModal();
+		}
+	};
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -26,11 +37,11 @@ export default function LoginButton() {
 					console.log(response);
 				} else {
 					setCurrentUserInfo(response.data);
+					setIsLoggedIn(true);
 				}
 			};
 
 			getCurrentUserInfo();
-			setIsLoggedIn(true);
 		}
 	}, [currentUserInfo, setCurrentUserInfo]);
 
@@ -51,7 +62,7 @@ export default function LoginButton() {
 				</button>
 			) : (
 				<button
-					onClick={() => router.push('/?login=true')}
+					onClick={handleLoginButtonClick}
 					className="w-[5.5rem] h-[2.25rem] ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900 button1-medium"
 				>
 					로그인
