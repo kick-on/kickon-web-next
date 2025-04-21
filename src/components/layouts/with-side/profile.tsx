@@ -109,13 +109,13 @@ export default function Profile() {
 											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
 											<div className="body3-regular text-black-800">님</div>
 										</div>
-										{currentUserInfo?.teamName && (
+										{currentUserInfo?.favoriteTeam && (
 											<Image
 												className="w-4 h-4 my-auto"
 												width={16}
 												height={16}
-												src={currentUserInfo?.teamLogoUrl}
-												alt={`${currentUserInfo?.teamName} 로고`}
+												src={currentUserInfo.favoriteTeam.logoUrl}
+												alt={`${currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn} 로고`}
 											/>
 										)}
 									</div>
@@ -136,7 +136,7 @@ export default function Profile() {
 							<div className="flex border-r border-black-200">
 								<div className="mx-auto my-[0.5625rem] text-center items-center">
 									<div className="caption2-regular h-4">
-										이번 시즌 {currentUserInfo?.teamName ? '우리 팀 내' : '전체'} 순위
+										이번 시즌 {currentUserInfo?.favoriteTeam ? '우리 팀 내' : '전체'} 순위
 									</div>
 									<div className="body4-semibold">{extraUserInfo?.ranking || '-'}위</div>
 								</div>

@@ -41,10 +41,10 @@ export default function Closed({
 					width={22}
 					height={22}
 					src={homeTeam.logoUrl}
-					alt={`${homeTeam.name} 로고 이미지`}
+					alt={`${homeTeam.nameKr || homeTeam.nameEn} 로고 이미지`}
 				/>
 				<div>
-					<div className="relative z-20">{homeTeam.name || '팀 이름'}</div>
+					<div className="relative z-20">{homeTeam.nameKr || homeTeam.nameEn || '팀 이름'}</div>
 					<div className="relative z-20 caption2-medium">{`${gambleResult.home}%`}</div>
 				</div>
 			</div>
@@ -84,7 +84,7 @@ export default function Closed({
 				})}
 			>
 				<div>
-					<div className="relative z-20">{awayTeam.name || '팀 이름'}</div>
+					<div className="relative z-20">{awayTeam.nameKr || awayTeam.nameEn || '팀 이름'}</div>
 					<div className="relative z-20 caption2-medium">{`${gambleResult.away}%`}</div>
 				</div>
 				<Image
@@ -92,7 +92,7 @@ export default function Closed({
 					width={22}
 					height={22}
 					src={awayTeam.logoUrl}
-					alt={`${awayTeam.name} 로고 이미지`}
+					alt={`${awayTeam.nameKr || awayTeam.nameEn} 로고 이미지`}
 				/>
 			</div>
 		</div>

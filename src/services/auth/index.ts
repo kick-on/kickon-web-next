@@ -28,7 +28,9 @@ export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 	try {
 		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user', body);
 
-		if (!response.code.split('_').includes('SUCCESS')) {
+		if (response.code === 'DUPLICATED_NICKNAME') {
+			return response.code;
+		} else if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
 			return response.message;
 		}

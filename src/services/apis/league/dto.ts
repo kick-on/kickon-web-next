@@ -7,5 +7,5 @@ export interface LeagueDto {
 	nameEn: string;
 	pk: number;
 	logoUrl: string;
-	leagueType?: 'League' | 'Cup';
+	type?: 'League' | 'Cup';
 }
