@@ -2,7 +2,7 @@ import NewsItem from './news-item';
 import CommunityItem from './community-item';
 import CommunityDivisionBar from './community-division-bar';
 import { getNewsList } from '@/services/apis/news/getNewsList';
-import { getBoardList } from '@/services/apis/news/getBoardList';
+import { getBoardList } from '@/services/apis/board/getBoardList';
 import FetchingFailedCard from '../fetching-failed-card';
 import TabBar from './tab-bar';
 import PaginationBar from '../pagination-bar';

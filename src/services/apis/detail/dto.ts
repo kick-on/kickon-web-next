@@ -1,16 +1,6 @@
 import { SuccessResponse } from '../../config/dto';
-
-export interface UserDto {
-	id: string;
-	nickname: string;
-	profileImageUrl: string;
-}
-export interface TeamDto {
-	logoUrl: string;
-	nameEn: string;
-	nameKr: string;
-	pk: number;
-}
+import { TeamDto } from '../team/dto';
+import { UserDto } from './comment/dto';
 
 export interface DetailDto {
 	pk: number;
