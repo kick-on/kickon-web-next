@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import Icon from '../../../../public/edit.svg';
 import { UAParser } from 'ua-parser-js';
@@ -10,10 +10,14 @@ import { useEffect, useState } from 'react';
 const FloatingWritingButton = () => {
 	const router = useRouter();
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 
 	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
 	const handleEditButtonClick = () => {
+		sessionStorage.setItem('previousPage', fullUrl);
+
 		if (pathname.startsWith('/news')) {
 			router.push('/post/news');
 		} else if (pathname.startsWith('/board')) {
