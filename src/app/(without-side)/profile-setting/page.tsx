@@ -91,16 +91,16 @@ export default function Page() {
 
 				setNickname(response.data.nickname);
 				setLeague({
-					pk: response.data.leaguePk,
-					nameKr: response.data.leagueName,
-					nameEn: response.data.leagueName,
-					logoUrl: response.data.leagueLogoUrl,
+					pk: response.data.leaguePk || -1,
+					nameKr: response.data.leagueName || '응원팀이 없어요.',
+					nameEn: response.data.leagueName || 'no cheering team',
+					logoUrl: response.data.leagueLogoUrl || '/ban.svg',
 				});
 				setTeam({
-					pk: response.data.teamPk,
-					nameKr: response.data.teamName,
-					nameEn: response.data.teamName,
-					logoUrl: response.data.teamLogoUrl,
+					pk: response.data.teamPk || -1,
+					nameKr: response.data.teamName || '응원팀이 없어요.',
+					nameEn: response.data.teamName || 'no cheering team',
+					logoUrl: response.data.teamLogoUrl || '/ban.svg',
 				});
 			}
 		};
