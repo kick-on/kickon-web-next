@@ -76,28 +76,30 @@ export default function Page() {
 	};
 
 	const handleSignupButtonClick = async () => {
-		const privacyRequest: UpdatePrivacyRequest = {
-			privacyAgreedAt: agreements.privacy && new Date().toISOString().split('.')[0] + 'Z',
-			marketingAgreedAt: agreements.marketing ? new Date().toISOString().split('.')[0] + 'Z' : undefined,
+		// 회원가입(정보 수정)
+		const updateUserInfoRequest: UpdateUserInfoRequest = {
+			nickname: nickname,
+			team: !team || team.pk === -1 ? undefined : team.pk,
 		};
-		const privacyResponse = await updatePrivacy(privacyRequest);
+		const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
-		if (typeof privacyResponse === 'string') {
-			console.log(privacyResponse);
+		if (updateUserInfoResponse === 'DUPLICATED_NICKNAME') {
+			if (isDuplicated === false) setIsDuplicated(true); // 닉네임 중복
+		} else if (typeof updateUserInfoResponse === 'string') {
+			if (isDuplicated === true) setIsDuplicated(false); // 기타 오류
+			console.log(updateUserInfoResponse);
 		} else {
-			// 회원가입 성공 시 유저 정보 수정 후 다시 로그인
-			const updateUserInfoRequest: UpdateUserInfoRequest = {
-				nickname: nickname,
-				team: team.pk === -1 ? undefined : team.pk,
+			// 성공 시 약관 동의 api 호출
+			const privacyRequest: UpdatePrivacyRequest = {
+				privacyAgreedAt: agreements.privacy && new Date().toISOString().split('.')[0] + 'Z',
+				marketingAgreedAt: agreements.marketing ? new Date().toISOString().split('.')[0] + 'Z' : undefined,
 			};
-			const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
+			const privacyResponse = await updatePrivacy(privacyRequest);
 
-			if (updateUserInfoResponse === 'DUPLICATED_NICKNAME') {
-				setIsDuplicated(true);
-			} else if (typeof updateUserInfoResponse === 'string') {
-				setIsDuplicated(false);
-				console.log(updateUserInfoResponse);
+			if (typeof privacyResponse === 'string') {
+				console.log(privacyResponse);
 			} else {
+				// 성공 시 재로그인
 				router.push(
 					`${SERVER_URL}/oauth2/authorization/${provider}?state=${DOMAIN_URL || 'http://localhost:3000'}/login/${provider}`,
 				);

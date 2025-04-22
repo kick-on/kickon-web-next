@@ -97,18 +97,22 @@ export default function Page() {
 				setCurrentUserInfo(response.data);
 
 				setNickname(response.data.nickname);
-				setLeague({
-					pk: response.data.league.pk,
-					nameKr: response.data.league.nameKr,
-					nameEn: response.data.league.nameEn,
-					logoUrl: response.data.league.logoUrl,
-				});
-				setTeam({
-					pk: response.data.favoriteTeam.pk,
-					nameKr: response.data.favoriteTeam.nameKr,
-					nameEn: response.data.favoriteTeam.nameEn,
-					logoUrl: response.data.favoriteTeam.logoUrl,
-				});
+				if (response.data.league) {
+					setLeague({
+						pk: response.data.league.pk,
+						nameKr: response.data.league.nameKr,
+						nameEn: response.data.league.nameEn,
+						logoUrl: response.data.league.logoUrl,
+					});
+				}
+				if (response.data.favoriteTeam) {
+					setTeam({
+						pk: response.data.favoriteTeam.pk,
+						nameKr: response.data.favoriteTeam.nameKr,
+						nameEn: response.data.favoriteTeam.nameEn,
+						logoUrl: response.data.favoriteTeam.logoUrl,
+					});
+				}
 			}
 		};
 		getCurrentUserInfo();
