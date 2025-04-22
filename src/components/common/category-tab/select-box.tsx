@@ -87,18 +87,28 @@ export default function SelectBox({
 
 	return (
 		<div ref={dropboxRef} className="relative w-fit">
-			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center px-[0.5625rem] py-[0.9375rem]">
-				<div>{!league ? '리그 선택' : league.nameKr || league.nameEn}</div>
+			<button onClick={handleSelectBoxClick} className="flex items-center">
+				<div
+					className={clsx(
+						'border-b-2 py-[0.9375rem] px-2 @max-[350px]:px-1',
+						isClickedOtherTab ? 'border-transparent' : 'border-primary-900 text-primary-900 header-semibold',
+					)}
+				>
+					{!league ? '리그 선택' : league.nameKr || league.nameEn}
+				</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
 			{isVisibleOptions && (
-				<div className="absolute w-[12.5rem] top-[2.4rem] shadow-select-options border border-black-200 rounded-[0.625rem]">
+				<div
+					className="absolute z-10 w-[12.5rem] top-[2.5625rem] @mobile:w-max @mobile:right-0
+						shadow-select-options border border-black-200 rounded-[0.625rem]"
+				>
 					{!options
 						? null
 						: options.map((league, index) => (
 								<div
 									key={league.pk}
-									className={clsx('bg-black-000 hover:bg-black-200 transition-colors', {
+									className={clsx('w-full bg-black-000 hover:bg-black-200 transition-colors', {
 										'rounded-t-[0.5625rem]': index === 0,
 										'rounded-b-[0.5625rem]': index === options.length - 1,
 									})}
