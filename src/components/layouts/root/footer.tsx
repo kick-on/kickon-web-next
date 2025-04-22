@@ -24,7 +24,7 @@ export default function Footer() {
 			<div className={`${bgColor} h-[13.125rem] flex items-center`}>
 				<div
 					className={`${textColor} flex items-start button4-medium max-w-[85rem]
-						gap-[3.625rem] mx-auto @mobile:flex-col @mobile:gap-6 @mobile:pl-6`}
+						gap-[3.625rem] mx-auto @mobile:flex-col @mobile:gap-6 @mobile:pl-6 @mobile:ml-0`}
 				>
 					<Image width={140} height={22} src={src} alt="킥온" />
 
