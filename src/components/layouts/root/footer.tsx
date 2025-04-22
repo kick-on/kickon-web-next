@@ -1,12 +1,18 @@
 'use client';
 
-import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { UAParser } from 'ua-parser-js';
 
 export default function Footer() {
+	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 	const pathname = usePathname();
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
 
 	if (pathname === '/' || pathname === '/signup') {
 		const isHome = pathname === '/';
@@ -14,16 +20,11 @@ export default function Footer() {
 		const textColor = isHome ? 'text-black-700' : 'text-black-200';
 		const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
 
-		const device = UAParser().device;
-		const isMobile = device.type === 'mobile';
-
 		return (
 			<div className={`${bgColor} h-[13.125rem] flex items-center`}>
 				<div
-					className={clsx(
-						`${textColor} flex items-start button4-medium max-w-[85rem]`,
-						isMobile ? 'flex-col gap-6 pl-6' : 'gap-[3.625rem] mx-auto',
-					)}
+					className={`${textColor} flex items-start button4-medium max-w-[85rem]
+						gap-[3.625rem] mx-auto @mobile:flex-col @mobile:gap-6 @mobile:pl-6 @mobile:ml-0`}
 				>
 					<Image width={140} height={22} src={src} alt="킥온" />
 
@@ -43,7 +44,7 @@ export default function Footer() {
 							<span
 								className="cursor-pointer"
 								onClick={() => {
-									if (window) {
+									if (typeof window !== 'undefined') {
 										window.open('https://www.notion.so/devbob/1c3e7fdb8ed180f39725d9aa9a6f1011', '_blank');
 									}
 								}}

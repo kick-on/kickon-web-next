@@ -14,7 +14,7 @@ export default function OptionItem({
 	return (
 		<button
 			onClick={() => onClick(pk)}
-			className="w-full h-8 flex gap-4 items-center pl-6 body5-regular text-black-900"
+			className="w-full h-8 flex gap-4 items-center px-6 body5-regular text-black-900 whitespace-nowrap"
 		>
 			<Image
 				className="w-4 h-4 object-contain"

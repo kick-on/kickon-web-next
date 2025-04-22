@@ -1,10 +1,10 @@
 import { ReactNode } from 'react';
 import clsx from 'clsx';
-import LeftSide from '@/components/layouts/root/left-side';
-import RightSide from '@/components/layouts/root/right-side';
+import LeftSide from '@/components/layouts/with-side/left-side';
+import RightSide from '@/components/layouts/with-side/right-side';
 import FloatingWritingButton from '@/components/layouts/with-side/floating-writing-button';
 
-export default async function Layout({ children }: { children: ReactNode }) {
+export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<div
 			className={clsx(

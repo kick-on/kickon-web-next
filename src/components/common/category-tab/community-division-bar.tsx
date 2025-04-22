@@ -2,7 +2,10 @@ import Image from 'next/image';
 
 export default function CommunityDivisionBar() {
 	return (
-		<div className="flex py-[0.9375rem] mx-4 justify-between subtitle2-medium text-center border-b border-black-300">
+		<div
+			className="@mobile:hidden flex py-[0.9375rem] mx-4 justify-between
+				subtitle2-medium text-center border-b border-black-300"
+		>
 			<div className="ml-[5.625rem]">제목</div>
 			<div className="flex gap-4">
 				<div className="w-[7.25rem]">글쓴이</div>

@@ -13,14 +13,18 @@ export const getNewsList = async ({ team, size, page, order, league }: GetNewsLi
 	if (team !== undefined) params.append('team', String(team));
 	if (league !== undefined) params.append('league', String(league));
 
-	const response = await axiosInstance.get<GetNewsListResponse | FailResponse>(
-		`${SERVER_URL}/api/news?${params.toString()}`,
-	);
-	console.log(`${SERVER_URL}/api/news?${params.toString()}`);
+	try {
+		const response = await axiosInstance.get<GetNewsListResponse | FailResponse>(
+			`${SERVER_URL}/api/news?${params.toString()}`,
+		);
 
-	if (!response.code.split('_').includes('SUCCESS')) {
-		console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, response);
-		return null;
+		if (!response.code.split('_').includes('SUCCESS')) {
+			console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, response);
+			return null;
+		}
+
+		return response;
+	} catch (error) {
+		console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, error);
 	}
-	return response;
 };

@@ -1,8 +1,8 @@
 'use client';
 
 import ComponentFrame from '@/components/common/component-frame';
-import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import { getUserInfo } from '@/services/auth';
@@ -16,26 +16,22 @@ export default function Profile() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const previousPage = typeof window !== 'undefined' ? sessionStorage.getItem('previousPage') : null;
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
+	const { openLoginModal } = useIsLoginModalOpenStore();
 
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const { currentUserInfo, setCurrentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
-	const fullUrl = !!searchParams.get('login')
-		? '/'
-		: `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 
 	const handleLoginButtonClick = () => {
-		setIsLoginModalOpen(true);
-	};
-
-	const handleLoginModalClose = () => {
-		setIsLoginModalOpen(false);
-		if (previousPage === '/') {
-			router.replace(previousPage);
+		if (pathname.split('/').includes('signup')) {
+			router.push('/');
+			sessionStorage.setItem('previousPage', '/');
+		} else {
+			sessionStorage.setItem('previousPage', fullUrl);
 		}
+		openLoginModal();
 	};
 
 	const handleLogoutButtonClick = () => {
@@ -45,10 +41,6 @@ export default function Profile() {
 
 		router.push('/');
 	};
-
-	useEffect(() => {
-		sessionStorage.setItem('previousPage', fullUrl);
-	}, [fullUrl]);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -88,7 +80,6 @@ export default function Profile() {
 
 	return (
 		<>
-			{isLoginModalOpen && <LoginModal onClose={handleLoginModalClose} />}
 			<ComponentFrame>
 				{isLoggedIn ? (
 					<div>

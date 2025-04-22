@@ -5,6 +5,7 @@ import Navbar from '@/components/layouts/root/navbar';
 import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
+import LoginPortal from '@/components/layouts/root/login-portal';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -25,7 +26,8 @@ const pretendard = localFont({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
-			<body>
+			<body className="@container">
+				<LoginPortal />
 				<Navbar />
 				<Banner />
 				<div className="pb-[9.375rem]">{children}</div>

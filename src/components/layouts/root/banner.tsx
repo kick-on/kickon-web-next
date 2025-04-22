@@ -15,10 +15,14 @@ import { UAParser } from 'ua-parser-js';
 
 export default function Banner() {
 	const [banners, setBanners] = useState<BannerDto[]>([]);
+	const [isMobile, setIsMobile] = useState(false);
 
 	const pathname = usePathname();
-	const device = UAParser().device;
-	const isMobile = device.type === 'mobile';
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
 
 	useEffect(() => {
 		const getBanners = async () => {
@@ -37,12 +41,12 @@ export default function Banner() {
 	const navigationButtons = [
 		{
 			src: '/chevron/banner-left.svg',
-			className: `${isMobile ? 'left-[1.625rem]' : 'left-[4.8125rem] desktop:left-[5.5625rem]'}  swiper-button-prev`,
+			className: 'left-[4.8125rem] @mobile:left-[1.625rem] desktop:left-[5.5625rem] swiper-button-prev',
 			alt: '왼쪽',
 		},
 		{
 			src: '/chevron/banner-right.svg',
-			className: `${isMobile ? 'right-[1.625rem]' : 'right-[4.8125rem] desktop:right-[5.5625rem]'} swiper-button-next`,
+			className: 'right-[4.8125rem] @mobile:right-[1.625rem] desktop:right-[5.5625rem] swiper-button-next',
 			alt: '오른쪽',
 		},
 	];
@@ -61,8 +65,8 @@ export default function Banner() {
 				}}
 				loop
 				className={clsx(
-					`relative w-full`,
-					isMobile ? 'h-[12.8125rem] mobile-banner-swiper' : 'h-[clamp(18.6875rem,35vw,35rem)] banner-swiper',
+					`relative w-full h-[clamp(18.6875rem,35vw,35rem)] @mobile:h-[12.8125rem]`,
+					isMobile ? 'mobile-banner-swiper' : 'banner-swiper',
 				)}
 			>
 				{navigationButtons.map((button) => (
@@ -86,7 +90,6 @@ export default function Banner() {
 							className={clsx('w-full h-full object-cover', { 'cursor-pointer': banner.embeddedUrl })}
 							width={1920}
 							height={560}
-							title={banner.title}
 							src={banner.thumbnailUrl}
 							alt="배너 이미지"
 						/>

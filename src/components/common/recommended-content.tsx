@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import CommunityDivisionBar from './category-tab/community-division-bar';
 import CommunityItem from './category-tab/community-item';
-import NewsItem from './category-tab/news-item';
 import ComponentFrame from './component-frame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
@@ -14,6 +13,7 @@ import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
 import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
+import NewsItem from './category-tab/news-item';
 
 const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();
@@ -83,7 +83,9 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 					data.map((item, index) => (
 						<div key={item.pk}>
 							<Component {...item} isMyTeam={isMyTeam} />
-							{index !== data.length - 1 && <hr className="border-black-300 mx-4" />}
+							{index !== data.length - 1 && (
+								<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': Component === CommunityItem })} />
+							)}
 						</div>
 					))
 				)}

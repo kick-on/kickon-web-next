@@ -22,13 +22,18 @@ export default function MobileNavbar() {
 	];
 
 	const toggleMenu = () => {
-		setIsMenuOpen(!isMenuOpen);
-		setIsBgVisible(!isBgVisible);
+		if (isMenuOpen) {
+			setIsMenuOpen(!isMenuOpen);
+			setTimeout(() => setIsBgVisible(!isBgVisible), 200);
+		} else {
+			setIsBgVisible(!isBgVisible);
+			setTimeout(() => setIsMenuOpen(!isMenuOpen), 10);
+		}
 	};
 
 	return (
 		<>
-			<header className="sticky z-50 transition-colors ease-out">
+			<header className="sticky top-0 z-50 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
 					<button onClick={toggleMenu} className={isHome ? '' : 'invert'}>
 						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />
@@ -43,12 +48,13 @@ export default function MobileNavbar() {
 			<div
 				className={clsx(
 					'fixed z-40 top-0 left-0 w-full h-full transition-colors',
-					isBgVisible ? 'bg-black/40' : 'bg-transparent',
+					isMenuOpen ? 'bg-black/40' : 'bg-transparent',
+					isBgVisible ? 'visible' : 'hidden',
 				)}
 			>
 				<nav
 					className={clsx(
-						'fixed top-16 z-50 w-full  transition-transform ease-in flex flex-col border-t rounded-b-lg body3-regular',
+						'fixed top-16 z-50 w-full transition-transform ease-in flex flex-col border-t rounded-b-lg body3-regular',
 						bgColor,
 						isHome ? 'text-black-900 border-black-200' : 'text-black-000 border-black-700',
 						!isMenuOpen ? '-translate-y-full' : '',

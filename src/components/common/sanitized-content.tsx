@@ -24,7 +24,7 @@ export default function SanitizedContent({ content }: { content: string }) {
 
 	return (
 		<div
-			className="mb-[1.125rem] subtitle2-regular font-normal"
+			className="@mobile:text-12 @mobile:font-regular @mobile:leading-5 @mobile:mb-2.5 subtitle2-regular mb-[1.125rem]"
 			style={{
 				display: '-webkit-box',
 				WebkitBoxOrient: 'vertical',

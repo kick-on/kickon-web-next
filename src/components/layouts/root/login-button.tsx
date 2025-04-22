@@ -1,20 +1,39 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
-import clsx from 'clsx';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { UAParser } from 'ua-parser-js';
 
 export default function LoginButton() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
-	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
-	const router = useRouter();
+	const { openLoginModal } = useIsLoginModalOpenStore();
 
-	const device = UAParser().device;
-	const isMobile = device.type === 'mobile';
+	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
+	const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+
+	const handleLoginButtonClick = () => {
+		if (pathname.split('/').includes('signup')) {
+			sessionStorage.setItem('previousPage', '/');
+			router.push('/');
+		} else {
+			sessionStorage.setItem('previousPage', fullUrl);
+		}
+		openLoginModal();
+	};
+
+	useEffect(() => {
+		const device = UAParser().device;
+		setIsMobile(device.type === 'mobile');
+	}, []);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -30,8 +49,8 @@ export default function LoginButton() {
 			};
 
 			getCurrentUserInfo();
-			setIsLoggedIn(true);
 		}
+		setIsLoggedIn(!!currentUserInfo);
 	}, [currentUserInfo, setCurrentUserInfo]);
 
 	return (
@@ -39,20 +58,21 @@ export default function LoginButton() {
 			{isLoggedIn ? (
 				<button
 					onClick={() => router.push('/profile-setting')}
-					className={clsx('ml-auto rounded-full', isMobile ? 'w-7 h-7' : 'w-[2.375rem] h-[2.375rem] mr-[0.3438rem]')}
+					className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
 				>
 					<Image
 						src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
 						alt="프로필 이미지"
 						width={isMobile ? 28 : 38}
 						height={isMobile ? 28 : 38}
-						objectFit="cover"
+						className="rounded-full object-cover"
 					/>
 				</button>
 			) : (
 				<button
-					onClick={() => router.push('/?login=true')}
-					className="w-[5.5rem] h-[2.25rem] ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900 button1-medium"
+					onClick={handleLoginButtonClick}
+					className="ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900
+						w-[5.5rem] h-[2.25rem] button1-medium @mobile:w-[3.8125rem] @mobile:h-7 @mobile:text-14 @mobile:font-medium"
 				>
 					로그인
 				</button>
