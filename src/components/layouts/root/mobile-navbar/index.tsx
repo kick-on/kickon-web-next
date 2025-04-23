@@ -27,7 +27,6 @@ export default function MobileNavbar() {
 		{ herf: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
 		{ herf: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
 		{ herf: '/ranking', content: '랭킹', isActive: pathname === '/ranking' },
-		{ herf: '/profile-setting', content: '프로필 설정', isActive: pathname === '/profile-setting' },
 	];
 
 	const handleToggleMenu = useCallback(() => {
@@ -95,20 +94,28 @@ export default function MobileNavbar() {
 						<MobileProfile />
 
 						{navButtons.map((button) => (
-							<>
-								{button.content === '프로필 설정' && <Divider />}
-								<Link
-									onClick={handleToggleMenu}
-									key={button.content}
-									href={button.herf}
-									className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
-										'text-primary-900 button2-semibold': button.isActive,
-									})}
-								>
-									{button.content}
-								</Link>
-							</>
+							<Link
+								onClick={handleToggleMenu}
+								key={button.content}
+								href={button.herf}
+								className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
+									'text-primary-900 button2-semibold': button.isActive,
+								})}
+							>
+								{button.content}
+							</Link>
 						))}
+
+						<Divider />
+						<Link
+							onClick={handleToggleMenu}
+							href={'/profile-setting'}
+							className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
+								'text-primary-900 button2-semibold': pathname === '/profile-setting',
+							})}
+						>
+							프로필 설정
+						</Link>
 					</nav>
 				</div>
 			)}
