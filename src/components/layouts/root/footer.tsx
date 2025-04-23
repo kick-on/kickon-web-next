@@ -1,18 +1,12 @@
 'use client';
 
+import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { UAParser } from 'ua-parser-js';
 
 export default function Footer() {
-	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 	const pathname = usePathname();
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
+	const isMobile = useIsMobile();
 
 	if (pathname === '/' || pathname === '/signup') {
 		const isHome = pathname === '/';

@@ -1,20 +1,19 @@
 'use client';
 
+import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { UAParser } from 'ua-parser-js';
 
 export default function LoginButton() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const { openLoginModal } = useIsLoginModalOpenStore();
-
 	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
-	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
+	const isMobile = useIsMobile();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -29,11 +28,6 @@ export default function LoginButton() {
 		}
 		openLoginModal();
 	};
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리

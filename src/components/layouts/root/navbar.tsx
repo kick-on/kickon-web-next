@@ -5,17 +5,16 @@ import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
 import useIsTablet from '@/lib/hooks/useIsTablet';
 import LoginButton from './login-button';
-import { UAParser } from 'ua-parser-js';
 import MobileNavbar from './mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { useEffect, useState } from 'react';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Navbar() {
 	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 
-	const [isMobile, setIsMobile] = useState<boolean | null>(null);
+	const isMobile = useIsMobile();
 	const isTablet = useIsTablet();
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
@@ -28,11 +27,6 @@ export default function Navbar() {
 	const handleLogoClick = () => {
 		router.push('/');
 	};
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
 
 	if (isMobile === null) return null;
 

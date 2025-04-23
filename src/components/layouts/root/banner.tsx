@@ -11,18 +11,12 @@ import { BannerDto } from '@/services/apis/event-board/dto';
 import { useEffect, useState } from 'react';
 import { getBanner } from '@/services/apis/event-board';
 import clsx from 'clsx';
-import { UAParser } from 'ua-parser-js';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Banner() {
 	const [banners, setBanners] = useState<BannerDto[]>([]);
-	const [isMobile, setIsMobile] = useState(false);
-
+	const isMobile = useIsMobile();
 	const pathname = usePathname();
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
 
 	useEffect(() => {
 		const getBanners = async () => {
