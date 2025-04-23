@@ -56,18 +56,20 @@ export default function LoginButton() {
 	return (
 		<>
 			{isLoggedIn ? (
-				<button
-					onClick={() => router.push('/profile-setting')}
-					className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
-				>
-					<Image
-						src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
-						alt="프로필 이미지"
-						width={isMobile ? 28 : 38}
-						height={isMobile ? 28 : 38}
-						className="rounded-full object-cover"
-					/>
-				</button>
+				!isMobile && (
+					<button
+						onClick={() => router.push('/profile-setting')}
+						className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
+					>
+						<Image
+							src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+							alt="프로필 이미지"
+							width={isMobile ? 28 : 38}
+							height={isMobile ? 28 : 38}
+							className="rounded-full object-cover"
+						/>
+					</button>
+				)
 			) : (
 				<button
 					onClick={handleLoginButtonClick}
