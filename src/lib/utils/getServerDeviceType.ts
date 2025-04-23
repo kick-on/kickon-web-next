@@ -1,13 +1,7 @@
-import { headers } from 'next/headers';
 import { UAParser } from 'ua-parser-js';
 
-export default async function getServerDeviceType() {
-	if (typeof window !== 'undefined') return;
-
-	// 서버사이드
-	const headerList = await headers();
-	const uaString = headerList.get('user-agent') ?? '';
-	const device = UAParser(uaString).device;
+export default function getServerDeviceType() {
+	const device = UAParser().device;
 
 	// 모바일 데스크톱 외 나머지는 모두 데스크톱으로 취급
 	const isMobile = device.type === 'mobile';

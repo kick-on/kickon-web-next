@@ -3,7 +3,7 @@ import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import Profile from './profile';
 
 export default async function RightSide() {
-	const { isMobile } = await getServerDeviceType();
+	const { isMobile } = getServerDeviceType();
 
 	if (isMobile) return null;
 
