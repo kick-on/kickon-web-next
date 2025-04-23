@@ -66,7 +66,9 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
-					{!isCommentAllowed && <Image src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />}
+					{!isCommentAllowed && (
+						<Image className="w-6 h-6 object-contain" src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />
+					)}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{categoryLabel}
 					</span>

@@ -102,7 +102,7 @@ export default function Profile() {
 										</div>
 										{currentUserInfo?.favoriteTeam && (
 											<Image
-												className="w-4 h-4 my-auto"
+												className="w-4 h-4 object-contain my-auto"
 												width={16}
 												height={16}
 												src={currentUserInfo.favoriteTeam.logoUrl}
