@@ -135,7 +135,7 @@ export default function AccountSelectBox({
 									'rounded-b-[0.5625rem]': index === options.length - 1 && !isLeagueSelectBox,
 								})}
 							>
-								<OptionItem onClick={handleOptionClick} {...option} />
+								<OptionItem height="h-[2.875rem]" onClick={handleOptionClick} {...option} />
 								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
@@ -144,7 +144,13 @@ export default function AccountSelectBox({
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
 							>
-								<OptionItem onClick={handleOptionClick} pk={-1} nameKr="응원팀이 없어요." logoUrl="/ban.svg" />
+								<OptionItem
+									height="h-[2.875rem]"
+									onClick={handleOptionClick}
+									pk={-1}
+									nameKr="응원팀이 없어요."
+									logoUrl="/ban.svg"
+								/>
 							</div>
 						)}
 					</div>
