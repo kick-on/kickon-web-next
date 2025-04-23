@@ -2,12 +2,13 @@
 
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import LoginButton from './login-button';
+import LoginButton from '../login-button';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import MobileProfile from './mobile-profile';
 
-function Divider() {
+export function Divider() {
 	return <hr className="m-4 border-black-200" />;
 }
 
@@ -90,7 +91,7 @@ export default function MobileNavbar() {
 						<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
 					</button>
 
-					<Divider />
+					<MobileProfile />
 
 					{navButtons.map((button) => (
 						<>
@@ -107,8 +108,6 @@ export default function MobileNavbar() {
 							</Link>
 						</>
 					))}
-
-					<Divider />
 				</nav>
 			</div>
 		</>

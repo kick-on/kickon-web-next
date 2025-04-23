@@ -66,7 +66,7 @@ export default function LoginButton() {
 							alt="프로필 이미지"
 							width={isMobile ? 28 : 38}
 							height={isMobile ? 28 : 38}
-							className="rounded-full object-cover"
+							className="w-full h-full rounded-full object-cover"
 						/>
 					</button>
 				)
