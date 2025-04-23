@@ -5,11 +5,18 @@ import { usePathname } from 'next/navigation';
 import LoginButton from './login-button';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+function Divider() {
+	return <hr className="m-4 border-black-200" />;
+}
 
 export default function MobileNavbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isBgVisible, setIsBgVisible] = useState(false);
+
+	const sideBarRef = useRef<HTMLDivElement | null>(null);
+
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 	const bgColor = isHome ? 'bg-black-000' : 'bg-black-800';
@@ -19,9 +26,10 @@ export default function MobileNavbar() {
 		{ herf: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
 		{ herf: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
 		{ herf: '/ranking', content: '랭킹', isActive: pathname === '/ranking' },
+		{ herf: '/profile-setting', content: '프로필 설정', isActive: pathname === '/profile-setting' },
 	];
 
-	const toggleMenu = () => {
+	const handleToggleMenu = useCallback(() => {
 		if (isMenuOpen) {
 			setIsMenuOpen(!isMenuOpen);
 			setTimeout(() => setIsBgVisible(!isBgVisible), 200);
@@ -29,13 +37,30 @@ export default function MobileNavbar() {
 			setIsBgVisible(!isBgVisible);
 			setTimeout(() => setIsMenuOpen(!isMenuOpen), 10);
 		}
-	};
+	}, [isBgVisible, isMenuOpen]);
+
+	useEffect(() => {
+		if (!sideBarRef.current) return;
+
+		const handleClickOutside = (event: MouseEvent) => {
+			if (!sideBarRef.current.contains(event.target as Node)) {
+				handleToggleMenu();
+			}
+		};
+		document.addEventListener('click', handleClickOutside);
+		document.body.style.overflow = 'hidden';
+
+		return () => {
+			document.removeEventListener('click', handleClickOutside);
+			document.body.style.overflow = '';
+		};
+	}, [handleToggleMenu]);
 
 	return (
 		<>
-			<header className="sticky top-0 z-50 transition-colors ease-out">
+			<header className="sticky top-0 z-40 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
-					<button onClick={toggleMenu} className={isHome ? '' : 'invert'}>
+					<button onClick={handleToggleMenu} className={isHome ? '' : 'invert'}>
 						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />
 					</button>
 					<Link href="/" className="w-auto h-full flex justify-center">
@@ -53,25 +78,37 @@ export default function MobileNavbar() {
 				)}
 			>
 				<nav
+					ref={sideBarRef}
 					className={clsx(
-						'fixed top-16 z-50 w-full transition-transform ease-in flex flex-col border-t rounded-b-lg body3-regular',
-						bgColor,
-						isHome ? 'text-black-900 border-black-200' : 'text-black-000 border-black-700',
-						!isMenuOpen ? '-translate-y-full' : '',
+						`fixed top-0 left-0 z-50 w-[15.9375rem] h-full flex flex-col
+						body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
+
+						!isMenuOpen ? '-translate-x-full' : '',
 					)}
 				>
+					<button onClick={handleToggleMenu} className="mt-4 ml-4 w-fit brightness-0">
+						<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
+					</button>
+
+					<Divider />
+
 					{navButtons.map((button) => (
-						<Link
-							onClick={toggleMenu}
-							key={button.content}
-							href={button.herf}
-							className={clsx('grow h-16 flex justify-center items-center', {
-								'text-primary-900 button2-semibold': button.isActive,
-							})}
-						>
-							{button.content}
-						</Link>
+						<>
+							{button.content === '프로필 설정' && <Divider />}
+							<Link
+								onClick={handleToggleMenu}
+								key={button.content}
+								href={button.herf}
+								className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
+									'text-primary-900 button2-semibold': button.isActive,
+								})}
+							>
+								{button.content}
+							</Link>
+						</>
 					))}
+
+					<Divider />
 				</nav>
 			</div>
 		</>
