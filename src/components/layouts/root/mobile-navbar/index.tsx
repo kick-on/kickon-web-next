@@ -61,7 +61,7 @@ export default function MobileNavbar() {
 		<>
 			<header className="sticky top-0 z-40 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
-					<button onClick={handleToggleMenu} className={isHome ? '' : 'invert'}>
+					<button onClick={handleToggleMenu} className={`w-fit ${isHome ? '' : 'invert'}`}>
 						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />
 					</button>
 					<Link href="/" className="w-auto h-full flex justify-center">
@@ -71,45 +71,47 @@ export default function MobileNavbar() {
 				</div>
 			</header>
 
-			<div
-				className={clsx(
-					'fixed z-40 top-0 left-0 w-full h-full transition-colors',
-					isMenuOpen ? 'bg-black/40' : 'bg-transparent',
-					isBgVisible ? 'visible' : 'hidden',
-				)}
-			>
-				<nav
-					ref={sideBarRef}
+			{isBgVisible && (
+				<div
 					className={clsx(
-						`fixed top-0 left-0 z-50 w-[15.9375rem] h-full flex flex-col
-						body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
-
-						!isMenuOpen ? '-translate-x-full' : '',
+						'fixed z-40 top-0 left-0 w-full h-full transition-colors',
+						isMenuOpen ? 'bg-black/40' : 'bg-transparent',
+						isBgVisible ? 'visible' : 'hidden',
 					)}
 				>
-					<button onClick={handleToggleMenu} className="mt-4 ml-4 w-fit brightness-0">
-						<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
-					</button>
+					<nav
+						ref={sideBarRef}
+						className={clsx(
+							`fixed top-0 left-0 z-50 w-[15.9375rem] h-full flex flex-col
+						body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
 
-					<MobileProfile />
+							!isMenuOpen ? '-translate-x-full' : '',
+						)}
+					>
+						<button onClick={handleToggleMenu} className="mt-4 ml-4 w-fit brightness-0">
+							<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
+						</button>
 
-					{navButtons.map((button) => (
-						<>
-							{button.content === '프로필 설정' && <Divider />}
-							<Link
-								onClick={handleToggleMenu}
-								key={button.content}
-								href={button.herf}
-								className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
-									'text-primary-900 button2-semibold': button.isActive,
-								})}
-							>
-								{button.content}
-							</Link>
-						</>
-					))}
-				</nav>
-			</div>
+						<MobileProfile />
+
+						{navButtons.map((button) => (
+							<>
+								{button.content === '프로필 설정' && <Divider />}
+								<Link
+									onClick={handleToggleMenu}
+									key={button.content}
+									href={button.herf}
+									className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
+										'text-primary-900 button2-semibold': button.isActive,
+									})}
+								>
+									{button.content}
+								</Link>
+							</>
+						))}
+					</nav>
+				</div>
+			)}
 		</>
 	);
 }
