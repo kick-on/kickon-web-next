@@ -1,5 +1,7 @@
 import CategoryTab from '@/components/common/category-tab/category-tab';
+import EmptyState from '@/components/common/category-tab/empty-state';
 import ComponentFrame from '@/components/common/component-frame';
+import { Suspense } from 'react';
 
 export default async function Page({
 	searchParams,
@@ -14,7 +16,9 @@ export default async function Page({
 
 	return (
 		<ComponentFrame className="@mobile:mb-[80px]" isMain={true}>
-			<CategoryTab mode="news" q={q} type={type} id={id} page={page} />
+			<Suspense fallback={<EmptyState isNews={true} />}>
+				<CategoryTab mode="news" q={q} type={type} id={id} page={page} />
+			</Suspense>
 		</ComponentFrame>
 	);
 }
