@@ -11,7 +11,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 		>
 			<LeftSide />
 			<main className="flex flex-col items-center gap-4">
-				<div className="relative @mobile:w-dvw">
+				<div className="relative @mobile:w-dvw @mobile:px-4">
 					{children}
 					<FloatingWritingButton />
 				</div>
