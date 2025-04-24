@@ -1,6 +1,7 @@
 import MostReadNewsList from './most-read-news-list/most-read-news-list';
 import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import Profile from './profile';
+import { Suspense } from 'react';
 
 export default async function RightSide() {
 	const { isMobile } = getServerDeviceType();
@@ -9,7 +10,9 @@ export default async function RightSide() {
 
 	return (
 		<aside className="tablet:hidden flex flex-col gap-4 relative">
-			<Profile />
+			<Suspense>
+				<Profile />
+			</Suspense>
 			<MostReadNewsList />
 		</aside>
 	);

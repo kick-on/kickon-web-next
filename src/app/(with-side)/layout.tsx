@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, Suspense } from 'react';
 import LeftSide from '@/components/layouts/with-side/left-side';
 import RightSide from '@/components/layouts/with-side/right-side';
 import FloatingWritingButton from '@/components/layouts/with-side/floating-writing-button';
@@ -13,7 +13,9 @@ export default function Layout({ children }: { children: ReactNode }) {
 			<main className="flex flex-col items-center gap-4">
 				<div className="relative @mobile:w-dvw @mobile:px-4">
 					{children}
-					<FloatingWritingButton />
+					<Suspense>
+						<FloatingWritingButton />
+					</Suspense>
 				</div>
 			</main>
 			<RightSide />
