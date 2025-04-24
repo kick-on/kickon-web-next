@@ -50,7 +50,7 @@ export default function Home() {
 	return (
 		<div className="flex flex-col gap-8">
 			<div className="flex flex-col gap-4">
-				{!proceedingGames ? (
+				{/* {!proceedingGames ? (
 					<div className="w-[41.75rem] bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
 						<FetchingFailedCard
 							onClick={() => getGamesByStatus('proceeding')}
@@ -91,7 +91,7 @@ export default function Home() {
 							{...game}
 						/>
 					))
-				)}
+				)} */}
 			</div>
 			<RecommendedContent
 				mode={'news'}

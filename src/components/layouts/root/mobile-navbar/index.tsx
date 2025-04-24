@@ -40,7 +40,7 @@ export default function MobileNavbar() {
 	}, [isBgVisible, isMenuOpen]);
 
 	useEffect(() => {
-		if (!sideBarRef.current) return;
+		if (!isBgVisible) return;
 
 		const handleClickOutside = (event: MouseEvent) => {
 			if (!sideBarRef.current.contains(event.target as Node)) {
@@ -54,7 +54,7 @@ export default function MobileNavbar() {
 			document.removeEventListener('click', handleClickOutside);
 			document.body.style.overflow = '';
 		};
-	}, [handleToggleMenu]);
+	}, [handleToggleMenu, isBgVisible]);
 
 	return (
 		<>
@@ -70,55 +70,53 @@ export default function MobileNavbar() {
 				</div>
 			</header>
 
-			{isBgVisible && (
-				<div
+			<div
+				className={clsx(
+					'fixed z-40 top-0 left-0 w-full h-full transition-colors',
+					isMenuOpen ? 'bg-black/40' : 'bg-transparent',
+					isBgVisible ? 'visible' : 'hidden -z-10',
+				)}
+			>
+				<nav
+					ref={sideBarRef}
 					className={clsx(
-						'fixed z-40 top-0 left-0 w-full h-full transition-colors',
-						isMenuOpen ? 'bg-black/40' : 'bg-transparent',
-						isBgVisible ? 'visible' : 'hidden',
-					)}
-				>
-					<nav
-						ref={sideBarRef}
-						className={clsx(
-							`fixed top-0 left-0 z-50 w-[15.9375rem] h-full flex flex-col
+						`fixed top-0 left-0 z-50 w-[15.9375rem] h-full flex flex-col
 						body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
 
-							!isMenuOpen ? '-translate-x-full' : '',
-						)}
-					>
-						<button onClick={handleToggleMenu} className="mt-4 ml-4 w-fit brightness-0">
-							<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
-						</button>
+						!isMenuOpen ? '-translate-x-full' : '',
+					)}
+				>
+					<button onClick={handleToggleMenu} className="mt-4 ml-4 w-fit brightness-0">
+						<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
+					</button>
 
-						<MobileProfile />
+					<MobileProfile />
 
-						{navButtons.map((button) => (
-							<Link
-								onClick={handleToggleMenu}
-								key={button.content}
-								href={button.herf}
-								className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
-									'text-primary-900 button2-semibold': button.isActive,
-								})}
-							>
-								{button.content}
-							</Link>
-						))}
-
-						<Divider />
+					{navButtons.map((button) => (
 						<Link
 							onClick={handleToggleMenu}
-							href={'/profile-setting'}
+							key={button.content}
+							href={button.herf}
 							className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
-								'text-primary-900 button2-semibold': pathname === '/profile-setting',
+								'text-primary-900 button2-semibold': button.isActive,
 							})}
 						>
-							프로필 설정
+							{button.content}
 						</Link>
-					</nav>
-				</div>
-			)}
+					))}
+
+					<Divider />
+					<Link
+						onClick={handleToggleMenu}
+						href={'/profile-setting'}
+						className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
+							'text-primary-900 button2-semibold': pathname === '/profile-setting',
+						})}
+					>
+						프로필 설정
+					</Link>
+				</nav>
+			</div>
 		</>
 	);
 }
