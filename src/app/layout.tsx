@@ -27,15 +27,17 @@ const pretendard = localFont({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
-			<body className="@container">
-				<Suspense>
-					<LoginPortal />
-					<Navbar />
-					<Banner />
-					<div className="pb-[9.375rem]">{children}</div>
-					<Footer />
-					<MinWidth />
-				</Suspense>
+			<body>
+				<div className="@container @mobile:mt-16">
+					<Suspense>
+						<LoginPortal />
+						<Navbar />
+						<Banner />
+						<div className="pb-[9.375rem]">{children}</div>
+						<Footer />
+						<MinWidth />
+					</Suspense>
+				</div>
 			</body>
 		</html>
 	);

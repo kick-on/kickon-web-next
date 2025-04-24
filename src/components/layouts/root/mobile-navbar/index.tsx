@@ -58,7 +58,7 @@ export default function MobileNavbar() {
 
 	return (
 		<>
-			<header className="sticky top-0 z-40 transition-colors ease-out">
+			<header className="fixed w-full top-0 z-40 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
 					<button onClick={handleToggleMenu} className={`w-fit ${isHome ? '' : 'invert'}`}>
 						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />
