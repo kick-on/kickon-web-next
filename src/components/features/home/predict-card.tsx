@@ -32,7 +32,9 @@ export default function PredictCard({
 	return (
 		<div
 			className={clsx(
-				'w-[41.75rem] min-h-[11rem] bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] gap-[0.625rem] transition-all',
+				`@mobile:grow @mobile:w-auto @mobile:rounded-lg @mobile:py-4 @mobile:mx-4
+				w-[41.75rem] min-h-[11rem] bg-black-000 rounded-[0.625rem]
+				flex flex-col px-4 py-[1.375rem] gap-2.5 transition-all`,
 				{ 'text-black-700': !isGambleInProgress && !isGameInProgress },
 			)}
 		>
@@ -70,14 +72,20 @@ export default function PredictCard({
 						</div>
 					)}
 				</div>
-				{isGambleInProgress && <div className="caption1-regular text-black-700">마감 {timeBefore}</div>}
+				<div className="@mobile:block hidden caption1-regular text-black-600">
+					{startDate.split(' ')} {startTime}
+				</div>
+				{isGambleInProgress && <div className="@mobile:hidden caption1-regular text-black-700">마감 {timeBefore}</div>}
 			</div>
 			<div className="flex gap-1.5 items-start">
 				<div
-					className={clsx('w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]', {
-						'border-black-200': isGambleInProgress || isGameInProgress,
-						'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
-					})}
+					className={clsx(
+						'@mobile:hidden w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]',
+						{
+							'border-black-200': isGambleInProgress || isGameInProgress,
+							'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
+						},
+					)}
 				>
 					<div className="body7-medium">
 						{isGambleInProgress
@@ -93,6 +101,7 @@ export default function PredictCard({
 					<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startDate}</div>
 					<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startTime}</div>
 				</div>
+
 				{isGambleInProgress ? (
 					<InProgress
 						pk={pk}
