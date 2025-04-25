@@ -32,13 +32,15 @@ export default function ButtonTypeInProgress({
 				? 'center'
 				: 'right';
 
-	const selectedButtonClass = (side) =>
-		isCompleted
-			? `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
-		${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`
-			: `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+	const clickedButtonClass = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] before:bg-primary-50 before:shadow-predict-button-active before:transition-all
+		${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`;
+
+	const completedButtonClass = (
+		side,
+	) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
 		${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`;
 
 	const handleTeamButtonClick = async (button: SelectedButton) => {
@@ -146,7 +148,8 @@ export default function ButtonTypeInProgress({
 				className={clsx('relative h-full flex flex-col justify-center', isClicked ? 'pt-5 pb-4' : 'min-h-[4.8125rem]', {
 					'px-3 pr-3 rounded-l-md': isLeft,
 					'px-3 pl-3 text-right rounded-r-md': !isLeft,
-					[selectedButtonClass(side)]: (isClicked || isCompleted) && selectedButton === side,
+					[clickedButtonClass(side)]: isClicked && selectedButton === side,
+					[completedButtonClass(side)]: isCompleted && (isLeft ? leftScore > rightScore : leftScore < rightScore),
 				})}
 			>
 				<div className={clsx('flex gap-1.5 items-center', { 'flex-row-reverse': !isLeft })}>
@@ -203,7 +206,8 @@ export default function ButtonTypeInProgress({
 						'relative h-full flex flex-col justify-center items-center border-x border-black-200',
 						isClicked ? 'pt-5 pb-17' : 'min-h-[4.8125rem]',
 						{
-							[selectedButtonClass('center')]: (isClicked || isCompleted) && selectedButton === 'center',
+							[clickedButtonClass('center')]: isClicked && selectedButton === 'center',
+							[completedButtonClass('center')]: isCompleted && leftScore === rightScore,
 						},
 					)}
 				>
