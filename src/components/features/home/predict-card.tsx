@@ -5,6 +5,7 @@ import { GameDto } from '@/services/apis/user-game-gamble/dto';
 import { formatGameStartDate } from '@/lib/utils/formatGameStartDate';
 import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipations';
 import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
+import ButtonTypeInProgress from './button-type-in-progress';
 
 export default function PredictCard({
 	pk,
@@ -29,12 +30,15 @@ export default function PredictCard({
 	const isGameCanceled = gameStatus === 'CANCELED' || gameStatus === 'POSTPONED';
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
 
+	const isMobile = true;
+
 	return (
 		<div
+			// TODO: KO-271 병합 후 @mobile:mx-4 제거
 			className={clsx(
 				`@mobile:grow @mobile:w-auto @mobile:rounded-lg @mobile:py-4 @mobile:mx-4
 				w-[41.75rem] min-h-[11rem] bg-black-000 rounded-[0.625rem]
-				flex flex-col px-4 py-[1.375rem] gap-2.5 transition-all`,
+				flex flex-col px-4 py-[1.375rem] gap-2.5 transition-all overflow-hidden`,
 				{ 'text-black-700': !isGambleInProgress && !isGameInProgress },
 			)}
 		>
@@ -103,25 +107,35 @@ export default function PredictCard({
 				</div>
 
 				{isGambleInProgress ? (
-					<InProgress
-						pk={pk}
-						homeTeam={homeTeam}
-						awayTeam={awayTeam}
-						gambleResult={gambleResult}
-						myGambleResult={myGambleResult}
-						refetchGames={refetchGames}
-					/>
-				) : (
-					<Closed
-						homeTeam={homeTeam}
-						awayTeam={awayTeam}
-						homeScore={homeScore}
-						awayScore={awayScore}
-						gambleResult={gambleResult}
-						isGameInProgress={isGameInProgress}
-						isParticipated={!!myGambleResult}
-					/>
-				)}
+					isMobile ? (
+						<ButtonTypeInProgress
+							pk={pk}
+							homeTeam={homeTeam}
+							awayTeam={awayTeam}
+							gambleResult={gambleResult}
+							myGambleResult={myGambleResult}
+							refetchGames={refetchGames}
+						/>
+					) : (
+						<InProgress
+							pk={pk}
+							homeTeam={homeTeam}
+							awayTeam={awayTeam}
+							gambleResult={gambleResult}
+							myGambleResult={myGambleResult}
+							refetchGames={refetchGames}
+						/>
+					)
+				) : // <Closed
+				// 	homeTeam={homeTeam}
+				// 	awayTeam={awayTeam}
+				// 	homeScore={homeScore}
+				// 	awayScore={awayScore}
+				// 	gambleResult={gambleResult}
+				// 	isGameInProgress={isGameInProgress}
+				// 	isParticipated={!!myGambleResult}
+				// />
+				null}
 			</div>
 			<div className="caption1-regular text-black-700 text-right">{participations}명 참여</div>
 		</div>

@@ -28,6 +28,7 @@
 	--shadow-floating-button: 0px 4px 12px 0px rgba(0, 0, 0, 0.2);
 	--shadow-predict-button: 0px 4px 10px 0px rgba(0, 0, 0, 0.1);
 	--shadow-predict-button-active: 0px 2px 10px 0px rgba(217, 25, 32, 0.4);
+	--shadow-score-button-active: 0px 2px 6px 0px rgba(217, 25, 32, 0.4);
 	--shadow-closed-button-active: 0 0 0 0.5px var(--color-primary-200);
 	--shadow-kick-button: 0px 2px 10px 0px rgba(0, 0, 0, 0.2);
 	--shadow-kick-button-active: 0px 2px 10px 0px rgba(217, 25, 32, 0.2);

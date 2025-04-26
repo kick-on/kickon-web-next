@@ -6,6 +6,7 @@ import { GameDto, PatchGameGambleRequest, PostGameGambleRequest } from '@/servic
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useState } from 'react';
+import ScoreButton from './score-button';
 
 type SelectedButton = 'none' | 'left' | 'center' | 'right';
 
@@ -184,7 +185,7 @@ export default function ButtonTypeInProgress({
 	};
 
 	return (
-		<div className="flex flex-col gap-4 grow cursor-pointer mt-[0.3125rem]">
+		<div className="flex flex-col grow cursor-pointer mt-[0.3125rem]">
 			<div
 				className="relative w-full h-fit grid grid-cols-3 button5-semibold
         border border-black-200 rounded-md shadow-predict-button"
@@ -212,16 +213,21 @@ export default function ButtonTypeInProgress({
 				{renderTeamButton('right')}
 			</div>
 
-			{/* 선택 완료 버튼 */}
 			{isClicked && (
-				<button
-					onClick={handleCompleteButtonClick}
-					className="w-full h-[2.125rem] border border-black-200 rounded-md
+				<div className="relative">
+					{/* score 버튼 */}
+					<ScoreButton />
+
+					{/* 선택 완료 버튼 */}
+					<button
+						onClick={handleCompleteButtonClick}
+						className="w-full h-[2.125rem] mt-22 border border-black-200 rounded-md
 						flex justify-center items-center button5-medium shadow-predict-button transition-colors
 						hover:bg-primary-700 hover:border-0 hover:shadow-kick-button-active active:bg-primary-900 active:text-white"
-				>
-					선택 완료
-				</button>
+					>
+						선택 완료
+					</button>
+				</div>
 			)}
 		</div>
 	);
