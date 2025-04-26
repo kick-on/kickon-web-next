@@ -9,6 +9,17 @@ import { useState } from 'react';
 
 type SelectedButton = 'none' | 'left' | 'center' | 'right';
 
+const clickedButtonClass = (side) =>
+	`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+  before:content-[''] before:bg-primary-50 before:shadow-predict-button-active before:transition-all
+  ${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`;
+
+const completedButtonClass = (
+	side,
+) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+  before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
+  ${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`;
+
 export default function ButtonTypeInProgress({
 	pk,
 	homeTeam,
@@ -31,17 +42,6 @@ export default function ButtonTypeInProgress({
 			: leftScore === rightScore
 				? 'center'
 				: 'right';
-
-	const clickedButtonClass = (side) =>
-		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] before:bg-primary-50 before:shadow-predict-button-active before:transition-all
-		${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`;
-
-	const completedButtonClass = (
-		side,
-	) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
-		${side === 'left' && 'before:rounded-l-md'} ${side === 'right' && 'before:rounded-r-md'}`;
 
 	const handleTeamButtonClick = async (button: SelectedButton) => {
 		// 로그인 하지 않은 경우 사용 제한
@@ -135,7 +135,7 @@ export default function ButtonTypeInProgress({
 
 	const renderTeamButton = (side: 'left' | 'right') => {
 		const isLeft = side === 'left';
-		const isCurrentButtonClicked = selectedButton === side;
+		const isCurrentScoreActive = selectedButton === side || selectedButton === 'center';
 
 		const teamName = isLeft ? homeTeam.nameKr || homeTeam.nameEn : awayTeam.nameKr || awayTeam.nameEn;
 		const teamLogoUrl = isLeft ? homeTeam.logoUrl : awayTeam.logoUrl;
@@ -146,13 +146,13 @@ export default function ButtonTypeInProgress({
 			<div
 				onClick={() => handleTeamButtonClick(side)}
 				className={clsx('relative h-full flex flex-col justify-center', isClicked ? 'pt-5 pb-4' : 'min-h-[4.8125rem]', {
-					'px-3 pr-3 rounded-l-md': isLeft,
-					'px-3 pl-3 text-right rounded-r-md': !isLeft,
+					'px-3 rounded-l-md': isLeft,
+					'px-3 text-right rounded-r-md': !isLeft,
 					[clickedButtonClass(side)]: isClicked && selectedButton === side,
 					[completedButtonClass(side)]: isCompleted && (isLeft ? leftScore > rightScore : leftScore < rightScore),
 				})}
 			>
-				<div className={clsx('flex gap-1.5 items-center', { 'flex-row-reverse': !isLeft })}>
+				<div className={clsx('flex gap-1.5 items-center', { 'flex-row-reverse': !isLeft, 'mb-13': isClicked })}>
 					<Image
 						className="relative z-20 w-4 h-4 object-contain"
 						width={16}
@@ -160,28 +160,21 @@ export default function ButtonTypeInProgress({
 						src={teamLogoUrl}
 						alt={`${teamName} 로고 이미지`}
 					/>
-					<div className="grow">
-						<div
-							className={clsx(
-								'relative z-20 max-w-full min-w-0 whitespace-pre-line',
-								!teamName.split(' ')[1] || Math.abs(teamName.split(' ')[0].length - teamName.split(' ')[1].length) > 3
-									? 'break-words @min-[379px]:break-keep'
-									: 'break-keep',
-							)}
-						>
-							{teamName}
+					<div className="grow overflow-hidden">
+						<div className="relative z-20 max-w-full min-w-0 max-h-8 whitespace-pre-line line-clamp-2 truncate">
+							{isLeft ? '마드리오 어쩌구저쩌' : 'SC 프라이부르크크'}
 						</div>
 						{isClicked && <div className="relative z-20 caption2-medium text-black-800">{`${ratio}%`}</div>}
 					</div>
 				</div>
 				{isClicked && (
 					<div
-						className={clsx('relative z-20 mt-4 mx-auto w-13 h-9 flex rounded-md', {
+						className={clsx('absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-13 h-9 flex rounded-md', {
 							'bg-black-500': isLeft ? leftScore < rightScore : leftScore > rightScore,
 							'bg-primary-900': isLeft ? leftScore >= rightScore : leftScore <= rightScore,
 						})}
 					>
-						<div className={clsx('m-auto px-1 text-black-000 body1-bold', { 'bg-black-900': isCurrentButtonClicked })}>
+						<div className={clsx('m-auto px-1 text-black-000 body1-bold', { 'bg-black-900': isCurrentScoreActive })}>
 							{score}
 						</div>
 					</div>
