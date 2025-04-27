@@ -65,7 +65,7 @@ export default function Page() {
 	useEffect(() => {
 		const handler = setTimeout(async () => {
 			try {
-				const response = await getTeam(null, searchTerm);
+				const response = await getTeam(undefined, searchTerm);
 
 				const teamData = response.data.map((team) => ({
 					id: team.pk,
