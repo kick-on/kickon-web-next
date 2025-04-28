@@ -29,9 +29,25 @@ export default function PredictCard({
 	const isGameInProgress = type === 'finished' && (gameStatus === 'PENDING' || gameStatus === 'PROCEEDING'); // 경기 중
 	const isGameCanceled = gameStatus === 'CANCELED' || gameStatus === 'POSTPONED';
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
+	const gameStatusContent = (() => {
+		if (isGambleInProgress) return '경기 전';
+		if (isGameInProgress) return '경기 중';
+		if (isGameCompleted) return '풀타임';
+		if (isGameCanceled) return '경기 취소';
+		return '기타';
+	})();
 
 	const isMobile = true;
 	const isTablet = true;
+
+	const buttonTypeInProgressProps = {
+		startDate,
+		startTime,
+		isGambleInProgress,
+		isGameInProgress,
+		isGameCanceled,
+		gameStatusContent,
+	};
 
 	return (
 		<div
@@ -83,30 +99,22 @@ export default function PredictCard({
 				{isGambleInProgress && <div className="@mobile:hidden caption1-regular text-black-700">마감 {timeBefore}</div>}
 			</div>
 
-			<div className="flex gap-[0.3125rem] items-center">
-				<div
-					className={clsx(
-						'@mobile:hidden -ml-1 w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]',
-						{
-							'border-black-200 bg-black-000': isGambleInProgress || isGameInProgress,
-							'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
-						},
-					)}
-				>
-					<div className="body7-medium">
-						{isGambleInProgress
-							? '경기 전'
-							: isGameInProgress
-								? '경기 중'
-								: isGameCompleted
-									? '풀타임'
-									: isGameCanceled
-										? '경기 취소'
-										: '기타'}
+			<div className="flex gap-1.5 items-start">
+				{!(isMobile || isTablet) && (
+					<div
+						className={clsx(
+							'-ml-1 w-[3.375rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]',
+							{
+								'border-black-200 bg-black-000': isGambleInProgress || isGameInProgress,
+								'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
+							},
+						)}
+					>
+						<div className="body7-medium">{gameStatusContent}</div>
+						<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startDate}</div>
+						<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startTime}</div>
 					</div>
-					<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startDate}</div>
-					<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startTime}</div>
-				</div>
+				)}
 
 				{isGambleInProgress ? (
 					isMobile ? (
@@ -116,6 +124,7 @@ export default function PredictCard({
 							awayTeam={awayTeam}
 							gambleResult={gambleResult}
 							myGambleResult={myGambleResult}
+							{...buttonTypeInProgressProps}
 							refetchGames={refetchGames}
 						/>
 					) : (

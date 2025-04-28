@@ -219,7 +219,7 @@ export default function InProgress({
 	};
 
 	return (
-		<div className="flex flex-col gap-4 w-[36rem] cursor-pointer">
+		<div className="flex flex-col gap-4 w-[36.1875rem] ml-auto cursor-pointer">
 			<div
 				className={clsx(
 					'relative w-full h-[4.625rem] grid grid-cols-3 border border-black-200 rounded-[0.625rem] shadow-predict-button',

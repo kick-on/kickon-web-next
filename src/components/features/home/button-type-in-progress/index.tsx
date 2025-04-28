@@ -27,14 +27,30 @@ export default function ButtonTypeInProgress({
 	awayTeam,
 	gambleResult,
 	myGambleResult,
+	startDate,
+	startTime,
+	isGambleInProgress,
+	isGameInProgress,
+	isGameCanceled,
+	gameStatusContent,
 	refetchGames,
-}: Pick<GameDto, 'pk' | 'homeTeam' | 'awayTeam' | 'gambleResult' | 'myGambleResult'> & { refetchGames: () => void }) {
+}: Pick<GameDto, 'pk' | 'homeTeam' | 'awayTeam' | 'gambleResult' | 'myGambleResult'> & {
+	startDate: string;
+	startTime: string;
+	isGambleInProgress: boolean;
+	isGameInProgress: boolean;
+	isGameCanceled: boolean;
+	gameStatusContent: string;
+	refetchGames: () => void;
+}) {
 	const [isClicked, setIsClicked] = useState(false);
 	const [isCompleted, setIsCompleted] = useState(!!myGambleResult);
 	const [isEditing, setIsEditing] = useState(false);
 
 	const [leftScore, setLeftScore] = useState(myGambleResult?.homeScore || 0);
 	const [rightScore, setRightScore] = useState(myGambleResult?.awayScore || 0);
+
+	const isTablet = true;
 
 	const selectedButton = !isClicked
 		? 'none'
@@ -146,34 +162,44 @@ export default function ButtonTypeInProgress({
 		return (
 			<div
 				onClick={() => handleTeamButtonClick(side)}
-				className={clsx('relative h-full flex flex-col justify-center', isClicked ? 'pt-5 pb-4' : 'min-h-[4.8125rem]', {
-					'px-3 rounded-l-md': isLeft,
-					'px-3 text-right rounded-r-md': !isLeft,
-					[clickedButtonClass(side)]: isClicked && selectedButton === side,
-					[completedButtonClass(side)]: isCompleted && (isLeft ? leftScore > rightScore : leftScore < rightScore),
-				})}
+				className={clsx(
+					'px-[1.875rem] @mobile:px-3 relative h-full flex flex-col justify-center',
+					isClicked ? 'pt-5 pb-4' : 'min-h-[4.8125rem]',
+					{
+						'rounded-l-md': isLeft,
+						'text-right rounded-r-md': !isLeft,
+						[clickedButtonClass(side)]: isClicked && selectedButton === side,
+						[completedButtonClass(side)]: isCompleted && (isLeft ? leftScore > rightScore : leftScore < rightScore),
+					},
+				)}
 			>
 				<div className={clsx('flex gap-1.5 items-center', { 'flex-row-reverse': !isLeft, 'mb-13': isClicked })}>
 					<Image
-						className="relative z-20 w-4 h-4 object-contain"
-						width={16}
-						height={16}
+						className="relative z-20 @mobile:w-4 @mobile:h-4 w-6 h-6 object-contain"
+						width={isTablet ? 24 : 16}
+						height={isTablet ? 24 : 16}
 						src={teamLogoUrl}
 						alt={`${teamName} 로고 이미지`}
 					/>
 					<div className="grow overflow-hidden">
 						<div className="relative z-20 max-w-full min-w-0 max-h-8 whitespace-pre-line line-clamp-2 truncate">
-							{isLeft ? '마드리오 어쩌구저쩌' : 'SC 프라이부르크크'}
+							{teamName}
 						</div>
-						{isClicked && <div className="relative z-20 caption2-medium text-black-800">{`${ratio}%`}</div>}
+						{isClicked && (
+							<div className="relative z-20 button5-medium text-black-800 @mobile:text-10">{`${ratio}%`}</div>
+						)}
 					</div>
 				</div>
 				{isClicked && (
 					<div
-						className={clsx('absolute bottom-4 left-1/2 -translate-x-1/2 z-20 w-13 h-9 flex rounded-md', {
-							'bg-black-500': isLeft ? leftScore < rightScore : leftScore > rightScore,
-							'bg-primary-900': isLeft ? leftScore >= rightScore : leftScore <= rightScore,
-						})}
+						className={clsx(
+							'absolute bottom-4 @mobile:left-1/2 @mobile:-translate-x-1/2 z-20 w-13 h-9 flex rounded-md',
+							isLeft ? 'left-[2.6875rem]' : 'right-[2.6875rem]',
+							{
+								'bg-black-500': isLeft ? leftScore < rightScore : leftScore > rightScore,
+								'bg-primary-900': isLeft ? leftScore >= rightScore : leftScore <= rightScore,
+							},
+						)}
 					>
 						<div className={clsx('m-auto px-1 text-black-000 body1-bold', { 'bg-black-900': isCurrentScoreActive })}>
 							{score}
@@ -185,10 +211,27 @@ export default function ButtonTypeInProgress({
 	};
 
 	return (
-		<div className="flex flex-col grow cursor-pointer">
+		<div className="grid grid-cols-[3.5625rem_1fr] grid-rows-[1fr_auto] w-full">
+			{isTablet && (
+				<div
+					className={clsx(
+						'relative z-20 -ml-1 w-[3.375rem] h-full flex flex-col justify-center items-center border rounded-[0.625rem] mb-auto',
+						{
+							'border-black-200 bg-black-000': isGambleInProgress || isGameInProgress,
+							'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
+						},
+					)}
+				>
+					<div className="body7-medium">{gameStatusContent}</div>
+					<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startDate}</div>
+					<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startTime}</div>
+				</div>
+			)}
+
+			{/* <div className="flex flex-col grow cursor-pointer"> */}
 			<div
-				className="relative w-full h-fit grid grid-cols-3 button5-semibold
-        border border-black-200 rounded-md shadow-predict-button"
+				className="relative w-full h-fit grid grid-cols-3 button4-semibold 
+        border border-black-200 rounded-md shadow-predict-button @mobile:text-12"
 			>
 				{/* 왼쪽 팀 */}
 				{renderTeamButton('left')}
@@ -206,12 +249,16 @@ export default function ButtonTypeInProgress({
 					)}
 				>
 					<div className="relative z-20">무승부</div>
-					{isClicked && <div className="relative z-20 caption2-medium text-black-800">{gambleResult.draw}%</div>}
+					{isClicked && (
+						<div className="relative z-20 button5-medium text-black-800 @mobile:text-10">{gambleResult.draw}%</div>
+					)}
 				</div>
 
 				{/* 오른쪽 팀 */}
 				{renderTeamButton('right')}
 			</div>
+
+			<div></div>
 
 			{isClicked && (
 				<div className="relative">
@@ -230,5 +277,6 @@ export default function ButtonTypeInProgress({
 				</div>
 			)}
 		</div>
+		// </div>
 	);
 }

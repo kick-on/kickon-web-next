@@ -13,7 +13,7 @@ export default function ScoreButton() {
         @mobile:-left-[0.9375rem] @mobile:w-[calc(100vw-16px)] @mobile:pl-[0.9375rem] @mobile:pr-8"
 		>
 			<div
-				className="relative z-10 flex w-fit rounded-md
+				className="relative z-10 flex w-fit rounded-md overflow-hidden
         bg-black-000 border border-black-200 shadow-predict-button"
 				onTouchStart={() => setIsScrollVisible(true)}
 				onTouchEnd={() => setTimeout(() => setIsScrollVisible(false), 500)}
