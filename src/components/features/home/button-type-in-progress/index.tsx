@@ -185,7 +185,7 @@ export default function ButtonTypeInProgress({
 	};
 
 	return (
-		<div className="flex flex-col grow cursor-pointer mt-[0.3125rem]">
+		<div className="flex flex-col grow cursor-pointer">
 			<div
 				className="relative w-full h-fit grid grid-cols-3 button5-semibold
         border border-black-200 rounded-md shadow-predict-button"

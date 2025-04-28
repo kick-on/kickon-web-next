@@ -31,6 +31,7 @@ export default function PredictCard({
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
 
 	const isMobile = true;
+	const isTablet = true;
 
 	return (
 		<div
@@ -81,12 +82,13 @@ export default function PredictCard({
 				</div>
 				{isGambleInProgress && <div className="@mobile:hidden caption1-regular text-black-700">마감 {timeBefore}</div>}
 			</div>
-			<div className="flex gap-1.5 items-start">
+
+			<div className="flex gap-[0.3125rem] items-center">
 				<div
 					className={clsx(
-						'@mobile:hidden w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]',
+						'@mobile:hidden -ml-1 w-[3.5rem] py-3 flex flex-col justify-center items-center border rounded-[0.625rem]',
 						{
-							'border-black-200': isGambleInProgress || isGameInProgress,
+							'border-black-200 bg-black-000': isGambleInProgress || isGameInProgress,
 							'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
 						},
 					)}
