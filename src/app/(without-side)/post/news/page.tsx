@@ -212,7 +212,10 @@ export default function Page() {
 						objectFit={isPortrait ? 'contain' : 'cover'} // 세로면 contain, 아니면 cover
 						className="rounded-[10px]"
 					/>
-					<button onClick={handleRemoveImage} className="absolute top-2 right-2 bg-black-200 p-1 rounded-full">
+					<button
+						onClick={handleRemoveImage}
+						className={clsx('absolute top-2 right-2 p-1 rounded-full', isPortrait ? 'bg-black-300' : 'bg-black-200')}
+					>
 						<Image src="/x.svg" alt="삭제 버튼" width={18} height={18} />
 					</button>
 				</div>
