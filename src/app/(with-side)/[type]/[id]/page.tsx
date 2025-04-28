@@ -69,12 +69,25 @@ const DetailPage = () => {
 			router.replace('/404');
 			return;
 		}
-
 		const getDetailContentData = async () => {
 			try {
 				const contentData = await getDetailContent(type, id);
+
+				// 내 조회가 반영되기 전 서버 조회수
+				const serverViewCount = contentData.data.views;
+
+				// shouldCallApi -> true: 글을 처음 본 상태, 조회수 +1, false: 이미 본 적 있음
+				const clientViewCount = shouldCallApi ? serverViewCount + 1 : serverViewCount;
+
+				setContents({
+					...contentData,
+					data: {
+						...contentData.data,
+						views: clientViewCount, // 수정한 조회수만 덮어씀
+					},
+				});
+
 				setTotalReplies(contentData.data.replies);
-				setContents(contentData);
 				console.log('상세조회', contentData);
 			} catch (error) {
 				console.error('데이터 불러오기 실패:', error);
@@ -84,7 +97,7 @@ const DetailPage = () => {
 		};
 
 		getDetailContentData();
-	}, [type, id, currentPage, router, isNews]);
+	}, [type, id, currentPage, router, isNews, shouldCallApi]);
 
 	const viewSent = useRef(false);
 
