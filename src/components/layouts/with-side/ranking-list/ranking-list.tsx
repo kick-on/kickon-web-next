@@ -26,7 +26,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 
 	// 렌더링 초기 currentUserInfo가 null인 문제 해결
 	useEffect(() => {
-		if (currentUserInfo) {
+		if (currentUserInfo && currentUserInfo.league) {
 			setLeague({
 				pk: currentUserInfo?.league?.pk || 1,
 				nameKr: currentUserInfo?.league?.nameKr || '프리미어리그',

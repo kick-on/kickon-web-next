@@ -17,13 +17,13 @@ export default function Footer() {
 		return (
 			<div className={`${bgColor} h-[13.125rem] flex items-center`}>
 				<div
-					className={`${textColor} flex items-start button4-medium max-w-[85rem]
+					className={`${textColor} flex items-start max-w-[85rem]
 						gap-[3.625rem] mx-auto @mobile:flex-col @mobile:gap-6 @mobile:pl-6 @mobile:ml-0`}
 				>
 					<Image width={140} height={22} src={src} alt="킥온" />
 
 					<div className="flex flex-col gap-4">
-						<div className="flex gap-4">
+						<div className="flex gap-4 button4-medium">
 							<span
 								className="cursor-pointer"
 								onClick={() => {
@@ -47,7 +47,7 @@ export default function Footer() {
 							</span>
 						</div>
 
-						<div className="flex gap-4 tablet:flex-col">
+						<div className="flex gap-2.5 tablet:flex-col body5-regular @mobile:text-13 @mobile:leading-5">
 							<span>
 								Copyright 2025. Kick-on {isMobile && <br />}All pictures cannot be copied {isMobile && <br />}without
 								permission
