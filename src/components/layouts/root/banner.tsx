@@ -11,18 +11,12 @@ import { BannerDto } from '@/services/apis/event-board/dto';
 import { useEffect, useState } from 'react';
 import { getBanner } from '@/services/apis/event-board';
 import clsx from 'clsx';
-import { UAParser } from 'ua-parser-js';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Banner() {
 	const [banners, setBanners] = useState<BannerDto[]>([]);
-	const [isMobile, setIsMobile] = useState(false);
-
+	const isMobile = useIsMobile();
 	const pathname = usePathname();
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
 
 	useEffect(() => {
 		const getBanners = async () => {
@@ -65,7 +59,7 @@ export default function Banner() {
 				}}
 				loop
 				className={clsx(
-					`relative w-full h-[clamp(18.6875rem,35vw,35rem)] @mobile:h-[12.8125rem]`,
+					`relative w-full h-[clamp(18.6875rem,35vw,35rem)] @mobile:h-[12.8125rem] @mobile:mt-16`,
 					isMobile ? 'mobile-banner-swiper' : 'banner-swiper',
 				)}
 			>

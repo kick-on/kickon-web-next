@@ -1,20 +1,19 @@
 'use client';
 
+import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { UAParser } from 'ua-parser-js';
 
 export default function LoginButton() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const { openLoginModal } = useIsLoginModalOpenStore();
-
 	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
-	const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
+	const isMobile = useIsMobile();
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -29,11 +28,6 @@ export default function LoginButton() {
 		}
 		openLoginModal();
 	};
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -56,18 +50,20 @@ export default function LoginButton() {
 	return (
 		<>
 			{isLoggedIn ? (
-				<button
-					onClick={() => router.push('/profile-setting')}
-					className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
-				>
-					<Image
-						src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
-						alt="프로필 이미지"
-						width={isMobile ? 28 : 38}
-						height={isMobile ? 28 : 38}
-						className="rounded-full object-cover"
-					/>
-				</button>
+				!isMobile && (
+					<button
+						onClick={() => router.push('/profile-setting')}
+						className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
+					>
+						<Image
+							src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+							alt="프로필 이미지"
+							width={isMobile ? 28 : 38}
+							height={isMobile ? 28 : 38}
+							className="w-full h-full rounded-full object-cover"
+						/>
+					</button>
+				)
 			) : (
 				<button
 					onClick={handleLoginButtonClick}

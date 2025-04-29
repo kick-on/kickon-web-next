@@ -28,15 +28,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
-				<div className="@container @mobile:mt-16">
-					<Suspense>
-						<LoginPortal />
-						<Navbar />
+				<div className="@container">
+					<Navbar />
+					<LoginPortal />
+					<div className="@mobile:mt-16">
 						<Banner />
 						<div className="pb-[9.375rem]">{children}</div>
 						<Footer />
 						<MinWidth />
-					</Suspense>
+					</div>
 				</div>
 			</body>
 		</html>

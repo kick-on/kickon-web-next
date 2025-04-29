@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useEffect, useState } from 'react';
 import CommentInput from '@/components/features/detail/comment/comment-input';
 import CommentItem from '@/components/features/detail/comment/comment-item';

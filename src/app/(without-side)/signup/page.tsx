@@ -36,7 +36,7 @@ export default function Page() {
 		marketing: false,
 	});
 
-	const isValidNickname = !nickname && !isDuplicated;
+	const isValidNickname = nickname && !isDuplicated;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
 	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
 

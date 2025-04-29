@@ -9,7 +9,11 @@ export interface NavButtonProps {
 
 export default function NavButton({ href, content }: NavButtonProps) {
 	const pathname = usePathname();
-	const isActive = pathname.split('/').includes(content === '뉴스' ? 'news' : 'board');
+	const isActive = (() => {
+		if (content === '뉴스') return pathname.split('/').includes('news');
+		if (content === '클럽 커뮤니티') return pathname.split('/').includes('board');
+		if (content === '랭킹') return pathname.split('/').includes('ranking');
+	})();
 
 	return (
 		<Link
@@ -19,7 +23,11 @@ export default function NavButton({ href, content }: NavButtonProps) {
 				'text-black-000':
 					(pathname !== '/' && !(pathname.startsWith('/news') || pathname.startsWith('/board'))) || isActive,
 				'text-black-600':
-					(pathname.startsWith('/news') || pathname.startsWith('/board') || pathname.startsWith('/post')) && !isActive,
+					(pathname.startsWith('/news') ||
+						pathname.startsWith('/board') ||
+						pathname.startsWith('/post') ||
+						pathname.startsWith('/ranking')) &&
+					!isActive,
 			})}
 		>
 			{content}

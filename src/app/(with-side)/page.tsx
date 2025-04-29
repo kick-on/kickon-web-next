@@ -6,7 +6,7 @@ import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getGames } from '@/services/apis/user-game-gamble';
 import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
-import { useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useState } from 'react';
 
 export default function Home() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -93,11 +93,13 @@ export default function Home() {
 					))
 				)}
 			</div>
-			<RecommendedContent
-				mode={'news'}
-				teamName={currentUserInfo?.favoriteTeam?.nameKr || currentUserInfo?.favoriteTeam?.nameEn || undefined}
-			/>
-			<RecommendedContent mode={'board'} />
+			<Suspense>
+				<RecommendedContent
+					mode={'news'}
+					teamName={currentUserInfo?.favoriteTeam?.nameKr || currentUserInfo?.favoriteTeam?.nameEn || undefined}
+				/>
+				<RecommendedContent mode={'board'} />
+			</Suspense>
 		</div>
 	);
 }
