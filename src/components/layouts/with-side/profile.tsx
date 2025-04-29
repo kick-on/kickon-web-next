@@ -60,7 +60,7 @@ export default function Profile() {
 
 		// 저장된 유저 정보가 있으면 사용자 프로필 렌더링
 		if (currentUserInfo) {
-			const getExtraUserInfo = async () => {
+			const getUserPointRankingInfo = async () => {
 				const response = await getUserPointRanking();
 
 				if (typeof response === 'string') {
@@ -73,7 +73,7 @@ export default function Profile() {
 				}
 			};
 
-			getExtraUserInfo();
+			getUserPointRankingInfo();
 			setIsLoggedIn(true);
 		}
 	}, [currentUserInfo, setCurrentUserInfo]);

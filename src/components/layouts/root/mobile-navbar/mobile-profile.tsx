@@ -22,7 +22,7 @@ export default function MobileProfile() {
 
 	useEffect(() => {
 		if (currentUserInfo) {
-			const getExtraUserInfo = async () => {
+			const getUserPointRankingInfo = async () => {
 				const response = await getUserPointRanking();
 
 				if (typeof response === 'string') {
@@ -35,7 +35,7 @@ export default function MobileProfile() {
 				}
 			};
 
-			getExtraUserInfo();
+			getUserPointRankingInfo();
 		}
 	}, [currentUserInfo]);
 
