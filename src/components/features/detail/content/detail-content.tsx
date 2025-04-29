@@ -19,6 +19,8 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
+	const [isVerticalImage, setIsVerticalImage] = useState(false);
+
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 		const sanitized = DOMPurify.sanitize(data.content, {
@@ -59,7 +61,14 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 					alt="대표 이미지"
 					width={636}
 					height={322}
-					className="mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] object-cover"
+					className={`mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] ${
+						isVerticalImage ? 'object-contain bg-black-200' : 'object-cover'
+					}`}
+					onLoadingComplete={(img) => {
+						if (img.naturalHeight > img.naturalWidth) {
+							setIsVerticalImage(true);
+						}
+					}}
 				/>
 			)}
 
