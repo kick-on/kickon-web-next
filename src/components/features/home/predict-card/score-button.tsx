@@ -8,8 +8,8 @@ export default function ScoreButton() {
 
 	return (
 		<div
-			className="absolute z-10 bottom-[3.375rem] -left-[72px]
-        w-[41.625rem] pl-[72px] pb-2.5 pr-[0.9375rem] overflow-scroll no-scrollbar
+			className="absolute z-10 bottom-[3.375rem] -left-[4.8125rem]
+        w-[41.625rem] pl-[4.8125rem] pb-2.5 pr-[0.9375rem] overflow-scroll no-scrollbar
         @mobile:-left-[0.9375rem] @mobile:w-[calc(100vw-16px)] @mobile:pl-[0.9375rem] @mobile:pr-8"
 		>
 			<div

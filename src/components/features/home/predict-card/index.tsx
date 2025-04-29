@@ -1,3 +1,5 @@
+'use client';
+
 import clsx from 'clsx';
 import InProgress from '../in-progress';
 import Closed from '../closed';
@@ -11,6 +13,8 @@ import TeamButton from './team-button';
 import ScoreButton from './score-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
+import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import { useState } from 'react';
 
 export default function PredictCard({
 	pk,
@@ -26,6 +30,11 @@ export default function PredictCard({
 	leagueName,
 	refetchGames,
 }: GameDto & { type: 'proceeding' | 'finished'; leagueName: string; refetchGames?: () => void }) {
+	const { isMobile, isTablet } = getServerDeviceType();
+
+	const [isClicked, setIsClicked] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(false);
+
 	const [startDate, startTime] = formatGameStartDate(startAt);
 	const participations = formatGambleParticipations(gambleResult.participationNumber);
 	const timeBefore = getGameStartTimeBefore(startAt);
@@ -57,18 +66,26 @@ export default function PredictCard({
 
 	return (
 		<div
-			className="flex flex-col justify-center px-4 min-h-[10.625rem]
-				bg-black-000 rounded-lg transition-all overflow-hidden"
+			className="flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem]
+				bg-black-000 rounded-lg overflow-hidden"
 		>
 			<Header {...headerProps} />
-			<div className="grid grid-cols-[auto_1fr] grid-rows-[auto_auto] gap-x-1.5">
-				<GameInfoBox {...gameInfoBoxProps} />
-				<TeamButton />
+			<div className={clsx('grid grid-cols-[auto_1fr] grid-rows-[auto_auto]', { 'gap-x-1.5': !isMobile })}>
+				{!isMobile ? <GameInfoBox {...gameInfoBoxProps} /> : <div></div>}
+				<TeamButton
+					onClick={() => setIsClicked(!isClicked)}
+					isMobile={isMobile}
+					isTablet={isTablet}
+					isClicked={isClicked}
+					isCompleted={false}
+				/>
 				<div></div>
-				<div className="relative">
-					<ScoreButton />
-					<CompleteButton />
-				</div>
+				{isClicked && (
+					<div className={clsx('relative', isMobile || isTablet ? 'mt-22' : 'mt-4')}>
+						{(isMobile || isTablet) && <ScoreButton />}
+						<CompleteButton />
+					</div>
+				)}
 			</div>
 			<footer className="mt-2 caption1-regular text-black-700 text-right">{participations}명 참여</footer>
 		</div>
