@@ -6,7 +6,7 @@ import { GameDto, PatchGameGambleRequest, PostGameGambleRequest } from '@/servic
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useState } from 'react';
-import ScoreButton from './score-button';
+import ScoreButton from '../predict-card/score-button';
 
 type SelectedButton = 'none' | 'left' | 'center' | 'right';
 
