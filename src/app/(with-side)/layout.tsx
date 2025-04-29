@@ -1,5 +1,4 @@
-import { ReactNode } from 'react';
-import clsx from 'clsx';
+import { ReactNode, Suspense } from 'react';
 import LeftSide from '@/components/layouts/with-side/left-side';
 import RightSide from '@/components/layouts/with-side/right-side';
 import FloatingWritingButton from '@/components/layouts/with-side/floating-writing-button';
@@ -7,15 +6,16 @@ import FloatingWritingButton from '@/components/layouts/with-side/floating-writi
 export default function Layout({ children }: { children: ReactNode }) {
 	return (
 		<div
-			className={clsx(
-				'pt-4 max-w-[85rem] m-auto grid gap-6 min-[1094px]:grid-cols-[auto_auto] min-[1094px]:justify-center desktop:grid-cols-[1fr_auto_1fr]',
-			)}
+			className="pt-4 max-w-[85rem] m-auto grid gap-6 desktop:grid-cols-[1fr_auto_1fr]
+				min-[1094px]:grid-cols-[auto_auto] min-[1094px]:justify-center"
 		>
 			<LeftSide />
 			<main className="flex flex-col items-center gap-4">
-				<div className="relative fit-content">
+				<div className="relative @mobile:w-dvw @mobile:px-4">
 					{children}
-					<FloatingWritingButton />
+					<Suspense>
+						<FloatingWritingButton />
+					</Suspense>
 				</div>
 			</main>
 			<RightSide />

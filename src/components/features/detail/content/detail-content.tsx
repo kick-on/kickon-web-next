@@ -19,6 +19,8 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
+	const [isVerticalImage, setIsVerticalImage] = useState(false);
+
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 		const sanitized = DOMPurify.sanitize(data.content, {
@@ -59,14 +61,23 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 					alt="대표 이미지"
 					width={636}
 					height={322}
-					className="mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] object-cover"
+					className={`mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] ${
+						isVerticalImage ? 'object-contain bg-black-200' : 'object-cover'
+					}`}
+					onLoadingComplete={(img) => {
+						if (img.naturalHeight > img.naturalWidth) {
+							setIsVerticalImage(true);
+						}
+					}}
 				/>
 			)}
 
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
-					{!isCommentAllowed && <Image src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />}
+					{!isCommentAllowed && (
+						<Image className="w-6 h-6 object-contain" src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />
+					)}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{categoryLabel}
 					</span>

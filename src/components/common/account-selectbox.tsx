@@ -89,7 +89,7 @@ export default function AccountSelectBox({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex gap-1.5 items-center subtitle1-medium">
+			<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">
 				{category}
 				{isLeagueSelectBox && (
 					<Image
@@ -107,7 +107,7 @@ export default function AccountSelectBox({
 				<button
 					onClick={handleSelectBoxClick}
 					className={`flex gap-2.5 items-center px-4 py-3 w-full
-						border border-black-300 rounded-lg body3-regular
+						border border-black-300 rounded-lg body3-regular @mobile:text-14
 						${content ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
@@ -136,7 +136,7 @@ export default function AccountSelectBox({
 									'rounded-b-[0.5625rem]': index === options.length - 1 && !isLeagueSelectBox,
 								})}
 							>
-								<OptionItem onClick={handleOptionClick} {...option} />
+								<OptionItem height="h-[2.875rem]" onClick={handleOptionClick} {...option} />
 								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
@@ -145,7 +145,13 @@ export default function AccountSelectBox({
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
 							>
-								<OptionItem onClick={handleOptionClick} pk={-1} nameKr="응원팀이 없어요." logoUrl="/ban.svg" />
+								<OptionItem
+									height="h-[2.875rem]"
+									onClick={handleOptionClick}
+									pk={-1}
+									nameKr="응원팀이 없어요."
+									logoUrl="/ban.svg"
+								/>
 							</div>
 						)}
 					</div>

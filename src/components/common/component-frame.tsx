@@ -13,7 +13,7 @@ export default function ComponentFrame({
 
 	return (
 		<div
-			className={`flex flex-col ${width} @mobile:w-auto @mobile:grow @mobile:mx-4
+			className={`flex flex-col ${width} @mobile:w-full @mobile:grow
 				bg-black-000 border border-black-300 rounded-[0.625rem] ${className}`}
 		>
 			{children}

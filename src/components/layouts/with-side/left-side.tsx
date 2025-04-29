@@ -1,18 +1,12 @@
 'use client';
 
-import { UAParser } from 'ua-parser-js';
 import RankingList from './ranking-list/ranking-list';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { useEffect, useState } from 'react';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function LeftSide() {
-	const [isMobile, setIsMobile] = useState<boolean | null>(null);
+	const isMobile = useIsMobile();
 	const isLeftSideVisible = useIsLeftSideVisible();
-
-	useEffect(() => {
-		const device = UAParser().device;
-		setIsMobile(device.type === 'mobile');
-	}, []);
 
 	if (isMobile === null || isMobile || !isLeftSideVisible) return null;
 

@@ -36,7 +36,7 @@ export default function Page() {
 		marketing: false,
 	});
 
-	const isValidNickname = !nickname && !isDuplicated;
+	const isValidNickname = nickname && !isDuplicated;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
 	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
 
@@ -157,7 +157,7 @@ export default function Page() {
 				<button
 					onClick={handleSignupButtonClick}
 					disabled={isButtonDisabled}
-					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
+					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000 @mobile:text-15
 										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
 				>
 					회원가입

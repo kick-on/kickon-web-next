@@ -11,7 +11,7 @@ export default function LoginButton({ social, onClick }) {
 			className={`flex gap-3 pl-[5.5rem] pr-[5.8125rem] py-[0.6875rem] rounded-lg ${backgroundColor}`}
 		>
 			<Image width={26} height={26} src={src} alt={social} />
-			<div className={`button2-semibold ${textColor}`}>{social}로 로그인</div>
+			<div className={`button2-semibold @mobile:text-15 ${textColor}`}>{social}로 로그인</div>
 		</button>
 	);
 }

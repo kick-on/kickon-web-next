@@ -146,9 +146,9 @@ export default function Page() {
 			</div>
 
 			<div className="flex flex-col gap-2 mt-[4.25rem]">
-				<div className="flex gap-1.5 items-center subtitle1-medium">계정 관리</div>
+				<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">계정 관리</div>
 				<div
-					className="flex gap-2.5 items-center px-4 py-3 w-full
+					className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-14
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
 				>
 					<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo?.providerType} 로고`} />
@@ -159,7 +159,7 @@ export default function Page() {
 			<div className="mt-[6.25rem] flex gap-4">
 				<button
 					onClick={handleCancelButtonClick}
-					className="w-full h-11 flex justify-center items-center
+					className="w-full h-11 flex justify-center items-center @mobile:text-15
             rounded-lg bg-black-200 button2-semibold text-black-700"
 				>
 					취소
@@ -167,7 +167,7 @@ export default function Page() {
 				<button
 					disabled={!nickname || isDuplicated}
 					onClick={handleCompleteButtonClick}
-					className="w-full h-11 flex justify-center items-center
+					className="w-full h-11 flex justify-center items-center @mobile:text-15
             rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
 				>
 					수정 완료

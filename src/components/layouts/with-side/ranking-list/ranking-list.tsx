@@ -9,9 +9,11 @@ import { LeagueDto } from '@/services/apis/league/dto';
 import { useCallback, useEffect, useState } from 'react';
 import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { usePathname } from 'next/navigation';
 
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const pathname = usePathname();
 
 	const [ranking, setRanking] = useState<GambleRankingDto[] | ActualRankingDto[] | null>();
 	const [league, setLeague] = useState<LeagueDto>({
@@ -24,7 +26,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 
 	// 렌더링 초기 currentUserInfo가 null인 문제 해결
 	useEffect(() => {
-		if (currentUserInfo) {
+		if (currentUserInfo && currentUserInfo.league) {
 			setLeague({
 				pk: currentUserInfo?.league?.pk || 1,
 				nameKr: currentUserInfo?.league?.nameKr || '프리미어리그',
@@ -53,7 +55,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	}, [getRanking]);
 
 	return (
-		<ComponentFrame>
+		<ComponentFrame isMain={pathname === '/ranking'}>
 			<div className="p-4 title5-semibold">{mode === 'season' ? '이번 시즌 순위' : '승부예측 순위'}</div>
 			<div className="p-4 pl-2 border border-black-200 border-x-0 button4-medium">
 				<SelectBox content={league.nameKr} onChange={handleLeagueChange} />
