@@ -132,24 +132,41 @@ export default function Page() {
 		};
 	}, []);
 
+	const [isPortrait, setIsPortrait] = useState(false);
+
 	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
 
 		try {
-			// 1. Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name, true);
-			const { presignedUrl, s3Url } = presignedResponse.data;
+			// 이미지 비율 체크
+			if (typeof window !== 'undefined') {
+				// 브라우저 환경에서만 실행
+				const img = document.createElement('img');
+				img.src = URL.createObjectURL(file);
+				img.onload = async () => {
+					if (img.height > img.width) {
+						setIsPortrait(true); // 세로
+					} else {
+						setIsPortrait(false); // 가로
+					}
 
-			// 2. Presigned URL을 사용해 S3에 업로드
-			await uploadToS3(presignedUrl, file);
+					// 1. Presigned URL 요청
+					const presignedResponse = await getPresignedUrl(file.name, true);
+					const { presignedUrl, s3Url } = presignedResponse.data;
 
-			// 3. 업로드된 S3 URL을 상태에 저장 (서버에 보낼 URL)
-			setSelectedImage(s3Url);
+					// 2. Presigned URL을 사용해 S3에 업로드
+					await uploadToS3(presignedUrl, file);
+
+					// 3. 업로드된 S3 URL을 상태에 저장
+					setSelectedImage(s3Url);
+				};
+			}
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
 		}
 	};
+
 	const handleRemoveImage = () => {
 		setSelectedImage(null);
 	};
@@ -187,15 +204,18 @@ export default function Page() {
 	return (
 		<div className="flex flex-col mx-auto">
 			{selectedImage ? (
-				<div className="relative w-[636px] h-[322px] mb-4">
+				<div className="relative w-[636px] h-[322px] mb-4 bg-black-200 rounded-[10px] overflow-hidden flex items-center justify-center">
 					<Image
 						src={selectedImage}
 						alt="업로드된 대표 이미지"
 						layout="fill"
-						objectFit="cover"
+						objectFit={isPortrait ? 'contain' : 'cover'} // 세로면 contain, 아니면 cover
 						className="rounded-[10px]"
 					/>
-					<button onClick={handleRemoveImage} className="absolute top-2 right-2 bg-black-200 p-1 rounded-full">
+					<button
+						onClick={handleRemoveImage}
+						className={clsx('absolute top-2 right-2 p-1 rounded-full', isPortrait ? 'bg-black-300' : 'bg-black-200')}
+					>
 						<Image src="/x.svg" alt="삭제 버튼" width={18} height={18} />
 					</button>
 				</div>
