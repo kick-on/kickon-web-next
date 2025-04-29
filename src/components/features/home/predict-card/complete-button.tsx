@@ -1,7 +1,7 @@
-export default function ConfirmButton() {
+export default function CompleteButton() {
 	return (
 		<button
-			className="w-full h-[2.125rem] border border-black-200 rounded-md
+			className="w-full h-9 border border-black-200 rounded-md
       flex justify-center items-center button5-medium shadow-predict-button transition-colors
       hover:bg-primary-700 hover:border-0 hover:shadow-kick-button-active active:bg-primary-900 active:text-white"
 		>

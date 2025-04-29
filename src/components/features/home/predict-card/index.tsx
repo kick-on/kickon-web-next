@@ -9,7 +9,7 @@ import ButtonTypeInProgress from '../button-type-in-progress';
 import GameInfoBox, { GameInfoBoxProps } from './game-info-box';
 import TeamButton from './team-button';
 import ScoreButton from './score-button';
-import ConfirmButton from './confirm-button';
+import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 
 export default function PredictCard({
@@ -65,9 +65,9 @@ export default function PredictCard({
 				<GameInfoBox {...gameInfoBoxProps} />
 				<TeamButton />
 				<div></div>
-				<div>
+				<div className="relative">
 					<ScoreButton />
-					<ConfirmButton />
+					<CompleteButton />
 				</div>
 			</div>
 			<footer className="mt-2 caption1-regular text-black-700 text-right">{participations}명 참여</footer>
