@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import { useState } from 'react';
 
-export default function ScoreButton() {
+export default function ScoreButton({ onClick }: { onClick: (score: number) => void }) {
 	const [isScrollVisible, setIsScrollVisible] = useState(false);
 
 	return (
@@ -21,6 +21,7 @@ export default function ScoreButton() {
 				{new Array(20).fill(null).map((_, i) => (
 					<div key={i} className="flex items-center">
 						<button
+							onClick={() => onClick(i + 1)}
 							className={clsx(
 								`relative p-4 inset-0 before:content-[''] before:transition-all
                 before:absolute before:z-20 before:top-0 before:left-0 before:bottom-0 before:right-0

@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import Score from '../../score';
-import { useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { GameDto } from '@/services/apis/user-game-gamble/dto';
 
 interface TeamButtonInfoDto {
@@ -24,6 +24,10 @@ export interface TeamButtonProps {
 	isEditing: boolean;
 	isFinished: boolean;
 	isGameInProgress: boolean;
+	leftScore: number;
+	rightScore: number;
+	setLeftScore: Dispatch<SetStateAction<number>>;
+	setRightScore: Dispatch<SetStateAction<number>>;
 	selectedButton: string;
 	onClick: (e: React.MouseEvent) => void;
 }
@@ -37,6 +41,10 @@ export default function TeamButton({
 	isEditing,
 	isFinished,
 	isGameInProgress,
+	leftScore,
+	rightScore,
+	setLeftScore,
+	setRightScore,
 	selectedButton,
 	onClick,
 }: TeamButtonProps) {
@@ -79,13 +87,6 @@ export default function TeamButton({
 		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
 
 	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
-
-	const [leftScore, setLeftScore] = useState(
-		(isFinished ? (isGameInProgress ? -1 : homeScore) : myGambleResult?.homeScore) || 0,
-	);
-	const [rightScore, setRightScore] = useState(
-		(isFinished ? (isGameInProgress ? -1 : awayScore) : myGambleResult?.awayScore) || 0,
-	);
 
 	const home: TeamButtonInfoDto = {
 		teamName: homeTeam.nameKr || homeTeam.nameEn,

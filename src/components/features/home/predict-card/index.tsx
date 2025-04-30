@@ -31,11 +31,6 @@ export default function PredictCard({
 
 	const { isMobile, isTablet, isDesktop } = getServerDeviceType();
 
-	const [selectedButton, setSelectedButton] = useState<string | null>(null);
-	const [isClicked, setIsClicked] = useState(false);
-	const [isCompleted, setIsCompleted] = useState(false);
-	const [isEditing, setIsEditing] = useState(false);
-
 	const isFinished = type === 'finished';
 
 	const [startDate, startTime] = formatGameStartDate(startAt);
@@ -46,6 +41,18 @@ export default function PredictCard({
 	const isGameInProgress = type === 'finished' && (gameStatus === 'PENDING' || gameStatus === 'PROCEEDING'); // 경기 중
 	const isGameCanceled = gameStatus === 'CANCELED' || gameStatus === 'POSTPONED';
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
+
+	const [selectedButton, setSelectedButton] = useState<string | null>(null);
+	const [leftScore, setLeftScore] = useState(
+		(isFinished ? (isGameInProgress ? -1 : homeScore) : myGambleResult?.homeScore) || 0,
+	);
+	const [rightScore, setRightScore] = useState(
+		(isFinished ? (isGameInProgress ? -1 : awayScore) : myGambleResult?.awayScore) || 0,
+	);
+
+	const [isClicked, setIsClicked] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
 
 	const headerProps: HeaderProps = {
 		leagueName,
@@ -102,6 +109,18 @@ export default function PredictCard({
 		}
 	};
 
+	const handleScoreButtonClick = (score: number) => {
+		// selectedButton에 따라서 score 업데이트
+		if (selectedButton === 'home') {
+			setLeftScore(score);
+		} else if (selectedButton === 'draw') {
+			setLeftScore(score);
+			setRightScore(score);
+		} else {
+			setRightScore(score);
+		}
+	};
+
 	const handleCompleteButtonClick = () => {
 		if (isEditing) {
 			// TODO: 승부예측 수정 api 연결
@@ -129,6 +148,10 @@ export default function PredictCard({
 				<TeamButton
 					onClick={handleTeamButtonClick}
 					selectedButton={selectedButton}
+					leftScore={leftScore}
+					rightScore={rightScore}
+					setLeftScore={setLeftScore}
+					setRightScore={setRightScore}
 					game={game}
 					isMobile={isMobile}
 					isTablet={isTablet}
@@ -141,7 +164,7 @@ export default function PredictCard({
 				<div></div>
 				{isClicked && (
 					<div className={clsx('relative', isMobile || isTablet ? 'mt-22' : 'mt-4')}>
-						{(isMobile || isTablet) && <ScoreButton />}
+						{(isMobile || isTablet) && <ScoreButton onClick={handleScoreButtonClick} />}
 						<CompleteButton onClick={handleCompleteButtonClick} />
 					</div>
 				)}
