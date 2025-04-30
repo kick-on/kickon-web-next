@@ -36,31 +36,7 @@ export default function TeamButton({
 	isGameInProgress,
 	onClick,
 }: TeamButtonProps) {
-	const hoverShadowClass = (side) =>
-		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
-		${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
-
-	const shadowClass50 = (side) =>
-		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] before:bg-primary-50 before:shadow-predict-button-active
-		${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
-
-	const shadowClass300 = (side) =>
-		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
-		${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
-
-	const bgClass200 = (side) =>
-		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-		before:content-[''] before:bg-primary-200 ${side === 'away' && 'before:rounded-r-[0.5625rem]'}
-		${side === 'home' && 'before:rounded-l-[0.5625rem]'} `;
-
-	const clickedFont = (type: 'team' | 'ratio') => {
-		if (isMobile) return type === 'team' ? 'button5-semibold' : 'caption2-medium';
-		if (isTablet) return type === 'team' ? 'button4-semibold' : 'caption1-regular';
-		if (isDesktop) return type === 'team' ? 'button4-semibold' : 'caption2-medium';
-	};
+	const isDesktop = !isMobile && !isTablet;
 
 	const defaultFont = (() => {
 		if (isMobile) return 'button5-semibold';
@@ -68,15 +44,44 @@ export default function TeamButton({
 		if (isDesktop) return 'button3-semibold';
 	})();
 
-	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
+	const clickedFont = (type: 'team' | 'ratio') => {
+		if (isMobile) return type === 'team' ? 'button5-semibold' : 'caption2-medium';
+		if (isTablet) return type === 'team' ? 'button4-semibold' : 'caption1-regular';
+		if (isDesktop) return type === 'team' ? 'button4-semibold' : 'caption2-medium';
+	};
 
-	const isDesktop = !isMobile && !isTablet;
+	const hoverShadowClass = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
+		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+
+	const shadowClass50 = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] before:bg-primary-50 before:shadow-predict-button-active
+		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+
+	const shadowClass300 = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
+		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+
+	const bgClass200 = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] before:bg-primary-200
+		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+
+	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
 	const [leftScore, setLeftScore] = useState(myGambleResult?.homeScore || 0);
 	const [rightScore, setRightScore] = useState(myGambleResult?.awayScore || 0);
 
 	const home: TeamButtonInfoDto = {
-		teamName: homeTeam.nameKr || homeTeam.nameEn,
+		// teamName: homeTeam.nameKr || homeTeam.nameEn,
+		teamName: '마드리드 어쩌고저쩌',
 		teamLogoUrl: homeTeam.logoUrl,
 		gambleRatio: gambleResult.home,
 		score: leftScore,
@@ -106,6 +111,13 @@ export default function TeamButton({
 		draw,
 		away,
 	};
+
+	const logoSize = (() => {
+		if (isMobile) return 'w-4 h-4 min-w-4 min-h-4';
+		if (isTablet)
+			return isClicked ? 'w-6 h-6 min-w-6 min-h-6' : 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
+		if (isDesktop) return 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
+	})();
 
 	const handleTeamButtonClick = (side) => {
 		if (side === 'home') {
@@ -140,39 +152,38 @@ export default function TeamButton({
 				<div key={side} className={clsx('relative', isClicked && !isDesktop ? 'h-29' : 'h-full')}>
 					<div
 						onClick={() => handleTeamButtonClick(side)}
-						className={clsx(
-							'relative h-full flex gap-2 @mobile:min-h-[4.8125rem]',
-							isClicked && !isDesktop ? 'pt-5 pb-4 items-start' : 'items-center',
-							{
-								// 데스크톱 태블릿 모바일 공통 스타일
-								'text-left': side === 'home',
-								'flex-row-reverse text-right': side === 'away',
-								'justify-center text-center border-x': side === 'draw',
-								'border-black-200': side === 'draw' && (!isFinished || (isFinished && isGameInProgress)),
-								'border-black-300': side === 'draw' && isFinished && !isGameInProgress,
-								[bgClass200(side)]: isFinished && !isGameInProgress && myGambleResult && sides[side].isActive,
-								// 데스크톱 스타일
-								'pl-4 rounded-l-lg': side === 'home' && isDesktop,
-								'pr-4 rounded-r-lg': side === 'away' && isDesktop,
-								[hoverShadowClass(side)]: !(isClicked || isCompleted),
-								[shadowClass300(side)]: (isClicked || isCompleted) && sides[side].isActive && isDesktop,
-								// 태블릿 모바일 스타일
-								'px-[1.875rem] @mobile:px-3': !isDesktop,
-								'rounded-l-md': side === 'home' && isMobile,
-								'rounded-r-md': side === 'away' && isMobile,
-								[shadowClass50(side)]: (isClicked || isCompleted) && sides[side].isActive && !isDesktop,
-							},
-						)}
+						className={clsx('relative h-full flex gap-2 items-center @mobile:min-h-[4.8125rem]', {
+							// 데스크톱 태블릿 모바일 공통 스타일
+							'text-left': side === 'home',
+							'flex-row-reverse text-right': side === 'away',
+							'justify-center text-center border-x': side === 'draw',
+							'border-black-200': side === 'draw' && (!isFinished || (isFinished && isGameInProgress)),
+							'border-black-300': side === 'draw' && isFinished && !isGameInProgress,
+							[bgClass200(side)]: isFinished && !isGameInProgress && myGambleResult && sides[side].isActive,
+							// 데스크톱 스타일
+							'pl-4 rounded-l-lg': side === 'home' && (isDesktop || isTablet),
+							'pr-4 rounded-r-lg': side === 'away' && (isDesktop || isTablet),
+							[hoverShadowClass(side)]: !(isClicked || isCompleted),
+							[shadowClass300(side)]: (isClicked || isCompleted) && sides[side].isActive && isDesktop,
+							// 태블릿 모바일 스타일
+							'px-[1.875rem] @mobile:px-3': !isDesktop,
+							'pt-5 pb-17': isClicked && !isDesktop,
+							'rounded-l-md': side === 'home' && isMobile,
+							'rounded-r-md': side === 'away' && isMobile,
+
+							[shadowClass50(side)]: (isClicked || isCompleted) && sides[side].isActive && !isDesktop,
+						})}
 					>
 						{side !== 'draw' ? (
 							// 팀 로고 이미지
-							<Image
-								className="relative z-20 w-[1.375rem] h-[1.375rem] object-contain"
-								width={22}
-								height={22}
-								src={sides[side].teamLogoUrl}
-								alt={`${sides[side].teamName} 로고 이미지`}
-							/>
+							<div className={`relative z-20 ${logoSize}`}>
+								<Image
+									className="relative z-20 w-full h-full object-contain"
+									fill
+									src={sides[side].teamLogoUrl}
+									alt={`${sides[side].teamName} 로고 이미지`}
+								/>
+							</div>
 						) : (
 							// 데스크톱에서 팀 버튼 클릭 시 또는
 							// 승부예측 참여 완료 시 score box
@@ -185,7 +196,10 @@ export default function TeamButton({
 										side="left"
 										score={leftScore}
 										isCompleted={isFinished}
-										isActive={myGambleResult && sides['home'].isScoreBoxActive}
+										isActive={
+											((isFinished && !isGameInProgress && myGambleResult) || !isFinished) &&
+											sides['home'].isScoreBoxActive
+										}
 									/>
 									<Score
 										onClickUpButton={() => {}}
@@ -194,15 +208,26 @@ export default function TeamButton({
 										side="right"
 										score={rightScore}
 										isCompleted={isFinished}
-										isActive={myGambleResult && sides['away'].isScoreBoxActive}
+										isActive={
+											((isFinished && !isGameInProgress && myGambleResult) || !isFinished) &&
+											sides['away'].isScoreBoxActive
+										}
 									/>
 								</>
 							)
 						)}
 
 						{/* 팀 이름 및 승부예측 비율 */}
-						<div>
-							<div className="relative z-20">{sides[side].teamName || '팀 이름'}</div>
+						<div
+							className={clsx('grow overflow-hidden', {
+								// 모바일 finish 승부예측 카드 score box 크기 고려
+								'pr-1': isMobile && isFinished && side === 'home',
+								'pl-1': isMobile && isFinished && side === 'away',
+							})}
+						>
+							<div className="relative z-20 max-w-full min-w-0 max-h-8 whitespace-pre-line line-clamp-2 truncate">
+								{sides[side].teamName || '팀 이름'}
+							</div>
 							{(isClicked || isFinished) && (
 								<div
 									className={`relative z-20 ${clickedFont('ratio')} ${!isFinished || isGameInProgress ? 'text-black-800' : ''}`}

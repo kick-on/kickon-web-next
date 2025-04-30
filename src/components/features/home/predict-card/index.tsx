@@ -13,8 +13,8 @@ import TeamButton from './team-button';
 import ScoreButton from './score-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { useState } from 'react';
+import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 
 export default function PredictCard({
 	game,
