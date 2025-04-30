@@ -156,6 +156,7 @@ const CommentInput = ({
 	};
 
 	// 댓글 등록
+	// 댓글 등록
 	const handleSubmit = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
 			setIsLoginModalOpen(true);
@@ -166,7 +167,6 @@ const CommentInput = ({
 
 		setIsSubmitting(true);
 		const isReply = type === 'reply';
-		setTimeout(() => onCommentSubmit?.(isReply), 300);
 
 		let sanitizedContent = content;
 		if (hasMention && mentionNickname) {
@@ -181,13 +181,22 @@ const CommentInput = ({
 			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 
-		const response = await postCreateReply(contentType, requestBody);
-		console.log('작성한 댓글', requestBody, response);
+		try {
+			const response = await postCreateReply(contentType, requestBody);
+			console.log('작성한 댓글', requestBody, response);
 
-		setContent('');
-		if (inputRef.current) inputRef.current.innerHTML = '';
-		setHasNewLine(false);
-		setIsSubmitting(false);
+			setContent('');
+			if (inputRef.current) inputRef.current.innerHTML = '';
+			setHasNewLine(false);
+
+			// 댓글 등록 성공 이후에 리스트 갱신 호출
+			onCommentSubmit?.(isReply);
+		} catch (error) {
+			console.error('댓글 등록 실패:', error);
+			alert('댓글 등록에 실패했습니다.');
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	// useEffect 모음

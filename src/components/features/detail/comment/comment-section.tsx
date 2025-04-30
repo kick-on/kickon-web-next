@@ -70,8 +70,6 @@ function CommentSection({
 		}
 		if (updatedTotalPages && updatedTotalPages !== currentPage) {
 			router.push(`${baseUrl}?page=${updatedTotalPages}`, { scroll: false });
-		} else {
-			await fetchCommentsListData();
 		}
 	};
 
