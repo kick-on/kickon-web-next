@@ -29,8 +29,9 @@ export default function PredictCard({
 }) {
 	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
-	const { isMobile, isTablet } = getServerDeviceType();
+	const { isMobile, isTablet, isDesktop } = getServerDeviceType();
 
+	const [selectedButton, setSelectedButton] = useState<string | null>(null);
 	const [isClicked, setIsClicked] = useState(false);
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
@@ -66,6 +67,57 @@ export default function PredictCard({
 		startTime,
 	};
 
+	const handleTeamButtonClick = (e: React.MouseEvent) => {
+		const currentButton = (e.target as HTMLElement).closest('[id]').id;
+
+		if (!isClicked) {
+			// 참여 완료 상태에서 클릭 시 -> 수정 중 상태로 변경
+			if (isCompleted) {
+				setIsCompleted(false);
+				setIsEditing(true);
+			} else {
+				setSelectedButton(currentButton);
+			}
+			setIsClicked(true);
+			return;
+		}
+
+		// 클릭 상태에서 동일 버튼 클릭 시 -> 상태 초기화 & 필요 시 승부 예측 삭제
+		if (isClicked && currentButton === selectedButton) {
+			if (isEditing) {
+				// TODO: 승부예측 삭제 api 연결
+			}
+
+			setSelectedButton(null);
+			setIsCompleted(false);
+			setIsEditing(false);
+			setIsClicked(false);
+			return;
+		}
+
+		// 클릭 상태에서 다른 버튼 클릭 시 -> selectedButton 업데이트
+		if (isClicked && currentButton !== selectedButton) {
+			setSelectedButton(currentButton);
+			return;
+		}
+	};
+
+	const handleCompleteButtonClick = () => {
+		if (isEditing) {
+			// TODO: 승부예측 수정 api 연결
+			setIsEditing(false);
+		} else {
+			// TODO: 승부예측 생성 api 연결
+		}
+
+		if (isMobile) {
+			setSelectedButton('home');
+		}
+
+		setIsClicked(false);
+		setIsCompleted(true);
+	};
+
 	return (
 		<div
 			className={`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem] max-w-[41.75rem]
@@ -75,7 +127,8 @@ export default function PredictCard({
 			<div className={clsx('grid grid-cols-[auto_1fr] grid-rows-[auto_auto]', { 'gap-x-1.5': !isMobile })}>
 				{!isMobile ? <GameInfoBox {...gameInfoBoxProps} /> : <div></div>}
 				<TeamButton
-					onClick={() => setIsClicked(!isClicked)}
+					onClick={handleTeamButtonClick}
+					selectedButton={selectedButton}
 					game={game}
 					isMobile={isMobile}
 					isTablet={isTablet}
@@ -89,7 +142,7 @@ export default function PredictCard({
 				{isClicked && (
 					<div className={clsx('relative', isMobile || isTablet ? 'mt-22' : 'mt-4')}>
 						{(isMobile || isTablet) && <ScoreButton />}
-						<CompleteButton />
+						<CompleteButton onClick={handleCompleteButtonClick} />
 					</div>
 				)}
 			</div>

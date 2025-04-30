@@ -68,7 +68,7 @@ export default function Score({
 			<input
 				disabled={isCompleted}
 				type="text"
-				value={score}
+				value={score === -1 ? '-' : score}
 				onChange={(e) => onChange(e, side)}
 				className={clsx('flex justify-center text-center text-black-000', scoreBoxClass, {
 					'bg-primary-900': isActive,

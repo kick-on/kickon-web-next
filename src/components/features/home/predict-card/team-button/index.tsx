@@ -24,7 +24,8 @@ export interface TeamButtonProps {
 	isEditing: boolean;
 	isFinished: boolean;
 	isGameInProgress: boolean;
-	onClick: () => void;
+	selectedButton: string;
+	onClick: (e: React.MouseEvent) => void;
 }
 
 export default function TeamButton({
@@ -36,6 +37,7 @@ export default function TeamButton({
 	isEditing,
 	isFinished,
 	isGameInProgress,
+	selectedButton,
 	onClick,
 }: TeamButtonProps) {
 	const isDesktop = !isMobile && !isTablet;
@@ -78,12 +80,15 @@ export default function TeamButton({
 
 	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
-	const [leftScore, setLeftScore] = useState(myGambleResult?.homeScore || 0);
-	const [rightScore, setRightScore] = useState(myGambleResult?.awayScore || 0);
+	const [leftScore, setLeftScore] = useState(
+		(isFinished ? (isGameInProgress ? -1 : homeScore) : myGambleResult?.homeScore) || 0,
+	);
+	const [rightScore, setRightScore] = useState(
+		(isFinished ? (isGameInProgress ? -1 : awayScore) : myGambleResult?.awayScore) || 0,
+	);
 
 	const home: TeamButtonInfoDto = {
-		// teamName: homeTeam.nameKr || homeTeam.nameEn,
-		teamName: '마드리드 어쩌고저쩌',
+		teamName: homeTeam.nameKr || homeTeam.nameEn,
 		teamLogoUrl: homeTeam.logoUrl,
 		gambleRatio: gambleResult.home,
 		score: leftScore,
@@ -121,19 +126,37 @@ export default function TeamButton({
 		if (isDesktop) return 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
 	})();
 
-	const handleTeamButtonClick = (side) => {
-		if (side === 'home') {
-			setLeftScore(1);
-			setRightScore(0);
-		} else if (side === 'draw') {
-			setLeftScore(0);
-			setRightScore(0);
-		} else {
-			setLeftScore(0);
-			setRightScore(1);
+	const handleTeamButtonClick = (e: React.MouseEvent, side) => {
+		if (!isCompleted) {
+			if (isDesktop) {
+				if (side === 'home') {
+					setLeftScore(1);
+					setRightScore(0);
+				} else if (side === 'draw') {
+					setLeftScore(0);
+					setRightScore(0);
+				} else {
+					setLeftScore(0);
+					setRightScore(1);
+				}
+			} else {
+				if (!isClicked && !isCompleted) {
+					if (side === 'home') {
+						setLeftScore(1);
+						setRightScore(0);
+					} else if (side === 'away') {
+						setLeftScore(0);
+						setRightScore(1);
+					}
+				}
+				if (side === 'draw') {
+					setLeftScore(0);
+					setRightScore(0);
+				}
+			}
 		}
 
-		onClick();
+		onClick(e);
 	};
 
 	return (
@@ -151,9 +174,9 @@ export default function TeamButton({
 			)}
 		>
 			{sidesArr.map((side) => (
-				<div key={side} className={clsx('relative', isClicked && !isDesktop ? 'h-29' : 'h-full')}>
+				<div key={side} id={side} className={clsx('relative', isClicked && !isDesktop ? 'h-29' : 'h-full')}>
 					<div
-						onClick={() => handleTeamButtonClick(side)}
+						onClick={(e: React.MouseEvent) => handleTeamButtonClick(e, side)}
 						className={clsx('relative h-full flex gap-2 items-center @mobile:min-h-[4.8125rem]', {
 							// 데스크톱 태블릿 모바일 공통 스타일
 							'text-left': side === 'home',
@@ -162,18 +185,17 @@ export default function TeamButton({
 							'border-black-200': side === 'draw' && (!isFinished || (isFinished && isGameInProgress)),
 							'border-black-300': side === 'draw' && isFinished && !isGameInProgress,
 							[bgClass200(side)]: isFinished && !isGameInProgress && myGambleResult && sides[side].isActive,
+							[shadowClass300(side)]: sides[side].isActive && (isCompleted || (isDesktop && isClicked)),
 							// 데스크톱 스타일
-							'pl-4 rounded-l-lg': side === 'home' && (isDesktop || isTablet),
-							'pr-4 rounded-r-lg': side === 'away' && (isDesktop || isTablet),
+							'px-4 rounded-l-lg': side === 'home' && (isDesktop || isTablet),
+							'px-4 rounded-r-lg': side === 'away' && (isDesktop || isTablet),
 							[hoverShadowClass(side)]: !(isClicked || isCompleted),
-							[shadowClass300(side)]: (isClicked || isCompleted) && sides[side].isActive && isDesktop,
 							// 태블릿 모바일 스타일
 							'px-[1.875rem] @mobile:px-3': !isDesktop,
 							'pt-5 pb-17': isClicked && !isDesktop,
 							'rounded-l-md': side === 'home' && isMobile,
 							'rounded-r-md': side === 'away' && isMobile,
-
-							[shadowClass50(side)]: (isClicked || isCompleted) && sides[side].isActive && !isDesktop,
+							[shadowClass50(side)]: isClicked && selectedButton === side && !isDesktop,
 						})}
 					>
 						{side !== 'draw' ? (
@@ -197,7 +219,7 @@ export default function TeamButton({
 										onChange={() => {}}
 										side="left"
 										score={leftScore}
-										isCompleted={isFinished}
+										isCompleted={isCompleted || isFinished}
 										isActive={
 											((isFinished && !isGameInProgress && myGambleResult) || !isFinished) &&
 											sides['home'].isScoreBoxActive
@@ -209,7 +231,7 @@ export default function TeamButton({
 										onChange={() => {}}
 										side="right"
 										score={rightScore}
-										isCompleted={isFinished}
+										isCompleted={isCompleted || isFinished}
 										isActive={
 											((isFinished && !isGameInProgress && myGambleResult) || !isFinished) &&
 											sides['away'].isScoreBoxActive
@@ -226,8 +248,8 @@ export default function TeamButton({
 								'pr-12': !isMobile && isClicked && side === 'home',
 								'pl-12': !isMobile && isClicked && side === 'away',
 								// 모바일 finish 승부예측 카드 score box 크기 고려
-								'pr-1': isMobile && isFinished && side === 'home',
-								'pl-1': isMobile && isFinished && side === 'away',
+								'pr-1': isMobile && (isFinished || isCompleted) && side === 'home',
+								'pl-1': isMobile && (isFinished || isCompleted) && side === 'away',
 							})}
 						>
 							<div className="relative z-20 max-w-full min-w-0 max-h-8 whitespace-pre-line line-clamp-2 truncate">
@@ -244,18 +266,19 @@ export default function TeamButton({
 					{/* 모바일에서 팀 버튼 클릭 시 score box */}
 					{isClicked && !isDesktop && side !== 'draw' && (
 						<div
+							onClick={(e: React.MouseEvent) => handleTeamButtonClick(e, side)}
 							className={clsx(
 								'absolute bottom-4 @mobile:left-1/2 @mobile:-translate-x-1/2 z-20 w-13 h-9 flex rounded-md',
 								side === 'home' ? 'left-[2.6875rem]' : 'right-[2.6875rem]',
 								{
-									'bg-black-500': !sides[side].isScoreBoxActive,
-									'bg-primary-900': sides[side].isScoreBoxActive,
+									'bg-black-500': selectedButton !== side || selectedButton === 'draw',
+									'bg-primary-900': selectedButton === side || selectedButton === 'draw',
 								},
 							)}
 						>
 							<div
 								className={clsx('m-auto px-1 text-black-000 body1-bold', {
-									'bg-black-900': sides[side].isScoreBoxActive,
+									'bg-black-900': selectedButton === side || selectedButton === 'draw',
 								})}
 							>
 								{sides[side].score}
