@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Score from '../../score';
 import { useState } from 'react';
+import { GameDto } from '@/services/apis/user-game-gamble/dto';
 
 interface TeamButtonInfoDto {
 	teamName: string;
@@ -12,6 +13,17 @@ interface TeamButtonInfoDto {
 	score?: number;
 	isActive: boolean; // 팀 버튼 active 여부
 	isScoreBoxActive?: boolean; // 점수 박스 active 여부
+}
+
+export interface TeamButtonProps {
+	game: GameDto;
+	isMobile: boolean;
+	isTablet: boolean;
+	isClicked: boolean;
+	isCompleted: boolean;
+	isFinished: boolean;
+	isGameInProgress: boolean;
+	onClick: () => void;
 }
 
 export default function TeamButton({
@@ -23,7 +35,7 @@ export default function TeamButton({
 	isFinished,
 	isGameInProgress,
 	onClick,
-}) {
+}: TeamButtonProps) {
 	const hoverShadowClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
@@ -60,13 +72,13 @@ export default function TeamButton({
 
 	const isDesktop = !isMobile && !isTablet;
 
-	const [leftScore, setLeftScore] = useState(0);
-	const [rightScore, setRightScore] = useState(0);
+	const [leftScore, setLeftScore] = useState(myGambleResult?.homeScore || 0);
+	const [rightScore, setRightScore] = useState(myGambleResult?.awayScore || 0);
 
 	const home: TeamButtonInfoDto = {
-		teamName: '',
-		teamLogoUrl: '',
-		gambleRatio: 0,
+		teamName: homeTeam.nameKr || homeTeam.nameEn,
+		teamLogoUrl: homeTeam.logoUrl,
+		gambleRatio: gambleResult.home,
 		score: leftScore,
 		isActive: leftScore > rightScore,
 		isScoreBoxActive: leftScore >= rightScore,
@@ -75,14 +87,14 @@ export default function TeamButton({
 	const draw: TeamButtonInfoDto = {
 		teamName: '무승부',
 		teamLogoUrl: undefined,
-		gambleRatio: 0,
+		gambleRatio: gambleResult.draw,
 		isActive: leftScore === rightScore,
 	};
 
 	const away: TeamButtonInfoDto = {
-		teamName: '',
-		teamLogoUrl: '',
-		gambleRatio: 0,
+		teamName: awayTeam.nameKr || awayTeam.nameEn,
+		teamLogoUrl: awayTeam.logoUrl,
+		gambleRatio: gambleResult.away,
 		score: rightScore,
 		isActive: leftScore < rightScore,
 		isScoreBoxActive: leftScore <= rightScore,
@@ -153,6 +165,7 @@ export default function TeamButton({
 						)}
 					>
 						{side !== 'draw' ? (
+							// 팀 로고 이미지
 							<Image
 								className="relative z-20 w-[1.375rem] h-[1.375rem] object-contain"
 								width={22}
@@ -162,7 +175,7 @@ export default function TeamButton({
 							/>
 						) : (
 							// 데스크톱에서 팀 버튼 클릭 시 또는
-							// 승부예측 참여 완료 시 score 표시
+							// 승부예측 참여 완료 시 score box
 							((isClicked && isDesktop) || isCompleted || isFinished) && (
 								<>
 									<Score
@@ -186,6 +199,8 @@ export default function TeamButton({
 								</>
 							)
 						)}
+
+						{/* 팀 이름 및 승부예측 비율 */}
 						<div>
 							<div className="relative z-20">{sides[side].teamName || '팀 이름'}</div>
 							{(isClicked || isFinished) && (
@@ -195,6 +210,8 @@ export default function TeamButton({
 							)}
 						</div>
 					</div>
+
+					{/* 모바일에서 팀 버튼 클릭 시 score box */}
 					{isClicked && !isDesktop && side !== 'draw' && (
 						<div
 							className={clsx(
