@@ -1,9 +1,9 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { PresignedUrlRequest, GetPresignedUrlResponse } from './dto';
-import { getTimestampedFileName } from '@/lib/utils/getTimestampedFileName';
+import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
 
 export async function getPresignedUrl(fileName: string, isNews: boolean): Promise<GetPresignedUrlResponse> {
-	const timestampedFileName = getTimestampedFileName(fileName);
+	const timestampedFileName = addTimestampToFileName(fileName);
 	console.log('new file name:', timestampedFileName);
 
 	const requestBody: PresignedUrlRequest = {

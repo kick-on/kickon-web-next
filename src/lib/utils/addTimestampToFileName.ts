@@ -1,4 +1,4 @@
-export const getTimestampedFileName = (originalName: string) => {
+export const addTimestampToFileName = (originalName: string) => {
 	const now = new Date();
 	const pad = (n: number) => n.toString().padStart(2, '0'); // 숫자를 항상 두 자리로 패딩 처리 5 -> 05
 
