@@ -44,6 +44,18 @@ export default function TeamButton({
 		before:content-[''] before:bg-primary-200 ${side === 'away' && 'before:rounded-r-[0.5625rem]'}
 		${side === 'home' && 'before:rounded-l-[0.5625rem]'} `;
 
+	const clickedFont = (type: 'team' | 'ratio') => {
+		if (isMobile) return type === 'team' ? 'button5-semibold' : 'caption2-medium';
+		if (isTablet) return type === 'team' ? 'button4-semibold' : 'caption1-regular';
+		if (isDesktop) return type === 'team' ? 'button4-semibold' : 'caption2-medium';
+	};
+
+	const defaultFont = (() => {
+		if (isMobile) return 'button5-semibold';
+		if (isTablet) return 'button3-semibold';
+		if (isDesktop) return 'button3-semibold';
+	})();
+
 	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
 	const isDesktop = !isMobile && !isTablet;
@@ -103,7 +115,7 @@ export default function TeamButton({
 			className={clsx(
 				`relative w-full h-full min-h-[4.625rem] @mobile:min-h-[4.8125rem] grid grid-cols-3 items-center
 				border transition-colors`,
-				isClicked ? 'subtitle1-semibold' : 'button3-semibold',
+				isClicked || isFinished ? clickedFont('team') : defaultFont,
 				isMobile ? 'rounded-md' : 'rounded-lg',
 				isFinished
 					? isGameInProgress
@@ -178,7 +190,7 @@ export default function TeamButton({
 							<div className="relative z-20">{sides[side].teamName || '팀 이름'}</div>
 							{(isClicked || isFinished) && (
 								<div
-									className={`relative z-20 caption2-medium ${!isFinished || isGameInProgress ? 'text-black-800' : ''}`}
+									className={`relative z-20 ${clickedFont('ratio')} ${!isFinished || isGameInProgress ? 'text-black-800' : ''}`}
 								>{`${sides[side].gambleRatio}%`}</div>
 							)}
 						</div>
