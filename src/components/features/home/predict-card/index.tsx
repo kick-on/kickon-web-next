@@ -17,23 +17,24 @@ import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { useState } from 'react';
 
 export default function PredictCard({
-	pk,
-	homeTeam,
-	awayTeam,
-	gambleResult,
-	myGambleResult,
-	homeScore,
-	awayScore,
-	gameStatus,
-	startAt,
+	game,
 	type,
 	leagueName,
 	refetchGames,
-}: GameDto & { type: 'proceeding' | 'finished'; leagueName: string; refetchGames?: () => void }) {
+}: {
+	game: GameDto;
+	type: 'proceeding' | 'finished';
+	leagueName: string;
+	refetchGames?: () => void;
+}) {
+	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
+
 	const { isMobile, isTablet } = getServerDeviceType();
 
 	const [isClicked, setIsClicked] = useState(false);
 	const [isCompleted, setIsCompleted] = useState(false);
+
+	const isFinished = type === 'finished';
 
 	const [startDate, startTime] = formatGameStartDate(startAt);
 	const participations = formatGambleParticipations(gambleResult.participationNumber);
@@ -66,18 +67,21 @@ export default function PredictCard({
 
 	return (
 		<div
-			className="flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem]
-				bg-black-000 rounded-lg overflow-hidden"
+			className={`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem]
+				bg-black-000 rounded-lg overflow-hidden ${isFinished && !isGameInProgress ? 'text-black-700' : ''}`}
 		>
 			<Header {...headerProps} />
 			<div className={clsx('grid grid-cols-[auto_1fr] grid-rows-[auto_auto]', { 'gap-x-1.5': !isMobile })}>
 				{!isMobile ? <GameInfoBox {...gameInfoBoxProps} /> : <div></div>}
 				<TeamButton
 					onClick={() => setIsClicked(!isClicked)}
+					game={game}
 					isMobile={isMobile}
 					isTablet={isTablet}
 					isClicked={isClicked}
 					isCompleted={false}
+					isFinished={isFinished}
+					isGameInProgress={isGambleInProgress}
 				/>
 				<div></div>
 				{isClicked && (

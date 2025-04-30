@@ -14,12 +14,20 @@ interface TeamButtonInfoDto {
 	isScoreBoxActive?: boolean; // 점수 박스 active 여부
 }
 
-export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted, onClick }) {
-	const hoverShadowClass = (
-		side,
-	) => `inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-	before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
-	${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
+export default function TeamButton({
+	game,
+	isMobile,
+	isTablet,
+	isClicked,
+	isCompleted,
+	isFinished,
+	isGameInProgress,
+	onClick,
+}) {
+	const hoverShadowClass = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
+		${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
 
 	const shadowClass50 = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
@@ -28,8 +36,15 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 
 	const shadowClass300 = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
-			before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
-			${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
+		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
+		${side === 'home' && 'before:rounded-l-[0.5625rem]'} ${side === 'away' && 'before:rounded-r-[0.5625rem]'}`;
+
+	const bgClass200 = (side) =>
+		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
+		before:content-[''] before:bg-primary-200 ${side === 'away' && 'before:rounded-r-[0.5625rem]'}
+		${side === 'home' && 'before:rounded-l-[0.5625rem]'} `;
+
+	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
 	const isDesktop = !isMobile && !isTablet;
 
@@ -87,9 +102,14 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 		<div
 			className={clsx(
 				`relative w-full h-full min-h-[4.625rem] @mobile:min-h-[4.8125rem] grid grid-cols-3 items-center
-				border border-black-200 shadow-predict-button transition-colors`,
+				border transition-colors`,
 				isClicked ? 'subtitle1-semibold' : 'button3-semibold',
 				isMobile ? 'rounded-md' : 'rounded-lg',
+				isFinished
+					? isGameInProgress
+						? 'pointer-events-none'
+						: 'pointer-events-none bg-black-200 border-black-300'
+					: 'cursor-pointer shadow-predict-button border-black-200',
 			)}
 		>
 			{sidesArr.map((side) => (
@@ -101,8 +121,12 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 							isClicked && !isDesktop ? 'pt-5 pb-4 items-start' : 'items-center',
 							{
 								// 데스크톱 태블릿 모바일 공통 스타일
+								'text-left': side === 'home',
 								'flex-row-reverse text-right': side === 'away',
-								'justify-center text-center border-x border-black-200': side === 'draw',
+								'justify-center text-center border-x': side === 'draw',
+								'border-black-200': side === 'draw' && (!isFinished || (isFinished && isGameInProgress)),
+								'border-black-300': side === 'draw' && isFinished && !isGameInProgress,
+								[bgClass200(side)]: isFinished && !isGameInProgress && myGambleResult && sides[side].isActive,
 								// 데스크톱 스타일
 								'pl-4 rounded-l-lg': side === 'home' && isDesktop,
 								'pr-4 rounded-r-lg': side === 'away' && isDesktop,
@@ -127,7 +151,7 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 						) : (
 							// 데스크톱에서 팀 버튼 클릭 시 또는
 							// 승부예측 참여 완료 시 score 표시
-							((isClicked && isDesktop) || isCompleted) && (
+							((isClicked && isDesktop) || isCompleted || isFinished) && (
 								<>
 									<Score
 										onClickUpButton={() => {}}
@@ -135,8 +159,8 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 										onChange={() => {}}
 										side="left"
 										score={leftScore}
-										isCompleted={isCompleted}
-										isActive={sides['home'].isScoreBoxActive}
+										isCompleted={isFinished}
+										isActive={myGambleResult && sides['home'].isScoreBoxActive}
 									/>
 									<Score
 										onClickUpButton={() => {}}
@@ -144,16 +168,18 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 										onChange={() => {}}
 										side="right"
 										score={rightScore}
-										isCompleted={isCompleted}
-										isActive={sides['away'].isScoreBoxActive}
+										isCompleted={isFinished}
+										isActive={myGambleResult && sides['away'].isScoreBoxActive}
 									/>
 								</>
 							)
 						)}
 						<div>
 							<div className="relative z-20">{sides[side].teamName || '팀 이름'}</div>
-							{isClicked && (
-								<div className="relative z-20 caption2-medium text-black-800">{`${sides[side].gambleRatio}%`}</div>
+							{(isClicked || isFinished) && (
+								<div
+									className={`relative z-20 caption2-medium ${!isFinished || isGameInProgress ? 'text-black-800' : ''}`}
+								>{`${sides[side].gambleRatio}%`}</div>
 							)}
 						</div>
 					</div>
@@ -163,8 +189,8 @@ export default function TeamButton({ isMobile, isTablet, isClicked, isCompleted,
 								'absolute bottom-4 @mobile:left-1/2 @mobile:-translate-x-1/2 z-20 w-13 h-9 flex rounded-md',
 								side === 'home' ? 'left-[2.6875rem]' : 'right-[2.6875rem]',
 								{
-									'bg-black-500': !sides[side].isScoreBoxActive,
-									'bg-primary-900': sides[side].isScoreBoxActive,
+									'bg-black-500': !myGambleResult || !sides[side].isScoreBoxActive,
+									'bg-primary-900': myGambleResult && sides[side].isScoreBoxActive,
 								},
 							)}
 						>

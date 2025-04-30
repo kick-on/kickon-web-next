@@ -66,7 +66,7 @@ export default function Home() {
 							type={'proceeding'}
 							leagueName={proceedingGames.league.nameKr || proceedingGames.league.nameEn}
 							refetchGames={() => getGamesByStatus('proceeding')}
-							{...game}
+							game={game}
 						/>
 					))
 				)}
@@ -88,7 +88,7 @@ export default function Home() {
 							key={game.pk}
 							type={'finished'}
 							leagueName={finishedGames.league.nameKr || finishedGames.league.nameEn}
-							{...game}
+							game={game}
 						/>
 					))
 				)}
