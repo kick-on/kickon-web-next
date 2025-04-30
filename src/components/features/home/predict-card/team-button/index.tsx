@@ -201,8 +201,8 @@ export default function TeamButton({
 								'absolute bottom-4 @mobile:left-1/2 @mobile:-translate-x-1/2 z-20 w-13 h-9 flex rounded-md',
 								side === 'home' ? 'left-[2.6875rem]' : 'right-[2.6875rem]',
 								{
-									'bg-black-500': !myGambleResult || !sides[side].isScoreBoxActive,
-									'bg-primary-900': myGambleResult && sides[side].isScoreBoxActive,
+									'bg-black-500': !sides[side].isScoreBoxActive,
+									'bg-primary-900': sides[side].isScoreBoxActive,
 								},
 							)}
 						>
