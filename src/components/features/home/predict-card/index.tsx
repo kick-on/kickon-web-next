@@ -113,6 +113,7 @@ export default function PredictCard({
 		// selectedButton에 따라서 score 업데이트
 		if (selectedButton === 'home') {
 			setLeftScore(score);
+			setSelectedButton('away');
 		} else if (selectedButton === 'draw') {
 			setLeftScore(score);
 			setRightScore(score);

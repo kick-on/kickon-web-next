@@ -215,9 +215,16 @@ export default function TeamButton({
 							((isClicked && isDesktop) || isCompleted || isFinished) && (
 								<>
 									<Score
-										onClickUpButton={() => {}}
-										onClickDownButton={() => {}}
-										onChange={() => {}}
+										onClickUpButton={() => {
+											setLeftScore((prev) => prev + 1);
+										}}
+										onClickDownButton={() => {
+											setLeftScore((prev) => prev - 1);
+										}}
+										onChange={(e) => {
+											const updatedScore = Math.min(20, Math.max(0, parseInt(e.target.value) || 0));
+											setLeftScore(updatedScore);
+										}}
 										side="left"
 										score={leftScore}
 										isCompleted={isCompleted || isFinished}
@@ -227,9 +234,16 @@ export default function TeamButton({
 										}
 									/>
 									<Score
-										onClickUpButton={() => {}}
-										onClickDownButton={() => {}}
-										onChange={() => {}}
+										onClickUpButton={() => {
+											setRightScore((prev) => prev + 1);
+										}}
+										onClickDownButton={() => {
+											setRightScore((prev) => prev - 1);
+										}}
+										onChange={(e) => {
+											const updatedScore = Math.min(20, Math.max(0, parseInt(e.target.value) || 0));
+											setRightScore(updatedScore);
+										}}
 										side="right"
 										score={rightScore}
 										isCompleted={isCompleted || isFinished}
