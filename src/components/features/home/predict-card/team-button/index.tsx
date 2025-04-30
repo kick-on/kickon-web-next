@@ -21,6 +21,7 @@ export interface TeamButtonProps {
 	isTablet: boolean;
 	isClicked: boolean;
 	isCompleted: boolean;
+	isEditing: boolean;
 	isFinished: boolean;
 	isGameInProgress: boolean;
 	onClick: () => void;
@@ -32,6 +33,7 @@ export default function TeamButton({
 	isTablet,
 	isClicked,
 	isCompleted,
+	isEditing,
 	isFinished,
 	isGameInProgress,
 	onClick,
@@ -220,6 +222,9 @@ export default function TeamButton({
 						{/* 팀 이름 및 승부예측 비율 */}
 						<div
 							className={clsx('grow overflow-hidden', {
+								// 데스크톱 태블릿 clicked 승부예측 카드 score box 크기 고려
+								'pr-12': !isMobile && isClicked && side === 'home',
+								'pl-12': !isMobile && isClicked && side === 'away',
 								// 모바일 finish 승부예측 카드 score box 크기 고려
 								'pr-1': isMobile && isFinished && side === 'home',
 								'pl-1': isMobile && isFinished && side === 'away',

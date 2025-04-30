@@ -33,6 +33,7 @@ export default function PredictCard({
 
 	const [isClicked, setIsClicked] = useState(false);
 	const [isCompleted, setIsCompleted] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
 
 	const isFinished = type === 'finished';
 
@@ -67,7 +68,7 @@ export default function PredictCard({
 
 	return (
 		<div
-			className={`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem]
+			className={`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem] max-w-[41.75rem]
 				bg-black-000 rounded-lg overflow-hidden ${isFinished && !isGameInProgress ? 'text-black-700' : ''}`}
 		>
 			<Header {...headerProps} />
@@ -79,7 +80,8 @@ export default function PredictCard({
 					isMobile={isMobile}
 					isTablet={isTablet}
 					isClicked={isClicked}
-					isCompleted={false}
+					isCompleted={isCompleted}
+					isEditing={isEditing}
 					isFinished={isFinished}
 					isGameInProgress={isGambleInProgress}
 				/>
