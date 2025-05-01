@@ -60,7 +60,7 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 			<div className="p-4 pl-2 border border-black-200 border-x-0 button4-medium">
 				<SelectBox content={league.nameKr} onChange={handleLeagueChange} />
 			</div>
-			<div className="flex justify-between p-4 subtitle2-medium text-black-700">
+			<div className="flex justify-between p-4 subtitle2-medium text-black-600">
 				<div className="w-7 text-center">순위</div>
 				<div className="flex gap-2">
 					{mode === 'season' ? (
