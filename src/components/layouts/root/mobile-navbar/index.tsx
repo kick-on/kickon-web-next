@@ -8,10 +8,13 @@ import clsx from 'clsx';
 import { useCallback, useState } from 'react';
 import Sidebar from './sidebar';
 import SideNavbar from './sidebar/side-navbar';
+import SideProfile from './sidebar/side-profile';
 
 export default function MobileNavbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
-	const [isBgVisible, setIsBgVisible] = useState(false);
+	const [isProfileOpen, setIsProfileOpen] = useState(false);
+	const [isMenuBgVisible, setIsMenuBgVisible] = useState(false);
+	const [isProfileBgVisible, setIsProfileBgVisible] = useState(false);
 
 	const pathname = usePathname();
 	const isHome = pathname === '/';
@@ -20,14 +23,26 @@ export default function MobileNavbar() {
 	const handleToggleMenu = useCallback(() => {
 		if (isMenuOpen) {
 			setTimeout(() => {
-				setIsMenuOpen(!isMenuOpen);
-				setTimeout(() => setIsBgVisible(!isBgVisible), 200);
+				setIsMenuOpen(false);
+				setTimeout(() => setIsMenuBgVisible(false), 200);
 			}, 200);
 		} else {
-			setIsBgVisible(!isBgVisible);
-			setTimeout(() => setIsMenuOpen(!isMenuOpen), 10);
+			setIsMenuBgVisible(true);
+			setTimeout(() => setIsMenuOpen(true), 10);
 		}
-	}, [isBgVisible, isMenuOpen]);
+	}, [isMenuOpen]);
+
+	const handleToggleProfile = useCallback(() => {
+		if (isProfileOpen) {
+			setTimeout(() => {
+				setIsProfileOpen(false);
+				setTimeout(() => setIsProfileBgVisible(false), 200);
+			}, 200);
+		} else {
+			setIsProfileBgVisible(true);
+			setTimeout(() => setIsProfileOpen(true), 10);
+		}
+	}, [isProfileOpen]);
 
 	return (
 		<>
@@ -39,12 +54,21 @@ export default function MobileNavbar() {
 					<Link href="/" className="w-auto h-full flex justify-center">
 						<Image src={'/logo/icon-red.svg'} alt="킥온 로고 이미지" width={45} height={36} />
 					</Link>
-					<LoginButton />
+					<LoginButton onClickProfile={handleToggleProfile} />
 				</div>
 			</header>
 
-			<Sidebar side="left" isMenuOpen={isMenuOpen} isBgVisible={isBgVisible} handleToggleMenu={handleToggleMenu}>
+			<Sidebar side={'left'} isMenuOpen={isMenuOpen} isBgVisible={isMenuBgVisible} handleToggleMenu={handleToggleMenu}>
 				<SideNavbar onClickButton={handleToggleMenu} />
+			</Sidebar>
+
+			<Sidebar
+				side={'right'}
+				isMenuOpen={isProfileOpen}
+				isBgVisible={isProfileBgVisible}
+				handleToggleMenu={handleToggleProfile}
+			>
+				<SideProfile onClickButton={handleToggleProfile} />
 			</Sidebar>
 		</>
 	);

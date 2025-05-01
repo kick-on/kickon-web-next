@@ -47,9 +47,9 @@ export default function Sidebar({
 			<div
 				ref={sideBarRef}
 				className={clsx(
-					`fixed top-0 left-0 z-50 w-[15.9375rem] h-full flex flex-col p-4
+					`fixed top-0 z-50 w-[15.9375rem] h-full flex flex-col p-4
 						body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
-
+					side === 'left' ? 'left-0' : 'right-0',
 					!isMenuOpen ? (side === 'left' ? '-translate-x-full' : 'translate-x-full') : '',
 				)}
 			>
