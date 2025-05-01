@@ -5,7 +5,7 @@ import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import { Divider } from '.';
+import Divider from './divider';
 import { useRouter } from 'next/navigation';
 
 export default function MobileProfile() {

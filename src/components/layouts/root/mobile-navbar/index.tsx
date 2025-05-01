@@ -8,10 +8,7 @@ import clsx from 'clsx';
 import { useCallback, useState } from 'react';
 import MobileProfile from './mobile-profile';
 import SideBar from './side-bar';
-
-export function Divider() {
-	return <hr className="m-4 border-black-200" />;
-}
+import SideNavBar from './side-bar/side-nav-bar';
 
 export default function MobileNavbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -21,17 +18,12 @@ export default function MobileNavbar() {
 	const isHome = pathname === '/';
 	const bgColor = isHome ? 'bg-black-000' : 'bg-black-800';
 
-	const navButtons = [
-		{ herf: '/', content: '홈', isActive: pathname === '/' },
-		{ herf: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
-		{ herf: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
-		{ herf: '/ranking', content: '랭킹', isActive: pathname === '/ranking' },
-	];
-
 	const handleToggleMenu = useCallback(() => {
 		if (isMenuOpen) {
-			setIsMenuOpen(!isMenuOpen);
-			setTimeout(() => setIsBgVisible(!isBgVisible), 200);
+			setTimeout(() => {
+				setIsMenuOpen(!isMenuOpen);
+				setTimeout(() => setIsBgVisible(!isBgVisible), 200);
+			}, 200);
 		} else {
 			setIsBgVisible(!isBgVisible);
 			setTimeout(() => setIsMenuOpen(!isMenuOpen), 10);
@@ -53,31 +45,7 @@ export default function MobileNavbar() {
 			</header>
 
 			<SideBar side="left" isMenuOpen={isMenuOpen} isBgVisible={isBgVisible} handleToggleMenu={handleToggleMenu}>
-				<MobileProfile />
-
-				{navButtons.map((button) => (
-					<Link
-						onClick={handleToggleMenu}
-						key={button.content}
-						href={button.herf}
-						className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
-							'text-primary-900 button2-semibold': button.isActive,
-						})}
-					>
-						{button.content}
-					</Link>
-				))}
-
-				<Divider />
-				<Link
-					onClick={handleToggleMenu}
-					href={'/profile-setting'}
-					className={clsx('w-full py-2.5 px-[1.375rem] active:bg-black-200 transition-colors', {
-						'text-primary-900 button2-semibold': pathname === '/profile-setting',
-					})}
-				>
-					프로필 설정
-				</Link>
+				<SideNavBar onClickButton={handleToggleMenu} />
 			</SideBar>
 		</>
 	);
