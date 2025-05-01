@@ -59,7 +59,7 @@ export default function Banner() {
 				}}
 				loop
 				className={clsx(
-					`relative w-full h-[clamp(18.6875rem,35vw,35rem)] @mobile:h-[12.8125rem] @mobile:mt-16`,
+					`relative w-full h-[clamp(18.6875rem,35vw,35rem)] @mobile:h-auto @mobile:aspect-[100/29] @mobile:mt-16`,
 					isMobile ? 'mobile-banner-swiper' : 'banner-swiper',
 				)}
 			>
