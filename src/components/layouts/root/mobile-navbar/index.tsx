@@ -6,9 +6,8 @@ import LoginButton from '../login-button';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
-import MobileProfile from './mobile-profile';
-import SideBar from './side-bar';
-import SideNavBar from './side-bar/side-nav-bar';
+import Sidebar from './sidebar';
+import SideNavbar from './sidebar/side-navbar';
 
 export default function MobileNavbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,9 +43,9 @@ export default function MobileNavbar() {
 				</div>
 			</header>
 
-			<SideBar side="left" isMenuOpen={isMenuOpen} isBgVisible={isBgVisible} handleToggleMenu={handleToggleMenu}>
-				<SideNavBar onClickButton={handleToggleMenu} />
-			</SideBar>
+			<Sidebar side="left" isMenuOpen={isMenuOpen} isBgVisible={isBgVisible} handleToggleMenu={handleToggleMenu}>
+				<SideNavbar onClickButton={handleToggleMenu} />
+			</Sidebar>
 		</>
 	);
 }

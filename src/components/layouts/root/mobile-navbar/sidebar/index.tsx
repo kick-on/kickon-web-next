@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
-export default function SideBar({
+export default function Sidebar({
 	children,
 	side,
 	isMenuOpen,

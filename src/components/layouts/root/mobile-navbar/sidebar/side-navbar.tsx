@@ -10,7 +10,7 @@ import MostReadNewsItem from '@/components/layouts/with-side/most-read-news-list
 import { getHotNews } from '@/services/apis/news/getHotNews';
 import Image from 'next/image';
 
-export default function SideNavBar({ onClickButton }: { onClickButton: () => void }) {
+export default function SideNavbar({ onClickButton }: { onClickButton: () => void }) {
 	const pathname = usePathname();
 	const [hotNews, setHotNews] = useState<HotNewsDto[]>([]);
 
