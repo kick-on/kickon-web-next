@@ -10,6 +10,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { CommentSectionProps } from '@/services/apis/detail/comment/dto';
+import useIsMobile from '@/lib/hooks/useIsMobile';
+import Image from 'next/image';
 
 function CommentSection({
 	type,
@@ -20,6 +22,7 @@ function CommentSection({
 }: CommentSectionProps) {
 	const router = useRouter();
 	const isNews = type === 'news';
+	const isMobile = useIsMobile();
 
 	const [comments, setComments] = useState([]);
 	const [likedComments, setLikedComments] = useState({});
@@ -31,29 +34,44 @@ function CommentSection({
 
 	const searchParams = useSearchParams();
 	const commentsPerPage = 10;
-	const currentPage = Number(searchParams.get('page') || '1');
+	const initialPage = Number(searchParams.get('page') || '1');
+	const [currentPage, setCurrentPage] = useState(initialPage);
 
 	const baseUrl = `/${type}/${contentsId}`;
 
-	const fetchCommentsListData = useCallback(async () => {
-		if (!contentsId || contentsId < 1) return null;
-		try {
-			const response = await getCommentList(contentsId, currentPage, commentsPerPage, isNews);
-			setComments(response?.data || []);
-			setTotalPages(response.meta?.totalPages || 1);
-			console.log('댓글 리스트', response.data);
-			setHasError(false);
-			return response.meta?.totalPages; // 바로 반환해버려
-		} catch (e) {
-			console.error('댓글 불러오기 실패:', e);
-			setHasError(true);
-			return null;
-		}
-	}, [contentsId, currentPage, isNews]);
+	const fetchCommentsListData = useCallback(
+		async (page = 1, append = false) => {
+			if (!contentsId || contentsId < 1) return null;
+			try {
+				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
+				if (append) {
+					setComments((prev) => [...prev, ...(response?.data || [])]);
+				} else {
+					setComments(response?.data || []);
+				}
+				setTotalPages(response.meta?.totalPages || 1);
+				setHasError(false);
+				return response.meta?.totalPages;
+			} catch (e) {
+				console.error('댓글 불러오기 실패:', e);
+				setHasError(true);
+				return null;
+			}
+		},
+		[contentsId, isNews],
+	);
 
 	useEffect(() => {
 		fetchCommentsListData();
 	}, [fetchCommentsListData]);
+
+	const handleLoadMoreComment = async () => {
+		const nextPage = currentPage + 1;
+		const updatedTotalPages = await fetchCommentsListData(nextPage, true);
+		if (updatedTotalPages) {
+			setCurrentPage(nextPage);
+		}
+	};
 
 	const handleCommentSubmit = async (isReply: boolean, pk?: number) => {
 		setTotalReplies(totalreplies + 1);
@@ -127,7 +145,7 @@ function CommentSection({
 	};
 
 	return (
-		<div className="px-4 mb-10.5">
+		<div className="px-4 mb-10.5 @mobile:mb-0">
 			{isCommentAllowed && (
 				<CommentInput
 					contentType={type}
@@ -166,12 +184,22 @@ function CommentSection({
 					))}
 				</div>
 			)}
-
 			{totalPages > 1 && (
-				<div className="flex justify-center mt-10">
-					<PaginationBar totalPages={totalPages} baseUrl={baseUrl} />
-				</div>
+				<>
+					{isMobile && currentPage < totalPages && (
+						<div className="flex gap-2 justify-center my-4 cursor-pointer" onClick={handleLoadMoreComment}>
+							<div className="button5-regular">더 보기</div>
+							<Image src="/chevron/down.svg" alt="댓글 더 보기" width={16} height={16} />
+						</div>
+					)}
+					{!isMobile && (
+						<div className="flex justify-center mt-10">
+							<PaginationBar totalPages={totalPages} baseUrl={baseUrl} />
+						</div>
+					)}
+				</>
 			)}
+
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 		</div>
 	);

@@ -44,7 +44,7 @@ function CommentItem({
 								{formatStringToDate(content.createdAt, '2-digit', true)}
 							</span>
 						</div>
-						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-1">
+						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-2">
 							<Image
 								src={likedComments[content.pk] ? '/kick/red.svg' : '/kick/gray.svg'}
 								alt="kick"

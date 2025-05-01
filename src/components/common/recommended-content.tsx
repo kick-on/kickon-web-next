@@ -52,18 +52,18 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 	}, [isHome, isNews, isMyTeam, getDatas]);
 
 	return (
-		<ComponentFrame isMain={true}>
+		<ComponentFrame className="@mobile:mb-10" isMain={true}>
 			<header
-				className={clsx('flex mx-4 justify-between pt-7.5 pb-1.5', {
+				className={clsx('flex mx-4 @mobile:mx-0 justify-between pt-7.5 pb-1.5', {
 					'border-b border-black-300 pb-7.5': !isNews,
 				})}
 			>
-				<h3 className="title4-semibold">{displayTitle}</h3>
+				<h3 className="@mobile:ml-4 title4-semibold">{displayTitle}</h3>
 
 				<Link
 					href={!isNews ? '/board?q=전체' : isMyTeam ? `/news?q=${teamName}` : `/news?q=전체`}
 					aria-label="더 보기"
-					className="flex gap-2 items-center text-black-700 body5-regular"
+					className="@mobile:mr-4 flex gap-2 items-center text-black-700 body5-regular"
 				>
 					<span>더 보기</span>
 					<Image src="/chevron/right-gray.svg" width={18} height={18} alt="오른쪽 화살표" />

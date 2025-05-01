@@ -1,5 +1,6 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
 import { CommentInputProps } from '@/services/apis/detail/comment/dto';
@@ -25,6 +26,8 @@ const CommentInput = ({
 	const [hasScroll, setHasScroll] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
+
+	const isMobile = useIsMobile();
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -205,9 +208,19 @@ const CommentInput = ({
 	}, []);
 
 	return (
-		<div className={type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4'}>
+		<div
+			className={
+				type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
+			}
+		>
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div className={clsx('flex', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-[6.5rem]')}>
+			<div
+				className={clsx(
+					'flex @mobile:flex-col',
+					hasScroll ? 'gap-1' : 'gap-0',
+					type === 'reply' ? 'h-20' : 'h-[6.5rem]',
+				)}
+			>
 				{/* 입력창 */}
 				<div className="relative w-full">
 					<div
@@ -216,7 +229,7 @@ const CommentInput = ({
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
 						className={clsx(
-							'relative w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left',
+							'relative w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
 							type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full',
 							content.trim().length === 0 && 'empty-placeholder',
 						)}
@@ -236,12 +249,34 @@ const CommentInput = ({
 					/>
 				</div>
 
+				{isMobile && (
+					<div className="flex gap-4 justify-end mt-3 mb-4">
+						<button
+							onClick={() => setContent('')}
+							className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
+						>
+							취소
+						</button>
+
+						{/* 등록 버튼 */}
+						<button
+							onClick={handleSubmit}
+							disabled={isSubmitting || content.trim().length === 0}
+							className={clsx(
+								'w-10.5 h-7 text-black-000  button5-medium rounded-[0.375rem]',
+								isSubmitting || content.trim().length === 0 ? 'bg-black-600' : 'bg-primary-900',
+							)}
+						>
+							등록
+						</button>
+					</div>
+				)}
 				{/* 등록 버튼 */}
 				<button
 					onClick={handleSubmit}
 					disabled={isSubmitting || content.trim().length === 0}
 					className={clsx(
-						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem]',
+						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem] @mobile:hidden',
 						isSubmitting || content.trim().length === 0 ? 'bg-black-400' : 'bg-primary-900',
 					)}
 				>
