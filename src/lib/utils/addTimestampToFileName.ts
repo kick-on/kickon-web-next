@@ -8,5 +8,8 @@ export const addTimestampToFileName = (originalName: string) => {
 	const name = dotIndex !== -1 ? originalName.substring(0, dotIndex) : originalName; // 파일명 부분
 	const ext = dotIndex !== -1 ? originalName.substring(dotIndex) : ''; // 확장자 부분
 
-	return `${name}_${timestamp}${ext}`;
+	// 특수문자 제거 (한글, 영어, 숫자, 공백 제외 -> 공백은 언더바로 대체)
+	const cleanedName = name.replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, '_');
+
+	return `${cleanedName}_${timestamp}${ext}`;
 };
