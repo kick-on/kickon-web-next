@@ -1,5 +1,6 @@
 'use client';
 
+import { getCookie, setCookie } from '@/lib/utils/cookie';
 import { deleteUserMe } from '@/services/auth';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -14,6 +15,8 @@ const alerts = [
 ];
 
 export default function Page() {
+	const [isValidAccess, setIsValidAccess] = useState(false);
+
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -48,6 +51,25 @@ export default function Page() {
 			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
 		}
 	}, [etcContent]);
+
+	useEffect(() => {
+		const fromProfile = getCookie('fromProfile');
+
+		if (fromProfile === 'true') {
+			setIsValidAccess(true);
+		} else {
+			alert('잘못된 접근입니다.');
+			router.replace('/');
+		}
+	}, [router]);
+
+	useEffect(() => {
+		return () => {
+			if (isValidAccess) {
+				setCookie('fromProfile', '', 0);
+			}
+		};
+	}, [isValidAccess]);
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14">
