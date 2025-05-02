@@ -58,7 +58,8 @@ export const getUserInfo = async () => {
 // 회원 탈퇴
 export const deleteUserMe = async (body: { reason: string }) => {
 	try {
-		const response = await axiosInstance.delete<EmptySuccessResponse | FailResponse>('/api/user/me', body);
+		// delete에서는 두 번째 인자로 body가 아닌 config 객체를 받기 때문에 data에 body를 넣어줘야 함
+		const response = await axiosInstance.delete<EmptySuccessResponse | FailResponse>('/api/user/me', { data: body });
 
 		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
