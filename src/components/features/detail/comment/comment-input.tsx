@@ -230,8 +230,9 @@ const CommentInput = ({
 						onKeyDown={handleKeyDown}
 						className={clsx(
 							'relative w-full h-full p-4 pb-3 @mobile:pb-10.5 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
-							type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full',
+							type === 'reply' ? 'bg-black-000 @mobile:border @mobile:border-black-200' : 'bg-black-100',
 							content.trim().length === 0 && 'empty-placeholder',
+							isMobile ? 'overflow-y-auto scrollbar' : 'overflow-y-scroll no-scrollbar',
 						)}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
@@ -266,7 +267,7 @@ const CommentInput = ({
 
 				{/* 스크롤바 */}
 				<div
-					className={`relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
+					className={`@mobile:hidden relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
 				>
 					<div
 						ref={thumbRef}
