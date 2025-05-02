@@ -212,13 +212,14 @@ function CommentSection({
 
 			{totalPages > 1 && (
 				<>
-					{isMobile && !isLastPageLoaded && (
-						<div className="flex gap-2 justify-center mt-4 cursor-pointer" onClick={handleLoadMoreComment}>
-							<div className="button5-regular">더 보기</div>
-							<Image src="/chevron/down.svg" alt="댓글 더 보기" width={16} height={16} />
-						</div>
-					)}
-					{!isMobile && (
+					{isMobile ? (
+						!isLastPageLoaded && (
+							<div className="flex gap-2 justify-center mt-4 cursor-pointer" onClick={handleLoadMoreComment}>
+								<div className="button5-regular">더 보기</div>
+								<Image src="/chevron/down.svg" alt="댓글 더 보기" width={16} height={16} />
+							</div>
+						)
+					) : (
 						<div className="flex justify-center mt-10">
 							<PaginationBar totalPages={totalPages} baseUrl={baseUrl} />
 						</div>
