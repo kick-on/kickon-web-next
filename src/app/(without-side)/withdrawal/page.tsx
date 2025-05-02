@@ -15,6 +15,11 @@ export default function Page() {
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+	const checkboxRef = useRef<HTMLInputElement | null>(null);
+
+	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
+	const isValidCheck = checkboxRef && checkboxRef.current.checked;
+	const isButtonDisabled = !(isValidReason && isValidCheck);
 
 	useEffect(() => {
 		if (textareaRef.current) {
@@ -89,6 +94,7 @@ export default function Page() {
 
 			<label className="flex items-center gap-2 body5-medium mt-[1.875rem] mb-20">
 				<input
+					ref={checkboxRef}
 					type="checkbox"
 					className="relative w-[0.875rem] h-[0.875rem] border border-black-300 rounded-xs appearance-none cursor-pointer
             checked:bg-primary-900 checked:border-primary-900
@@ -104,6 +110,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
+					disabled={isButtonDisabled}
 					className="flex-1 py-2.5 rounded-lg button2-semibold text-black-000 @mobile:text-15
             enabled:bg-primary-900 disabled:bg-black-300"
 				>
