@@ -9,7 +9,7 @@ export default function Page() {
 	];
 
 	return (
-		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14">
+		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14 @mobile:leading-4">
 			<div
 				className="mb-[3.125rem] title1-bold 
           @mobile:mb-[2.375rem] @mobile:text-24 @mobile:font-semibold @mobile:leading-8"
@@ -22,14 +22,24 @@ export default function Page() {
 
 			<div className="w-full flex flex-col gap-4">
 				{reasons.map((reason) => (
-					<label
-						key={reason}
-						id="reason"
-						className="w-full py-[0.9375rem] px-4 flex gap-4 bg-black-000 border border-black-300 rounded-lg"
-					>
-						<input name="reason" type="radio" />
-						{reason}
-					</label>
+					<div key={reason} id="reason" className="relative w-full">
+						<input
+							id={reason}
+							name="reason"
+							type="radio"
+							className="peer absolute left-4 top-1/2 -translate-y-1/2 appearance-none
+                w-[1.125rem] h-[1.125rem] rounded-full border border-black-300 checked:before:content-['']
+                checked:before:absolute checked:before:left-[0.1875rem] checked:before:top-[0.1875rem]
+                checked:before:w-2.5 checked:before:h-2.5 checked:before:bg-primary-900 checked:before:rounded-full"
+						/>
+						<label
+							htmlFor={reason}
+							className="w-full py-[0.9375rem] pl-[3.125rem] flex gap-4 items-center bg-black-000
+                rounded-lg border border-black-300 peer-checked:border-primary-900 cursor-pointer"
+						>
+							{reason}
+						</label>
+					</div>
 				))}
 			</div>
 
@@ -40,7 +50,7 @@ export default function Page() {
 					<div
 						key={alert}
 						className="flex gap-1.5 items-center text-black-000 body7-regular @mobile:font-12
-              @max-[374px]:break-words @max-[374px]:whitespace-normal whitespace-break-spaces break-keep"
+              @max-[374px]:whitespace-normal @max-[374px]:break-words whitespace-break-spaces break-keep"
 					>
 						<Image src={'/alert-circle.svg'} alt="주의 아이콘" width={18} height={18} />
 						{alert}
