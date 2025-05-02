@@ -55,6 +55,21 @@ export const getUserInfo = async () => {
 	}
 };
 
+// 회원 탈퇴
+export const deleteUserMe = async (body: { reason: string }) => {
+	try {
+		const response = await axiosInstance.delete<EmptySuccessResponse | FailResponse>('/api/user/me', body);
+
+		if (!response.code.split('_').includes('SUCCESS')) {
+			console.error(response);
+			return response.message;
+		}
+		return response;
+	} catch (error) {
+		console.error('회원 탈퇴 실패: ', error);
+	}
+};
+
 // 토큰 재발급
 export const postNewToken = async (body: PostNewTokenRequest) => {
 	try {

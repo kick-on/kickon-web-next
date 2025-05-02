@@ -1,7 +1,9 @@
 'use client';
 
+import { deleteUserMe } from '@/services/auth';
 import clsx from 'clsx';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 const reasons = ['서비스 품질 및 정보 불만족', '다른 계정으로 재가입', '사용성 불만족', '기타'];
@@ -18,8 +20,27 @@ export default function Page() {
 	const checkboxRef = useRef<HTMLInputElement | null>(null);
 
 	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
-	const isValidCheck = checkboxRef && checkboxRef.current.checked;
+	const isValidCheck = checkboxRef && checkboxRef.current && checkboxRef.current.checked;
 	const isButtonDisabled = !(isValidReason && isValidCheck);
+
+	const router = useRouter();
+
+	const handleWithDrawalButtonClick = async () => {
+		if (selectedReason === null) alert('탈퇴 사유를 선택해 주세요.');
+
+		const body = {
+			reason: selectedReason === 3 ? etcContent : reasons[selectedReason],
+		};
+		const response = await deleteUserMe(body);
+
+		if (typeof response === 'string') {
+			alert(`서버 오류입니다.\n잠시 후 다시 시도해 주세요.`);
+			console.log(response);
+		} else {
+			localStorage.clear();
+			router.replace('/');
+		}
+	};
 
 	useEffect(() => {
 		if (textareaRef.current) {
@@ -110,6 +131,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
+					onClick={handleWithDrawalButtonClick}
 					disabled={isButtonDisabled}
 					className="flex-1 py-2.5 rounded-lg button2-semibold text-black-000 @mobile:text-15
             enabled:bg-primary-900 disabled:bg-black-300"
