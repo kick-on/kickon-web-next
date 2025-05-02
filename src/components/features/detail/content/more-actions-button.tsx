@@ -50,7 +50,13 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 		<>
 			<div className="relative inline-block">
 				<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
-					<Image src="/more-horizontal.svg" alt="더보기" width={20} height={20} />
+					<Image
+						src="/more-horizontal.svg"
+						alt="더보기"
+						width={20}
+						height={20}
+						className="@mobile:w-4.5 @mobile:h-4.5"
+					/>
 				</button>
 
 				{isOpen && (

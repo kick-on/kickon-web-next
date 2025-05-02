@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
@@ -20,6 +20,24 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
 	const [isVerticalImage, setIsVerticalImage] = useState(false);
+	const imageRef = useRef(null);
+
+	// 이미지 비율 확인 (세로 이미지 감지)
+	useEffect(() => {
+		const checkImageOrientation = () => {
+			if (data.thumbnailUrl && typeof window !== 'undefined') {
+				const img = document.createElement('img');
+				img.onload = () => {
+					// 이미지의 높이가 너비보다 크면 세로 이미지로 판단
+					const isVertical = img.naturalHeight > img.naturalWidth;
+					setIsVerticalImage(isVertical);
+				};
+				img.src = data.thumbnailUrl;
+			}
+		};
+
+		checkImageOrientation();
+	}, [data.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -56,22 +74,24 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 		<div className="px-4">
 			{/* 대표 이미지 */}
 			{isNews && (
-				<Image
-					src={data.thumbnailUrl}
-					alt="대표 이미지"
-					width={636}
-					height={322}
-					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem]
+				<div
+					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden
 						min-h-[190px]
-						w-[clamp(311px, 80vw, 636px)] h-[clamp(190px, 40vw, 322px)]
-						${isVerticalImage ? 'object-contain bg-black-200' : 'object-cover'}
-					  `}
-					onLoadingComplete={(img) => {
-						if (img.naturalHeight > img.naturalWidth) {
-							setIsVerticalImage(true);
-						}
-					}}
-				/>
+						w-[clamp(311px,100%,636px)] h-[clamp(190px,40vw,322px)]
+						${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
+					`}
+				>
+					<Image
+						ref={imageRef}
+						src={data.thumbnailUrl}
+						alt="대표 이미지"
+						width={636}
+						height={322}
+						className={`
+							${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
+						`}
+					/>
+				</div>
 			)}
 
 			{/* 헤더 */}
@@ -124,7 +144,10 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 body3-regular @mobile:mb-30" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+			<div
+				className="mb-40 body3-regular @mobile:mb-30 responsive-content"
+				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+			/>
 
 			{/* 좋아요 버튼 */}
 			<button

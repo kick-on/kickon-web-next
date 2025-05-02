@@ -229,13 +229,39 @@ const CommentInput = ({
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
 						className={clsx(
-							'relative w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
+							'relative w-full h-full p-4 pb-3 @mobile:pb-10.5 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
 							type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full',
 							content.trim().length === 0 && 'empty-placeholder',
 						)}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
+
+					{isMobile && (
+						<div
+							className={clsx(
+								'flex gap-4 justify-end',
+								type === 'reply' ? 'absolute bottom-3 right-4' : '@mobile:mt-3',
+							)}
+						>
+							<button
+								onClick={() => setContent('')}
+								className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
+							>
+								취소
+							</button>
+							<button
+								onClick={handleSubmit}
+								disabled={isSubmitting || content.trim().length === 0}
+								className={clsx(
+									'w-10.5 h-7 text-black-000 button5-medium rounded-[0.375rem]',
+									isSubmitting || content.trim().length === 0 ? 'bg-black-600' : 'bg-primary-900',
+								)}
+							>
+								등록
+							</button>
+						</div>
+					)}
 				</div>
 
 				{/* 스크롤바 */}
@@ -248,29 +274,6 @@ const CommentInput = ({
 						style={{ height: `${scrollThumbHeight}px` }}
 					/>
 				</div>
-
-				{isMobile && (
-					<div className="flex gap-4 justify-end mt-3 mb-4">
-						<button
-							onClick={() => setContent('')}
-							className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
-						>
-							취소
-						</button>
-
-						{/* 등록 버튼 */}
-						<button
-							onClick={handleSubmit}
-							disabled={isSubmitting || content.trim().length === 0}
-							className={clsx(
-								'w-10.5 h-7 text-black-000  button5-medium rounded-[0.375rem]',
-								isSubmitting || content.trim().length === 0 ? 'bg-black-600' : 'bg-primary-900',
-							)}
-						>
-							등록
-						</button>
-					</div>
-				)}
 				{/* 등록 버튼 */}
 				<button
 					onClick={handleSubmit}
