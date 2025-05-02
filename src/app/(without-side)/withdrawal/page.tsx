@@ -1,15 +1,30 @@
+'use client';
+
+import clsx from 'clsx';
 import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+
+const reasons = ['서비스 품질 및 정보 불만족', '다른 계정으로 재가입', '사용성 불만족', '기타'];
+const alerts = [
+	`계정을 삭제하면 모든 활동 정보 및 포인트가 삭제되며,\n삭제 후 7일간 동일한 계정으로 다시 가입할 수 없어요.`,
+	`추후에 동일한 계정으로 재가입하셔도\n포인트 내역은 복구되지 않아요.`,
+	`다른 사용자 게시글의 댓글은 삭제되지 않으니\n미리 확인하세요.`,
+];
 
 export default function Page() {
-	const reasons = ['서비스 품질 및 정보 불만족', '다른 계정으로 재가입', '사용성 불만족', '기타'];
-	const alerts = [
-		`계정을 삭제하면 모든 활동 정보 및 포인트가 삭제되며,\n삭제 후 7일간 동일한 계정으로 다시 가입할 수 없어요.`,
-		`추후에 동일한 계정으로 재가입하셔도\n포인트 내역은 복구되지 않아요.`,
-		`다른 사용자 게시글의 댓글은 삭제되지 않으니\n미리 확인하세요.`,
-	];
+	const [selectedReason, setSelectedReason] = useState<number | null>(null);
+	const [etcContent, setEtcContent] = useState('');
+	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+	useEffect(() => {
+		if (textareaRef.current) {
+			textareaRef.current.style.height = 'auto';
+			textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+		}
+	}, [etcContent]);
 
 	return (
-		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14 @mobile:leading-4">
+		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14">
 			<div
 				className="mb-[3.125rem] title1-bold 
           @mobile:mb-[2.375rem] @mobile:text-24 @mobile:font-semibold @mobile:leading-8"
@@ -21,25 +36,39 @@ export default function Page() {
 			</span>
 
 			<div className="w-full flex flex-col gap-4">
-				{reasons.map((reason) => (
-					<div key={reason} id="reason" className="relative w-full">
-						<input
-							id={reason}
-							name="reason"
-							type="radio"
-							className="peer absolute left-4 top-1/2 -translate-y-1/2 appearance-none
-                w-[1.125rem] h-[1.125rem] rounded-full border border-black-300 checked:before:content-['']
-                checked:before:absolute checked:before:left-[0.1875rem] checked:before:top-[0.1875rem]
-                checked:before:w-2.5 checked:before:h-2.5 checked:before:bg-primary-900 checked:before:rounded-full"
-						/>
-						<label
-							htmlFor={reason}
-							className="w-full py-[0.9375rem] pl-[3.125rem] flex gap-4 items-center bg-black-000
-                rounded-lg border border-black-300 peer-checked:border-primary-900 cursor-pointer"
-						>
+				{reasons.map((reason, i) => (
+					<label
+						key={reason}
+						id="reason"
+						className={clsx(
+							'w-full py-[0.9375rem] px-4 flex flex-col gap-3 justify-center bg-black-000 border rounded-lg cursor-pointer',
+							selectedReason === i ? 'border-primary-900' : 'border-black-300',
+						)}
+					>
+						<div className="flex gap-4 items-center">
+							<input
+								name="reason"
+								type="radio"
+								onChange={() => setSelectedReason(i)}
+								className="relative appearance-none w-[1.125rem] h-[1.125rem] rounded-full border border-black-300
+                  before:content-[''] before:absolute before:left-1/2 before:top-1/2
+                  before:-translate-x-1/2 before:-translate-y-1/2
+                  before:w-2.5 before:h-2.5 before:bg-primary-900
+                  before:rounded-full before:hidden checked:before:block"
+							/>
 							{reason}
-						</label>
-					</div>
+						</div>
+						{selectedReason === 3 && i === 3 && (
+							<textarea
+								ref={textareaRef}
+								value={etcContent}
+								rows={3}
+								maxLength={500}
+								onChange={(e) => setEtcContent(e.target.value)}
+								className="w-full p-4 border border-black-300 rounded-md outline-none resize-none no-scrollbar body6-regular"
+							/>
+						)}
+					</label>
 				))}
 			</div>
 
@@ -62,10 +91,10 @@ export default function Page() {
 				<input
 					type="checkbox"
 					className="relative w-[0.875rem] h-[0.875rem] border border-black-300 rounded-xs appearance-none cursor-pointer
-            checked:[background-color:var(--color-primary-900)] checked:[border:var(--color-primary-900)]
-            after:content-[''] after:absolute after:w-full after:h-full
-            after:bg-[url('/check.svg')] after:bg-center after:bg-no-repeat
-            after:opacity-0 checked:after:opacity-100"
+            checked:bg-primary-900 checked:border-primary-900
+            before:content-[''] before:absolute before:w-full before:h-full
+            before:bg-[url('/check.svg')] before:bg-center before:bg-no-repeat
+            before:hidden checked:before:block"
 				/>
 				<span className="cursor-pointer body6-regular">안내사항을 모두 확인하였으며, 이에 동의합니다.</span>
 			</label>
