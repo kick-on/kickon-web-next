@@ -19,11 +19,12 @@ export default function Page() {
 
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
+
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const checkboxRef = useRef<HTMLInputElement | null>(null);
 
+	const [isValidCheck, setIsValidCheck] = useState(false);
 	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
-	const isValidCheck = checkboxRef && checkboxRef.current && checkboxRef.current.checked;
 	const isButtonDisabled = !(isValidReason && isValidCheck);
 
 	const router = useRouter();
@@ -137,6 +138,7 @@ export default function Page() {
 
 			<label className="flex items-center gap-2 body5-medium mt-[1.875rem] mb-20">
 				<input
+					onChange={() => setIsValidCheck(!isValidCheck)}
 					ref={checkboxRef}
 					type="checkbox"
 					className="relative w-[0.875rem] h-[0.875rem] border border-black-300 rounded-xs appearance-none cursor-pointer
