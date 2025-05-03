@@ -27,7 +27,7 @@ function CommentItem({
 	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
 	return (
 		<>
-			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
+			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10', isReplyInputOpen && '@mobile:pb-10')}>
 				<Image
 					src={content.user?.profileImageUrl ?? '/default-profile.svg'}
 					alt="프로필"
@@ -44,7 +44,7 @@ function CommentItem({
 								{formatStringToDate(content.createdAt, '2-digit', true)}
 							</span>
 						</div>
-						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-1">
+						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-2">
 							<Image
 								src={likedComments[content.pk] ? '/kick/red.svg' : '/kick/gray.svg'}
 								alt="kick"
@@ -65,7 +65,10 @@ function CommentItem({
 					<div className="flex flex-col gap-3.5">
 						{isCommentAllowed && !isReply && (
 							<button
-								className="button5-regular text-black-700 bg-black-200 rounded-sm px-2 py-1 w-fit"
+								className={clsx(
+									'button5-regular rounded-sm px-2 py-1 w-fit',
+									isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
+								)}
 								onClick={() => handleReply(content.pk)}
 							>
 								답글
