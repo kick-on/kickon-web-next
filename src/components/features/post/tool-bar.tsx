@@ -204,7 +204,7 @@ export default function Toolbar({
 							className="cursor-pointer p-[7px] border border-[#D9D9D9] rounded-sm"
 						>
 							{btn.icon}
-							<input type="file" accept={btn.accept} className="hidden" onChange={btn.onChange} />
+							<input type="file" accept={btn.accept} className="hidden" onClick={(e) => (e.target as HTMLInputElement).value = ''} onChange={btn.onChange} />
 						</label>
 					) : (
 						<button
