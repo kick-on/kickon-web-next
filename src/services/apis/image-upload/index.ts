@@ -4,7 +4,6 @@ import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
 
 export async function getPresignedUrl(fileName: string, isNews: boolean): Promise<GetPresignedUrlResponse> {
 	const timestampedFileName = addTimestampToFileName(fileName);
-	console.log('new file name:', timestampedFileName);
 
 	const requestBody: PresignedUrlRequest = {
 		type: isNews ? 'news-images' : 'board-images',
