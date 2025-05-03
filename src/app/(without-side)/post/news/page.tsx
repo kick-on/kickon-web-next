@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import debounce from 'lodash/debounce';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
@@ -62,37 +63,49 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, navigate]);
 
-	useEffect(() => {
-		const handler = setTimeout(async () => {
-			try {
-				const response = await getTeam(undefined, searchTerm);
+	const getTeamLists = useCallback(async (term: string) => {
+		// 검색어가 없으면 필터링 결과를 초기화하고 종료
+		if (!term) {
+		  setFilteredResults([]);
+		  return;
+		}
+		try {
+		  const response = await getTeam(undefined, term);
+		  const teamData = response.data.map((team) => ({
+			id: team.pk,
+			name: team.nameKr ?? team.nameEn,
+			logo: team.logoUrl,
+		  }));
+	
+		  setTeams(teamData);
 
-				const teamData = response.data.map((team) => ({
-					id: team.pk,
-					name: team.nameKr ?? team.nameEn,
-					logo: team.logoUrl,
-				}));
+		  // 검색어와 일치하는 팀만 필터링하여 상태 업데이트
+		  setFilteredResults(
+			teamData.filter((team) =>
+			  team.name.toLowerCase().includes(term.toLowerCase())
+			)
+		  );
+		} catch (error) {
+		  console.error('팀 리스트 가져오기 실패:', error);
+		  setFilteredResults([]);
+		}
+	  }, []);
 
-				setTeams(teamData);
-				setFilteredResults(teamData.filter((team) => team.name.toLowerCase().includes(searchTerm.toLowerCase())));
-			} catch (error) {
-				console.error('팀 리스트 가져오기 실패:', error);
-			}
-		}, 300); // 300ms 디바운스
-
+	  // 마지막 글자가 입력된 뒤 0.5초 후 api 호출
+	  const debouncedFetchTeams = useRef(debounce(getTeamLists, 300)).current;
+	
+	  useEffect(() => {
+		debouncedFetchTeams(searchTerm); // 검색어가 변경될 때마다 디바운스된 함수 호출
+	
 		return () => {
-			clearTimeout(handler);
+		  debouncedFetchTeams.cancel();
 		};
-	}, [searchTerm]);
+	  }, [searchTerm, debouncedFetchTeams]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
 		setSearchTerm(value);
 		setSelectedTeam(null);
-
-		const filtered = teams.filter((team) => team?.name.toLowerCase().includes(value.toLowerCase()));
-
-		setFilteredResults(filtered);
 		setIsVisibleSearchResults(value.length > 0);
 	};
 
@@ -177,8 +190,6 @@ export default function Page() {
 			fileInputRef.current.click();
 		}
 	};
-
-	console.log(body);
 
 	const postNewsContents = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
