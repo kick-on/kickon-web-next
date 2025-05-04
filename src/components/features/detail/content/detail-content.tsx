@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
@@ -15,29 +15,28 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const [isLiked, setIsLiked] = useState(data.isKicked);
 	const [likes, setLikes] = useState(data.likes);
 	const [sanitizedContent, setSanitizedContent] = useState('');
+	const [isImageLoaded, setIsImageLoaded] = useState(false);
+	const [isVerticalImage, setIsVerticalImage] = useState(false);
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
-	const [isVerticalImage, setIsVerticalImage] = useState(false);
-	const imageRef = useRef(null);
-
-	// 이미지 비율 확인 (세로 이미지 감지)
+	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {
-		const checkImageOrientation = () => {
-			if (data.thumbnailUrl && typeof window !== 'undefined') {
-				const img = document.createElement('img');
-				img.onload = () => {
-					// 이미지의 높이가 너비보다 크면 세로 이미지로 판단
-					const isVertical = img.naturalHeight > img.naturalWidth;
-					setIsVerticalImage(isVertical);
-				};
-				img.src = data.thumbnailUrl;
-			}
+		if (typeof window === 'undefined' || !isNews || !data.thumbnailUrl) return;
+		
+		// 이미지를 불러오기 위한 함수
+		const preloadImage = () => {
+			const img = document.createElement('img');
+			img.onload = () => {
+				setIsVerticalImage(img.naturalHeight > img.naturalWidth);
+				setIsImageLoaded(true);
+			};
+			img.src = data.thumbnailUrl;
 		};
-
-		checkImageOrientation();
-	}, [data.thumbnailUrl]);
+		
+		preloadImage();
+	}, [isNews, data.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -73,27 +72,27 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	return (
 		<div className="px-4">
 			{/* 대표 이미지 */}
-			{isNews && (
+			{isNews && isImageLoaded && (
 				<div
-					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden
-						min-h-[190px]
-						w-[clamp(311px,100%,636px)] h-[clamp(190px,40vw,322px)]
-						${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
+				className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden
+					min-h-[190px]
+					w-[clamp(311px,100%,636px)] h-[clamp(190px,40vw,322px)]
+					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
+				`}
+			>
+				<Image
+					src={data.thumbnailUrl}
+					alt="대표 이미지"
+					width={636}
+					height={322}
+					className={`
+						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
 					`}
-				>
-					<Image
-						ref={imageRef}
-						src={data.thumbnailUrl}
-						alt="대표 이미지"
-						width={636}
-						height={322}
-						className={`
-							${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
-						`}
-					/>
-				</div>
+					priority={true}
+				/>
+			</div>
 			)}
-
+			
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
