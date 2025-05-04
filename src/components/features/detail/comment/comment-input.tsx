@@ -219,7 +219,7 @@ const CommentInput = ({
 				className={clsx(
 					'flex @mobile:flex-col',
 					hasScroll ? 'gap-1' : 'gap-0',
-					type === 'reply' ? 'h-20' : 'h-[6.5rem]',
+					type === 'reply' ? 'h-20' : 'h-26',
 				)}
 			>
 				{/* 입력창 */}

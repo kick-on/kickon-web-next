@@ -95,7 +95,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 					<button
 						onClick={handleSubmitButtonClick}
 						disabled={!isSubmitEnabled}
-						className={`w-77 @mobile:w-77.5 px-4 py-[0.625rem] rounded-lg ${
+						className={`w-full px-4 py-[0.625rem] rounded-lg ${
 							isSubmitEnabled ? 'bg-black-900 text-black-000' : 'bg-black-300 text-black-500'
 						}`}
 					>

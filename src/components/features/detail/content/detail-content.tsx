@@ -109,7 +109,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			<h1 className={`title1-bold @mobile:text-2xl ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
-			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-[12px] @mobile:mt-4">
+			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
 				<div className="flex items-center gap-2">
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
@@ -120,7 +120,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 							className="w-full h-full rounded-full object-cover"
 						/>
 					</div>
-					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-[13px]">
+					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-13">
 						{data.user.nickname}
 						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
 					</span>

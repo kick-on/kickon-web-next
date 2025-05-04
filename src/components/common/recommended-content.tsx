@@ -75,12 +75,12 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 					'border-b border-black-300 pb-7.5': !isNews,
 				})}
 			>
-				<h3 className="@mobile:ml-4 @mobile:text-[16px] title4-semibold">{displayTitle}</h3>
+				<h3 className="@mobile:ml-4 @mobile:text-16 title4-semibold">{displayTitle}</h3>
 
 				<Link
 					href={!isNews ? '/board?q=전체' : isMyTeam ? `/news?q=${teamName}` : `/news?q=전체`}
 					aria-label="더 보기"
-					className="@mobile:mr-4 @mobile:text-[12px] flex gap-2 items-center text-black-700 body5-regular"
+					className="@mobile:mr-4 @mobile:text-12 flex gap-2 items-center text-black-700 body5-regular"
 				>
 					<span>더 보기</span>
 					<Image
