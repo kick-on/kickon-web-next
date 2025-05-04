@@ -155,12 +155,31 @@ function CommentSection({
 		return <FetchingFailedCard height="300px" marginTop="50px" onClick={() => window.location.reload()} />;
 	}
 
+	const handleReply = (id: number) => {
+		setReplyingTo((prev) => {
+			const isAlreadyOpen = prev.includes(id);
+
+			if (isMobile) {
+				// 모바일: 무조건 열기만
+				return isAlreadyOpen ? prev : [...prev, id];
+			} else {
+				// PC: 토글
+				return isAlreadyOpen ? prev.filter((i) => i !== id) : [...prev, id];
+			}
+		});
+	};
+
+	const closeReplyInput = (id: number) => {
+		setReplyingTo((prev) => prev.filter((i) => i !== id));
+	};	
+
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {
 		type,
 		likedComments,
 		handleLikeToggle: toggleCommentLike,
-		handleReply: (id) => setReplyingTo((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id])),
+		handleReply,
+		closeReplyInput,
 		toggleReplyVisibility: (id) => setReplyVisibilities((prev) => ({ ...prev, [id]: !prev[id] })),
 		replyingTo,
 		replyVisibilities,

@@ -14,6 +14,7 @@ const CommentInput = ({
 	parentReplyId,
 	contentType,
 	onCommentSubmit,
+	onCommentCancel,
 }: CommentInputProps) => {
 	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
@@ -246,7 +247,16 @@ const CommentInput = ({
 							)}
 						>
 							<button
-								onClick={() => setContent('')}
+								onClick={
+									type === 'reply'
+										? onCommentCancel
+										: () => {
+												setContent('');
+												if (inputRef.current) {
+													inputRef.current.innerHTML = '';
+												}
+										  }
+										}								
 								className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
 							>
 								취소
