@@ -74,9 +74,8 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			{/* 대표 이미지 */}
 			{isNews && isImageLoaded && (
 				<div
-				className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden
-					min-h-[190px]
-					w-[clamp(311px,100%,636px)] h-[clamp(190px,40vw,322px)]
+				className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
+					w-full max-w-[636px] aspect-[636/322]
 					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
 				`}
 			>
