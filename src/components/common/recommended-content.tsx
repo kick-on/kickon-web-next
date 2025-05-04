@@ -14,12 +14,10 @@ import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
 import NewsItem from './category-tab/news-item';
-import useIsMobile from '@/lib/hooks/useIsMobile';
 
 const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 	const pathname = usePathname();
 	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
-	const isMobile = useIsMobile();
 
 	const isMyTeam = Boolean(teamName);
 	const isNews = mode === 'news';
@@ -30,25 +28,16 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 		pathname === '/' && !isNews ? (
 			'클럽 커뮤니티'
 		) : (
-			<>
-				{!isMobile ? (
-					<div>
-						함께 볼 만한 {isMyTeam && <span className="text-primary-900">{teamName} </span>}
-						{isNews ? '뉴스' : '게시글'}
-					</div>
-				) : (
-					<div className="flex">
-						함께 볼 만한
-						{isMyTeam && (
-							<span className="text-primary-900 flex mx-1 items-center">
-								MY 팀
-								<Image width={16} height={16} src={teamLogo} alt="팀 로고" className="w-4 h-4 ml-1" />
-							</span>
-						)}
-						{isNews ? '뉴스' : '게시글'}
-					</div>
+		<div className="flex">
+			함께 볼 만한
+				{isMyTeam && (
+					<span className="text-primary-900 flex mx-1 items-center">
+						MY 팀
+						<Image width={16} height={16} src={teamLogo} alt="팀 로고" className="w-4 h-4" />
+					</span>
 				)}
-			</>
+				{isNews ? ' 뉴스' : ' 게시글'}
+			</div>
 		);
 
 	const getDatas = useCallback(async () => {
