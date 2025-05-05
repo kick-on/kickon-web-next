@@ -123,7 +123,9 @@ const PostEditor = ({
 
 			// 업로드된 이미지 URL을 에디터에 추가
 			editor.chain().focus().setImage({ src: s3Url }).run();
-			console.log('이미지 추가됨:', s3Url);
+    
+			// 이미지 삽입 후 빈 단락 추가하여 커서 위치시키기
+			editor.chain().focus().createParagraphNear().run();
 
 			// 에디터 내용 업데이트 (비동기 반영 확인)
 			setTimeout(() => {
