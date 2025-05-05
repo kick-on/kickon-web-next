@@ -211,7 +211,7 @@ const PostEditor = ({
 			<div className="tiptap">
 				<EditorContent
 					editor={editor}
-					className="rounded-lg overflow-y-auto minimal-scrollbar border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
+					className="rounded-lg overflow-y-auto custom-scrollbar border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
 				/>
 			</div>
 		</div>

@@ -124,25 +124,28 @@ body.overflow-hidden {
 }
 
 /*커스텀 스크롤바*/
-.minimal-scrollbar::-webkit-scrollbar {
-	width: 6px; /* 바만 좁게 남기고 */
+.custom-scrollbar { 
+	overflow-y: scroll;
+}
+  
+/* 스크롤바의 폭 너비 */
+.custom-scrollbar::-webkit-scrollbar {
+	width: 6px;  
+}
+  
+.custom-scrollbar::-webkit-scrollbar-thumb {
+	background: rgba(0,0,0,0.3); /* 스크롤바 색상 */
+	border-radius: 4px; /* 스크롤바 둥근 테두리 */
+}
+  
+.custom-scrollbar::-webkit-scrollbar-track {
+	background: transparent;  /*스크롤바 뒷 배경 색상*/
 }
 
-.minimal-scrollbar::-webkit-scrollbar-track {
-	background: transparent; /* 트랙 투명하게 */
-}
-
-.minimal-scrollbar::-webkit-scrollbar-thumb {
-	background-color: rgba(0, 0, 0, 0.3); /* 바만 보이게 */
-	border-radius: 4px;
-}
-
-.minimal-scrollbar {
-	scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
-}
 .no-scrollbar::-webkit-scrollbar {
 	display: none;
 }
+
 .no-scrollbar {
 	-ms-overflow-style: none; /* IE */
 	scrollbar-width: none; /* Firefox */
