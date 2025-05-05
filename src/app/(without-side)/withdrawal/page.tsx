@@ -16,7 +16,7 @@ const alerts = [
 ];
 
 export default function Page() {
-	const { clearCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
@@ -86,7 +86,8 @@ export default function Page() {
 				회원 탈퇴
 			</div>
 			<span className="mb-10 @mobile:mb-8">
-				<span className="font-semibold">가나다라마바사아</span>님이 탈퇴하시려는 이유가 궁금해요.
+				<span className="font-semibold">{currentUserInfo?.nickname || '알수없음'}</span>님이 탈퇴하시려는 이유가
+				궁금해요.
 			</span>
 
 			<div className="w-full flex flex-col gap-4">
