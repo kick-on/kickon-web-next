@@ -1,5 +1,6 @@
 'use client';
 
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
 import { deleteUserMe } from '@/services/auth';
 import clsx from 'clsx';
@@ -15,7 +16,7 @@ const alerts = [
 ];
 
 export default function Page() {
-	const [isValidAccess, setIsValidAccess] = useState(false);
+	const { clearCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
@@ -23,6 +24,7 @@ export default function Page() {
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const checkboxRef = useRef<HTMLInputElement | null>(null);
 
+	const [isValidAccess, setIsValidAccess] = useState(false);
 	const [isValidCheck, setIsValidCheck] = useState(false);
 	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
 	const isButtonDisabled = !(isValidReason && isValidCheck);
@@ -41,11 +43,13 @@ export default function Page() {
 			alert(`서버 오류입니다.\n잠시 후 다시 시도해 주세요.`);
 			console.log(response);
 		} else {
+			clearCurrentUserInfo();
 			localStorage.clear();
 			router.replace('/');
 		}
 	};
 
+	// 기타 사유 textarea 높이 자동 조절
 	useEffect(() => {
 		if (textareaRef.current) {
 			textareaRef.current.style.height = 'auto';
@@ -53,6 +57,7 @@ export default function Page() {
 		}
 	}, [etcContent]);
 
+	// 프로필 세팅을 통한 접근이 아닌 경우 접근 제한
 	useEffect(() => {
 		const fromProfile = getCookie('fromProfile');
 
