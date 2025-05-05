@@ -9,12 +9,15 @@ import { useCallback, useState } from 'react';
 import Sidebar from './sidebar';
 import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function MobileNavbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isMenuBgVisible, setIsMenuBgVisible] = useState(false);
 	const [isProfileBgVisible, setIsProfileBgVisible] = useState(false);
+
+	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	const pathname = usePathname();
 	const isHome = pathname === '/';
@@ -58,14 +61,16 @@ export default function MobileNavbar() {
 				<SideNavbar onClickButton={handleToggleMenu} />
 			</Sidebar>
 
-			<Sidebar
-				side={'right'}
-				isMenuOpen={isProfileOpen}
-				isBgVisible={isProfileBgVisible}
-				handleToggleMenu={handleToggleProfile}
-			>
-				<SideProfile onClickButton={handleToggleProfile} />
-			</Sidebar>
+			{currentUserInfo && (
+				<Sidebar
+					side={'right'}
+					isMenuOpen={isProfileOpen}
+					isBgVisible={isProfileBgVisible}
+					handleToggleMenu={handleToggleProfile}
+				>
+					<SideProfile onClickButton={handleToggleProfile} />
+				</Sidebar>
+			)}
 		</>
 	);
 }
