@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import Divider from '../divider';
+import Divider from './divider';
 import { HotNewsDto } from '@/services/apis/news/dto';
 import { useEffect, useState } from 'react';
 import MostReadNewsItem from '@/components/layouts/with-side/most-read-news-list/most-read-news-item';

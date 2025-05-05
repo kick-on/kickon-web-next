@@ -5,8 +5,7 @@ import Navbar from '@/components/layouts/root/navbar';
 import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
-import LoginPortal from '@/components/layouts/root/login-portal';
-import { Suspense } from 'react';
+import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 
 export const metadata: Metadata = {
 	title: '킥온',

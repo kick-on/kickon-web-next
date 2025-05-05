@@ -5,7 +5,7 @@ import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
 import useIsTablet from '@/lib/hooks/useIsTablet';
 import LoginButton from './login-button';
-import MobileNavbar from './mobile-navbar';
+import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 

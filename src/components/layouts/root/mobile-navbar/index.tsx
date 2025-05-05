@@ -2,13 +2,13 @@
 
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import LoginButton from '../login-button';
+import LoginButton from '../navbar/login-button';
 import Link from 'next/link';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
 import Sidebar from './sidebar';
 import SideNavbar from './sidebar/side-navbar';
-import SideProfile from './sidebar/side-profile';
+import { default as SideProfile } from '../navbar/profile';
 
 export default function MobileNavbar() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);

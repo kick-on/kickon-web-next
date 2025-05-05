@@ -5,12 +5,12 @@ import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import Divider from '../divider';
+import Divider from '../mobile-navbar/sidebar/divider';
 import { usePathname, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
 
-export default function SideProfile({ onClickButton }: { onClickButton: () => void }) {
+export default function Profile({ onClickButton }: { onClickButton: () => void }) {
 	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const router = useRouter();

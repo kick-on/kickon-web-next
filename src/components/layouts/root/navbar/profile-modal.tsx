@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import SideProfile from './mobile-navbar/sidebar/side-profile';
+import Profile from './profile';
 import { useEffect, useRef } from 'react';
 
 export default function ProfileModal({ onClickButton }: { onClickButton: () => void }) {
@@ -42,7 +42,7 @@ export default function ProfileModal({ onClickButton }: { onClickButton: () => v
 			<button className="ml-auto w-6 h-6">
 				<Image onClick={onClickButton} className="brightness-0" src={'/x.svg'} alt="닫기" width={24} height={24} />
 			</button>
-			<SideProfile onClickButton={onClickButton} />
+			<Profile onClickButton={onClickButton} />
 		</div>
 	);
 }
