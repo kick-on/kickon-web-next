@@ -110,7 +110,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 				<Divider />
 
 				<Link
-					onClick={onClickButton}
+					onClick={() => setTimeout(onClickButton, 200)}
 					href={'/profile-setting'}
 					className={clsx('w-[calc(100%+32px)] -ml-4 mt-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
 						'text-primary-900 button2-semibold': pathname === '/profile-setting',

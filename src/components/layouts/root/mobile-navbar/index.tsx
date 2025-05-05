@@ -22,10 +22,8 @@ export default function MobileNavbar() {
 
 	const handleToggleMenu = useCallback(() => {
 		if (isMenuOpen) {
-			setTimeout(() => {
-				setIsMenuOpen(false);
-				setTimeout(() => setIsMenuBgVisible(false), 200);
-			}, 200);
+			setIsMenuOpen(false);
+			setTimeout(() => setIsMenuBgVisible(false), 200);
 		} else {
 			setIsMenuBgVisible(true);
 			setTimeout(() => setIsMenuOpen(true), 10);
@@ -34,10 +32,8 @@ export default function MobileNavbar() {
 
 	const handleToggleProfile = useCallback(() => {
 		if (isProfileOpen) {
-			setTimeout(() => {
-				setIsProfileOpen(false);
-				setTimeout(() => setIsProfileBgVisible(false), 200);
-			}, 200);
+			setIsProfileOpen(false);
+			setTimeout(() => setIsProfileBgVisible(false), 200);
 		} else {
 			setIsProfileBgVisible(true);
 			setTimeout(() => setIsProfileOpen(true), 10);

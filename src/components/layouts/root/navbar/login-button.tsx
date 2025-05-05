@@ -85,8 +85,9 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 			) : (
 				<button
 					onClick={handleLoginButtonClick}
-					className="ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl bg-black-000 text-primary-900
-						w-[5.5rem] h-[2.25rem] button1-medium @mobile:w-[3.8125rem] @mobile:h-7 @mobile:text-14 @mobile:font-medium"
+					className="ml-auto mr-[0.3438rem] border border-black-300 rounded-3xl 
+						w-[5.5rem] h-[2.25rem] button1-medium bg-black-000 text-primary-900
+						@mobile:mr-0 @mobile:w-[3.8125rem] @mobile:h-7 @mobile:text-14 @mobile:font-medium"
 				>
 					로그인
 				</button>

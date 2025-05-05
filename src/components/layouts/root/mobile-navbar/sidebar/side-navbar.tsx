@@ -36,7 +36,7 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 			<nav className="flex flex-col gap-2">
 				{navButtons.map((button) => (
 					<Link
-						onClick={onClickButton}
+						onClick={() => setTimeout(onClickButton, 200)}
 						key={button.content}
 						href={button.herf}
 						className={clsx('w-[calc(100%+32px)] -ml-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
