@@ -4,14 +4,17 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserInfo } from '@/services/auth';
+import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import ProfileModal from './profile-modal';
 
 export default function LoginButton({ onClickProfile }: { onClickProfile?: () => void }) {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const { openLoginModal } = useIsLoginModalOpenStore();
 	const [isLoggedIn, setIsLoggedIn] = useState(!!currentUserInfo);
+	const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
 	const isMobile = useIsMobile();
 	const router = useRouter();
@@ -33,7 +36,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 		if (isMobile) {
 			onClickProfile();
 		} else {
-			router.push('/profile-setting');
+			setIsProfileModalOpen(!isProfileModalOpen);
 		}
 	};
 
@@ -58,18 +61,25 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 	return (
 		<>
 			{isLoggedIn ? (
-				<button
-					onClick={handleProfileButtonClick}
-					className={'ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7'}
-				>
-					<Image
-						src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
-						alt="프로필 이미지"
-						width={isMobile ? 28 : 38}
-						height={isMobile ? 28 : 38}
-						className="w-full h-full rounded-full object-cover"
-					/>
-				</button>
+				<div className="relative w-fit flex">
+					<button
+						onClick={handleProfileButtonClick}
+						className={clsx('ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7', {
+							'outline-[0.5625rem] outline-black-500/45': isProfileModalOpen,
+						})}
+					>
+						<Image
+							src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+							alt="프로필 이미지"
+							width={isMobile ? 28 : 38}
+							height={isMobile ? 28 : 38}
+							className="w-full h-full rounded-full object-cover"
+						/>
+					</button>
+					{!isMobile && isProfileModalOpen && (
+						<ProfileModal onClickButton={() => setIsProfileModalOpen(!isProfileModalOpen)} />
+					)}
+				</div>
 			) : (
 				<button
 					onClick={handleLoginButtonClick}

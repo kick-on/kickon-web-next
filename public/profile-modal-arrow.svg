@@ -1,0 +1,15 @@
+<svg width="20" height="10" viewBox="0 0 20 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path 
+    d="
+      M10 1
+      C10.55 1, 11.1 1.3, 11.5 1.8
+      L19.5 11
+      H0.5
+      L8.5 1.8
+      C8.9 1.3, 9.45 1, 10 1Z" 
+    fill="#ffffff"  
+    stroke="#f8f8f8"  
+    stroke-width="1"
+    shape-rendering="geometricPrecision"
+  />
+</svg>
