@@ -37,7 +37,6 @@ export default function Page() {
 	const [body, setBody] = useState('');
 	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
 	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
-	const [filteredResults, setFilteredResults] = useState(teams);
 
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
 
@@ -66,41 +65,34 @@ export default function Page() {
 	const getTeamLists = useCallback(async (term: string) => {
 		// 검색어가 없으면 필터링 결과를 초기화하고 종료
 		if (!term) {
-		  setFilteredResults([]);
-		  return;
+			setTeams([]);
+			return;
 		}
 		try {
-		  const response = await getTeam(undefined, term);
-		  const teamData = response.data.map((team) => ({
-			id: team.pk,
-			name: team.nameKr ?? team.nameEn,
-			logo: team.logoUrl,
-		  }));
-	
-		  setTeams(teamData);
+			const response = await getTeam(undefined, term);
+			const teamData = response.data.map((team) => ({
+				id: team.pk,
+				name: team.nameKr ?? team.nameEn,
+				logo: team.logoUrl,
+			}));
 
-		  // 검색어와 일치하는 팀만 필터링하여 상태 업데이트
-		  setFilteredResults(
-			teamData.filter((team) =>
-			  team.name.toLowerCase().includes(term.toLowerCase())
-			)
-		  );
+			setTeams(teamData);
 		} catch (error) {
-		  console.error('팀 리스트 가져오기 실패:', error);
-		  setFilteredResults([]);
+			console.error('팀 리스트 가져오기 실패:', error);
+			setTeams([]);
 		}
-	  }, []);
+	}, []);
 
-	  // 마지막 글자가 입력된 뒤 0.5초 후 api 호출
-	  const debouncedFetchTeams = useRef(debounce(getTeamLists, 300)).current;
-	
-	  useEffect(() => {
+	// 마지막 글자가 입력된 뒤 0.5초 후 api 호출
+	const debouncedFetchTeams = useRef(debounce(getTeamLists, 300)).current;
+
+	useEffect(() => {
 		debouncedFetchTeams(searchTerm); // 검색어가 변경될 때마다 디바운스된 함수 호출
-	
+
 		return () => {
-		  debouncedFetchTeams.cancel();
+			debouncedFetchTeams.cancel();
 		};
-	  }, [searchTerm, debouncedFetchTeams]);
+	}, [searchTerm, debouncedFetchTeams]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
@@ -182,12 +174,12 @@ export default function Page() {
 
 	const handleRemoveImage = () => {
 		setSelectedImage(null);
-	  
+
 		// file input의 값을 초기화해서 동일한 파일 다시 선택 가능하게 함
 		if (fileInputRef.current) {
-		  fileInputRef.current.value = '';
+			fileInputRef.current.value = '';
 		}
-	  };	  
+	};
 
 	// 대표 이미지 클릭 시 파일 업로드 창 열기
 	const handleImageClick = () => {
@@ -284,14 +276,14 @@ export default function Page() {
 
 					{isVisibleSearchResults && (
 						<div className="z-50 absolute top-10 w-[17.75rem] bg-black-000 border border-black-200 button4-medium rounded-lg shadow-lg overflow-hidden">
-							{filteredResults.length > 0 ? (
-								filteredResults.map((team, index) => (
+							{teams.length > 0 ? (
+								teams.map((team, index) => (
 									<div
 										key={team.id}
 										className={clsx(
 											'flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors',
 											{
-												'rounded-b-sm': index === filteredResults.length - 1,
+												'rounded-b-sm': index === teams.length - 1,
 											},
 										)}
 										onClick={() => {
