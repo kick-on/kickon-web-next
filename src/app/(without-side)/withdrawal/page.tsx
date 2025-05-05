@@ -1,7 +1,7 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getCookie, setCookie } from '@/lib/utils/cookie';
+import { getCookie } from '@/lib/utils/cookie';
 import { deleteUserMe } from '@/services/auth';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -24,7 +24,6 @@ export default function Page() {
 	const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 	const checkboxRef = useRef<HTMLInputElement | null>(null);
 
-	const [isValidAccess, setIsValidAccess] = useState(false);
 	const [isValidCheck, setIsValidCheck] = useState(false);
 	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
 	const isButtonDisabled = !(isValidReason && isValidCheck);
@@ -61,21 +60,11 @@ export default function Page() {
 	useEffect(() => {
 		const fromProfile = getCookie('fromProfile');
 
-		if (fromProfile === 'true') {
-			setIsValidAccess(true);
-		} else {
+		if (fromProfile !== 'true') {
 			alert('잘못된 접근입니다.');
 			router.replace('/');
 		}
 	}, [router]);
-
-	useEffect(() => {
-		return () => {
-			if (isValidAccess) {
-				setCookie('fromProfile', '', 0);
-			}
-		};
-	}, [isValidAccess]);
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14">
