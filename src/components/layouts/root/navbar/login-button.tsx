@@ -65,10 +65,9 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 					<button
 						onClick={handleProfileButtonClick}
 						className={clsx(
-							'rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7 @mobile:mr-0',
-							{
-								'outline-[0.5625rem] outline-black-500/45': isProfileModalOpen,
-							},
+							`rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7 @mobile:mr-0
+							outline-[0.5625rem] active:outline-black-500/45 transition-colors`,
+							isProfileModalOpen ? 'outline-black-500/45' : 'outline-transparent',
 						)}
 					>
 						<Image
