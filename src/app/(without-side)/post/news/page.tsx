@@ -169,7 +169,12 @@ export default function Page() {
 
 	const handleRemoveImage = () => {
 		setSelectedImage(null);
-	};
+	  
+		// file input의 값을 초기화해서 동일한 파일 다시 선택 가능하게 함
+		if (fileInputRef.current) {
+		  fileInputRef.current.value = '';
+		}
+	  };	  
 
 	// 대표 이미지 클릭 시 파일 업로드 창 열기
 	const handleImageClick = () => {
