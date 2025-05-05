@@ -171,7 +171,7 @@ function CommentSection({
 
 	const closeReplyInput = (id: number) => {
 		setReplyingTo((prev) => prev.filter((i) => i !== id));
-	};	
+	};
 
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {

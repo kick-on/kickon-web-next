@@ -24,7 +24,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {
 		if (typeof window === 'undefined' || !isNews || !data.thumbnailUrl) return;
-		
+
 		// 이미지를 불러오기 위한 함수
 		const preloadImage = () => {
 			const img = document.createElement('img');
@@ -34,7 +34,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			};
 			img.src = data.thumbnailUrl;
 		};
-		
+
 		preloadImage();
 	}, [isNews, data.thumbnailUrl]);
 
@@ -74,24 +74,24 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			{/* 대표 이미지 */}
 			{isNews && isImageLoaded && (
 				<div
-				className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
+					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
 					w-full max-w-[636px] aspect-[636/322]
 					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
 				`}
-			>
-				<Image
-					src={data.thumbnailUrl}
-					alt="대표 이미지"
-					width={636}
-					height={322}
-					className={`
+				>
+					<Image
+						src={data.thumbnailUrl}
+						alt="대표 이미지"
+						width={636}
+						height={322}
+						className={`
 						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
 					`}
-					priority={true}
-				/>
-			</div>
+						priority={true}
+					/>
+				</div>
 			)}
-			
+
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">

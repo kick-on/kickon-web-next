@@ -28,8 +28,8 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 		pathname === '/' && !isNews ? (
 			'클럽 커뮤니티'
 		) : (
-		<div className="flex">
-			함께 볼 만한
+			<div className="flex">
+				함께 볼 만한
 				{isMyTeam && (
 					<span className="text-primary-900 flex mx-1 items-center">
 						MY 팀

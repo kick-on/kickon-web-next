@@ -68,14 +68,14 @@ function CommentItem({
 					<div className="flex flex-col gap-3.5">
 						{isCommentAllowed && !isReply && (!isMobile || !isReplyInputOpen) && (
 							<button
-							className={clsx(
-								'button5-regular rounded-sm px-2 py-1 w-fit',
-								isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
-							)}
-							onClick={() => handleReply(content.pk)}
-						>
-							답글
-						</button>
+								className={clsx(
+									'button5-regular rounded-sm px-2 py-1 w-fit',
+									isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
+								)}
+								onClick={() => handleReply(content.pk)}
+							>
+								답글
+							</button>
 						)}
 
 						{isRepliesOpen && (
