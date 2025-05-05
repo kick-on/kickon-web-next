@@ -51,19 +51,19 @@ export default function SideProfile({ onClickButton }: { onClickButton: () => vo
 				<div className="px-1.5 flex flex-col gap-3">
 					<div className="flex gap-2 items-center">
 						<Image
-							className="w-9 h-9 object-cover rounded-full"
+							className="@mobile:w-9 @mobile:h-9 @mobile:mr-0 mr-1 w-12 h-12 object-cover rounded-full"
 							src={currentUserInfo.profileImageUrl || '/default-profile.svg'}
 							alt="프로필 이미지"
 							width={36}
 							height={36}
 						/>
-						<div className="flex gap-1 items-center title4-semibold">
+						<div className="flex gap-1 items-center body2-semibold @mobile:text-18">
 							{currentUserInfo.nickname}
-							<span className="body3-regular text-black-800">님</span>
+							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
 						</div>
 						{currentUserInfo.favoriteTeam && (
 							<Image
-								className="w-4 h-4 object-contain"
+								className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
 								src={currentUserInfo.favoriteTeam.logoUrl}
 								alt="팀 로고 이미지"
 								width={16}
@@ -71,7 +71,10 @@ export default function SideProfile({ onClickButton }: { onClickButton: () => vo
 							/>
 						)}
 					</div>
-					<button onClick={handleLogoutButtonClick} className="ml-auto text-black-600 button5-regular underline">
+					<button
+						onClick={handleLogoutButtonClick}
+						className="ml-auto text-black-600 body5-regular underline @mobile:text-12"
+					>
 						로그아웃
 					</button>
 				</div>
@@ -80,18 +83,24 @@ export default function SideProfile({ onClickButton }: { onClickButton: () => vo
 
 				<div className="flex flex-col gap-3 px-1.5 body4-semibold">
 					<div className="flex justify-between items-center">
-						<span className="body7-regular">
+						<span className="body5-regular @mobile:text-12">
 							이번 시즌 {currentUserInfo?.favoriteTeam ? '우리 팀 내' : '전체'} 순위
 						</span>
 						{extraUserInfo?.ranking || '- '}위
 					</div>
 					<div className="flex justify-between items-center">
-						<span className="flex gap-1 items-center body7-regular">
+						<span className="flex gap-1 items-center body5-regular @mobile:text-12">
 							지금까지 모은 포인트
 							<button
 								onClick={() => window.open('https://www.notion.so/devbob/1d0e7fdb8ed18034a779ee0f30e87a35', '_blank')}
 							>
-								<Image width={12} height={12} src="/help-circle.svg" alt="도움말" />
+								<Image
+									className="@mobile:w-3 @mobile:h-3 w-4 h-4"
+									width={12}
+									height={12}
+									src="/help-circle.svg"
+									alt="도움말"
+								/>
 							</button>
 						</span>
 						{extraUserInfo?.totalPoints || '-'} P
@@ -111,7 +120,11 @@ export default function SideProfile({ onClickButton }: { onClickButton: () => vo
 				</Link>
 			</div>
 
-			<div className="absolute bottom-15 left-1/2 -translate-x-1/2 w-full flex flex-col items-center gap-6">
+			<div className="absolute bottom-[1.875rem] @mobile:bottom-15 left-1/2 -translate-x-1/2 w-full flex flex-col items-center gap-6">
+				<div className="@mobile:hidden w-full mb-1.5 px-4">
+					<Divider />
+				</div>
+
 				<span className="body6-medium">팔로우하고 소식을 받아보세요!</span>
 				<div className="flex gap-8">
 					<button

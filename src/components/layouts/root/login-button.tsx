@@ -61,12 +61,15 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 	return (
 		<>
 			{isLoggedIn ? (
-				<div className="relative w-fit flex">
+				<div className="relative w-fit flex ml-auto">
 					<button
 						onClick={handleProfileButtonClick}
-						className={clsx('ml-auto rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7', {
-							'outline-[0.5625rem] outline-black-500/45': isProfileModalOpen,
-						})}
+						className={clsx(
+							'rounded-full w-[2.375rem] h-[2.375rem] mr-[0.3438rem] @mobile:w-7 @mobile:h-7 @mobile:mr-0',
+							{
+								'outline-[0.5625rem] outline-black-500/45': isProfileModalOpen,
+							},
+						)}
 					>
 						<Image
 							src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
