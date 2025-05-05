@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import debounce from 'lodash/debounce';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
@@ -36,7 +37,6 @@ export default function Page() {
 	const [body, setBody] = useState('');
 	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
 	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
-	const [filteredResults, setFilteredResults] = useState(teams);
 
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
 
@@ -62,37 +62,42 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, navigate]);
 
+	const getTeamLists = useCallback(async (term: string) => {
+		// 검색어가 없으면 필터링 결과를 초기화하고 종료
+		if (!term) {
+			setTeams([]);
+			return;
+		}
+		try {
+			const response = await getTeam(undefined, term);
+			const teamData = response.data.map((team) => ({
+				id: team.pk,
+				name: team.nameKr ?? team.nameEn,
+				logo: team.logoUrl,
+			}));
+
+			setTeams(teamData);
+		} catch (error) {
+			console.error('팀 리스트 가져오기 실패:', error);
+			setTeams([]);
+		}
+	}, []);
+
+	// 마지막 글자가 입력된 뒤 0.5초 후 api 호출
+	const debouncedFetchTeams = useRef(debounce(getTeamLists, 300)).current;
+
 	useEffect(() => {
-		const handler = setTimeout(async () => {
-			try {
-				const response = await getTeam(undefined, searchTerm);
-
-				const teamData = response.data.map((team) => ({
-					id: team.pk,
-					name: team.nameKr ?? team.nameEn,
-					logo: team.logoUrl,
-				}));
-
-				setTeams(teamData);
-				setFilteredResults(teamData.filter((team) => team.name.toLowerCase().includes(searchTerm.toLowerCase())));
-			} catch (error) {
-				console.error('팀 리스트 가져오기 실패:', error);
-			}
-		}, 300); // 300ms 디바운스
+		debouncedFetchTeams(searchTerm); // 검색어가 변경될 때마다 디바운스된 함수 호출
 
 		return () => {
-			clearTimeout(handler);
+			debouncedFetchTeams.cancel();
 		};
-	}, [searchTerm]);
+	}, [searchTerm, debouncedFetchTeams]);
 
 	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const value = e.target.value.trim();
 		setSearchTerm(value);
 		setSelectedTeam(null);
-
-		const filtered = teams.filter((team) => team?.name.toLowerCase().includes(value.toLowerCase()));
-
-		setFilteredResults(filtered);
 		setIsVisibleSearchResults(value.length > 0);
 	};
 
@@ -169,12 +174,12 @@ export default function Page() {
 
 	const handleRemoveImage = () => {
 		setSelectedImage(null);
-	  
+
 		// file input의 값을 초기화해서 동일한 파일 다시 선택 가능하게 함
 		if (fileInputRef.current) {
-		  fileInputRef.current.value = '';
+			fileInputRef.current.value = '';
 		}
-	  };	  
+	};
 
 	// 대표 이미지 클릭 시 파일 업로드 창 열기
 	const handleImageClick = () => {
@@ -182,8 +187,6 @@ export default function Page() {
 			fileInputRef.current.click();
 		}
 	};
-
-	console.log(body);
 
 	const postNewsContents = async () => {
 		if (!getAccessToken() || !getRefreshToken()) {
@@ -273,14 +276,14 @@ export default function Page() {
 
 					{isVisibleSearchResults && (
 						<div className="z-50 absolute top-10 w-[17.75rem] bg-black-000 border border-black-200 button4-medium rounded-lg shadow-lg overflow-hidden">
-							{filteredResults.length > 0 ? (
-								filteredResults.map((team, index) => (
+							{teams.length > 0 ? (
+								teams.map((team, index) => (
 									<div
 										key={team.id}
 										className={clsx(
 											'flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors',
 											{
-												'rounded-b-sm': index === filteredResults.length - 1,
+												'rounded-b-sm': index === teams.length - 1,
 											},
 										)}
 										onClick={() => {
