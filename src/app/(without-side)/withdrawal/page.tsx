@@ -30,7 +30,7 @@ export default function Page() {
 
 	const router = useRouter();
 
-	const handleWithDrawalButtonClick = async () => {
+	const handleWithdrawalButtonClick = async () => {
 		if (selectedReason === null) alert('탈퇴 사유를 선택해 주세요.');
 
 		const body = {
@@ -150,7 +150,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={handleWithDrawalButtonClick}
+					onClick={handleWithdrawalButtonClick}
 					disabled={isButtonDisabled}
 					className="flex-1 py-2.5 rounded-lg button2-semibold text-black-000 @mobile:text-15
             enabled:bg-primary-900 disabled:bg-black-300"
