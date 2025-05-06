@@ -28,8 +28,8 @@ export default function Score({
 	})();
 
 	const spacing = (side: 'home' | 'away') => {
-		if (isMobile) return side === 'home' ? '-home-[2.375rem]' : 'flex-row-reverse -away-[2.375rem]';
-		if (!isMobile) return side === 'home' ? '-home-[2.625rem]' : 'flex-row-reverse -away-[2.625rem]';
+		if (isMobile) return side === 'home' ? '-left-[2.375rem]' : 'flex-row-reverse -right-[2.375rem]';
+		if (!isMobile) return side === 'home' ? '-left-[2.625rem]' : 'flex-row-reverse -right-[2.625rem]';
 	};
 
 	return (
