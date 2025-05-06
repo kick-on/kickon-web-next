@@ -12,6 +12,7 @@ import { getUserInfo, updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getAccessToken } from '@/lib/utils/getAccessToken';
+import { setCookie } from '@/lib/utils/cookie';
 
 export default function Page() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
@@ -31,7 +32,7 @@ export default function Page() {
 		logoUrl: '/ban.svg',
 	});
 
-	const route = useRouter();
+	const router = useRouter();
 
 	const isEditable = false;
 	const hasTeam = league.nameKr !== '응원팀이 없어요.';
@@ -55,7 +56,7 @@ export default function Page() {
 	};
 
 	const handleCancelButtonClick = () => {
-		route.push('/');
+		router.push('/');
 	};
 
 	const handleCompleteButtonClick = () => {
@@ -77,16 +78,16 @@ export default function Page() {
 			alert(response);
 			setIsDuplicated(false);
 		} else {
-			route.push('/');
+			router.push('/');
 		}
 	};
 
 	useEffect(() => {
 		if (!getAccessToken()) {
 			alert('로그인이 필요한 서비스입니다. 홈으로 이동합니다.');
-			route.replace('/');
+			router.replace('/');
 		}
-	}, [route]);
+	}, [router]);
 
 	useEffect(() => {
 		// 새로고침해도 유저 정보 유지 -> persist로 대체 가능
@@ -145,7 +146,7 @@ export default function Page() {
 				)}
 			</div>
 
-			<div className="flex flex-col gap-2 mt-[4.25rem]">
+			<div className="relative flex flex-col gap-2 mt-[4.25rem]">
 				<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">계정 관리</div>
 				<div
 					className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-14
@@ -154,6 +155,16 @@ export default function Page() {
 					<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo?.providerType} 로고`} />
 					{currentUserInfo?.email}
 				</div>
+
+				<button
+					onClick={() => {
+						router.push('/withdrawal');
+						setCookie('fromProfile', 'true', 60);
+					}}
+					className="absolute -bottom-8 right-0 text-black-500 button5-regular underline"
+				>
+					회원 탈퇴
+				</button>
 			</div>
 
 			<div className="mt-[6.25rem] flex gap-4">
