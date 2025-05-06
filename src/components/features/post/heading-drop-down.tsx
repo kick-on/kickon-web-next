@@ -34,7 +34,7 @@ export default function HeadingDropdown({
 					{headingOptions.map((option, index) => (
 						<div
 							key={option.value}
-							className={clsx('p-2 body5-regular cursor-pointer hover:bg-gray-200 transition-colors', {
+							className={clsx('p-2 body5-regular cursor-pointer hover:bg-primary-50 transition-colors', {
 								'rounded-t-sm': index === 0,
 								'rounded-b-sm': index === headingOptions.length - 1,
 							})}

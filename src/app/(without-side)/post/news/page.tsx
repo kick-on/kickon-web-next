@@ -17,7 +17,7 @@ import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Page() {
-	const navigate = useRouter();
+	const router = useRouter();
 	const isMobile = useIsMobile();
 
 	const [searchTerm, setSearchTerm] = useState('');
@@ -61,7 +61,7 @@ export default function Page() {
 		if (!isLoggedIn) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
-			navigate.replace(previousPage);
+			router.replace(previousPage);
 		}
 		const fetchUserInfo = async () => {
 			const user = await getUserInfo();
@@ -73,7 +73,7 @@ export default function Page() {
 		if (!currentUserInfo) {
 			fetchUserInfo();
 		}
-	}, [currentUserInfo, setCurrentUserInfo, navigate]);
+	}, [currentUserInfo, setCurrentUserInfo, router]);
 
 	const getTeamLists = useCallback(async (term: string) => {
 		// 검색어가 없으면 필터링 결과를 초기화하고 종료
@@ -216,7 +216,7 @@ export default function Page() {
 		try {
 			const response = await postNewContents(requestBody, true);
 
-			navigate.push(`/news/${response.data.pk}`);
+			router.push(`/news/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
@@ -363,7 +363,7 @@ export default function Page() {
 
 			<div className="flex justify-center gap-4 mt-4">
 				<button
-					onClick={() => console.log('취소')}
+					onClick={() => router.back()}
 					className="w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소

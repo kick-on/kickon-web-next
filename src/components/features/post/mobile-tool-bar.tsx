@@ -6,6 +6,7 @@ import HeadingDropdown from './heading-drop-down';
 import { ToolBarDivider } from './tool-bar';
 import Image from 'next/image';
 import { useEditorContext } from '@/lib/contexts/editor/context';
+import clsx from 'clsx';
 
 const MobileToolBar = ({
 	selectedOption,
@@ -18,7 +19,7 @@ const MobileToolBar = ({
 }) => {
 	const { handleTextFormatToggle, handleHeadingChange } = useEditorContext();
 	const [activeExtra, setActiveExtra] = useState<'format' | 'quote' | null>(null);
-	const baseButtonClass = 'flex items-center p-1.75 w-8.5 h-8.5 rounded-sm';
+	const baseButtonClass = 'flex items-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
 
 	const toggleExtra = (type: 'format' | 'quote') => {
 		setActiveExtra((prev) => (prev === type ? null : type));
@@ -60,21 +61,27 @@ const MobileToolBar = ({
 					<ToolBarDivider />
 
 					{/* 텍스트 포맷 버튼 */}
-					<button
-						onClick={() => toggleExtra('format')}
-						className={`${baseButtonClass} ${activeExtra === 'format' ? 'bg-primary-50 border border-black-000' : 'bg-black-000 border border-black-300'}`}
-					>
-						<Image src="/editor/textformatter.svg" alt="텍스트 포맷 버튼" width={20} height={20} className="w-5 h-5" />
+					<button onClick={() => toggleExtra('format')} className={`${baseButtonClass}`}>
+						<Image
+							src="/editor/textformatter.svg"
+							alt="텍스트 포맷 버튼"
+							width={20}
+							height={20}
+							className={clsx('w-6 h-6 rounded-xs', activeExtra === 'format' && 'bg-primary-50')}
+						/>
 					</button>
 
 					<ToolBarDivider />
 
 					{/*인용구 버튼*/}
-					<button
-						onClick={() => toggleExtra('quote')}
-						className={`${baseButtonClass} ${activeExtra === 'quote' ? 'bg-primary-50 border border-black-000' : 'bg-black-000 border border-black-300'}`}
-					>
-						<Image src="/editor/paragraph.svg" alt="텍스트 포맷 버튼" width={20} height={20} className="w-5 h-5" />
+					<button onClick={() => toggleExtra('quote')} className={`${baseButtonClass}`}>
+						<Image
+							src="/editor/paragraph.svg"
+							alt="텍스트 포맷 버튼"
+							width={20}
+							height={20}
+							className={clsx('w-6 h-6 rounded-xs', activeExtra === 'quote' && 'bg-primary-50')}
+						/>
 					</button>
 
 					<ToolBarDivider />

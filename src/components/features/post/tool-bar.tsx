@@ -2,13 +2,13 @@
 
 import clsx from 'clsx';
 import { useRef, useEffect, useState } from 'react';
-import { headingOptions } from '@/lib/constants/options';
 import Image from 'next/image';
+import { headingOptions } from '@/lib/constants/options';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { useEditorContext } from '@/lib/contexts/editor/context';
 import MobileToolBar from './mobile-tool-bar';
 import HeadingDropdown from './heading-drop-down';
 import MediaButtons from './media-buttons';
-import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-2" />;
 
@@ -132,11 +132,11 @@ export default function Toolbar() {
 			<ToolBarDivider />
 
 			{/*텍스트 포맷 형식*/}
-			<div className="flex h-8.5 text-center gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2 py-[7px]">
+			<div className="flex h-8.5 text-center gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-1.25 py-1">
 				{textFormatButtons.map((btn) => (
 					<button
 						key={btn.key}
-						className={clsx('w-5 rounded-xs', editor?.isActive(btn.key) && 'bg-black-300')}
+						className={clsx('w-5 rounded-xs', editor?.isActive(btn.key) && 'bg-primary-50')}
 						onClick={() => handleTextFormatToggle(btn.key)}
 					>
 						{btn.icon}
