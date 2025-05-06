@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { GameDto } from '@/services/apis/user-game-gamble/dto';
+import { GameDto, PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
 import { formatGameStartDate } from '@/lib/utils/formatGameStartDate';
 import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipations';
 import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
@@ -12,7 +12,7 @@ import Header, { HeaderProps } from './header';
 import { useState } from 'react';
 import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { getAccessToken } from '@/lib/utils/getAccessToken';
-import { deleteGameGamble } from '@/services/apis/user-game-gamble';
+import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
 
 export default function PredictCard({
 	game,
@@ -25,7 +25,7 @@ export default function PredictCard({
 	leagueName: string;
 	refetchGames?: () => void;
 }) {
-	const { gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
+	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
 	const { isMobile, isTablet } = getServerDeviceType();
 
@@ -46,7 +46,6 @@ export default function PredictCard({
 
 	// proceeding 카드: 내 예측 점수 또는 0으로 초기화
 	// finished 카드: 실제 경기 득점 또는 경기 중이면 -1로 초기화
-	console.log(game);
 	const [leftScore, setLeftScore] = useState(
 		(isFinished ? (isGameInProgress ? -1 : homeScore) : myGambleResult?.homeScore) || 0,
 	);
@@ -134,16 +133,43 @@ export default function PredictCard({
 		}
 	};
 
-	const handleCompleteButtonClick = () => {
+	const handleCompleteButtonClick = async () => {
 		if (isEditing) {
-			// TODO: 승부예측 수정 api 연결
-			setIsEditing(false);
-		} else {
-			// TODO: 승부예측 생성 api 연결
-		}
+			// 수정 중인 상태에서는 patch 함수 호출
+			const request: PatchGameGambleRequest = {
+				gamble: myGambleResult?.id,
+				predictedHomeScore: leftScore,
+				predictedAwayScore: rightScore,
+			};
+			const response = await patchGameGamble(request);
+			console.log('patch', response);
 
-		setIsClicked(false);
-		setIsCompleted(true);
+			if (typeof response === 'string') {
+				console.error(response);
+			} else {
+				setIsClicked(false);
+				setIsEditing(false);
+				setIsCompleted(true);
+				refetchGames();
+			}
+		} else {
+			// 새로 생성하는 경우 post 함수 호출
+			const request: PostGameGambleRequest = {
+				game: pk,
+				predictedHomeScore: leftScore,
+				predictedAwayScore: rightScore,
+			};
+			const response = await postGameGamble(request);
+			console.log('post', response);
+
+			if (typeof response === 'string') {
+				console.error(response);
+			} else {
+				setIsClicked(false);
+				setIsCompleted(true);
+				refetchGames();
+			}
+		}
 	};
 
 	return (
