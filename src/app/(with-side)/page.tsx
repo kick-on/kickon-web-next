@@ -51,7 +51,7 @@ export default function Home() {
 		<div className="flex flex-col gap-8">
 			<div className="flex flex-col gap-4">
 				{!proceedingGames ? (
-					<div className="w-[41.75rem] bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
+					<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
 						<FetchingFailedCard
 							onClick={() => getGamesByStatus('proceeding')}
 							isCardVisible={false}
@@ -74,7 +74,7 @@ export default function Home() {
 			<hr className="mx-6 border-black-600" />
 			<div className="flex flex-col gap-4">
 				{!finishedGames ? (
-					<div className="w-[41.75rem] bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
+					<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
 						<FetchingFailedCard
 							onClick={() => getGamesByStatus('finished')}
 							isCardVisible={false}
