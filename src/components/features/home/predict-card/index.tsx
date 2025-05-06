@@ -44,6 +44,9 @@ export default function PredictCard({
 	const [isCompleted, setIsCompleted] = useState(false);
 	const [isEditing, setIsEditing] = useState(false);
 
+	// proceeding 카드: 내 예측 점수 또는 0으로 초기화
+	// finished 카드: 실제 경기 득점 또는 경기 중이면 -1로 초기화
+	console.log(game);
 	const [leftScore, setLeftScore] = useState(
 		(isFinished ? (isGameInProgress ? -1 : homeScore) : myGambleResult?.homeScore) || 0,
 	);

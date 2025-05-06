@@ -71,8 +71,8 @@ export default function Score({
 				value={score === -1 ? '-' : score}
 				onChange={(e) => onChange(e, side)}
 				className={clsx('flex justify-center text-center text-black-000', scoreBoxClass, {
-					'bg-primary-900': isActive,
-					'bg-black-500': !isActive,
+					'bg-primary-900': isActive && score !== -1,
+					'bg-black-500': !isActive || score === -1,
 				})}
 			/>
 		</div>
