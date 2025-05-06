@@ -1,6 +1,6 @@
 'use client';
 
-import Score from './score';
+import Score from './predict-card/team-button/score';
 import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
 import clsx from 'clsx';

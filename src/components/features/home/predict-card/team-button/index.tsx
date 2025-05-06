@@ -2,7 +2,7 @@
 
 import clsx from 'clsx';
 import Image from 'next/image';
-import Score from '../../score';
+import Score from './score';
 import { Dispatch, SetStateAction } from 'react';
 import { GameDto } from '@/services/apis/user-game-gamble/dto';
 

@@ -165,7 +165,6 @@ export default function PredictCard({
 				<div></div>
 				{isClicked && (
 					<div className={clsx('relative', isMobile || isTablet ? 'mt-22' : 'mt-4')}>
-						{(isMobile || isTablet) && <ScoreButton onClick={handleScoreButtonClick} />}
 						<CompleteButton onClick={handleCompleteButtonClick} />
 					</div>
 				)}
