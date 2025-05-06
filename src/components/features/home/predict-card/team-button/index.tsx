@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Score from './score';
 import { Dispatch, SetStateAction } from 'react';
 import { GameDto } from '@/services/apis/user-game-gamble/dto';
+import MobileUpdownButton from './mobile-updown-button';
 
 interface TeamButtonInfoDto {
 	teamName: string;
@@ -65,26 +66,27 @@ export default function TeamButton({
 	const hoverShadowClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] hover:before:bg-primary-50 hover:before:shadow-predict-button-active before:transition-all
-		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
-		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+		${side === 'home' && (!isDesktop ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (!isDesktop ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
 
-	const shadowClass50 = (side) =>
+	const activeShadowClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] before:bg-primary-50 before:shadow-predict-button-active
-		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
-		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+		before:opacity-0 active:before:opacity-100 before:transition-all
+		${side === 'home' && (!isDesktop ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (!isDesktop ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
 
 	const shadowClass300 = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] before:bg-primary-300 before:shadow-predict-button-active
-		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
-		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+		${side === 'home' && (!isDesktop ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (!isDesktop ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
 
 	const bgClass200 = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] before:bg-primary-200
-		${side === 'home' && (isMobile ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
-		${side === 'away' && (isMobile ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
+		${side === 'home' && (!isDesktop ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
+		${side === 'away' && (!isDesktop ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
 
 	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
@@ -166,7 +168,7 @@ export default function TeamButton({
 				`relative w-full h-full min-h-[4.625rem] @mobile:min-h-[4.8125rem] grid grid-cols-3 items-center
 				border transition-colors`,
 				isClicked || isFinished ? clickedFont('team') : defaultFont,
-				isMobile ? 'rounded-md' : 'rounded-lg',
+				!isDesktop ? 'rounded-md' : 'rounded-lg',
 				isFinished
 					? isGameInProgress
 						? 'pointer-events-none'
@@ -186,17 +188,23 @@ export default function TeamButton({
 							'border-black-200': side === 'draw' && (!isFinished || (isFinished && isGameInProgress)),
 							'border-black-300': side === 'draw' && isFinished && !isGameInProgress,
 							[bgClass200(side)]: isFinished && !isGameInProgress && myGambleResult && sides[side].isActive,
-							[shadowClass300(side)]: sides[side].isActive && (isCompleted || (isDesktop && isClicked)),
+							[shadowClass300(side)]: sides[side].isActive && (isCompleted || isClicked),
 							// 데스크톱 스타일
-							'px-4 rounded-l-lg': side === 'home' && (isDesktop || isTablet),
-							'px-4 rounded-r-lg': side === 'away' && (isDesktop || isTablet),
-							[hoverShadowClass(side)]: !(isClicked || isCompleted),
-							// 태블릿 모바일 스타일
-							'px-[1.875rem] @mobile:px-3': !isDesktop,
+							'px-4 rounded-l-lg': side === 'home' && isDesktop,
+							'px-4 rounded-r-lg': side === 'away' && isDesktop,
+							[hoverShadowClass(side)]: !(isClicked || isCompleted) && isDesktop,
+							// 태블릿 모바일 공통 스타일
 							'pt-5 pb-17': isClicked && !isDesktop,
 							'rounded-l-md': side === 'home' && isMobile,
 							'rounded-r-md': side === 'away' && isMobile,
-							[shadowClass50(side)]: isClicked && selectedButton === side && !isDesktop,
+							[activeShadowClass(side)]: !(isClicked || isCompleted) && !isDesktop,
+							// 태블릿 스타일
+							'px-4 rounded-l-md': side === 'home' && isTablet,
+							'px-4 rounded-r-md': side === 'away' && isTablet,
+							'px-[1.975rem] rounded-l-md': side === 'home' && isTablet && isClicked,
+							'px-[1.975rem] rounded-r-md': side === 'away' && isTablet && isClicked,
+							// 모바일 스타일
+							'px-3': isMobile,
 						})}
 					>
 						{side !== 'draw' ? (
@@ -286,19 +294,18 @@ export default function TeamButton({
 								'absolute bottom-4 @mobile:left-1/2 @mobile:-translate-x-1/2 z-20 w-13 h-9 flex rounded-md',
 								side === 'home' ? 'left-[2.6875rem]' : 'right-[2.6875rem]',
 								{
-									'bg-black-500': selectedButton !== side || selectedButton === 'draw',
-									'bg-primary-900': selectedButton === side || selectedButton === 'draw',
+									'bg-black-500': !sides[side].isScoreBoxActive,
+									'bg-primary-900': sides[side].isScoreBoxActive,
 								},
 							)}
 						>
-							<div
-								className={clsx('m-auto px-1 text-black-000 body1-bold', {
-									'bg-black-900': selectedButton === side || selectedButton === 'draw',
-								})}
-							>
-								{sides[side].score}
-							</div>
+							<div className="m-auto px-1 text-black-000 body1-bold">{sides[side].score}</div>
 						</div>
+					)}
+
+					{/* 모바일 업다운 버튼 */}
+					{side !== 'draw' && !isDesktop && isClicked && (
+						<MobileUpdownButton score={side === 'home' ? leftScore : rightScore} />
 					)}
 				</div>
 			))}
