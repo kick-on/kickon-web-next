@@ -108,8 +108,11 @@ export default function Page() {
 								value={etcContent}
 								rows={3}
 								maxLength={500}
+								placeholder="고객님의 소중한 피드백을 받아 더 나은 서비스로 보답할게요."
 								onChange={(e) => setEtcContent(e.target.value)}
-								className="w-full p-4 border border-black-300 rounded-md outline-none resize-none no-scrollbar body6-regular"
+								className="w-full p-4 border border-black-300 rounded-md outline-none resize-none no-scrollbar
+									placeholder:text-12 placeholder:font-regular placeholder:leading-4 placeholder:text-black-600
+									placeholder:break-keep body6-regular"
 							/>
 						)}
 					</label>
