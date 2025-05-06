@@ -1,19 +1,21 @@
+import { useEditorContext } from '@/lib/contexts/editor/context';
 import Image from 'next/image';
 
-export default function MediaButtons({
-	showLinkInput,
-	setShowLinkInput,
-	linkUrl,
-	setLinkUrl,
-	handleInsertLink,
-	showYoutubeInput,
-	setShowYoutubeInput,
-	youtubeUrl,
-	setYoutubeUrl,
-	handleInsertYoutube,
-	handleAddImage,
-	mediaButtonRef,
-}) {
+const MediaButtons = ({ mediaButtonRef }) => {
+	const {
+		showLinkInput,
+		setShowLinkInput,
+		linkUrl,
+		setLinkUrl,
+		handleInsertLink,
+		showYoutubeInput,
+		setShowYoutubeInput,
+		youtubeUrl,
+		setYoutubeUrl,
+		handleInsertYoutube,
+		handleAddImage,
+	} = useEditorContext();
+
 	const mediaButtons = [
 		{
 			key: 'link',
@@ -125,4 +127,6 @@ export default function MediaButtons({
 			)}
 		</div>
 	);
-}
+};
+
+export default MediaButtons;

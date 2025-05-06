@@ -8,25 +8,21 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import MobileToolBar from './mobile-tool-bar';
 import HeadingDropdown from './heading-drop-down';
 import MediaButtons from './media-buttons';
+import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-2" />;
 
-export default function Toolbar({
-	editor,
-	showLinkInput,
-	setShowLinkInput,
-	linkUrl,
-	setLinkUrl,
-	handleInsertLink,
-	handleAddImage,
-	handleTextFormatToggle,
-	handleHeadingChange,
-	showYoutubeInput,
-	setShowYoutubeInput,
-	youtubeUrl,
-	setYoutubeUrl,
-	handleInsertYoutube,
-}) {
+export default function Toolbar() {
+	const {
+		editor,
+		showLinkInput,
+		setShowLinkInput,
+		handleTextFormatToggle,
+		handleHeadingChange,
+		showYoutubeInput,
+		setShowYoutubeInput,
+	} = useEditorContext();
+
 	const isMobile = useIsMobile();
 	const [hasMounted, setHasMounted] = useState(false);
 
@@ -117,21 +113,8 @@ export default function Toolbar({
 			setSelectedOption={setSelectedOption}
 			isVisibleDropdown={isVisibleDropdown}
 			setIsVisibleDropdown={setIsVisibleDropdown}
-			handleHeadingChange={handleHeadingChange}
 			dropdownRef={dropdownRef}
-			showLinkInput={showLinkInput}
-			setShowLinkInput={setShowLinkInput}
-			linkUrl={linkUrl}
-			setLinkUrl={setLinkUrl}
-			handleInsertLink={handleInsertLink}
-			showYoutubeInput={showYoutubeInput}
-			setShowYoutubeInput={setShowYoutubeInput}
-			youtubeUrl={youtubeUrl}
-			setYoutubeUrl={setYoutubeUrl}
-			handleInsertYoutube={handleInsertYoutube}
-			handleAddImage={handleAddImage}
 			mediaButtonRef={mediaButtonRef}
-			handleTextFormatToggle={handleTextFormatToggle}
 			quoteAndRuleButtons={quoteAndRuleButtons}
 		/>
 	) : (
@@ -174,20 +157,7 @@ export default function Toolbar({
 			<ToolBarDivider />
 
 			{/* 미디어 버튼 */}
-			<MediaButtons
-				showLinkInput={showLinkInput}
-				setShowLinkInput={setShowLinkInput}
-				linkUrl={linkUrl}
-				setLinkUrl={setLinkUrl}
-				handleInsertLink={handleInsertLink}
-				showYoutubeInput={showYoutubeInput}
-				setShowYoutubeInput={setShowYoutubeInput}
-				youtubeUrl={youtubeUrl}
-				setYoutubeUrl={setYoutubeUrl}
-				handleInsertYoutube={handleInsertYoutube}
-				handleAddImage={handleAddImage}
-				mediaButtonRef={mediaButtonRef}
-			/>
+			<MediaButtons mediaButtonRef={mediaButtonRef} />
 		</div>
 	);
 }

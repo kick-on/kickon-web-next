@@ -5,29 +5,18 @@ import MediaButtons from './media-buttons';
 import HeadingDropdown from './heading-drop-down';
 import { ToolBarDivider } from './tool-bar';
 import Image from 'next/image';
+import { useEditorContext } from '@/lib/contexts/editor/context';
 
 const MobileToolBar = ({
 	selectedOption,
 	setSelectedOption,
 	isVisibleDropdown,
 	setIsVisibleDropdown,
-	handleHeadingChange,
 	dropdownRef,
-	showLinkInput,
-	setShowLinkInput,
-	linkUrl,
-	setLinkUrl,
-	handleInsertLink,
-	showYoutubeInput,
-	setShowYoutubeInput,
-	youtubeUrl,
-	setYoutubeUrl,
-	handleInsertYoutube,
-	handleAddImage,
-	mediaButtonRef,
-	handleTextFormatToggle,
 	quoteAndRuleButtons,
+	mediaButtonRef,
 }) => {
+	const { handleTextFormatToggle, handleHeadingChange } = useEditorContext();
 	const [activeExtra, setActiveExtra] = useState<'format' | 'quote' | null>(null);
 	const baseButtonClass = 'flex items-center p-1.75 w-8.5 h-8.5 rounded-sm';
 
@@ -90,20 +79,7 @@ const MobileToolBar = ({
 
 					<ToolBarDivider />
 
-					<MediaButtons
-						showLinkInput={showLinkInput}
-						setShowLinkInput={setShowLinkInput}
-						linkUrl={linkUrl}
-						setLinkUrl={setLinkUrl}
-						handleInsertLink={handleInsertLink}
-						showYoutubeInput={showYoutubeInput}
-						setShowYoutubeInput={setShowYoutubeInput}
-						youtubeUrl={youtubeUrl}
-						setYoutubeUrl={setYoutubeUrl}
-						handleInsertYoutube={handleInsertYoutube}
-						handleAddImage={handleAddImage}
-						mediaButtonRef={mediaButtonRef}
-					/>
+					<MediaButtons mediaButtonRef={mediaButtonRef} />
 				</div>
 			</div>
 
