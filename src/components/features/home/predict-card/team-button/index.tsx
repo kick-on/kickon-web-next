@@ -12,6 +12,8 @@ interface TeamButtonInfoDto {
 	teamLogoUrl: string;
 	gambleRatio: number;
 	score?: number;
+	increaseScore?: () => void;
+	decreaseScore?: () => void;
 	isActive: boolean; // 팀 버튼 active 여부
 	isScoreBoxActive?: boolean; // 점수 박스 active 여부
 }
@@ -95,6 +97,19 @@ export default function TeamButton({
 		teamLogoUrl: homeTeam.logoUrl,
 		gambleRatio: gambleResult.home,
 		score: leftScore,
+		increaseScore: () => {
+			// 무승부 선택 시 양쪽 점수 동시에 제어어
+			if (selectedButton === 'draw') {
+				setRightScore(rightScore + 1);
+			}
+			setLeftScore(leftScore + 1);
+		},
+		decreaseScore: () => {
+			if (selectedButton === 'draw') {
+				setRightScore(rightScore - 1);
+			}
+			setLeftScore(leftScore - 1);
+		},
 		isActive: leftScore > rightScore,
 		isScoreBoxActive: leftScore >= rightScore,
 	};
@@ -111,6 +126,18 @@ export default function TeamButton({
 		teamLogoUrl: awayTeam.logoUrl,
 		gambleRatio: gambleResult.away,
 		score: rightScore,
+		increaseScore: () => {
+			if (selectedButton === 'draw') {
+				setLeftScore(leftScore + 1);
+			}
+			setRightScore(rightScore + 1);
+		},
+		decreaseScore: () => {
+			if (selectedButton === 'draw') {
+				setLeftScore(leftScore - 1);
+			}
+			setRightScore(rightScore - 1);
+		},
 		isActive: leftScore < rightScore,
 		isScoreBoxActive: leftScore <= rightScore,
 	};
@@ -190,12 +217,8 @@ export default function TeamButton({
 							((isClicked && isDesktop) || isCompleted || isFinished) && (
 								<>
 									<Score
-										onClickUpButton={() => {
-											setLeftScore((prev) => prev + 1);
-										}}
-										onClickDownButton={() => {
-											setLeftScore((prev) => prev - 1);
-										}}
+										onClickUpButton={sides.home.increaseScore}
+										onClickDownButton={sides.home.decreaseScore}
 										onChange={(e) => {
 											const updatedScore = Math.min(20, Math.max(0, parseInt(e.target.value) || 0));
 											setLeftScore(updatedScore);
@@ -209,12 +232,8 @@ export default function TeamButton({
 										}
 									/>
 									<Score
-										onClickUpButton={() => {
-											setRightScore((prev) => prev + 1);
-										}}
-										onClickDownButton={() => {
-											setRightScore((prev) => prev - 1);
-										}}
+										onClickUpButton={sides.away.increaseScore}
+										onClickDownButton={sides.away.decreaseScore}
 										onChange={(e) => {
 											const updatedScore = Math.min(20, Math.max(0, parseInt(e.target.value) || 0));
 											setRightScore(updatedScore);
@@ -272,7 +291,11 @@ export default function TeamButton({
 
 					{/* 모바일 업다운 버튼 */}
 					{side !== 'draw' && !isDesktop && isClicked && (
-						<MobileUpdownButton score={side === 'home' ? leftScore : rightScore} />
+						<MobileUpdownButton
+							score={sides[side].score}
+							onClickUpButton={sides[side].increaseScore}
+							onClickDownButton={sides[side].decreaseScore}
+						/>
 					)}
 				</div>
 			))}

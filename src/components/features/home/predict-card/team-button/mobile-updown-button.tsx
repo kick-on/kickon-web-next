@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 
-export default function MobileUpdownButton({ score }) {
+export default function MobileUpdownButton({ score, onClickUpButton, onClickDownButton }) {
 	const shadowClass = (side) =>
 		`inset-0 before:absolute before:z-10 before:top-0 before:left-0 before:bottom-0 before:right-0
 		before:content-[''] before:bg-primary-50 before:shadow-predict-button-active
@@ -14,6 +14,7 @@ export default function MobileUpdownButton({ score }) {
       bg-black-000 border border-black-200 rounded-md shadow-predict-button"
 		>
 			<button
+				onClick={onClickUpButton}
 				disabled={score >= 20}
 				className={clsx('group grow relative rounded-l-md flex justify-center items-center', shadowClass('left'))}
 			>
@@ -21,6 +22,7 @@ export default function MobileUpdownButton({ score }) {
 			</button>
 			<div className="my-auto w-[1px] h-9 bg-black-200"></div>
 			<button
+				onClick={onClickDownButton}
 				disabled={score <= 0}
 				className={clsx('group grow relative rounded-r-md flex justify-center items-center', shadowClass('right'))}
 			>
