@@ -168,7 +168,7 @@ export default function PredictCard({
 					isCompleted={isCompleted}
 					isEditing={isEditing}
 					isFinished={isFinished}
-					isGameInProgress={isGambleInProgress}
+					isGameInProgress={isGameInProgress}
 				/>
 				<div></div>
 				{isClicked && (

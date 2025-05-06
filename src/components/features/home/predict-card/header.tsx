@@ -39,7 +39,7 @@ export default function Header({
 					className={clsx(
 						'px-2 py-1 ml-2 mr-0.5 rounded-full text-black-000 caption2-regular text-center items-center',
 						{
-							'bg-black-900': isGambleInProgress || isGameInProgress,
+							'bg-black-900': isGambleInProgress || (isGameInProgress && myGambleResult),
 							'bg-primary-900':
 								myGambleResult &&
 								(myGambleResult.gambleStatus === 'SUCCEED' || myGambleResult.gambleStatus === 'PERFECT'),

@@ -162,11 +162,11 @@ export default function TeamButton({
 				border transition-colors`,
 				isClicked || isFinished ? clickedFont('team') : defaultFont,
 				!isDesktop ? 'rounded-md' : 'rounded-lg',
-				isFinished
-					? isGameInProgress
-						? 'pointer-events-none'
-						: 'pointer-events-none bg-black-200 border-black-300'
-					: 'cursor-pointer shadow-predict-button border-black-200',
+				{
+					'bg-black-000 border-black-200 shadow-predict-button cursor-pointer': !isFinished,
+					'pointer-events-none bg-black-000 border-black-200': isFinished && isGameInProgress,
+					'cursor-pointer shadow-predict-button border-black-200': isFinished && !isGameInProgress,
+				},
 			)}
 		>
 			{sidesArr.map((side) => (
