@@ -113,6 +113,8 @@ body.overflow-hidden {
 	width: 1.5rem;
 }
 
+/* 에디터 */
+
 .tiptap hr {
 	border: none;
 	border-top: 1px solid #d9d9d9;
@@ -123,23 +125,40 @@ body.overflow-hidden {
 	height: 100%; /* 에디터 전체 영역을 인풋으로 받음 */
 }
 
-/*커스텀 스크롤바*/
-.custom-scrollbar { 
+.responsive-youtube {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	max-width: 100%;
+	height: auto;
+	margin-bottom: 10px;
+}
+
+.responsive-image {
+	max-width: 100%;
+	height: auto;
+	display: block;
+	margin: 1rem auto;
+	max-height: 300px;
+	object-fit: contain;
+}
+
+/* 커스텀 스크롤바 */
+.custom-scrollbar {
 	overflow-y: scroll;
 }
-  
+
 /* 스크롤바의 폭 너비 */
 .custom-scrollbar::-webkit-scrollbar {
-	width: 6px;  
+	width: 6px;
 }
-  
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
-	background: rgba(0,0,0,0.3); /* 스크롤바 색상 */
+	background: rgba(0, 0, 0, 0.3); /* 스크롤바 색상 */
 	border-radius: 4px; /* 스크롤바 둥근 테두리 */
 }
-  
+
 .custom-scrollbar::-webkit-scrollbar-track {
-	background: transparent;  /*스크롤바 뒷 배경 색상*/
+	background: transparent; /*스크롤바 뒷 배경 색상*/
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -151,15 +170,9 @@ body.overflow-hidden {
 	scrollbar-width: none; /* Firefox */
 }
 
-/*placeholder*/
+/* placeholder */
 .empty-placeholder:empty:before {
 	content: attr(data-placeholder);
 	color: #999;
 	pointer-events: none;
-}
-.responsive-content iframe {
-	width: 100%;
-	aspect-ratio: 16 / 9;
-	max-width: 100%;
-	height: auto;
 }

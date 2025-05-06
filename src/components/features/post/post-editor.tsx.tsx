@@ -9,8 +9,8 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Link from '@tiptap/extension-link';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
-import Toolbar from './tool-bar';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
+import Toolbar from './tool-bar';
 
 const PostEditor = ({
 	setTitle,
@@ -40,11 +40,19 @@ const PostEditor = ({
 					class: 'underline text-blue-500 cursor-pointer',
 				},
 			}),
-			Image,
+			Image.configure({
+				HTMLAttributes: {
+					class: 'responsive-image',
+				},
+			}),
 			Underline,
 			FontFamily,
 			HorizontalRule,
-			Youtube,
+			Youtube.configure({
+				HTMLAttributes: {
+					class: 'responsive-youtube',
+				},
+			}),
 		],
 		content: '',
 		editorProps: {
@@ -123,7 +131,7 @@ const PostEditor = ({
 
 			// 업로드된 이미지 URL을 에디터에 추가
 			editor.chain().focus().setImage({ src: s3Url }).run();
-    
+
 			// 이미지 삽입 후 빈 단락 추가하여 커서 위치시키기
 			editor.chain().focus().createParagraphNear().run();
 
@@ -172,9 +180,8 @@ const PostEditor = ({
 			.focus()
 			.setYoutubeVideo({
 				src: `https://www.youtube.com/watch?v=${youtubeId}`,
-				width: 600,
-				height: 360,
 			})
+			.createParagraphNear() // 커서 아래로 이동
 			.run();
 		setYoutubeUrl('');
 		setShowYoutubeInput(false);
@@ -206,14 +213,14 @@ const PostEditor = ({
 		<div>
 			<input
 				placeholder="제목"
-				className="title1-bold w-[39.75rem] h-[3.5rem] px-4 py-[15px] border border-[#D9D9D9] rounded-lg mb-8 focus:outline-none"
+				className="title1-bold @mobile:text-20 w-full @mobile:font-semibold h-[3.5rem] @mobile:h-12 px-4 py-[15px] @mobile:py-3 border border-black-300 rounded-lg mb-8 focus:outline-none"
 				onChange={(e) => setTitle(e.target.value)}
 			/>
 			<Toolbar {...toolbarProps} />
 			<div className="tiptap">
 				<EditorContent
 					editor={editor}
-					className="rounded-lg overflow-y-auto custom-scrollbar border border-[#D9D9D9] px-4 py-6 w-[636px] mb-7.5 h-[460px] focus:outline-none"
+					className="rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg overflow-y-auto custom-scrollbar border border-black-300 px-4 py-6 w-full mb-7.5 h-[460px] focus:outline-none"
 				/>
 			</div>
 		</div>
@@ -221,3 +228,5 @@ const PostEditor = ({
 };
 
 export default PostEditor;
+
+// 렌더링 시 처음은 ssr로 시작해서 모바일용 툴바부터 나오는 게 아닌 데스크탑용 툴바부터 나옴. 탭 선택하기도 마찬가지... 이를 어쩜 좋으니
