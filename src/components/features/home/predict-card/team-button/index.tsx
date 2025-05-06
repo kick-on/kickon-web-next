@@ -129,39 +129,6 @@ export default function TeamButton({
 		if (isDesktop) return 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
 	})();
 
-	const handleTeamButtonClick = (e: React.MouseEvent, side) => {
-		if (!isCompleted) {
-			if (isDesktop) {
-				if (side === 'home') {
-					setLeftScore(1);
-					setRightScore(0);
-				} else if (side === 'draw') {
-					setLeftScore(0);
-					setRightScore(0);
-				} else {
-					setLeftScore(0);
-					setRightScore(1);
-				}
-			} else {
-				if (!isClicked && !isCompleted) {
-					if (side === 'home') {
-						setLeftScore(1);
-						setRightScore(0);
-					} else if (side === 'away') {
-						setLeftScore(0);
-						setRightScore(1);
-					}
-				}
-				if (side === 'draw') {
-					setLeftScore(0);
-					setRightScore(0);
-				}
-			}
-		}
-
-		onClick(e);
-	};
-
 	return (
 		<div
 			className={clsx(
@@ -179,7 +146,7 @@ export default function TeamButton({
 			{sidesArr.map((side) => (
 				<div key={side} id={side} className={clsx('relative', isClicked && !isDesktop ? 'h-29' : 'h-full')}>
 					<div
-						onClick={(e: React.MouseEvent) => handleTeamButtonClick(e, side)}
+						onClick={onClick}
 						className={clsx('relative h-full flex gap-2 items-center @mobile:min-h-[4.8125rem]', {
 							// 데스크톱 태블릿 모바일 공통 스타일
 							'text-left': side === 'home',
@@ -289,7 +256,7 @@ export default function TeamButton({
 					{/* 모바일에서 팀 버튼 클릭 시 score box */}
 					{isClicked && !isDesktop && side !== 'draw' && (
 						<div
-							onClick={(e: React.MouseEvent) => handleTeamButtonClick(e, side)}
+							onClick={onClick}
 							className={clsx(
 								'absolute bottom-4 @mobile:left-1/2 @mobile:-translate-x-1/2 z-20 w-13 h-9 flex rounded-md',
 								side === 'home' ? 'left-[2.6875rem]' : 'right-[2.6875rem]',

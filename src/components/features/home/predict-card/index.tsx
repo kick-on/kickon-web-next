@@ -15,6 +15,8 @@ import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
 import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import { getAccessToken } from '@/lib/utils/getAccessToken';
+import { deleteGameGamble } from '@/services/apis/user-game-gamble';
 
 export default function PredictCard({
 	game,
@@ -42,17 +44,23 @@ export default function PredictCard({
 	const isGameCanceled = gameStatus === 'CANCELED' || gameStatus === 'POSTPONED';
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
 
-	const [selectedButton, setSelectedButton] = useState<string | null>(null);
+	const [isClicked, setIsClicked] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(false);
+	const [isEditing, setIsEditing] = useState(false);
+
 	const [leftScore, setLeftScore] = useState(
 		(isFinished ? (isGameInProgress ? -1 : homeScore) : myGambleResult?.homeScore) || 0,
 	);
 	const [rightScore, setRightScore] = useState(
 		(isFinished ? (isGameInProgress ? -1 : awayScore) : myGambleResult?.awayScore) || 0,
 	);
-
-	const [isClicked, setIsClicked] = useState(false);
-	const [isCompleted, setIsCompleted] = useState(false);
-	const [isEditing, setIsEditing] = useState(false);
+	const selectedButton = !isClicked
+		? 'none'
+		: leftScore > rightScore
+			? 'home'
+			: leftScore === rightScore
+				? 'draw'
+				: 'away';
 
 	const headerProps: HeaderProps = {
 		leagueName,
@@ -74,51 +82,56 @@ export default function PredictCard({
 		startTime,
 	};
 
-	const handleTeamButtonClick = (e: React.MouseEvent) => {
+	const handleTeamButtonClick = async (e) => {
+		// 로그인 하지 않은 경우 사용 제한
+		if (!getAccessToken()) {
+			alert(`로그인이 필요한 서비스입니다.\n로그인 후 이용해 주세요.`);
+			return;
+		}
+
 		const currentButton = (e.target as HTMLElement).closest('[id]').id;
 
-		if (!isClicked) {
-			// 참여 완료 상태에서 클릭 시 -> 수정 중 상태로 변경
-			if (isCompleted) {
-				setIsCompleted(false);
-				setIsEditing(true);
-			} else {
-				setSelectedButton(currentButton);
-			}
-			setIsClicked(true);
-			return;
-		}
-
-		// 클릭 상태에서 동일 버튼 클릭 시 -> 상태 초기화 & 필요 시 승부 예측 삭제
-		if (isClicked && currentButton === selectedButton) {
-			if (isEditing) {
-				// TODO: 승부예측 삭제 api 연결
-			}
-
-			setSelectedButton(null);
+		// 선택이 완료된 상태에서 다시 클릭 시 득점 업다운 버튼 활성화
+		if (isCompleted) {
 			setIsCompleted(false);
-			setIsEditing(false);
-			setIsClicked(false);
-			return;
-		}
-
-		// 클릭 상태에서 다른 버튼 클릭 시 -> selectedButton 업데이트
-		if (isClicked && currentButton !== selectedButton) {
-			setSelectedButton(currentButton);
-			return;
-		}
-	};
-
-	const handleScoreButtonClick = (score: number) => {
-		// selectedButton에 따라서 score 업데이트
-		if (selectedButton === 'home') {
-			setLeftScore(score);
-			setSelectedButton('away');
-		} else if (selectedButton === 'draw') {
-			setLeftScore(score);
-			setRightScore(score);
+			setIsEditing(true);
+			setIsClicked(true);
 		} else {
-			setRightScore(score);
+			// 동일 버튼 클릭 시 선택 종료
+			if (selectedButton === currentButton) {
+				// 기존 예측이 있는 경우에는 예측 삭제
+				if (myGambleResult) {
+					const response = await deleteGameGamble(myGambleResult.id);
+					console.log('delete', response);
+
+					// 삭제 실패 시 현재 상태 유지
+					if (typeof response === 'string') {
+						console.error(response);
+						return;
+					}
+				}
+				setIsClicked(false);
+				setIsCompleted(false);
+				setIsEditing(false);
+				setLeftScore(0);
+				setRightScore(0);
+				refetchGames();
+			} else {
+				switch (currentButton) {
+					case 'home':
+						setLeftScore(1);
+						setRightScore(0);
+						break;
+					case 'draw':
+						setLeftScore(0);
+						setRightScore(0);
+						break;
+					case 'away':
+						setLeftScore(0);
+						setRightScore(1);
+				}
+				setIsClicked(true);
+			}
 		}
 	};
 
@@ -128,10 +141,6 @@ export default function PredictCard({
 			setIsEditing(false);
 		} else {
 			// TODO: 승부예측 생성 api 연결
-		}
-
-		if (isMobile) {
-			setSelectedButton('home');
 		}
 
 		setIsClicked(false);
