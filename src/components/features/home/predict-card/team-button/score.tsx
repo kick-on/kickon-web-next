@@ -12,13 +12,13 @@ export default function Score({
 	onClickDownButton,
 	onChange,
 }: {
-	side: 'left' | 'right';
+	side: 'home' | 'away';
 	score: number;
 	isActive: boolean;
 	isCompleted: boolean;
 	onClickUpButton: () => void;
 	onClickDownButton: () => void;
-	onChange: (e: ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => void;
+	onChange: (e: ChangeEvent<HTMLInputElement>, side: 'home' | 'away') => void;
 }) {
 	const { isMobile } = getServerDeviceType();
 
@@ -27,9 +27,9 @@ export default function Score({
 		if (!isMobile) return 'w-9 h-9 rounded-lg body1-bold';
 	})();
 
-	const spacing = (side: 'left' | 'right') => {
-		if (isMobile) return side === 'left' ? '-left-[2.375rem]' : 'flex-row-reverse -right-[2.375rem]';
-		if (!isMobile) return side === 'left' ? '-left-[2.625rem]' : 'flex-row-reverse -right-[2.625rem]';
+	const spacing = (side: 'home' | 'away') => {
+		if (isMobile) return side === 'home' ? '-home-[2.375rem]' : 'flex-row-reverse -away-[2.375rem]';
+		if (!isMobile) return side === 'home' ? '-home-[2.625rem]' : 'flex-row-reverse -away-[2.625rem]';
 	};
 
 	return (
@@ -46,7 +46,7 @@ export default function Score({
 						height={16}
 						src={'/chevron/score-up.svg'}
 						alt={'증가'}
-						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
+						className="hover:filter hover:bawayness-0 hover:invert group-disabled:opacity-[23%]"
 					/>
 				</button>
 				<button
@@ -60,7 +60,7 @@ export default function Score({
 						height={16}
 						src={'/chevron/score-down.svg'}
 						alt={'감소'}
-						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
+						className="hover:filter hover:bawayness-0 hover:invert group-disabled:opacity-[23%]"
 					/>
 				</button>
 			</div>

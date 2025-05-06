@@ -223,12 +223,12 @@ export default function TeamButton({
 											const updatedScore = Math.min(20, Math.max(0, parseInt(e.target.value) || 0));
 											setLeftScore(updatedScore);
 										}}
-										side="left"
+										side="home"
 										score={leftScore}
 										isCompleted={isCompleted || isFinished}
 										isActive={
 											((isFinished && !isGameInProgress && myGambleResult) || !isFinished) &&
-											sides['home'].isScoreBoxActive
+											sides.home.isScoreBoxActive
 										}
 									/>
 									<Score
@@ -238,12 +238,12 @@ export default function TeamButton({
 											const updatedScore = Math.min(20, Math.max(0, parseInt(e.target.value) || 0));
 											setRightScore(updatedScore);
 										}}
-										side="right"
+										side="away"
 										score={rightScore}
 										isCompleted={isCompleted || isFinished}
 										isActive={
 											((isFinished && !isGameInProgress && myGambleResult) || !isFinished) &&
-											sides['away'].isScoreBoxActive
+											sides.away.isScoreBoxActive
 										}
 									/>
 								</>
