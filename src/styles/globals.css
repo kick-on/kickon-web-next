@@ -154,3 +154,9 @@ body.overflow-hidden {
 	color: #999;
 	pointer-events: none;
 }
+.responsive-content iframe {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	max-width: 100%;
+	height: auto;
+}

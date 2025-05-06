@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
@@ -11,7 +11,7 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const isNews = type === 'news';
-	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
+	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
 	const [isLiked, setIsLiked] = useState(data.isKicked);
 	const [likes, setLikes] = useState(data.likes);
 	const [sanitizedContent, setSanitizedContent] = useState('');
@@ -20,6 +20,24 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
 	const [isVerticalImage, setIsVerticalImage] = useState(false);
+	const imageRef = useRef(null);
+
+	// 이미지 비율 확인 (세로 이미지 감지)
+	useEffect(() => {
+		const checkImageOrientation = () => {
+			if (data.thumbnailUrl && typeof window !== 'undefined') {
+				const img = document.createElement('img');
+				img.onload = () => {
+					// 이미지의 높이가 너비보다 크면 세로 이미지로 판단
+					const isVertical = img.naturalHeight > img.naturalWidth;
+					setIsVerticalImage(isVertical);
+				};
+				img.src = data.thumbnailUrl;
+			}
+		};
+
+		checkImageOrientation();
+	}, [data.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -56,20 +74,24 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 		<div className="px-4">
 			{/* 대표 이미지 */}
 			{isNews && (
-				<Image
-					src={data.thumbnailUrl}
-					alt="대표 이미지"
-					width={636}
-					height={322}
-					className={`mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] ${
-						isVerticalImage ? 'object-contain bg-black-200' : 'object-cover'
-					}`}
-					onLoadingComplete={(img) => {
-						if (img.naturalHeight > img.naturalWidth) {
-							setIsVerticalImage(true);
-						}
-					}}
-				/>
+				<div
+					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden
+						min-h-[190px]
+						w-[clamp(311px,100%,636px)] h-[clamp(190px,40vw,322px)]
+						${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
+					`}
+				>
+					<Image
+						ref={imageRef}
+						src={data.thumbnailUrl}
+						alt="대표 이미지"
+						width={636}
+						height={322}
+						className={`
+							${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
+						`}
+					/>
+				</div>
 			)}
 
 			{/* 헤더 */}
@@ -84,10 +106,10 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 			)}
 
-			<h1 className={`title1-bold ${titleMargin}`}>{data.title}</h1>
+			<h1 className={`title1-bold @mobile:text-2xl ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
-			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular">
+			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-[12px] @mobile:mt-4">
 				<div className="flex items-center gap-2">
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
@@ -98,7 +120,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 							className="w-full h-full rounded-full object-cover"
 						/>
 					</div>
-					<span className="flex items-center gap-1.5 text-black-900">
+					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-[13px]">
 						{data.user.nickname}
 						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
 					</span>
@@ -108,11 +130,11 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 
 				<div className="flex gap-3 items-center text-black-600 body5-regular">
-					<div className="flex items-center gap-1.5">
+					<div className="flex items-center gap-1.5 @mobile:hidden">
 						<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
 						<span>{likes}</span>
 					</div>
-					<div className="flex items-center gap-1.5">
+					<div className="flex items-center gap-1.5 @mobile:hidden">
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
 						<span>{data.replies}</span>
 					</div>
@@ -122,7 +144,10 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+			<div
+				className="mb-40 body3-regular @mobile:mb-30 responsive-content"
+				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+			/>
 
 			{/* 좋아요 버튼 */}
 			<button
