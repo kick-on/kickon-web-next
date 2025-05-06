@@ -1,16 +1,12 @@
 'use client';
 
 import clsx from 'clsx';
-import InProgress from '../in-progress';
-import Closed from '../closed';
 import { GameDto } from '@/services/apis/user-game-gamble/dto';
 import { formatGameStartDate } from '@/lib/utils/formatGameStartDate';
 import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipations';
 import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
-import ButtonTypeInProgress from '../button-type-in-progress';
 import GameInfoBox, { GameInfoBoxProps } from './game-info-box';
 import TeamButton from './team-button';
-import ScoreButton from './score-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
@@ -29,9 +25,9 @@ export default function PredictCard({
 	leagueName: string;
 	refetchGames?: () => void;
 }) {
-	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
+	const { gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
-	const { isMobile, isTablet, isDesktop } = getServerDeviceType();
+	const { isMobile, isTablet } = getServerDeviceType();
 
 	const isFinished = type === 'finished';
 

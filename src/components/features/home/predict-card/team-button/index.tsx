@@ -41,7 +41,6 @@ export default function TeamButton({
 	isTablet,
 	isClicked,
 	isCompleted,
-	isEditing,
 	isFinished,
 	isGameInProgress,
 	leftScore,
@@ -90,7 +89,7 @@ export default function TeamButton({
 		${side === 'home' && (!isDesktop ? 'before:rounded-l-md' : 'before:rounded-l-lg')} 
 		${side === 'away' && (!isDesktop ? 'before:rounded-r-md' : 'before:rounded-r-lg')}`;
 
-	const { pk, homeTeam, awayTeam, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
+	const { homeTeam, awayTeam, gambleResult, myGambleResult } = game;
 
 	const home: TeamButtonInfoDto = {
 		teamName: homeTeam.nameKr || homeTeam.nameEn,
