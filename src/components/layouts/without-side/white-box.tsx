@@ -8,11 +8,12 @@ const paddingMap: Record<string, string> = {
 	'/post/news': 'py-[1.875rem]',
 	'/post/board': 'py-[1.875rem]',
 	'/profile-setting': 'py-[8.25rem] @mobile:pt-15', // 프로필 설정 페이지
+	'/withdrawal': 'py-[6.25rem] @mobile:pt-15',
 };
 
 const WhiteBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const pathname = usePathname();
-	const isNaked = pathname === '/signup' || pathname === '/profile-setting';
+	const isNaked = pathname === '/signup' || pathname === '/profile-setting' || pathname === '/withdrawal';
 
 	return (
 		<div

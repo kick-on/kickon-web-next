@@ -56,7 +56,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 			className="fixed z-50 inset-0 flex items-center justify-center"
 			style={{ backgroundColor: 'rgba(0, 0, 0, 0.4)' }}
 		>
-			<div className="bg-black-000 px-[2.1875rem] py-6 rounded-[0.625rem] w-[23.625rem]">
+			<div className="bg-black-000 px-[2.1875rem] @mobile:px-4 py-6 rounded-[0.625rem] w-[23.625rem] @mobile:w-[343px]">
 				<div className="flex justify-between items-center mb-10.5">
 					<h2 className="title3-semibold text-black-900 text-center flex-grow">게시글 신고</h2>
 					<button onClick={onClose} className="ml-auto">
@@ -67,7 +67,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 					{reportOptions.map((reason) => (
 						<div
 							key={reason}
-							className="flex items-center gap-2 text-black-900 cursor-pointer"
+							className="flex items-center gap-2 text-black-900 body5-regular cursor-pointer"
 							onClick={() => handleOptionChange(reason)}
 						>
 							<div
@@ -95,7 +95,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 					<button
 						onClick={handleSubmitButtonClick}
 						disabled={!isSubmitEnabled}
-						className={`w-77 px-4 py-[0.625rem] rounded-lg ${
+						className={`w-77 @mobile:w-77.5 px-4 py-[0.625rem] rounded-lg ${
 							isSubmitEnabled ? 'bg-black-900 text-black-000' : 'bg-black-300 text-black-500'
 						}`}
 					>
