@@ -2,13 +2,19 @@
 
 import clsx from 'clsx';
 import { useRef, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { headingOptions } from '@/lib/constants/options';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import MobileToolBar from './mobile-tool-bar';
 import HeadingDropdown from './heading-drop-down';
 import MediaButtons from './media-buttons';
+import BoldIcon from '@/assets/editor/bold.svg';
+import UnderlineIcon from '@/assets/editor/underline.svg';
+import EllipsisIcon from '@/assets/editor/ellipsis.svg';
+import ItalicIcon from '@/assets/editor/italic.svg';
+import SortNumericIcon from '@/assets/editor/sort-numeric.svg';
+import QuoteIcon from '@/assets/editor/quote.svg';
+import lineIcon from '@/assets/editor/line.svg';
 
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-2" />;
 
@@ -22,7 +28,7 @@ export default function Toolbar() {
 		showYoutubeInput,
 		setShowYoutubeInput,
 	} = useEditorContext();
-
+	const [hrClicked, setHrClicked] = useState(false);
 	const isMobile = useIsMobile();
 	const [hasMounted, setHasMounted] = useState(false);
 
@@ -39,23 +45,27 @@ export default function Toolbar() {
 	const mediaButtonRef = showLinkInput ? linkInputRef : showYoutubeInput ? youtubeInputRef : null;
 
 	const textFormatButtons = [
-		{ key: 'bold', icon: <Image src="/editor/bold.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'underline', icon: <Image src="/editor/underline.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'italic', icon: <Image src="/editor/italic.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'bulletList', icon: <Image src="/editor/ellipsis.svg" alt="Bold" width={20} height={20} /> },
-		{ key: 'orderedList', icon: <Image src="/editor/sort-numeric.svg" alt="Bold" width={20} height={20} /> },
+		{ key: 'bold', Icon: BoldIcon },
+		{ key: 'underline', Icon: UnderlineIcon },
+		{ key: 'italic', Icon: ItalicIcon },
+		{ key: 'bulletList', Icon: EllipsisIcon },
+		{ key: 'orderedList', Icon: SortNumericIcon },
 	];
 
 	const quoteAndRuleButtons = [
 		{
 			key: 'blockquote',
-			icon: <Image src="/editor/quote.svg" alt="인용구" width={20} height={20} />,
+			Icon: QuoteIcon,
 			onClick: () => handleTextFormatToggle('blockquote'),
 		},
 		{
 			key: 'horizontalRule',
-			icon: <Image src="/editor/line.svg" alt="구분선" width={20} height={20} />,
-			onClick: () => handleTextFormatToggle('horizontalRule'),
+			Icon: lineIcon,
+			onClick: () => {
+				handleTextFormatToggle('horizontalRule');
+				setHrClicked(true);
+				setTimeout(() => setHrClicked(false), 3000);
+			},
 		},
 	];
 
@@ -132,26 +142,35 @@ export default function Toolbar() {
 			<ToolBarDivider />
 
 			{/*텍스트 포맷 형식*/}
-			<div className="flex h-8.5 text-center gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-1.25 py-1">
-				{textFormatButtons.map((btn) => (
-					<button
-						key={btn.key}
-						className={clsx('w-5 rounded-xs', editor?.isActive(btn.key) && 'bg-primary-50')}
-						onClick={() => handleTextFormatToggle(btn.key)}
-					>
-						{btn.icon}
-					</button>
-				))}
+			<div className="flex h-8.5 text-center gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2 py-1.75">
+				{textFormatButtons.map(({ key, Icon }) => {
+					const isActive = editor?.isActive(key);
+
+					return (
+						<button
+							key={key}
+							className={clsx('w-5 h-5 rounded-xs flex items-center justify-center', isActive && 'bg-primary-50')}
+							onClick={() => handleTextFormatToggle(key)}
+						>
+							<Icon className={isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f]'} />
+						</button>
+					);
+				})}
 			</div>
 			<ToolBarDivider />
 
 			{/* 인용구 & 구분선 버튼 */}
 			<div className="flex gap-2 h-8.5">
-				{quoteAndRuleButtons.map((btn) => (
-					<button key={btn.key} className="p-[7px] border border-black-300 rounded-sm" onClick={btn.onClick}>
-						{btn.icon}
-					</button>
-				))}
+				{quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
+					const isActive = key === 'horizontalRule' ? hrClicked : editor?.isActive(key);
+					return (
+						<button key={key} className="p-[7px] border border-black-300 rounded-sm" onClick={onClick}>
+							<Icon
+								className={clsx('w-5 h-5 rounded-xs', isActive ? 'stroke-[#c00c0b] bg-primary-50' : 'stroke-[#8f8f8f]')}
+							/>
+						</button>
+					);
+				})}
 			</div>
 
 			<ToolBarDivider />

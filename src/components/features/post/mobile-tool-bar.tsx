@@ -4,9 +4,15 @@ import { useState } from 'react';
 import MediaButtons from './media-buttons';
 import HeadingDropdown from './heading-drop-down';
 import { ToolBarDivider } from './tool-bar';
-import Image from 'next/image';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import clsx from 'clsx';
+import BoldIcon from '@/assets/editor/bold.svg';
+import UnderlineIcon from '@/assets/editor/underline.svg';
+import EllipsisIcon from '@/assets/editor/ellipsis.svg';
+import ItalicIcon from '@/assets/editor/italic.svg';
+import SortNumericIcon from '@/assets/editor/sort-numeric.svg';
+import TextFormattIcon from '@/assets/editor/textformatter.svg';
+import ParagraphIcon from '@/assets/editor/paragraph.svg';
 
 const MobileToolBar = ({
 	selectedOption,
@@ -17,33 +23,48 @@ const MobileToolBar = ({
 	quoteAndRuleButtons,
 	mediaButtonRef,
 }) => {
-	const { handleTextFormatToggle, handleHeadingChange } = useEditorContext();
+	const { editor, handleTextFormatToggle, handleHeadingChange } = useEditorContext();
 	const [activeExtra, setActiveExtra] = useState<'format' | 'quote' | null>(null);
-	const baseButtonClass = 'flex items-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
+	const baseButtonClass =
+		'flex items-center justify-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
 
 	const toggleExtra = (type: 'format' | 'quote') => {
 		setActiveExtra((prev) => (prev === type ? null : type));
 	};
 
+	const formatButtons = [
+		{ key: 'bold', Icon: BoldIcon },
+		{ key: 'underline', Icon: UnderlineIcon },
+		{ key: 'italic', Icon: ItalicIcon },
+		{ key: 'bulletList', Icon: EllipsisIcon },
+		{ key: 'orderedList', Icon: SortNumericIcon },
+	];
+
 	const extraButtons =
 		activeExtra === 'format'
-			? [
-					{ key: 'bold', icon: '/editor/bold.svg' },
-					{ key: 'underline', icon: '/editor/underline.svg' },
-					{ key: 'italic', icon: '/editor/italic.svg' },
-					{ key: 'bulletList', icon: '/editor/ellipsis.svg' },
-					{ key: 'orderedList', icon: '/editor/sort-numeric.svg' },
-				].map((btn) => (
-					<button key={btn.key} onClick={() => handleTextFormatToggle(btn.key)}>
-						<Image src={btn.icon} alt={btn.key} width={18} height={18} />
-					</button>
-				))
-			: activeExtra === 'quote'
-				? quoteAndRuleButtons.map((btn) => (
-						<button key={btn.key} onClick={btn.onClick}>
-							{btn.icon}
+			? formatButtons.map(({ key, Icon }) => {
+					const isActive = editor?.isActive(key);
+					return (
+						<button key={key} onClick={() => handleTextFormatToggle(key)}>
+							<div className="w-5 h-5 flex items-center justify-center rounded-sm">
+								<Icon className={clsx('w-5 h-5', isActive ? 'stroke-[#c00c0b]' : 'stroke-[#afafaf]')} />
+							</div>
 						</button>
-					))
+					);
+				})
+			: activeExtra === 'quote'
+				? quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
+						const isActive = editor?.isActive(key);
+						return (
+							<button key={key} onClick={onClick} className="p-[7px] border border-black-300 rounded-sm">
+								<div
+									className={clsx('w-5 h-5 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}
+								>
+									<Icon className={clsx('w-5 h-5', isActive ? 'stroke-[#c00c0b]' : 'stroke-[#afafaf]')} />
+								</div>
+							</button>
+						);
+					})
 				: null;
 
 	return (
@@ -61,26 +82,24 @@ const MobileToolBar = ({
 					<ToolBarDivider />
 
 					{/* 텍스트 포맷 버튼 */}
-					<button onClick={() => toggleExtra('format')} className={`${baseButtonClass}`}>
-						<Image
-							src="/editor/textformatter.svg"
-							alt="텍스트 포맷 버튼"
-							width={20}
-							height={20}
-							className={clsx('w-6 h-6 rounded-xs', activeExtra === 'format' && 'bg-primary-50')}
+					<button onClick={() => toggleExtra('format')} className={baseButtonClass}>
+						<TextFormattIcon
+							className={clsx(
+								'w-5 h-5 rounded-xs',
+								activeExtra === 'format' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
+							)}
 						/>
 					</button>
 
 					<ToolBarDivider />
 
-					{/*인용구 버튼*/}
-					<button onClick={() => toggleExtra('quote')} className={`${baseButtonClass}`}>
-						<Image
-							src="/editor/paragraph.svg"
-							alt="텍스트 포맷 버튼"
-							width={20}
-							height={20}
-							className={clsx('w-6 h-6 rounded-xs', activeExtra === 'quote' && 'bg-primary-50')}
+					{/* 인용구 버튼 */}
+					<button onClick={() => toggleExtra('quote')} className={baseButtonClass}>
+						<ParagraphIcon
+							className={clsx(
+								'w-5 h-5 rounded-xs',
+								activeExtra === 'quote' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
+							)}
 						/>
 					</button>
 
