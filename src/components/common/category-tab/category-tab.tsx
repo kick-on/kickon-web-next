@@ -8,8 +8,9 @@ import TabBar from './tab-bar';
 import PaginationBar from '../pagination-bar';
 import clsx from 'clsx';
 import EmptyState from './empty-state';
+import MoreList, { MoreListProps } from './more-list';
 
-const renderItems = (items, ItemComponent) => (
+export const renderItems = (items, ItemComponent) => (
 	<div>
 		{items.map((item, index) => (
 			<div key={item.pk}>
@@ -46,6 +47,14 @@ export default async function CategoryTab({
 	};
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
 
+	const moreListProps: MoreListProps = {
+		mode: mode,
+		initialLastPk: response.data.at(-1)?.pk || 0,
+		initialLastViewCount: response.data.at(-1)?.views || 0,
+		initialRequest: request,
+		initialMeta: response.meta,
+	};
+
 	return (
 		<div className="flex flex-col w-full @mobile:w-[calc(100vw-34px)]">
 			<TabBar mode={mode} q={q} type={type} />
@@ -57,6 +66,7 @@ export default async function CategoryTab({
 			) : (
 				<div className="flex flex-col w-full pb-10 @mobile:pb-0">
 					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
+					<MoreList {...moreListProps} />
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />
 				</div>
 			)}
