@@ -41,6 +41,7 @@ export default function MoreList({
 	const observerRef = useRef<IntersectionObserver | null>(null);
 	const targetRef = useRef<HTMLDivElement | null>(null);
 
+	// 스크롤 감지
 	useEffect(() => {
 		if (!targetRef.current) return;
 
@@ -55,6 +56,7 @@ export default function MoreList({
 		};
 	}, [targetRef]);
 
+	// 스크롤에 따라 추가 데이터 페칭
 	useEffect(() => {
 		const getItems = async () => {
 			const request = {
@@ -82,13 +84,13 @@ export default function MoreList({
 		}
 	}, [isIntersecting]);
 
+	// 탭 이동 시 items 초기화
 	useEffect(() => {
 		setItems([]);
 		setLastPk(initialLastPk);
 		setLastViewCount(initialLastViewCount);
 		setPage(initialMeta.currentPage + 1);
 		setHasNext(initialMeta.totalItems - initialMeta.pageSize * initialMeta.currentPage > 0);
-		console.log(initialMeta);
 	}, [initialRequest]);
 
 	return isMobile ? (
