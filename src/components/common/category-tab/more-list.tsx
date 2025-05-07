@@ -29,6 +29,7 @@ export default function MoreList({
 	const [items, setItems] = useState([]);
 	const [lastPk, setLastPk] = useState(initialLastPk);
 	const [lastViewCount, setLastViewCount] = useState(initialLastViewCount);
+	const [page, setPage] = useState(initialMeta.currentPage + 1);
 	const [hasNext, setHasNext] = useState(initialMeta.totalItems - initialMeta.pageSize * initialMeta.currentPage > 0);
 
 	const { isMobile } = getServerDeviceType();
@@ -60,6 +61,7 @@ export default function MoreList({
 		const getItems = async () => {
 			const request = {
 				...initialRequest,
+				page: page,
 				infinite: isMobile ? true : undefined,
 				lastNews: isMobile && isNews ? lastPk : undefined,
 				lastBoard: isMobile && !isNews ? lastPk : undefined,
@@ -74,6 +76,7 @@ export default function MoreList({
 			setLastPk(response.data.at(-1)?.pk || 0);
 			setLastViewCount(response.data.at(-1)?.views || 0);
 
+			setPage(page + 1);
 			setHasNext(response.meta.hasNext);
 		};
 
