@@ -37,17 +37,15 @@ export default function MoreList({
 	const isNews = mode === 'news';
 	const itemComponent = isNews ? NewsItem : CommunityItem;
 
+	const [isIntersecting, setIsIntersecting] = useState(false);
 	const observerRef = useRef<IntersectionObserver | null>(null);
 	const targetRef = useRef<HTMLDivElement | null>(null);
-	const [isIntersecting, setIsIntersecting] = useState(false);
 
 	useEffect(() => {
 		if (!targetRef.current) return;
 
 		observerRef.current = new IntersectionObserver(([entry]) => {
 			setIsIntersecting(entry.isIntersecting);
-			console.log('intersecting: ', entry.isIntersecting);
-			console.log('hasNext: ', hasNext);
 		});
 
 		observerRef.current.observe(targetRef.current);
@@ -69,7 +67,6 @@ export default function MoreList({
 			};
 
 			const response = isNews ? await getNewsList(request) : await getBoardList(request);
-			console.log(response.data.at(-1)?.pk);
 			if (!response || response.data.length === 0) return;
 
 			setItems((prev) => [...prev, ...response.data]);
@@ -85,10 +82,19 @@ export default function MoreList({
 		}
 	}, [isIntersecting]);
 
+	useEffect(() => {
+		setItems([]);
+		setLastPk(initialLastPk);
+		setLastViewCount(initialLastViewCount);
+		setPage(initialMeta.currentPage + 1);
+		setHasNext(initialMeta.totalItems - initialMeta.pageSize * initialMeta.currentPage > 0);
+		console.log(initialMeta);
+	}, [initialRequest]);
+
 	return isMobile ? (
 		<>
 			{renderItems(items, itemComponent)}
-			<div ref={targetRef} style={{ height: 1 }} /> {/* 감지용 div */}
+			<div ref={targetRef} style={{ height: 1 }} />
 		</>
 	) : null;
 }
