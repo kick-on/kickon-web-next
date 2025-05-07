@@ -178,6 +178,7 @@ export default function PredictCard({
 				bg-black-000 rounded-lg overflow-hidden ${isFinished && !isGameInProgress ? 'text-black-700' : ''}`}
 		>
 			<Header {...headerProps} />
+
 			<div className={clsx('grid grid-cols-[auto_1fr] grid-rows-[auto_auto]', { 'gap-x-1.5': !isMobile })}>
 				{!isMobile ? <GameInfoBox {...gameInfoBoxProps} /> : <div></div>}
 				<TeamButton
@@ -203,6 +204,7 @@ export default function PredictCard({
 					</div>
 				)}
 			</div>
+
 			<footer className="mt-2 caption1-regular text-black-700 text-right">{participations}명 참여</footer>
 		</div>
 	);

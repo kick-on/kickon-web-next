@@ -165,7 +165,7 @@ export default function TeamButton({
 				{
 					'bg-black-000 border-black-200 shadow-predict-button cursor-pointer': !isFinished,
 					'pointer-events-none bg-black-000 border-black-200': isFinished && isGameInProgress,
-					'cursor-pointer shadow-predict-button border-black-200': isFinished && !isGameInProgress,
+					'pointer-events-none bg-black-200 border-black-300': isFinished && !isGameInProgress,
 				},
 			)}
 		>
