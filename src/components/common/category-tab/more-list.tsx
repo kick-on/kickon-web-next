@@ -10,6 +10,7 @@ import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { GetNewsListRequest } from '@/services/apis/news/dto';
 import { GetBoardListRequest } from '@/services/apis/board/dto';
 import { MetaDto } from '@/services/config/dto';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export interface MoreListProps {
 	mode: 'news' | 'board';
@@ -32,7 +33,7 @@ export default function MoreList({
 	const [page, setPage] = useState(initialMeta.currentPage + 1);
 	const [hasNext, setHasNext] = useState(initialMeta.totalItems - initialMeta.pageSize * initialMeta.currentPage > 0);
 
-	const { isMobile } = getServerDeviceType();
+	const isMobile = useIsMobile();
 
 	const isNews = mode === 'news';
 	const itemComponent = isNews ? NewsItem : CommunityItem;
