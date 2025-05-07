@@ -8,6 +8,9 @@ export interface GetBoardListRequest {
 	size: number;
 	page: number;
 	order: string;
+	infinite?: boolean;
+	lastBoard?: number;
+	lastViewCount?: number;
 }
 
 export type GetBoardListResponse = SuccessResponse<BoardItemDto[]>;

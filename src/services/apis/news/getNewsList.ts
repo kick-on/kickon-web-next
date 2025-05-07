@@ -3,7 +3,16 @@ import { GetNewsListRequest, GetNewsListResponse } from './dto';
 import axiosInstance from '@/services/config/axiosInstance';
 import { FailResponse } from '@/services/config/dto';
 
-export const getNewsList = async ({ team, size, page, order, league }: GetNewsListRequest) => {
+export const getNewsList = async ({
+	team,
+	size,
+	page,
+	order,
+	league,
+	infinite,
+	lastNews,
+	lastViewCount,
+}: GetNewsListRequest) => {
 	const params = new URLSearchParams();
 
 	params.append('order', String(order));
@@ -12,6 +21,10 @@ export const getNewsList = async ({ team, size, page, order, league }: GetNewsLi
 
 	if (team !== undefined) params.append('team', String(team));
 	if (league !== undefined) params.append('league', String(league));
+	// 무한 스크롤
+	if (infinite !== undefined) params.append('infinite', String(infinite));
+	if (lastNews !== undefined) params.append('lastNews', String(lastNews));
+	if (lastViewCount !== undefined) params.append('lastViewCount', String(lastViewCount));
 
 	try {
 		const response = await axiosInstance.get<GetNewsListResponse | FailResponse>(

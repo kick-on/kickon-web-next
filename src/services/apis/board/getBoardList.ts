@@ -2,12 +2,24 @@ import { SERVER_URL } from '@/services/config/constants';
 import { GetBoardListRequest, GetBoardListResponse } from './dto';
 import axiosInstance from '@/services/config/axiosInstance';
 
-export const getBoardList = async ({ team, size, page, order }: GetBoardListRequest) => {
+export const getBoardList = async ({
+	team,
+	size,
+	page,
+	order,
+	infinite,
+	lastBoard,
+	lastViewCount,
+}: GetBoardListRequest) => {
 	const params = new URLSearchParams();
 
-	params.append('order', String(order));
 	params.append('size', String(size));
 	params.append('page', String(page));
+	params.append('order', String(order));
+	// 무한 스크롤
+	if (infinite !== undefined) params.append('infinite', String(infinite));
+	if (lastBoard !== undefined) params.append('lastNews', String(lastBoard));
+	if (lastViewCount !== undefined) params.append('lastViewCount', String(lastViewCount));
 
 	if (team !== undefined) params.append('team', String(team));
 
