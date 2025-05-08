@@ -50,7 +50,7 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 	}, [countToRender]);
 
 	useEffect(() => {
-		if (window.innerHeight < 666) setCountToRender(2);
+		if (window.innerHeight < 668) setCountToRender(2);
 		else if (window.innerHeight < 768) setCountToRender(3);
 		else if (window.innerHeight < 846) setCountToRender(4);
 		else setCountToRender(5);
