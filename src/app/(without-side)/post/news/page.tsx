@@ -221,8 +221,7 @@ export default function Page() {
 			console.error('게시글 작성 실패:', error);
 		}
 	};
-
-	const isSpecialCase = isMobile && selectedOption.label === '현지 팬 반응';
+	const isSpecial = isMobile && selectedOption.label === '현지 팬 반응';
 	return (
 		<div className="flex flex-col w-full">
 			{selectedImage ? (
@@ -318,9 +317,8 @@ export default function Page() {
 				<div ref={dropdownRef} className="relative w-fit button4-medium tablet:text-14 @mobile:text-13">
 					<button
 						onClick={handleDropdownToggle}
-						className={`flex items-center gap-8 h-9 border border-black-300 rounded-lg
-							${isMobile ? 'gap-2.5' : ''}
-							${isSpecialCase ? 'px-5' : isMobile ? 'px-3' : 'px-4'}`}
+						className={`flex items-center h-9 border border-black-300 rounded-lg 
+						${isSpecial ? 'gap-0.5 px-1' : 'gap-8 @mobile:gap-2.5 px-4 @mobile:px-3'}`}
 					>
 						<div
 							className={` ${
