@@ -48,7 +48,7 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-[39px]">
+		<div className="flex flex-col justify-between h-full">
 			<nav className="flex flex-col gap-2">
 				{navButtons.map((button) => (
 					<Link
@@ -68,7 +68,7 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 				<>
 					<Divider />
 
-					<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-4 mb-18 h-81">
 						<span className="text-black-700 subtitle1-medium mb-1">
 							{isHotNewsEmpty ? '최신 뉴스' : '많이 본 뉴스'}
 						</span>
