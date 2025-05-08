@@ -14,16 +14,29 @@ import { getTeam } from '@/services/apis/team';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Page() {
-	const navigate = useRouter();
+	const router = useRouter();
+	const isMobile = useIsMobile();
 
 	const [searchTerm, setSearchTerm] = useState('');
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
-		label: '탭 선택하기',
+		label: '',
 		value: '',
 	});
+
+	// isMobile이 null이 아니게 되면 label 설정
+	useEffect(() => {
+		if (isMobile !== null) {
+			setSelectedOption({
+				label: isMobile ? '탭 선택' : '탭 선택하기',
+				value: '',
+			});
+		}
+	}, [isMobile]);
+
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const [isVisibleSearchResults, setIsVisibleSearchResults] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -35,7 +48,7 @@ export default function Page() {
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedOption.value && title.trim() && body.trim());
+	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
 	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
 
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
@@ -48,7 +61,7 @@ export default function Page() {
 		if (!isLoggedIn) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
-			navigate.replace(previousPage);
+			router.replace(previousPage);
 		}
 		const fetchUserInfo = async () => {
 			const user = await getUserInfo();
@@ -60,7 +73,7 @@ export default function Page() {
 		if (!currentUserInfo) {
 			fetchUserInfo();
 		}
-	}, [currentUserInfo, setCurrentUserInfo, navigate]);
+	}, [currentUserInfo, setCurrentUserInfo, router]);
 
 	const getTeamLists = useCallback(async (term: string) => {
 		// 검색어가 없으면 필터링 결과를 초기화하고 종료
@@ -203,16 +216,16 @@ export default function Page() {
 		try {
 			const response = await postNewContents(requestBody, true);
 
-			navigate.push(`/news/${response.data.pk}`);
+			router.push(`/news/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
 	};
-
+	const isSpecial = isMobile && selectedOption.label === '현지 팬 반응';
 	return (
-		<div className="flex flex-col mx-auto">
+		<div className="flex flex-col w-full">
 			{selectedImage ? (
-				<div className="relative w-[636px] h-[322px] mb-4 bg-black-200 rounded-[10px] overflow-hidden flex items-center justify-center">
+				<div className="relative w-full h-80.5 @mobile:h-47.5 mb-4 bg-black-200 rounded-[10px] overflow-hidden flex items-center justify-center">
 					<Image
 						src={selectedImage}
 						alt="업로드된 대표 이미지"
@@ -240,8 +253,8 @@ export default function Page() {
 			<input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} accept="image/*" />
 
 			<div className="flex gap-4 mb-4">
-				<div ref={searchRef} className="relative w-[17.75rem]">
-					<div className="relative button4-medium flex items-center border border-black-300 rounded-lg h-9 px-4 py-[0.5625rem]">
+				<div ref={searchRef} className="relative w-71 @mobile:w-41.5">
+					<div className="relative button4-medium @mobile:text-13 flex items-center border border-black-300 rounded-lg h-9 px-4 py-[0.5625rem]">
 						{selectedTeam && (
 							<Image
 								src={selectedTeam.logo}
@@ -275,7 +288,7 @@ export default function Page() {
 					</div>
 
 					{isVisibleSearchResults && (
-						<div className="z-50 absolute top-10 w-[17.75rem] bg-black-000 border border-black-200 button4-medium rounded-lg shadow-lg overflow-hidden">
+						<div className="z-50 absolute top-10 w-full bg-black-000 border border-black-200 button4-medium @mobile:text-13 rounded-lg shadow-lg overflow-hidden">
 							{teams.length > 0 ? (
 								teams.map((team, index) => (
 									<div
@@ -301,14 +314,17 @@ export default function Page() {
 					)}
 				</div>
 
-				<div ref={dropdownRef} className="relative w-fit button4-medium">
+				<div ref={dropdownRef} className="relative w-fit button4-medium tablet:text-14 @mobile:text-13">
 					<button
 						onClick={handleDropdownToggle}
-						className="flex items-center gap-8 px-4 py-[0.5625rem] border border-[#D9D9D9] rounded-lg"
+						className={`flex items-center h-9 border border-black-300 rounded-lg 
+						${isSpecial ? 'gap-0.5 px-1' : 'gap-8 @mobile:gap-2.5 px-4 @mobile:px-3'}`}
 					>
 						<div
-							className={`button4-medium ${
-								selectedOption.label === '탭 선택하기' ? 'text-black-600' : 'text-black-900'
+							className={` ${
+								selectedOption.label === '탭 선택하기' || selectedOption.label === '탭 선택'
+									? 'text-black-600'
+									: 'text-black-900'
 							}`}
 						>
 							{selectedOption.label}
@@ -317,11 +333,11 @@ export default function Page() {
 					</button>
 
 					{isVisibleDropdown && (
-						<div className="z-50 absolute top-10 w-[9.125rem] bg-white border border-gray-300 button4-medium rounded-lg shadow-lg overflow-hidden">
+						<div className="z-50 absolute top-10 w-[9.125rem] @mobile:w-[97px] bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
 							{categories.map((option, index) => (
 								<div
 									key={option.value}
-									className={clsx('px-4 py-2.5 body5-regular cursor-pointer hover:bg-black-200 transition-colors', {
+									className={clsx('px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors', {
 										'rounded-b-sm': index === categories.length - 1,
 									})}
 									onClick={() => handleNewsOptionClick(option)}
@@ -344,10 +360,10 @@ export default function Page() {
 			</div>
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} />
 
-			<div className="flex justify-center gap-4 mt-4 mx-auto">
+			<div className="flex justify-center gap-4 mt-4">
 				<button
-					onClick={() => console.log('취소')}
-					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
+					onClick={() => router.back()}
+					className="w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소
 				</button>
@@ -355,7 +371,7 @@ export default function Page() {
 					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
 					disabled={!isFormValid}
 					className={clsx(
-						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
+						'w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all',
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>

@@ -14,6 +14,7 @@ const CommentInput = ({
 	parentReplyId,
 	contentType,
 	onCommentSubmit,
+	onCommentCancel,
 }: CommentInputProps) => {
 	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
@@ -214,13 +215,7 @@ const CommentInput = ({
 			}
 		>
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div
-				className={clsx(
-					'flex @mobile:flex-col',
-					hasScroll ? 'gap-1' : 'gap-0',
-					type === 'reply' ? 'h-20' : 'h-[6.5rem]',
-				)}
-			>
+			<div className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-26')}>
 				{/* 입력창 */}
 				<div className="relative w-full">
 					<div
@@ -229,10 +224,13 @@ const CommentInput = ({
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
 						className={clsx(
-							'relative w-full h-full p-4 pb-3 @mobile:pb-10.5 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
-							type === 'reply' ? 'bg-black-000 @mobile:border @mobile:border-black-200' : 'bg-black-100',
-							content.trim().length === 0 && 'empty-placeholder',
-							isMobile ? 'overflow-y-auto scrollbar' : 'overflow-y-scroll no-scrollbar',
+							'relative w-full h-full bg-black-000 p-4 pb-3 @mobile:pb-10.5 rounded-l-[0.625rem] resize-none focus:outline-none body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
+							{
+								'@mobile:border @mobile:border-black-200': type === 'reply',
+								'empty-placeholder': content.trim().length === 0,
+								'overflow-y-scroll custom-scrollbar': isMobile,
+								'overflow-y-scroll no-scrollbar': !isMobile,
+							},
 						)}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
@@ -246,7 +244,16 @@ const CommentInput = ({
 							)}
 						>
 							<button
-								onClick={() => setContent('')}
+								onClick={
+									type === 'reply'
+										? onCommentCancel
+										: () => {
+												setContent('');
+												if (inputRef.current) {
+													inputRef.current.innerHTML = '';
+												}
+											}
+								}
 								className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
 							>
 								취소

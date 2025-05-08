@@ -48,6 +48,7 @@ export interface CommentItemProps {
 	likedComments: Record<number, boolean>;
 	handleLikeToggle: (commentId: number) => void;
 	handleReply: (commentId: number) => void;
+	closeReplyInput: (commentId: number) => void;
 	toggleReplyVisibility: (commentId: number) => void;
 	replyingTo: number[];
 	replyVisibilities: Record<number, boolean>;
@@ -66,4 +67,5 @@ export interface CommentInputProps {
 	contentType: 'news' | 'board';
 	contentsId: number;
 	onCommentSubmit?: (isReply: boolean) => void;
+	onCommentCancel?: () => void;
 }
