@@ -101,7 +101,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 						<input
 							className="flex-1 p-2 w-60 bg-black-000 px-2 border border-black-300 rounded-lg shadow-md focus:outline-none"
 							type="text"
-							placeholder="URL을 입력하세요."
+							placeholder="링크를 입력해 주세요."
 							value={linkUrl}
 							onChange={(e) => setLinkUrl(e.target.value)}
 						/>

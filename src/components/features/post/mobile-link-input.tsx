@@ -35,7 +35,13 @@ const LinkInputModal = ({ onClose }) => {
 					onChange={(e) => setLinkUrl(e.target.value)}
 				/>
 				<div className="flex justify-end gap-4 button3-semibold">
-					<button onClick={onClose} className="px-4 py-2.5 bg-black-200 text-black-700 rounded-md">
+					<button
+						onClick={() => {
+							setLinkUrl('');
+							onClose();
+						}}
+						className="px-4 py-2.5 bg-black-200 text-black-700 rounded-md"
+					>
 						취소
 					</button>
 					<button
@@ -44,8 +50,8 @@ const LinkInputModal = ({ onClose }) => {
 							onClose();
 							setLinkUrl('');
 						}}
-						disabled={!linkUrl}
-						className={`px-4 py-2.5 rounded-md ${linkUrl ? 'bg-primary-900 text-white' : 'bg-gray-200 text-gray-500'}`}
+						disabled={!linkUrl.trim()}
+						className={`px-4 py-2.5 rounded-md ${linkUrl.trim() ? 'bg-primary-900 text-black-000' : 'bg-black-200 text-black-700'}`}
 					>
 						확인
 					</button>

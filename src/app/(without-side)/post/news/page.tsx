@@ -222,6 +222,7 @@ export default function Page() {
 		}
 	};
 
+	const isSpecialCase = isMobile && selectedOption.label === '현지 팬 반응';
 	return (
 		<div className="flex flex-col w-full">
 			{selectedImage ? (
@@ -317,10 +318,10 @@ export default function Page() {
 				<div ref={dropdownRef} className="relative w-fit button4-medium tablet:text-14 @mobile:text-13">
 					<button
 						onClick={handleDropdownToggle}
-						className="flex items-center gap-8 @mobile:gap-2.5 px-4 @mobile:px-3 h-9 border border-black-300 rounded-lg"
+						className={`flex items-center gap-8 h-9 border border-black-300 rounded-lg
+							${isMobile ? 'gap-2.5' : ''}
+							${isSpecialCase ? 'px-5' : isMobile ? 'px-3' : 'px-4'}`}
 					>
-						{' '}
-						{/*iphone se, 678에서는 양 옆 패딩을 3 정도여야 글자가 정렬이 됨... 모바일에서는 패딩을 3 정도로 줄이면 어떨까...*/}
 						<div
 							className={` ${
 								selectedOption.label === '탭 선택하기' || selectedOption.label === '탭 선택'
