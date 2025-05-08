@@ -5,7 +5,7 @@ import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
 import useIsTablet from '@/lib/hooks/useIsTablet';
 import LoginButton from './login-button';
-import MobileNavbar from './mobile-navbar';
+import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
@@ -33,7 +33,7 @@ export default function Navbar() {
 	return isMobile ? (
 		<MobileNavbar />
 	) : (
-		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky transition-colors ease-out`}>
+		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-10 transition-colors ease-out`}>
 			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] min-w-[48rem] max-[1094px]:w-[48rem] max-[1440px]:w-[62.5rem] m-auto">
 				<nav className="flex items-center">
 					<Image

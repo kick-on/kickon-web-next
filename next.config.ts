@@ -43,6 +43,14 @@ const nextConfig: NextConfig = {
 		dangerouslyAllowSVG: true, // SVG 허용 (보안 주의)
 		unoptimized: true, // 모든 이미지 최적화 비활성화 → 외부 이미지 무제한 허용
 	},
+	webpack(config) {
+		config.module.rules.push({
+			test: /\.svg$/,
+			issuer: /\.[jt]sx?$/,
+			use: ['@svgr/webpack'],
+		});
+		return config;
+	},
 };
 
 if (process.env.NEXT_PUBLIC_NODE_ENV === 'prod') {

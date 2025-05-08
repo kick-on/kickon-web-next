@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import CommentInput from './comment-input';
 import { CommentItemProps } from '@/services/apis/detail/comment/dto';
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 function CommentItem({
 	content,
@@ -11,6 +12,7 @@ function CommentItem({
 	likedComments,
 	handleLikeToggle,
 	handleReply,
+	closeReplyInput,
 	toggleReplyVisibility,
 	replyingTo,
 	replyVisibilities,
@@ -20,6 +22,7 @@ function CommentItem({
 	isReply = false,
 	onCommentSubmit,
 }: CommentItemProps) {
+	const isMobile = useIsMobile();
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
@@ -63,7 +66,7 @@ function CommentItem({
 					</p>
 
 					<div className="flex flex-col gap-3.5">
-						{isCommentAllowed && !isReply && (
+						{isCommentAllowed && !isReply && (!isMobile || !isReplyInputOpen) && (
 							<button
 								className={clsx(
 									'button5-regular rounded-sm px-2 py-1 w-fit',
@@ -99,6 +102,7 @@ function CommentItem({
 							contentType={type}
 							mentionNickname={content.user.nickname}
 							onCommentSubmit={(isReply) => onCommentSubmit(isReply, content.pk)}
+							onCommentCancel={() => closeReplyInput(content.pk)}
 						/>
 					)}
 				</div>

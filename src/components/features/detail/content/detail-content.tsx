@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
@@ -15,29 +15,28 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const [isLiked, setIsLiked] = useState(data.isKicked);
 	const [likes, setLikes] = useState(data.likes);
 	const [sanitizedContent, setSanitizedContent] = useState('');
+	const [isImageLoaded, setIsImageLoaded] = useState(false);
+	const [isVerticalImage, setIsVerticalImage] = useState(false);
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
 
-	const [isVerticalImage, setIsVerticalImage] = useState(false);
-	const imageRef = useRef(null);
-
-	// 이미지 비율 확인 (세로 이미지 감지)
+	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {
-		const checkImageOrientation = () => {
-			if (data.thumbnailUrl && typeof window !== 'undefined') {
-				const img = document.createElement('img');
-				img.onload = () => {
-					// 이미지의 높이가 너비보다 크면 세로 이미지로 판단
-					const isVertical = img.naturalHeight > img.naturalWidth;
-					setIsVerticalImage(isVertical);
-				};
-				img.src = data.thumbnailUrl;
-			}
+		if (typeof window === 'undefined' || !isNews || !data.thumbnailUrl) return;
+
+		// 이미지를 불러오기 위한 함수
+		const preloadImage = () => {
+			const img = document.createElement('img');
+			img.onload = () => {
+				setIsVerticalImage(img.naturalHeight > img.naturalWidth);
+				setIsImageLoaded(true);
+			};
+			img.src = data.thumbnailUrl;
 		};
 
-		checkImageOrientation();
-	}, [data.thumbnailUrl]);
+		preloadImage();
+	}, [isNews, data.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -73,23 +72,22 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	return (
 		<div className="px-4">
 			{/* 대표 이미지 */}
-			{isNews && (
+			{isNews && isImageLoaded && (
 				<div
-					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden
-						min-h-[190px]
-						w-[clamp(311px,100%,636px)] h-[clamp(190px,40vw,322px)]
-						${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
-					`}
+					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
+					w-full max-w-[636px] aspect-[636/322]
+					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
+				`}
 				>
 					<Image
-						ref={imageRef}
 						src={data.thumbnailUrl}
 						alt="대표 이미지"
 						width={636}
 						height={322}
 						className={`
-							${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
-						`}
+						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
+					`}
+						priority={true}
 					/>
 				</div>
 			)}
@@ -109,7 +107,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			<h1 className={`title1-bold @mobile:text-2xl ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
-			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-[12px] @mobile:mt-4">
+			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
 				<div className="flex items-center gap-2">
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
@@ -120,7 +118,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 							className="w-full h-full rounded-full object-cover"
 						/>
 					</div>
-					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-[13px]">
+					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-13">
 						{data.user.nickname}
 						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
 					</span>
@@ -145,7 +143,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
 			<div
-				className="mb-40 body3-regular @mobile:mb-30 responsive-content"
+				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube"
 				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 			/>
 

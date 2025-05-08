@@ -6,7 +6,7 @@ export async function getPresignedUrl(fileName: string, isNews: boolean): Promis
 	const timestampedFileName = addTimestampToFileName(fileName);
 
 	const requestBody: PresignedUrlRequest = {
-		type: isNews ? 'news-images' : 'board-images',
+		type: isNews ? 'news-files' : 'board-files',
 		fileName: timestampedFileName,
 	};
 
