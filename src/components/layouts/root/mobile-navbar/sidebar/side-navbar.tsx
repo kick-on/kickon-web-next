@@ -15,10 +15,10 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 	const [hotNews, setHotNews] = useState<HotNewsDto[]>([]);
 
 	const navButtons = [
-		{ herf: '/', content: '홈', isActive: pathname === '/' },
-		{ herf: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
-		{ herf: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
-		{ herf: '/ranking', content: '랭킹', isActive: pathname === '/ranking' },
+		{ href: '/', content: '홈', isActive: pathname === '/' },
+		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
+		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
+		{ href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' },
 	];
 
 	useEffect(() => {
@@ -38,7 +38,7 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 					<Link
 						onClick={() => setTimeout(onClickButton, 200)}
 						key={button.content}
-						href={button.herf}
+						href={button.href}
 						className={clsx('w-[calc(100%+32px)] -ml-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
 							'text-primary-900 button2-semibold': button.isActive,
 						})}
