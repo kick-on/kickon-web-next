@@ -26,7 +26,7 @@ export default function Header({
 		if (isGambleInProgress) return '예측 진행 중';
 		if (isGameInProgress && myGambleResult) return '참여 완료';
 		if (!myGambleResult) return '미참여';
-		if (myGambleResult.gambleStatus === 'SUCCEED') return '예측 성공';
+		if (myGambleResult.gambleStatus === 'SUCCEED' || myGambleResult.gambleStatus === 'PERFECT') return '예측 성공';
 		if (myGambleResult.gambleStatus === 'FAILED') return '예측 실패';
 		return '-';
 	})();
