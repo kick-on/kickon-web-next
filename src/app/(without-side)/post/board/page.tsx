@@ -12,7 +12,7 @@ import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { getUserInfo } from '@/services/auth';
 
 export default function Page() {
-	const navigate = useRouter();
+	const router = useRouter();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const teams: { label: string; value: string; logo?: string }[] = [
@@ -28,7 +28,10 @@ export default function Page() {
 			: []),
 	];
 
-	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string; logo?: string }>(teams[0]);
+	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string; logo?: string }>({
+		label: '탭 선택하기',
+		value: '',
+	});
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
@@ -56,7 +59,7 @@ export default function Page() {
 		if (!isLoggedIn) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
-			navigate.replace(previousPage);
+			router.replace(previousPage);
 		}
 		const fetchUserInfo = async () => {
 			const user = await getUserInfo();
@@ -68,7 +71,7 @@ export default function Page() {
 		if (!currentUserInfo) {
 			fetchUserInfo();
 		}
-	}, [currentUserInfo, setCurrentUserInfo, navigate]);
+	}, [currentUserInfo, setCurrentUserInfo, router]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -101,39 +104,41 @@ export default function Page() {
 		try {
 			const response = await postNewContents(requestBody);
 
-			navigate.push(`/board/${response.data.pk}`);
+			router.push(`/board/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
 	};
 
 	return (
-		<div className="flex flex-col mx-auto">
-			<div ref={dropdownRef} className="relative w-fit button4-medium">
+		<div className="flex flex-col w-full mx-auto">
+			<div ref={dropdownRef} className="relative w-[9.125rem] button4-medium @mobile:text-13">
 				<button
 					onClick={handleDropdownToggle}
 					className={clsx(
-						'flex items-center gap-2 px-4 py-[0.5625rem] border border-black-300 rounded-lg',
+						'flex items-center justify-between w-full px-4 py-[0.5625rem] border border-black-300 rounded-lg',
 						isVisibleDropdown ? 'mb-[5.75rem]' : 'mb-4',
 					)}
 				>
-					{selectedOption.logo && (
-						<Image
-							className="w-4 h-4 object-contain"
-							src={selectedOption.logo}
-							alt={selectedOption.label}
-							width={16}
-							height={16}
-						/>
-					)}
-					<div className={clsx('button4-medium', selectedOption.value !== '' ? 'text-black-900' : 'text-black-900')}>
-						{selectedOption.label}
+					<div className="flex items-center gap-2">
+						{selectedOption.logo && (
+							<Image
+								className="w-4 h-4 object-contain"
+								src={selectedOption.logo}
+								alt={selectedOption.label}
+								width={16}
+								height={16}
+							/>
+						)}
+						<div className={`${selectedOption.label === '탭 선택하기' ? 'text-black-600' : 'text-black-900'}`}>
+							{selectedOption.label}
+						</div>
 					</div>
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 				</button>
 
 				{isVisibleDropdown && (
-					<div className="z-50 absolute top-10 w-[9.125rem] bg-black-000 border border-black-300 button4-medium rounded-lg shadow-lg overflow-hidden">
+					<div className="z-50 absolute top-10 w-full bg-black-000 border border-black-300 rounded-lg shadow-lg overflow-hidden">
 						{teams.map((option, index) => (
 							<div
 								key={option.value}
@@ -162,9 +167,9 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} />
 
-			<div className="flex justify-center gap-4 mt-4 mx-auto">
+			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
 				<button
-					onClick={() => console.log('취소')}
+					onClick={() => router.back()}
 					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소
