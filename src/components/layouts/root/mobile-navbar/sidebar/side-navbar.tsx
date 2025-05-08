@@ -14,6 +14,7 @@ import { getNewsList } from '@/services/apis/news/getNewsList';
 export default function SideNavbar({ onClickButton }: { onClickButton: () => void }) {
 	const pathname = usePathname();
 
+	const [countToRender, setCountToRender] = useState<number | null>(null);
 	const [hotNews, setHotNews] = useState<HotNewsDto[] | null>(null);
 	const [recentNews, setRecentNews] = useState<NewsItemDto[] | null>(null);
 
@@ -27,16 +28,17 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 	];
 
 	useEffect(() => {
+		if (countToRender === null) return;
+
 		const getHotNewsItem = async () => {
 			const hotNewsResponse = await getHotNews();
 
 			if (hotNewsResponse) {
-				setHotNews(hotNewsResponse.data);
+				setHotNews(hotNewsResponse.data.slice(0, countToRender));
 
 				// 많이 본 뉴스가 빈 배열인 경우 최신 뉴스 렌더링
 				if (hotNewsResponse.data.length === 0) {
-					const recentNewsResponse = await getNewsList({ order: 'recent', size: 4, page: 1 });
-					console.log('recent', recentNewsResponse);
+					const recentNewsResponse = await getNewsList({ order: 'recent', size: countToRender, page: 1 });
 					if (recentNewsResponse) {
 						setRecentNews(recentNewsResponse.data);
 					}
@@ -45,6 +47,13 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 		};
 
 		getHotNewsItem();
+	}, [countToRender]);
+
+	useEffect(() => {
+		if (window.innerHeight < 666) setCountToRender(2);
+		else if (window.innerHeight < 768) setCountToRender(3);
+		else if (window.innerHeight < 846) setCountToRender(4);
+		else setCountToRender(5);
 	}, []);
 
 	return (
@@ -68,20 +77,20 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 				<>
 					<Divider />
 
-					<div className="flex flex-col gap-4 mb-18 h-81">
-						<span className="text-black-700 subtitle1-medium mb-1">
+					<div className="relative z-20 flex flex-col gap-4 mb-18">
+						<span className="text-black-700 subtitle1-medium mb-1 mt-2">
 							{isHotNewsEmpty ? '최신 뉴스' : '많이 본 뉴스'}
 						</span>
 						{isHotNewsEmpty
 							? recentNews !== null
 								? recentNews.map((news) => <MostReadNewsItem key={news?.pk} {...news} leagueNameKr={news?.category} />)
 								: null
-							: hotNews.map((news, i) => (i > 3 ? null : <MostReadNewsItem key={news.pk} {...news} />))}
+							: hotNews.map((news, i) => (i > countToRender - 1 ? null : <MostReadNewsItem key={news.pk} {...news} />))}
 					</div>
 				</>
 			)}
 
-			<div className="absolute z-60 -bottom-[3.625rem] right-9 w-[15.9375rem] h-[12.75rem] opacity-[0.08]">
+			<div className="absolute z-10 -bottom-[3.625rem] right-9 w-[15.9375rem] h-[12.75rem] opacity-[0.08]">
 				<Image className="w-auto h-auto object-contain" src={'/logo/icon-red.svg'} alt="킥온 로고" fill />
 			</div>
 		</div>
