@@ -4,15 +4,20 @@ import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Divider from './divider';
-import { HotNewsDto } from '@/services/apis/news/dto';
+import { HotNewsDto, NewsItemDto } from '@/services/apis/news/dto';
 import { useEffect, useState } from 'react';
 import MostReadNewsItem from '@/components/layouts/with-side/most-read-news-list/most-read-news-item';
 import { getHotNews } from '@/services/apis/news/getHotNews';
 import Image from 'next/image';
+import { getNewsList } from '@/services/apis/news/getNewsList';
 
 export default function SideNavbar({ onClickButton }: { onClickButton: () => void }) {
 	const pathname = usePathname();
-	const [hotNews, setHotNews] = useState<HotNewsDto[]>([]);
+
+	const [hotNews, setHotNews] = useState<HotNewsDto[] | null>(null);
+	const [recentNews, setRecentNews] = useState<NewsItemDto[] | null>(null);
+
+	const isHotNewsEmpty = hotNews && hotNews.length === 0;
 
 	const navButtons = [
 		{ href: '/', content: '홈', isActive: pathname === '/' },
@@ -23,9 +28,20 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 
 	useEffect(() => {
 		const getHotNewsItem = async () => {
-			const response = await getHotNews();
+			const hotNewsResponse = await getHotNews();
 
-			if (response) setHotNews(response.data);
+			if (hotNewsResponse) {
+				setHotNews(hotNewsResponse.data);
+
+				// 많이 본 뉴스가 빈 배열인 경우 최신 뉴스 렌더링
+				if (hotNewsResponse.data.length === 0) {
+					const recentNewsResponse = await getNewsList({ order: 'recent', size: 4, page: 1 });
+					console.log('recent', recentNewsResponse);
+					if (recentNewsResponse) {
+						setRecentNews(recentNewsResponse.data);
+					}
+				}
+			}
 		};
 
 		getHotNewsItem();
@@ -48,13 +64,19 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 				))}
 			</nav>
 
-			{hotNews.length !== 0 && (
+			{hotNews !== null && (
 				<>
 					<Divider />
 
 					<div className="flex flex-col gap-4">
-						<span className="text-black-700 subtitle1-medium mb-1">많이 본 뉴스</span>
-						{hotNews.map((news, i) => (i > 3 ? null : <MostReadNewsItem key={news.pk} {...news} />))}
+						<span className="text-black-700 subtitle1-medium mb-1">
+							{isHotNewsEmpty ? '최신 뉴스' : '많이 본 뉴스'}
+						</span>
+						{isHotNewsEmpty
+							? recentNews !== null
+								? recentNews.map((news) => <MostReadNewsItem key={news?.pk} {...news} leagueNameKr={news?.category} />)
+								: null
+							: hotNews.map((news, i) => (i > 3 ? null : <MostReadNewsItem key={news.pk} {...news} />))}
 					</div>
 				</>
 			)}
