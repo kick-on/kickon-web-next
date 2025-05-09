@@ -19,6 +19,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 		showYoutubeInput,
 		setShowYoutubeInput,
 		handleAddImage,
+		handleAddVideo,
 	} = useEditorContext();
 
 	const mediaButtons = [
@@ -43,12 +44,13 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			isLabel: true,
 		},
 		{
-			key: 'youtube',
+			key: 'video',
 			Icon: VideoIcon,
 			onClick: () => {
 				if (showLinkInput) setShowLinkInput(false);
-				setShowYoutubeInput(!showYoutubeInput);
 			},
+			onChange: handleAddVideo,
+			accept: 'video/*',
 			isLabel: false,
 		},
 	];
@@ -56,39 +58,41 @@ const MediaButtons = ({ mediaButtonRef }) => {
 	return (
 		<div ref={mediaButtonRef} className="relative flex h-8.5 gap-2 @mobile:gap-1.5">
 			{mediaButtons.map((btn) => {
-				const isActive = btn.key === 'link' ? showLinkInput : btn.key === 'youtube' ? showYoutubeInput : false;
+				// 링크 버튼은 버튼만 렌더링
+				if (btn.key === 'link') {
+					const isActive = showLinkInput;
 
-				if (btn.isLabel) {
-					// 이미지 버튼
 					return (
-						<label
-							onClick={btn.onClick}
+						<button
 							key={btn.key}
-							className="cursor-pointer p-[7px] bg-black-000 border border-black-300 rounded-sm"
+							onClick={btn.onClick}
+							className="p-[7px] bg-black-000 border border-black-300 rounded-sm"
 						>
-							{btn.icon}
-							<input
-								type="file"
-								accept={btn.accept}
-								className="hidden"
-								onClick={(e) => ((e.target as HTMLInputElement).value = '')}
-								onChange={btn.onChange}
-							/>
-						</label>
+							<div className={clsx('w-5 h-5 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}>
+								<btn.Icon
+									className={`${isActive ? 'stroke-[#c00c0b] rounded-xs bg-primary-50' : 'stroke-[#8f8f8f]'}`}
+								/>
+							</div>
+						</button>
 					);
 				}
 
-				// 링크, 유튜브 버튼
+				// 이미지, 영상 버튼은 <label> + <input type="file">
 				return (
-					<button
+					<label
 						key={btn.key}
 						onClick={btn.onClick}
-						className="p-[7px] bg-black-000 border border-black-300 rounded-sm"
+						className="cursor-pointer p-[7px] bg-black-000 border border-black-300 rounded-sm"
 					>
-						<div className={clsx('w-5 h-5 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}>
-							<btn.Icon className={`${isActive ? 'stroke-[#c00c0b] rounded-xs bg-primary-50' : 'stroke-[#8f8f8f]'}`} />
-						</div>
-					</button>
+						{btn.icon ? btn.icon : btn.Icon && <btn.Icon className="stroke-[#8f8f8f]" />}
+						<input
+							type="file"
+							accept={btn.accept}
+							className="hidden"
+							onClick={(e) => ((e.target as HTMLInputElement).value = '')}
+							onChange={btn.onChange}
+						/>
+					</label>
 				);
 			})}
 

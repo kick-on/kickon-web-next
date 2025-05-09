@@ -15,11 +15,11 @@ interface EditorContextProps {
 	setShowYoutubeInput: (val: boolean) => void;
 	youtubeUrl: string;
 	setYoutubeUrl: (val: string) => void;
-	handleInsertYoutube: () => void;
 
 	handleAddImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	handleTextFormatToggle: (type: string) => void;
 	handleHeadingChange: (value: string) => void;
+	handleAddVideo: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const EditorContext = createContext<EditorContextProps | null>(null);
