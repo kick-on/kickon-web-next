@@ -183,6 +183,8 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 				.insertContent({
 					type: 'video',
 					attrs: { src: s3Url },
+					preload: 'none',
+					controls: true,
 				})
 				.run();
 
