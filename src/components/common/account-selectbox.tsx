@@ -54,6 +54,7 @@ export default function AccountSelectBox({
 			}
 		}
 
+		console.log(selectedOption);
 		onChange(selectedOption);
 		setIsVisibleOptions(false);
 	};
