@@ -2,7 +2,9 @@ import { HotNewsDto } from '@/services/apis/news/dto';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function MostReadNewsItem({ pk, title, leagueNameKr, thumbnailUrl }: HotNewsDto) {
+export type MostReadNewsItemProps = Pick<HotNewsDto, 'pk' | 'title' | 'leagueNameKr' | 'thumbnailUrl'>;
+
+export default function MostReadNewsItem({ pk, title, leagueNameKr, thumbnailUrl }: MostReadNewsItemProps) {
 	return (
 		<Link
 			href={`/news/${pk}`}
