@@ -32,7 +32,7 @@ const FloatingWritingButton = () => {
 				onClick={handleEditButtonClick}
 				className="w-[3.625rem] h-[3.625rem] bg-black-700 text-white rounded-full shadow-lg 
 				overflow-hidden group transition-all duration-300 ease-in-out 
-				desktop:hover:w-[20.125rem] desktop:hover:pl-[3.75rem] @mobile:mr-[1.0625rem]"
+				desktop:hover:w-[20.125rem] desktop:hover:pl-[3.75rem] @mobile:mr-[1px]"
 			>
 				<div className="flex items-center gap-2 px-[15px] w-full">
 					<Image src="/edit.svg" alt="아이콘" width={28} height={28} className="min-w-7" />
