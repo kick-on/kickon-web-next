@@ -6,7 +6,7 @@ import CommentItem from './comment-item';
 import { getCommentList, postCommentKick } from '@/services/apis/detail/comment';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import PaginationBar from '@/components/common/pagination-bar';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { CommentSectionProps } from '@/services/apis/detail/comment/dto';
@@ -20,7 +20,6 @@ function CommentSection({
 	totalreplies = 0,
 	setTotalReplies,
 }: CommentSectionProps) {
-	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const isNews = type === 'news';
@@ -51,7 +50,7 @@ function CommentSection({
 					// 중복되지 않는 새 댓글만 추가
 					setComments((prev) => {
 						const newComments = response?.data?.filter((c) => !prev.find((p) => p.pk === c.pk)) || [];
-						return [...prev, ...newComments];
+						return [...newComments, ...prev];
 					});
 				} else {
 					setComments(response?.data || []);
@@ -117,11 +116,6 @@ function CommentSection({
 
 		// 일반 댓글일 경우 현재 페이지 댓글 다시 불러오기
 		await fetchComments(currentPage, true);
-
-		// 데스크탑 환경에서는 마지막 페이지로 이동
-		if (!isMobile && totalPages > 0 && totalPages !== currentPage) {
-			router.push(`${baseUrl}?page=${totalPages}`, { scroll: false });
-		}
 	};
 
 	// 좋아요 토글
