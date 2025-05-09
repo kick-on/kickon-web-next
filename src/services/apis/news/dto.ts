@@ -9,6 +9,9 @@ export interface GetNewsListRequest {
 	page: number;
 	order: string;
 	league?: number;
+	infinite?: boolean;
+	lastNews?: number;
+	lastViewCount?: number;
 }
 
 export type GetNewsListResponse = SuccessResponse<NewsItemDto[]>;

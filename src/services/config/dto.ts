@@ -19,4 +19,5 @@ export interface MetaDto {
 	pageSize: number;
 	totalItems: number;
 	totalPages: number;
+	hasNext: boolean;
 }
