@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { ChangeEvent } from 'react';
 import Image from 'next/image';
+import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 
 export default function Score({
 	side,
@@ -11,22 +12,28 @@ export default function Score({
 	onClickDownButton,
 	onChange,
 }: {
-	side: 'left' | 'right';
+	side: 'home' | 'away';
 	score: number;
 	isActive: boolean;
 	isCompleted: boolean;
 	onClickUpButton: () => void;
 	onClickDownButton: () => void;
-	onChange: (e: ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => void;
+	onChange: (e: ChangeEvent<HTMLInputElement>, side: 'home' | 'away') => void;
 }) {
+	const { isMobile } = getServerDeviceType();
+
+	const scoreBoxClass = (() => {
+		if (isMobile) return 'w-7 h-7 rounded-md body2-semibold';
+		if (!isMobile) return 'w-9 h-9 rounded-lg body1-bold';
+	})();
+
+	const spacing = (side: 'home' | 'away') => {
+		if (isMobile) return side === 'home' ? '-left-[2.375rem]' : 'flex-row-reverse -right-[2.375rem]';
+		if (!isMobile) return side === 'home' ? '-left-[2.625rem]' : 'flex-row-reverse -right-[2.625rem]';
+	};
+
 	return (
-		<div
-			onClick={(e) => e.stopPropagation()}
-			className={clsx('absolute z-20 flex gap-2 items-center', {
-				'-left-[2.625rem]': side === 'left',
-				'flex-row-reverse -right-[2.625rem]': side === 'right',
-			})}
-		>
+		<div onClick={(e) => e.stopPropagation()} className={clsx('absolute z-20 flex gap-2 items-center', spacing(side))}>
 			<div className={clsx('flex flex-col gap-1.5', { invisible: isCompleted })}>
 				<button
 					disabled={score >= 20}
@@ -39,7 +46,7 @@ export default function Score({
 						height={16}
 						src={'/chevron/score-up.svg'}
 						alt={'증가'}
-						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
+						className="hover:filter hover:bawayness-0 hover:invert group-disabled:opacity-[23%]"
 					/>
 				</button>
 				<button
@@ -53,7 +60,7 @@ export default function Score({
 						height={16}
 						src={'/chevron/score-down.svg'}
 						alt={'감소'}
-						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
+						className="hover:filter hover:bawayness-0 hover:invert group-disabled:opacity-[23%]"
 					/>
 				</button>
 			</div>
@@ -61,11 +68,11 @@ export default function Score({
 			<input
 				disabled={isCompleted}
 				type="text"
-				value={score}
+				value={score === -1 ? '-' : score}
 				onChange={(e) => onChange(e, side)}
-				className={clsx('w-9 h-9 flex justify-center text-center rounded-lg body1-bold text-black-000', {
-					'bg-primary-900': isActive,
-					'bg-black-500': !isActive,
+				className={clsx('flex justify-center text-center text-black-000', scoreBoxClass, {
+					'bg-primary-900': isActive && score !== -1,
+					'bg-black-500': !isActive || score === -1,
 				})}
 			/>
 		</div>

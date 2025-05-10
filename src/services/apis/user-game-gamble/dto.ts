@@ -36,8 +36,8 @@ export interface GameDto {
 	gambleResult: GambleResultDto;
 	myGambleResult: MyGambleResultDto | null;
 	pk: number;
-	homeScore: number | null;
-	awayScore: number | null;
+	homeScore: number | null; // 실제 경기 결과
+	awayScore: number | null; // 실제 경기 결과
 	round: string;
 	homePenaltyScore: number | null;
 	awayPenaltyScore: number | null;
