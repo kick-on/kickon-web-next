@@ -25,8 +25,7 @@ const MobileToolBar = ({
 }) => {
 	const { editor, handleTextFormatToggle, handleHeadingChange } = useEditorContext();
 	const [activeExtra, setActiveExtra] = useState<'format' | 'quote' | null>(null);
-	const baseButtonClass =
-		'flex items-center justify-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
+	const baseButtonClass = 'flex items-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
 
 	const toggleExtra = (type: 'format' | 'quote') => {
 		setActiveExtra((prev) => (prev === type ? null : type));
@@ -86,24 +85,28 @@ const MobileToolBar = ({
 
 					{/* 텍스트 포맷 버튼 */}
 					<button onClick={() => toggleExtra('format')} className={baseButtonClass}>
-						<TextFormattIcon
+						<div
 							className={clsx(
-								'w-5 h-5 rounded-xs',
+								'w-6 h-6 flex items-center justify-center rounded-sm',
 								activeExtra === 'format' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
 							)}
-						/>
+						>
+							<TextFormattIcon />
+						</div>
 					</button>
 
 					<ToolBarDivider />
 
 					{/* 인용구 버튼 */}
 					<button onClick={() => toggleExtra('quote')} className={baseButtonClass}>
-						<ParagraphIcon
+						<div
 							className={clsx(
-								'w-5 h-5 rounded-xs',
+								'w-6 h-6 flex items-center justify-center rounded-sm',
 								activeExtra === 'quote' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
 							)}
-						/>
+						>
+							<ParagraphIcon />
+						</div>
 					</button>
 
 					<ToolBarDivider />

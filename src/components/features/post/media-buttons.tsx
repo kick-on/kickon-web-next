@@ -66,12 +66,10 @@ const MediaButtons = ({ mediaButtonRef }) => {
 						<button
 							key={btn.key}
 							onClick={btn.onClick}
-							className="p-[7px] bg-black-000 border border-black-300 rounded-sm"
+							className="px-[5px] bg-black-000 border border-black-300 rounded-sm"
 						>
-							<div className={clsx('w-5 h-5 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}>
-								<btn.Icon
-									className={`${isActive ? 'stroke-[#c00c0b] rounded-xs bg-primary-50' : 'stroke-[#8f8f8f]'}`}
-								/>
+							<div className={clsx('w-6 h-6 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}>
+								<btn.Icon className={`${isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f]'}`} />
 							</div>
 						</button>
 					);
@@ -82,9 +80,11 @@ const MediaButtons = ({ mediaButtonRef }) => {
 					<label
 						key={btn.key}
 						onClick={btn.onClick}
-						className="cursor-pointer p-[7px] bg-black-000 border border-black-300 rounded-sm"
+						className="flex items-center cursor-pointer px-[5px] bg-black-000 border border-black-300 rounded-sm"
 					>
-						{btn.icon ? btn.icon : btn.Icon && <btn.Icon className="stroke-[#8f8f8f]" />}
+						<div className="w-6 h-6 flex items-center justify-center">
+							{btn.icon ? btn.icon : btn.Icon && <btn.Icon className="stroke-[#8f8f8f]" />}
+						</div>
 						<input
 							type="file"
 							accept={btn.accept}

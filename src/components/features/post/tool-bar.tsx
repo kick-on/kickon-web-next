@@ -139,14 +139,14 @@ export default function Toolbar() {
 			<ToolBarDivider />
 
 			{/*텍스트 포맷 형식*/}
-			<div className="flex h-8.5 text-center gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2 py-1.75">
+			<div className="flex items-center justify-center h-8.5 gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2">
 				{textFormatButtons.map(({ key, Icon }) => {
 					const isActive = editor?.isActive(key);
 
 					return (
 						<button
 							key={key}
-							className={clsx('w-5 h-5 rounded-xs flex items-center justify-center', isActive && 'bg-primary-50')}
+							className={clsx('flex items-center justify-center w-6 h-6 rounded-xs', isActive && 'bg-primary-50')}
 							onClick={() => handleTextFormatToggle(key)}
 						>
 							<Icon className={isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f]'} />
@@ -162,15 +162,12 @@ export default function Toolbar() {
 					const isActive = key !== 'horizontalRule' && editor?.isActive(key);
 
 					return (
-						<button key={key} onClick={onClick} className="p-[7px] border border-black-300 rounded-sm">
-							<Icon
-								className={clsx(
-									'w-5 h-5 rounded-xs',
-									isActive
-										? 'stroke-[#c00c0b] bg-primary-50'
-										: 'stroke-[#8f8f8f] active:stroke-[#c00c0b] active:bg-primary-50',
-								)}
-							/>
+						<button key={key} onClick={onClick} className="px-[5px] border border-black-300 rounded-sm">
+							<div
+								className={`flex items-center justify-center w-6 h-6 rounded-xs ${isActive ? 'bg-primary-50' : 'active:bg-primary-50'}`}
+							>
+								<Icon className={isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f] active:stroke-[#c00c0b]'} />
+							</div>
 						</button>
 					);
 				})}
