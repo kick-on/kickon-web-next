@@ -9,9 +9,9 @@ import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
-import { CommentSectionProps } from '@/services/apis/detail/comment/dto';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
+import { CommentSectionProps } from './type';
 
 function CommentSection({
 	type,
