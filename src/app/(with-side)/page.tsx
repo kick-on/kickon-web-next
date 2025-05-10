@@ -49,7 +49,7 @@ export default function Home() {
 
 	return (
 		<div className="flex flex-col gap-8">
-			{/* <div className="flex flex-col gap-4">
+			<div className="flex flex-col gap-4">
 				{!proceedingGames ? (
 					<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
 						<FetchingFailedCard
@@ -92,7 +92,7 @@ export default function Home() {
 						/>
 					))
 				)}
-			</div> */}
+			</div>
 			<Suspense>
 				<RecommendedContent
 					mode={'news'}
