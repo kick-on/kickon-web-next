@@ -24,6 +24,25 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 		type: 'League',
 	});
 
+	const handleLeagueChange = (selectedLeague: LeagueDto) => {
+		if (league.pk === selectedLeague.pk) return;
+		setLeague(selectedLeague);
+	};
+
+	// league.pk가 변경될 때마다 getRanking 재생성
+	const getRanking = useCallback(async () => {
+		const leaguePk = league.pk;
+		const response =
+			mode === 'season' ? await getActualSeasonRanking(leaguePk) : await getGambleSeasonRanking(leaguePk);
+		setRanking(response?.data || null);
+		console.log(response);
+	}, [league.pk, mode]);
+
+	// getRanking이 변경되면, 즉 league.pk가 변경되면 실행
+	useEffect(() => {
+		getRanking();
+	}, [getRanking]);
+
 	// 렌더링 초기 currentUserInfo가 null인 문제 해결
 	useEffect(() => {
 		if (currentUserInfo && currentUserInfo.league) {
@@ -36,23 +55,6 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 			});
 		}
 	}, [currentUserInfo]);
-
-	const handleLeagueChange = (selectedLeague: LeagueDto) => {
-		if (league.pk === selectedLeague.pk) return;
-		setLeague(selectedLeague);
-	};
-
-	const getRanking = useCallback(async () => {
-		const leaguePk = league.pk;
-		const response =
-			mode === 'season' ? await getActualSeasonRanking(leaguePk) : await getGambleSeasonRanking(leaguePk);
-		setRanking(response?.data || null);
-		console.log(response);
-	}, [league.pk, mode]);
-
-	useEffect(() => {
-		getRanking();
-	}, [getRanking]);
 
 	return (
 		<ComponentFrame isMain={pathname === '/ranking'}>
