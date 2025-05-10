@@ -83,9 +83,19 @@ export default function SideNavbar({ onClickButton }: { onClickButton: () => voi
 						</span>
 						{isHotNewsEmpty
 							? recentNews !== null
-								? recentNews.map((news) => <MostReadNewsItem key={news?.pk} {...news} leagueNameKr={news?.category} />)
+								? recentNews.map((news) => (
+										<div key={news?.pk} onClick={onClickButton}>
+											<MostReadNewsItem {...news} leagueNameKr={news?.category} />
+										</div>
+									))
 								: null
-							: hotNews.map((news, i) => (i > countToRender - 1 ? null : <MostReadNewsItem key={news.pk} {...news} />))}
+							: hotNews.map((news, i) =>
+									i > countToRender - 1 ? null : (
+										<div key={news.pk} onClick={onClickButton}>
+											<MostReadNewsItem {...news} />
+										</div>
+									),
+								)}
 					</div>
 				</>
 			)}

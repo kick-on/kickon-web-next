@@ -50,7 +50,7 @@ function CommentSection({
 					// 중복되지 않는 새 댓글만 추가
 					setComments((prev) => {
 						const newComments = response?.data?.filter((c) => !prev.find((p) => p.pk === c.pk)) || [];
-						return [...newComments, ...prev];
+						return [...prev, ...newComments];
 					});
 				} else {
 					setComments(response?.data || []);
@@ -101,21 +101,36 @@ function CommentSection({
 			setReplyingTo((prev) => prev.filter((id) => id !== parentPk));
 			setReplyVisibilities((prev) => ({ ...prev, [parentPk]: true }));
 
-			// 해당 댓글의 최신 상태를 다시 불러와 갱신
 			try {
-				const response = await getCommentList(contentsId, currentPage, commentsPerPage, isNews);
-				const updatedComment = response?.data.find((c) => c.pk === parentPk);
-				if (updatedComment) {
-					setComments((prev) => prev.map((c) => (c.pk === parentPk ? updatedComment : c)));
+				const response = await getCommentList(contentsId, 1, 1, isNews);
+				const newComment = response?.data?.[0];
+				if (newComment) {
+					setComments((prev) => {
+						const exists = prev.some((c) => c.pk === newComment.pk);
+						return exists ? prev : [newComment, ...prev];
+					});
 				}
-			} catch {
-				console.error('대댓글 업데이트 실패');
+			} catch (err) {
+				console.error('댓글 작성 후 최신 댓글 불러오기 실패', err);
 			}
-			return;
 		}
 
-		// 일반 댓글일 경우 현재 페이지 댓글 다시 불러오기
-		await fetchComments(currentPage, true);
+		// 일반 댓글일 경우 현재 페이지 댓글 다시 불러오기 or 바로 추가
+		if (currentPage >= totalPages) {
+			// 다 로드됐으면 새 댓글만 추가
+			try {
+				const response = await getCommentList(contentsId, 1, 1, isNews);
+				const newComment = response?.data?.[0];
+				if (newComment) {
+					setComments((prev) => [newComment, ...prev]);
+				}
+			} catch (err) {
+				console.error('댓글 작성 후 최신 댓글 가져오기 실패', err);
+			}
+		} else {
+			// 기존 로직: 다시 불러오기
+			await fetchComments(1, false);
+		}
 	};
 
 	// 좋아요 토글
