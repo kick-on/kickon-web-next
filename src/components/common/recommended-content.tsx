@@ -69,7 +69,7 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 	}, [isHome, isNews, isMyTeam, getDatas]);
 
 	return (
-		<ComponentFrame className="@mobile:mb-10" isMain={true}>
+		<ComponentFrame isMain={true}>
 			<header
 				className={clsx('flex mx-4 justify-between pb-1.5', isNews ? '@mobile:pt-6 pt-7.5' : 'pt-7.5', '@mobile:mx-0', {
 					'border-b border-black-300 pb-7.5': !isNews,
