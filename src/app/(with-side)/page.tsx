@@ -48,7 +48,8 @@ export default function Home() {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-8">
+		<div className="flex flex-col gap-8 @mobile:gap-5">
+			{/* 예측 진행 중 경기 */}
 			<div className="flex flex-col gap-4">
 				{!proceedingGames ? (
 					<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
@@ -71,7 +72,11 @@ export default function Home() {
 					))
 				)}
 			</div>
-			<hr className="mx-6 border-black-600" />
+
+			{/* 구분선 */}
+			<hr className="mx-6 @mobile:mx-4 border-black-600" />
+
+			{/* 예측 종료 경기 */}
 			<div className="flex flex-col gap-4">
 				{!finishedGames ? (
 					<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
@@ -92,15 +97,17 @@ export default function Home() {
 						/>
 					))
 				)}
+
+				{/* 추천 뉴스 및 게시글 */}
+				<Suspense>
+					<RecommendedContent
+						mode={'news'}
+						teamLogo={currentUserInfo?.favoriteTeam.logoUrl}
+						teamName={currentUserInfo?.favoriteTeam?.nameKr || currentUserInfo?.favoriteTeam?.nameEn || undefined}
+					/>
+					<RecommendedContent mode={'board'} />
+				</Suspense>
 			</div>
-			<Suspense>
-				<RecommendedContent
-					mode={'news'}
-					teamLogo={currentUserInfo?.favoriteTeam.logoUrl}
-					teamName={currentUserInfo?.favoriteTeam?.nameKr || currentUserInfo?.favoriteTeam?.nameEn || undefined}
-				/>
-				<RecommendedContent mode={'board'} />
-			</Suspense>
 		</div>
 	);
 }
