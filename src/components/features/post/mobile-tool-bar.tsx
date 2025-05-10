@@ -54,14 +54,17 @@ const MobileToolBar = ({
 				})
 			: activeExtra === 'quote'
 				? quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
-						const isActive = editor?.isActive(key);
+						const isActive = key !== 'horizontalRule' && editor?.isActive(key);
 						return (
-							<button key={key} onClick={onClick} className="p-[7px] border border-black-300 rounded-sm">
-								<div
-									className={clsx('w-5 h-5 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}
-								>
-									<Icon className={clsx('w-5 h-5', isActive ? 'stroke-[#c00c0b]' : 'stroke-[#afafaf]')} />
-								</div>
+							<button key={key} onClick={onClick} className="p-[7px] rounded-sm">
+								<Icon
+									className={clsx(
+										'w-5 h-5 rounded-sm',
+										isActive
+											? 'stroke-[#c00c0b] bg-primary-50'
+											: 'stroke-[#afafaf] active:stroke-[#c00c0b] active:bg-primary-50',
+									)}
+								/>
 							</button>
 						);
 					})

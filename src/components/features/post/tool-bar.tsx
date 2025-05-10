@@ -28,7 +28,6 @@ export default function Toolbar() {
 		showYoutubeInput,
 		setShowYoutubeInput,
 	} = useEditorContext();
-	const [hrClicked, setHrClicked] = useState(false);
 	const isMobile = useIsMobile();
 	const [hasMounted, setHasMounted] = useState(false);
 
@@ -63,8 +62,6 @@ export default function Toolbar() {
 			Icon: lineIcon,
 			onClick: () => {
 				handleTextFormatToggle('horizontalRule');
-				setHrClicked(true);
-				setTimeout(() => setHrClicked(false), 3000);
 			},
 		},
 	];
@@ -162,11 +159,17 @@ export default function Toolbar() {
 			{/* 인용구 & 구분선 버튼 */}
 			<div className="flex gap-2 h-8.5">
 				{quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
-					const isActive = key === 'horizontalRule' ? hrClicked : editor?.isActive(key);
+					const isActive = key !== 'horizontalRule' && editor?.isActive(key);
+
 					return (
-						<button key={key} className="p-[7px] border border-black-300 rounded-sm" onClick={onClick}>
+						<button key={key} onClick={onClick} className="p-[7px] border border-black-300 rounded-sm">
 							<Icon
-								className={clsx('w-5 h-5 rounded-xs', isActive ? 'stroke-[#c00c0b] bg-primary-50' : 'stroke-[#8f8f8f]')}
+								className={clsx(
+									'w-5 h-5 rounded-xs',
+									isActive
+										? 'stroke-[#c00c0b] bg-primary-50'
+										: 'stroke-[#8f8f8f] active:stroke-[#c00c0b] active:bg-primary-50',
+								)}
 							/>
 						</button>
 					);
