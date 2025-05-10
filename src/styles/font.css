@@ -201,13 +201,21 @@
 		font-weight: var(--font-weight-regular);
 	}
 
-	.button4-medium {
+	.button4-medium,
+	.button4-semibold {
 		font-size: var(--text-14);
-		font-weight: var(--font-weight-medium);
 		line-height: var(--lh-16);
 	}
 
+	.button4-medium {
+		font-weight: var(--font-weight-medium);
+	}
+	.button4-semibold {
+		font-weight: var(--font-weight-semibold);
+	}
+
 	.button5-medium,
+	.button5-semibold,
 	.button5-regular {
 		font-size: var(--text-12);
 		line-height: var(--lh-16);
@@ -215,6 +223,9 @@
 
 	.button5-medium {
 		font-weight: var(--font-weight-medium);
+	}
+	.button5-semibold {
+		font-weight: var(--font-weight-semibold);
 	}
 	.button5-regular {
 		font-weight: var(--font-weight-regular);
