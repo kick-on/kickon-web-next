@@ -5,8 +5,8 @@ import VideoIcon from '@/assets/editor/video.svg';
 
 import Image from 'next/image';
 import clsx from 'clsx';
-import LinkInputModal from './mobile-link-input';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import MobileLinkInput from './mobile-link-input';
 
 const MediaButtons = ({ mediaButtonRef }) => {
 	const isMobile = useIsMobile();
@@ -99,7 +99,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			{/*링크 input*/}
 			{showLinkInput &&
 				(isMobile ? (
-					<LinkInputModal onClose={() => setShowLinkInput(false)} />
+					<MobileLinkInput onClose={() => setShowLinkInput(false)} />
 				) : (
 					<div className="absolute top-full left-0 mt-1 flex gap-0.5 h-10 z-50">
 						<input
