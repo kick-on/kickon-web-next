@@ -113,7 +113,7 @@ const DetailPage = () => {
 	}, [contents, type, id, shouldCallApi]);
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
 			<ComponentFrame isMain={true}>
 				{contents?.data ? (
 					<DetailContent data={contents.data} type={type} isCommentAllowed={isCommentAllowed} />
