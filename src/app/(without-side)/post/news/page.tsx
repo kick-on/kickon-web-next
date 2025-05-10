@@ -15,6 +15,7 @@ import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 
 export default function Page() {
 	const router = useRouter();
@@ -222,14 +223,8 @@ export default function Page() {
 		}
 	};
 
-	const shortenMap = {
-		'감독 교체': '감독 교...',
-		'현지 팬 반응': '현지 팬...',
-	};
-
 	const originalLabel = selectedOption.label.trim();
-	const isShortened = isMobile && shortenMap[originalLabel];
-	const displayLabel = isShortened ? shortenMap[originalLabel] : originalLabel;
+	const displayLabel = isMobile ? trimTextWithoutSpaces(originalLabel, 3) : originalLabel;
 
 	return (
 		<div className="flex flex-col w-full">
@@ -277,7 +272,7 @@ export default function Page() {
 						<input
 							type="text"
 							placeholder="팀명"
-							value={searchTerm}
+							value={isMobile ? trimTextWithoutSpaces(searchTerm) : searchTerm}
 							onChange={handleSearchChange}
 							className="w-full focus:outline-none"
 						/>
@@ -308,12 +303,10 @@ export default function Page() {
 												'rounded-b-sm': index === teams.length - 1,
 											},
 										)}
-										onClick={() => {
-											handleSelectTeam(team);
-										}}
+										onClick={() => handleSelectTeam(team)}
 									>
 										<Image className="w-4 h-4 object-contain" src={team.logo} alt={team.name} width={16} height={16} />
-										{team.name}
+										{isMobile ? trimTextWithoutSpaces(team.name) : team.name}
 									</div>
 								))
 							) : (
