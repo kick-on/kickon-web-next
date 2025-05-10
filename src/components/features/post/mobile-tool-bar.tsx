@@ -25,8 +25,7 @@ const MobileToolBar = ({
 }) => {
 	const { editor, handleTextFormatToggle, handleHeadingChange } = useEditorContext();
 	const [activeExtra, setActiveExtra] = useState<'format' | 'quote' | null>(null);
-	const baseButtonClass =
-		'flex items-center justify-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
+	const baseButtonClass = 'flex items-center px-1 py-1.25 w-8.5 h-8.5 rounded-sm bg-black-000 border border-black-300';
 
 	const toggleExtra = (type: 'format' | 'quote') => {
 		setActiveExtra((prev) => (prev === type ? null : type));
@@ -46,22 +45,23 @@ const MobileToolBar = ({
 					const isActive = editor?.isActive(key);
 					return (
 						<button key={key} onClick={() => handleTextFormatToggle(key)}>
-							<div className="w-5 h-5 flex items-center justify-center rounded-sm">
-								<Icon className={clsx('w-5 h-5', isActive ? 'stroke-[#c00c0b]' : 'stroke-[#afafaf]')} />
+							<div className="w-4.5 h-4.5 flex items-center justify-center rounded-sm">
+								<Icon className={clsx('w-5 h-5', isActive ? 'stroke-primary-900' : 'stroke-black-600')} />
 							</div>
 						</button>
 					);
 				})
 			: activeExtra === 'quote'
 				? quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
-						const isActive = editor?.isActive(key);
+						const isActive = key !== 'horizontalRule' && editor?.isActive(key);
 						return (
-							<button key={key} onClick={onClick} className="p-[7px] border border-black-300 rounded-sm">
-								<div
-									className={clsx('w-5 h-5 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}
-								>
-									<Icon className={clsx('w-5 h-5', isActive ? 'stroke-[#c00c0b]' : 'stroke-[#afafaf]')} />
-								</div>
+							<button key={key} onClick={onClick} className="p-[7px] rounded-sm">
+								<Icon
+									className={clsx(
+										'w-4.5 h-4.5 rounded-sm',
+										isActive ? 'stroke-primary-900' : 'stroke-black-600 active:stroke-primary-900',
+									)}
+								/>
 							</button>
 						);
 					})
@@ -83,24 +83,28 @@ const MobileToolBar = ({
 
 					{/* 텍스트 포맷 버튼 */}
 					<button onClick={() => toggleExtra('format')} className={baseButtonClass}>
-						<TextFormattIcon
+						<div
 							className={clsx(
-								'w-5 h-5 rounded-xs',
-								activeExtra === 'format' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
+								'w-6 h-6 flex items-center justify-center rounded-sm',
+								activeExtra === 'format' ? 'bg-primary-50 stroke-primary-900' : 'stroke-black-600',
 							)}
-						/>
+						>
+							<TextFormattIcon />
+						</div>
 					</button>
 
 					<ToolBarDivider />
 
 					{/* 인용구 버튼 */}
 					<button onClick={() => toggleExtra('quote')} className={baseButtonClass}>
-						<ParagraphIcon
+						<div
 							className={clsx(
-								'w-5 h-5 rounded-xs',
-								activeExtra === 'quote' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
+								'w-6 h-6 flex items-center justify-center rounded-sm',
+								activeExtra === 'quote' ? 'bg-primary-50 stroke-primary-900' : 'stroke-black-600',
 							)}
-						/>
+						>
+							<ParagraphIcon />
+						</div>
 					</button>
 
 					<ToolBarDivider />

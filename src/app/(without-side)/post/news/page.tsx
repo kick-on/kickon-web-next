@@ -15,6 +15,7 @@ import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 
 export default function Page() {
 	const router = useRouter();
@@ -221,7 +222,10 @@ export default function Page() {
 			console.error('게시글 작성 실패:', error);
 		}
 	};
-	const isSpecial = isMobile && selectedOption.label === '현지 팬 반응';
+
+	const originalLabel = selectedOption.label.trim();
+	const displayLabel = isMobile ? trimTextWithoutSpaces(originalLabel, 3) : originalLabel;
+
 	return (
 		<div className="flex flex-col w-full">
 			{selectedImage ? (
@@ -268,7 +272,7 @@ export default function Page() {
 						<input
 							type="text"
 							placeholder="팀명"
-							value={searchTerm}
+							value={isMobile ? trimTextWithoutSpaces(searchTerm) : searchTerm}
 							onChange={handleSearchChange}
 							className="w-full focus:outline-none"
 						/>
@@ -299,12 +303,10 @@ export default function Page() {
 												'rounded-b-sm': index === teams.length - 1,
 											},
 										)}
-										onClick={() => {
-											handleSelectTeam(team);
-										}}
+										onClick={() => handleSelectTeam(team)}
 									>
 										<Image className="w-4 h-4 object-contain" src={team.logo} alt={team.name} width={16} height={16} />
-										{team.name}
+										{isMobile ? trimTextWithoutSpaces(team.name) : team.name}
 									</div>
 								))
 							) : (
@@ -314,26 +316,26 @@ export default function Page() {
 					)}
 				</div>
 
-				<div ref={dropdownRef} className="relative w-fit button4-medium tablet:text-14 @mobile:text-13">
+				<div
+					ref={dropdownRef}
+					className="relative w-[148px] @mobile:w-[132px] button4-medium tablet:text-14 @mobile:text-13"
+				>
 					<button
 						onClick={handleDropdownToggle}
-						className={`flex items-center h-9 border border-black-300 rounded-lg 
-						${isSpecial ? 'gap-0.5 px-1' : 'gap-8 @mobile:gap-2.5 px-4 @mobile:px-3'}`}
+						className="flex items-center justify-between w-full h-auto border border-black-300 rounded-lg px-4 py-[9px] @mobile:pr-[10px]"
 					>
 						<div
-							className={` ${
-								selectedOption.label === '탭 선택하기' || selectedOption.label === '탭 선택'
-									? 'text-black-600'
-									: 'text-black-900'
-							}`}
+							className={clsx(
+								originalLabel === '탭 선택하기' || originalLabel === '탭 선택' ? 'text-black-600' : 'text-black-900',
+							)}
 						>
-							{selectedOption.label}
+							{displayLabel}
 						</div>
 						<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 					</button>
 
 					{isVisibleDropdown && (
-						<div className="z-50 absolute top-10 w-[9.125rem] @mobile:w-[97px] bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+						<div className="z-50 absolute top-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
 							{categories.map((option, index) => (
 								<div
 									key={option.value}
@@ -348,6 +350,7 @@ export default function Page() {
 						</div>
 					)}
 				</div>
+
 				<button
 					onClick={() => {
 						if (window) {
@@ -362,7 +365,12 @@ export default function Page() {
 
 			<div className="flex justify-center gap-4 mt-4">
 				<button
-					onClick={() => router.back()}
+					onClick={() => {
+						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
+						if (confirmCancel) {
+							router.back();
+						}
+					}}
 					className="w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소

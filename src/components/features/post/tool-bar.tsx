@@ -28,7 +28,6 @@ export default function Toolbar() {
 		showYoutubeInput,
 		setShowYoutubeInput,
 	} = useEditorContext();
-	const [hrClicked, setHrClicked] = useState(false);
 	const isMobile = useIsMobile();
 	const [hasMounted, setHasMounted] = useState(false);
 
@@ -63,8 +62,6 @@ export default function Toolbar() {
 			Icon: lineIcon,
 			onClick: () => {
 				handleTextFormatToggle('horizontalRule');
-				setHrClicked(true);
-				setTimeout(() => setHrClicked(false), 3000);
 			},
 		},
 	];
@@ -142,17 +139,17 @@ export default function Toolbar() {
 			<ToolBarDivider />
 
 			{/*텍스트 포맷 형식*/}
-			<div className="flex h-8.5 text-center gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2 py-1.75">
+			<div className="flex items-center justify-center h-8.5 gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2">
 				{textFormatButtons.map(({ key, Icon }) => {
 					const isActive = editor?.isActive(key);
 
 					return (
 						<button
 							key={key}
-							className={clsx('w-5 h-5 rounded-xs flex items-center justify-center', isActive && 'bg-primary-50')}
+							className={clsx('flex items-center justify-center w-6 h-6 rounded-xs', isActive && 'bg-primary-50')}
 							onClick={() => handleTextFormatToggle(key)}
 						>
-							<Icon className={isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f]'} />
+							<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600'} />
 						</button>
 					);
 				})}
@@ -162,12 +159,15 @@ export default function Toolbar() {
 			{/* 인용구 & 구분선 버튼 */}
 			<div className="flex gap-2 h-8.5">
 				{quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
-					const isActive = key === 'horizontalRule' ? hrClicked : editor?.isActive(key);
+					const isActive = key !== 'horizontalRule' && editor?.isActive(key);
+
 					return (
-						<button key={key} className="p-[7px] border border-black-300 rounded-sm" onClick={onClick}>
-							<Icon
-								className={clsx('w-5 h-5 rounded-xs', isActive ? 'stroke-[#c00c0b] bg-primary-50' : 'stroke-[#8f8f8f]')}
-							/>
+						<button key={key} onClick={onClick} className="px-[5px] border border-black-300 rounded-sm">
+							<div
+								className={`flex items-center justify-center w-6 h-6 rounded-xs ${isActive ? 'bg-primary-50' : 'active:bg-primary-50'}`}
+							>
+								<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600 active:stroke-primary-900'} />
+							</div>
 						</button>
 					);
 				})}

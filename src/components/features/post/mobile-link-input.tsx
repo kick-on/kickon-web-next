@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 
-const LinkInputModal = ({ onClose }) => {
+const MobileLinkInput = ({ onClose }) => {
 	const { linkUrl, setLinkUrl, handleInsertLink } = useEditorContext();
 	const inputRef = useRef<HTMLInputElement>(null);
 
@@ -61,4 +61,4 @@ const LinkInputModal = ({ onClose }) => {
 	);
 };
 
-export default LinkInputModal;
+export default MobileLinkInput;

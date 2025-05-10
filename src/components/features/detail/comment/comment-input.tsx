@@ -3,9 +3,9 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
-import { CommentInputProps } from '@/services/apis/detail/comment/dto';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { CommentInputProps } from './type';
 
 const CommentInput = ({
 	type = 'comment',
@@ -216,17 +216,23 @@ const CommentInput = ({
 		>
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
 			<div className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-26')}>
-				{/* 입력창 */}
-				<div className="relative w-full">
+				<div
+					className={clsx(
+						'relative w-full h-full bg-black-000 rounded-l-[0.625rem] resize-none @mobile:h-[110px] @mobile:rounded-[0.625rem]',
+						{
+							'@mobile:pb-10.5 @mobile:border @mobile:border-black-200': type === 'reply',
+						},
+					)}
+				>
 					<div
 						ref={inputRef}
 						contentEditable
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
 						className={clsx(
-							'relative w-full h-full bg-black-000 p-4 pb-3 @mobile:pb-10.5 rounded-l-[0.625rem] resize-none focus:outline-none body6-regular text-left @mobile:h-[110px] @mobile:rounded-[0.625rem]',
+							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left',
+							type === 'reply' ? '@mobile:h-[70px]' : '@mobile:h-[110px]',
 							{
-								'@mobile:border @mobile:border-black-200': type === 'reply',
 								'empty-placeholder': content.trim().length === 0,
 								'overflow-y-scroll custom-scrollbar': isMobile,
 								'overflow-y-scroll no-scrollbar': !isMobile,

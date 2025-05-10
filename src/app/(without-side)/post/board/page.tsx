@@ -10,9 +10,12 @@ import { useRouter } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { getUserInfo } from '@/services/auth';
+import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Page() {
 	const router = useRouter();
+	const isMobile = useIsMobile();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const teams: { label: string; value: string; logo?: string }[] = [
@@ -131,7 +134,7 @@ export default function Page() {
 							/>
 						)}
 						<div className={`${selectedOption.label === '탭 선택하기' ? 'text-black-600' : 'text-black-900'}`}>
-							{selectedOption.label}
+							{isMobile ? trimTextWithoutSpaces(selectedOption.label) : selectedOption.label}
 						</div>
 					</div>
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
@@ -157,7 +160,7 @@ export default function Page() {
 											height={16}
 										/>
 									)}
-									<span>{option.label}</span>
+									<span>{isMobile ? trimTextWithoutSpaces(option.label) : option.label}</span>
 								</div>
 							</div>
 						))}
@@ -169,7 +172,12 @@ export default function Page() {
 
 			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
 				<button
-					onClick={() => router.back()}
+					onClick={() => {
+						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
+						if (confirmCancel) {
+							router.back();
+						}
+					}}
 					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소

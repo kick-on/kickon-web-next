@@ -11,6 +11,7 @@ import FontFamily from '@tiptap/extension-font-family';
 import { useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
+import { Video } from '@/lib/extensions/video';
 
 type EditorProviderProps = {
 	children: React.ReactNode;
@@ -30,6 +31,7 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 			Underline,
 			FontFamily,
 			HorizontalRule,
+			Video,
 			Image.configure({ HTMLAttributes: { class: 'responsive-image' } }),
 			Link.configure({
 				autolink: false,
@@ -71,11 +73,6 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 		} catch {
 			return false;
 		}
-	};
-
-	const getYoutubeId = (url: string) => {
-		const match = url.match(/(?:youtube\.com\/(?:[^/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?/ ]{11})/);
-		return match ? match[1] : null;
 	};
 
 	const handleHeadingChange = (value: string) => {
@@ -167,21 +164,39 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 		setShowLinkInput(false);
 	};
 
-	const handleInsertYoutube = () => {
-		if (!editor || !youtubeUrl) return;
-		const youtubeId = getYoutubeId(youtubeUrl);
-		if (!youtubeId) {
-			alert('유효한 유튜브 링크를 입력해주세요.');
-			return;
+	const handleAddVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		if (!event.target.files?.length || !editor) return;
+		const file = event.target.files[0];
+
+		try {
+			// Presigned URL 요청
+			const presignedResponse = await getPresignedUrl(file.name, isNews);
+			const { presignedUrl, s3Url } = presignedResponse.data;
+
+			// S3에 업로드
+			await uploadToS3(presignedUrl, file);
+
+			// 에디터에 video 태그로 삽입
+			editor
+				.chain()
+				.focus()
+				.insertContent({
+					type: 'video',
+					attrs: { src: s3Url },
+					preload: 'none',
+					controls: true,
+				})
+				.run();
+
+			editor.chain().focus().createParagraphNear().run();
+
+			setTimeout(() => {
+				const updatedContent = editor.getHTML();
+				setBody(updatedContent);
+			}, 100);
+		} catch (error) {
+			console.error('비디오 업로드 실패:', error);
 		}
-		editor
-			.chain()
-			.focus()
-			.setYoutubeVideo({ src: `https://www.youtube.com/watch?v=${youtubeId}` })
-			.createParagraphNear() // 커서 아래로 이동
-			.run();
-		setYoutubeUrl('');
-		setShowYoutubeInput(false);
 	};
 
 	return (
@@ -200,7 +215,7 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 				setShowYoutubeInput,
 				youtubeUrl,
 				setYoutubeUrl,
-				handleInsertYoutube,
+				handleAddVideo,
 			}}
 		>
 			{children}

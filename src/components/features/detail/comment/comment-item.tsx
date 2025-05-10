@@ -1,10 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
-import { CommentItemProps } from '@/services/apis/detail/comment/dto';
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { CommentItemProps } from './type';
 
 function CommentItem({
 	content,

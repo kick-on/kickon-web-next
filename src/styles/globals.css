@@ -125,7 +125,7 @@ body.overflow-hidden {
 	height: 100%; /* 에디터 전체 영역을 인풋으로 받음 */
 }
 
-.responsive-youtube {
+.responsive-youtube iframe {
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	max-width: 100%;
@@ -150,6 +150,7 @@ body.overflow-hidden {
 /* 스크롤바의 폭 너비 */
 .custom-scrollbar::-webkit-scrollbar {
 	width: 6px;
+	padding: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
