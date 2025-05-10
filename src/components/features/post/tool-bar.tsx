@@ -149,7 +149,7 @@ export default function Toolbar() {
 							className={clsx('flex items-center justify-center w-6 h-6 rounded-xs', isActive && 'bg-primary-50')}
 							onClick={() => handleTextFormatToggle(key)}
 						>
-							<Icon className={isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f]'} />
+							<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600'} />
 						</button>
 					);
 				})}
@@ -166,7 +166,7 @@ export default function Toolbar() {
 							<div
 								className={`flex items-center justify-center w-6 h-6 rounded-xs ${isActive ? 'bg-primary-50' : 'active:bg-primary-50'}`}
 							>
-								<Icon className={isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f] active:stroke-[#c00c0b]'} />
+								<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600 active:stroke-primary-900'} />
 							</div>
 						</button>
 					);

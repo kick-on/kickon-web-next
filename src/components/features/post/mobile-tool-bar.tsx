@@ -45,8 +45,8 @@ const MobileToolBar = ({
 					const isActive = editor?.isActive(key);
 					return (
 						<button key={key} onClick={() => handleTextFormatToggle(key)}>
-							<div className="w-5 h-5 flex items-center justify-center rounded-sm">
-								<Icon className={clsx('w-5 h-5', isActive ? 'stroke-[#c00c0b]' : 'stroke-[#afafaf]')} />
+							<div className="w-4.5 h-4.5 flex items-center justify-center rounded-sm">
+								<Icon className={clsx('w-5 h-5', isActive ? 'stroke-primary-900' : 'stroke-black-600')} />
 							</div>
 						</button>
 					);
@@ -58,10 +58,8 @@ const MobileToolBar = ({
 							<button key={key} onClick={onClick} className="p-[7px] rounded-sm">
 								<Icon
 									className={clsx(
-										'w-5 h-5 rounded-sm',
-										isActive
-											? 'stroke-[#c00c0b] bg-primary-50'
-											: 'stroke-[#afafaf] active:stroke-[#c00c0b] active:bg-primary-50',
+										'w-4.5 h-4.5 rounded-sm',
+										isActive ? 'stroke-primary-900' : 'stroke-black-600 active:stroke-primary-900',
 									)}
 								/>
 							</button>
@@ -88,7 +86,7 @@ const MobileToolBar = ({
 						<div
 							className={clsx(
 								'w-6 h-6 flex items-center justify-center rounded-sm',
-								activeExtra === 'format' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
+								activeExtra === 'format' ? 'bg-primary-50 stroke-primary-900' : 'stroke-black-600',
 							)}
 						>
 							<TextFormattIcon />
@@ -102,7 +100,7 @@ const MobileToolBar = ({
 						<div
 							className={clsx(
 								'w-6 h-6 flex items-center justify-center rounded-sm',
-								activeExtra === 'quote' ? 'bg-primary-50 stroke-[#c00c0b]' : 'stroke-[#afafaf]',
+								activeExtra === 'quote' ? 'bg-primary-50 stroke-primary-900' : 'stroke-black-600',
 							)}
 						>
 							<ParagraphIcon />

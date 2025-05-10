@@ -69,7 +69,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 							className="px-[5px] bg-black-000 border border-black-300 rounded-sm"
 						>
 							<div className={clsx('w-6 h-6 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}>
-								<btn.Icon className={`${isActive ? 'stroke-[#c00c0b]' : 'stroke-[#8f8f8f]'}`} />
+								<btn.Icon className={`${isActive ? 'stroke-primary-900' : 'stroke-black-600'}`} />
 							</div>
 						</button>
 					);
@@ -83,7 +83,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 						className="flex items-center cursor-pointer px-[5px] bg-black-000 border border-black-300 rounded-sm"
 					>
 						<div className="w-6 h-6 flex items-center justify-center">
-							{btn.icon ? btn.icon : btn.Icon && <btn.Icon className="stroke-[#8f8f8f]" />}
+							{btn.icon ? btn.icon : btn.Icon && <btn.Icon className="stroke-black-600" />}
 						</div>
 						<input
 							type="file"
