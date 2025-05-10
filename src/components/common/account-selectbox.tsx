@@ -54,6 +54,7 @@ export default function AccountSelectBox({
 			}
 		}
 
+		console.log(selectedOption);
 		onChange(selectedOption);
 		setIsVisibleOptions(false);
 	};
@@ -88,7 +89,7 @@ export default function AccountSelectBox({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex gap-1.5 items-center subtitle1-medium">
+			<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">
 				{category}
 				{isLeagueSelectBox && (
 					<Image
@@ -106,7 +107,7 @@ export default function AccountSelectBox({
 				<button
 					onClick={handleSelectBoxClick}
 					className={`flex gap-2.5 items-center px-4 py-3 w-full
-						border border-black-300 rounded-lg body3-regular
+						border border-black-300 rounded-lg body3-regular @mobile:text-14
 						${content ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>

@@ -24,7 +24,8 @@ export default function Page() {
 
 	const [isValidAccess, setIsValidAccess] = useState(false);
 
-	const [nickname, setNickname] = useState('');
+	const [isDuplicated, setIsDuplicated] = useState(false);
+	const [nickname, setNickname] = useState<string | null>(null);
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
 	const [agreements, setAgreements] = useState({
@@ -35,12 +36,15 @@ export default function Page() {
 		marketing: false,
 	});
 
-	const isValidNickname = nickname.length > 0 && nickname.length < 9;
+	const isValidNickname = nickname && !isDuplicated;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
 	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
+		if (isDuplicated) {
+			setIsDuplicated(false);
+		}
 	};
 
 	const handleLeagueChange = (selectedLeague) => {
@@ -79,7 +83,10 @@ export default function Page() {
 		};
 		const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
-		if (typeof updateUserInfoResponse === 'string') {
+		if (updateUserInfoResponse === 'DUPLICATED_NICKNAME') {
+			if (isDuplicated === false) setIsDuplicated(true); // 닉네임 중복
+		} else if (typeof updateUserInfoResponse === 'string') {
+			if (isDuplicated === true) setIsDuplicated(false); // 기타 오류
 			console.log(updateUserInfoResponse);
 		} else {
 			// 성공 시 약관 동의 api 호출
@@ -122,14 +129,16 @@ export default function Page() {
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
-			<div className="mb-8 title1-bold">회원가입</div>
+			<div className="mb-8 @mobile:mb-4 title1-bold @mobile:text-24 @mobile:font-semibold @mobile:leading-8">
+				회원가입
+			</div>
 			<div className="flex gap-2">
 				<Image width={24} height={24} src={socialLogoUrl} alt={socialLogoAlt} />
-				<div className="body3-regular">계정으로 가입을 진행하고 있어요.</div>
+				<div className="body3-regular @mobile:text-14">계정으로 가입을 진행하고 있어요.</div>
 			</div>
 
-			<div className="mt-[4.75rem] mb-[4.5rem] w-full flex flex-col gap-6">
-				<Nickname nickname={nickname} onChange={handleNicknameChange} />
+			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] @mobile:mb-6 w-full flex flex-col gap-6">
+				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
 					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
@@ -150,8 +159,8 @@ export default function Page() {
 				<button
 					onClick={handleSignupButtonClick}
 					disabled={isButtonDisabled}
-					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000
-										enabled:[background-color:var(--color-primary-900)] disabled:[background-color:var(--color-black-300)]"
+					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000 @mobile:text-15
+										enabled:bg-primary-900 disabled:bg-black-300"
 				>
 					회원가입
 				</button>

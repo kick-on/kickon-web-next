@@ -11,13 +11,32 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const isNews = type === 'news';
-	const titleMargin = isNews ? 'mt-0' : 'mt-7.5';
+	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
 	const [isLiked, setIsLiked] = useState(data.isKicked);
 	const [likes, setLikes] = useState(data.likes);
 	const [sanitizedContent, setSanitizedContent] = useState('');
+	const [isImageLoaded, setIsImageLoaded] = useState(false);
+	const [isVerticalImage, setIsVerticalImage] = useState(false);
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
+
+	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
+	useEffect(() => {
+		if (typeof window === 'undefined' || !isNews || !data.thumbnailUrl) return;
+
+		// 이미지를 불러오기 위한 함수
+		const preloadImage = () => {
+			const img = document.createElement('img');
+			img.onload = () => {
+				setIsVerticalImage(img.naturalHeight > img.naturalWidth);
+				setIsImageLoaded(true);
+			};
+			img.src = data.thumbnailUrl;
+		};
+
+		preloadImage();
+	}, [isNews, data.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
@@ -53,30 +72,42 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	return (
 		<div className="px-4">
 			{/* 대표 이미지 */}
-			{isNews && (
-				<Image
-					src={data.thumbnailUrl}
-					alt="대표 이미지"
-					width={636}
-					height={322}
-					className="mt-6 mb-12 rounded-[0.625rem] w-[636px] h-[322px] object-cover"
-				/>
+			{isNews && isImageLoaded && (
+				<div
+					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
+					w-full max-w-[636px] aspect-[636/322]
+					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
+				`}
+				>
+					<Image
+						src={data.thumbnailUrl}
+						alt="대표 이미지"
+						width={636}
+						height={322}
+						className={`
+						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
+					`}
+						priority={true}
+					/>
+				</div>
 			)}
 
 			{/* 헤더 */}
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
-					{!isCommentAllowed && <Image src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />}
+					{!isCommentAllowed && (
+						<Image className="w-6 h-6 object-contain" src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />
+					)}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{categoryLabel}
 					</span>
 				</div>
 			)}
 
-			<h1 className={`title1-bold ${titleMargin}`}>{data.title}</h1>
+			<h1 className={`title1-bold @mobile:text-2xl ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
-			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular">
+			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
 				<div className="flex items-center gap-2">
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
@@ -87,7 +118,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 							className="w-full h-full rounded-full object-cover"
 						/>
 					</div>
-					<span className="flex items-center gap-1.5 text-black-900">
+					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-13">
 						{data.user.nickname}
 						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
 					</span>
@@ -97,11 +128,11 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 
 				<div className="flex gap-3 items-center text-black-600 body5-regular">
-					<div className="flex items-center gap-1.5">
+					<div className="flex items-center gap-1.5 @mobile:hidden">
 						<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
 						<span>{likes}</span>
 					</div>
-					<div className="flex items-center gap-1.5">
+					<div className="flex items-center gap-1.5 @mobile:hidden">
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
 						<span>{data.replies}</span>
 					</div>
@@ -111,7 +142,10 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 body3-regular" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+			<div
+				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube"
+				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
+			/>
 
 			{/* 좋아요 버튼 */}
 			<button

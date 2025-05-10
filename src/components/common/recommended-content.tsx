@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import CommunityDivisionBar from './category-tab/community-division-bar';
 import CommunityItem from './category-tab/community-item';
-import NewsItem from './category-tab/news-item';
 import ComponentFrame from './component-frame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
@@ -14,10 +13,13 @@ import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
 import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
+import NewsItem from './category-tab/news-item';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
-const RecommendedContent = ({ mode, teamName = '' }) => {
+const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 	const pathname = usePathname();
 	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
+	const isMobile = useIsMobile();
 
 	const isMyTeam = Boolean(teamName);
 	const isNews = mode === 'news';
@@ -29,8 +31,23 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 			'클럽 커뮤니티'
 		) : (
 			<>
-				함께 볼 만한 {isMyTeam && <span className="text-primary-900">{teamName} </span>}
-				{isNews ? '뉴스' : '게시글'}
+				{!isMobile ? (
+					<div>
+						함께 볼 만한 {isMyTeam && <span className="text-primary-900">{teamName} </span>}
+						{isNews ? ' 뉴스' : ' 게시글'}
+					</div>
+				) : (
+					<div className="flex">
+						함께 볼 만한
+						{isMyTeam && (
+							<span className="text-primary-900 flex mx-1 items-center">
+								MY 팀
+								<Image width={16} height={16} src={teamLogo} alt="팀 로고" className="w-4 h-4 ml-1" />
+							</span>
+						)}
+						{isNews ? '뉴스' : '게시글'}
+					</div>
+				)}
 			</>
 		);
 
@@ -54,19 +71,27 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 	return (
 		<ComponentFrame isMain={true}>
 			<header
-				className={clsx('flex mx-4 justify-between pt-7.5 pb-1.5', {
+				className={clsx('flex mx-4 justify-between pb-1.5', isNews ? '@mobile:pt-6 pt-7.5' : 'pt-7.5', '@mobile:mx-0', {
 					'border-b border-black-300 pb-7.5': !isNews,
 				})}
 			>
-				<h3 className="title4-semibold">{displayTitle}</h3>
+				<h3 className={clsx('@mobile:ml-4', 'title4-semibold', isNews ? '@mobile:text-16' : '@mobile:text-18')}>
+					{displayTitle}
+				</h3>
 
 				<Link
 					href={!isNews ? '/board?q=전체' : isMyTeam ? `/news?q=${teamName}` : `/news?q=전체`}
 					aria-label="더 보기"
-					className="flex gap-2 items-center text-black-700 body5-regular"
+					className="@mobile:mr-4 @mobile:text-[12px] flex gap-2 items-center text-black-700 body5-regular"
 				>
 					<span>더 보기</span>
-					<Image src="/chevron/right-gray.svg" width={18} height={18} alt="오른쪽 화살표" />
+					<Image
+						src="/chevron/right-gray.svg"
+						width={18}
+						height={18}
+						className="@mobile:w-4 @mobile:h-4"
+						alt="오른쪽 화살표"
+					/>
 				</Link>
 			</header>
 
@@ -83,7 +108,9 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 					data.map((item, index) => (
 						<div key={item.pk}>
 							<Component {...item} isMyTeam={isMyTeam} />
-							{index !== data.length - 1 && <hr className="border-black-300 mx-4" />}
+							{index !== data.length - 1 && (
+								<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': Component === CommunityItem })} />
+							)}
 						</div>
 					))
 				)}

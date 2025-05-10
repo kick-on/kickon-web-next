@@ -15,29 +15,38 @@ export default function Page() {
 	const { setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	useEffect(() => {
-		const accessToken = searchParams.get('accessToken');
-		const refreshToken = searchParams.get('refreshToken');
+		const errorCode = searchParams.get('errorCode');
 
-		if (accessToken && refreshToken) {
-			localStorage.setItem('accessToken', accessToken);
-			localStorage.setItem('refreshToken', refreshToken);
-		}
+		// errorCode가 있는 경우 alert 후 홈으로 리디렉션
+		if (errorCode === 'FORBIDDEN_RESISTER') {
+			router.replace('/');
+			alert('탈퇴 후 7일이 지나지 않아 재가입할 수 없습니다.');
+		} else {
+			// errorCode가 없는 경우에만 가입 또는 로그인 진행
+			const accessToken = searchParams.get('accessToken');
+			const refreshToken = searchParams.get('refreshToken');
 
-		const getCurrentUserInfo = async () => {
-			const response = await getUserInfo();
-
-			if (typeof response === 'string') {
-				// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
-				setCookie('fromLogin', 'true', 30);
-				router.push(`/signup?provider=${provider}`);
-			} else {
-				// 유저 정보 불러오기 성공 시 이전 페이지로
-				setCurrentUserInfo(response.data);
-				const previousPage = sessionStorage.getItem('previousPage');
-				router.replace(previousPage);
+			if (accessToken && refreshToken) {
+				localStorage.setItem('accessToken', accessToken);
+				localStorage.setItem('refreshToken', refreshToken);
 			}
-		};
 
-		getCurrentUserInfo();
+			const getCurrentUserInfo = async () => {
+				const response = await getUserInfo();
+
+				if (typeof response === 'string') {
+					// 유저 정보 불러오기 실패(401/403) 시 회원가입 페이지로
+					setCookie('fromLogin', 'true', 30);
+					router.replace(`/signup?provider=${provider}`);
+				} else {
+					// 유저 정보 불러오기 성공 시 이전 페이지로
+					setCurrentUserInfo(response.data);
+					const previousPage = sessionStorage.getItem('previousPage');
+					router.replace(previousPage);
+				}
+			};
+
+			getCurrentUserInfo();
+		}
 	}, [router, searchParams, setCurrentUserInfo, provider]);
 }

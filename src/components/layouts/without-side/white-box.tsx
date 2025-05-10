@@ -4,27 +4,26 @@ import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
 const paddingMap: Record<string, string> = {
-	'/signup': 'pt-[6.25rem] pb-[6.25rem]',
-	'/post/news': 'px-4',
-	'/post/board': 'px-4',
-	'/profile-setting': 'pt-[8.25rem] pb-[4.25rem]', // 프로필 설정 페이지
+	'/signup': 'py-[6.25rem] @mobile:pt-15',
+	'/post/news': 'py-[1.875rem] @mobile:mt-20',
+	'/post/board': 'py-[1.875rem] @mobile:mt-20',
+	'/profile-setting': 'py-[8.25rem] @mobile:pt-15',
+	'/withdrawal': 'py-[6.25rem] @mobile:pt-15',
 };
 
 const WhiteBox: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 	const pathname = usePathname();
-
-	const computedPadding = clsx(
-		paddingMap[pathname] || 'p-5', // 기존 매핑된 패딩 적용
-		!paddingMap[pathname]?.includes('pt-') && 'pt-[1.875rem]', // pt가 없으면 기본값 적용
-		!paddingMap[pathname]?.includes('pb-') && 'pb-[6.25rem]', // pb가 없으면 기본값 적용
-	);
+	const isNaked = pathname === '/signup' || pathname === '/profile-setting' || pathname === '/withdrawal';
 
 	return (
 		<div
 			className={clsx(
-				'flex bg-black-000 w-[41.75rem] h-auto border border-black-300 border-solid rounded-[0.625rem] mt-4 m-auto',
-				'bg-black-000 w-[41.75rem] h-auto border border-black-300 border-solid rounded-[0.625rem] mt-4 m-auto',
-				computedPadding,
+				`flex w-[41.75rem] h-auto m-auto mt-4 px-4 bg-black-000 border border-black-300 rounded-[0.625rem]
+				@mobile:w-auto @mobile:grow @mobile:mx-4`,
+				paddingMap[pathname] || 'pt-5',
+				{
+					'@mobile:bg-transparent @mobile:border-0 @mobile:pb-0': isNaked,
+				},
 			)}
 		>
 			{children}

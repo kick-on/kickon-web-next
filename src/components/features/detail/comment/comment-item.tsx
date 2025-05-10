@@ -1,9 +1,12 @@
+'use client';
+
 import Image from 'next/image';
 import { useMemo } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
-import { CommentItemProps } from '@/services/apis/detail/comment/dto';
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
+import useIsMobile from '@/lib/hooks/useIsMobile';
+import { CommentItemProps } from './type';
 
 function CommentItem({
 	content,
@@ -11,6 +14,7 @@ function CommentItem({
 	likedComments,
 	handleLikeToggle,
 	handleReply,
+	closeReplyInput,
 	toggleReplyVisibility,
 	replyingTo,
 	replyVisibilities,
@@ -20,6 +24,7 @@ function CommentItem({
 	isReply = false,
 	onCommentSubmit,
 }: CommentItemProps) {
+	const isMobile = useIsMobile();
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
@@ -27,7 +32,7 @@ function CommentItem({
 	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
 	return (
 		<>
-			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
+			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10', isReplyInputOpen && '@mobile:pb-10')}>
 				<Image
 					src={content.user?.profileImageUrl ?? '/default-profile.svg'}
 					alt="프로필"
@@ -44,7 +49,7 @@ function CommentItem({
 								{formatStringToDate(content.createdAt, '2-digit', true)}
 							</span>
 						</div>
-						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-1">
+						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-2">
 							<Image
 								src={likedComments[content.pk] ? '/kick/red.svg' : '/kick/gray.svg'}
 								alt="kick"
@@ -63,9 +68,12 @@ function CommentItem({
 					</p>
 
 					<div className="flex flex-col gap-3.5">
-						{isCommentAllowed && !isReply && (
+						{isCommentAllowed && !isReply && (!isMobile || !isReplyInputOpen) && (
 							<button
-								className="button5-regular text-black-700 bg-black-200 rounded-sm px-2 py-1 w-fit"
+								className={clsx(
+									'button5-regular rounded-sm px-2 py-1 w-fit',
+									isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
+								)}
 								onClick={() => handleReply(content.pk)}
 							>
 								답글
@@ -96,6 +104,7 @@ function CommentItem({
 							contentType={type}
 							mentionNickname={content.user.nickname}
 							onCommentSubmit={(isReply) => onCommentSubmit(isReply, content.pk)}
+							onCommentCancel={() => closeReplyInput(content.pk)}
 						/>
 					)}
 				</div>

@@ -1,10 +1,11 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
-import { CommentInputProps } from '@/services/apis/detail/comment/dto';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { CommentInputProps } from './type';
 
 const CommentInput = ({
 	type = 'comment',
@@ -13,6 +14,7 @@ const CommentInput = ({
 	parentReplyId,
 	contentType,
 	onCommentSubmit,
+	onCommentCancel,
 }: CommentInputProps) => {
 	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
@@ -25,6 +27,8 @@ const CommentInput = ({
 	const [hasScroll, setHasScroll] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
+
+	const isMobile = useIsMobile();
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -205,29 +209,78 @@ const CommentInput = ({
 	}, []);
 
 	return (
-		<div className={type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4'}>
+		<div
+			className={
+				type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
+			}
+		>
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div className={clsx('flex', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-[6.5rem]')}>
-				{/* 입력창 */}
-				<div className="relative w-full">
+			<div className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-26')}>
+				<div
+					className={clsx(
+						'relative w-full h-full bg-black-000 rounded-l-[0.625rem] resize-none @mobile:h-[110px] @mobile:rounded-[0.625rem]',
+						{
+							'@mobile:pb-10.5 @mobile:border @mobile:border-black-200': type === 'reply',
+						},
+					)}
+				>
 					<div
 						ref={inputRef}
 						contentEditable
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
 						className={clsx(
-							'relative w-full h-full p-4 pb-3 rounded-l-[0.625rem] resize-none focus:outline-none overflow-y-scroll no-scrollbar body6-regular text-left',
-							type === 'reply' ? 'bg-black-100' : 'bg-black-000 h-full',
-							content.trim().length === 0 && 'empty-placeholder',
+							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left',
+							type === 'reply' ? '@mobile:h-[70px]' : '@mobile:h-[110px]',
+							{
+								'empty-placeholder': content.trim().length === 0,
+								'overflow-y-scroll custom-scrollbar': isMobile,
+								'overflow-y-scroll no-scrollbar': !isMobile,
+							},
 						)}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
+
+					{isMobile && (
+						<div
+							className={clsx(
+								'flex gap-4 justify-end',
+								type === 'reply' ? 'absolute bottom-3 right-4' : '@mobile:mt-3',
+							)}
+						>
+							<button
+								onClick={
+									type === 'reply'
+										? onCommentCancel
+										: () => {
+												setContent('');
+												if (inputRef.current) {
+													inputRef.current.innerHTML = '';
+												}
+											}
+								}
+								className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
+							>
+								취소
+							</button>
+							<button
+								onClick={handleSubmit}
+								disabled={isSubmitting || content.trim().length === 0}
+								className={clsx(
+									'w-10.5 h-7 text-black-000 button5-medium rounded-[0.375rem]',
+									isSubmitting || content.trim().length === 0 ? 'bg-black-600' : 'bg-primary-900',
+								)}
+							>
+								등록
+							</button>
+						</div>
+					)}
 				</div>
 
 				{/* 스크롤바 */}
 				<div
-					className={`relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
+					className={`@mobile:hidden relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
 				>
 					<div
 						ref={thumbRef}
@@ -235,13 +288,12 @@ const CommentInput = ({
 						style={{ height: `${scrollThumbHeight}px` }}
 					/>
 				</div>
-
 				{/* 등록 버튼 */}
 				<button
 					onClick={handleSubmit}
 					disabled={isSubmitting || content.trim().length === 0}
 					className={clsx(
-						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem]',
+						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem] @mobile:hidden',
 						isSubmitting || content.trim().length === 0 ? 'bg-black-400' : 'bg-primary-900',
 					)}
 				>

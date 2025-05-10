@@ -1,4 +1,6 @@
 import { SuccessResponse } from '@/services/config/dto';
+import { TeamDto } from '../team/dto';
+import { LeagueDto } from '../league/dto';
 
 // 리그 기반으로 매치 리스트 조회
 export interface GetGamesRequest {
@@ -24,32 +26,24 @@ export type GetGamesResponse = SuccessResponse<GameTaggedLeagueDto>;
 
 // 내부 dto
 export interface GameTaggedLeagueDto {
-	name: string;
-	pk: number;
+	league: LeagueDto;
 	games: GameDto[];
 }
 
 export interface GameDto {
-	homeTeam: GambleTeamDto;
-	awayTeam: GambleTeamDto;
+	homeTeam: TeamDto;
+	awayTeam: TeamDto;
 	gambleResult: GambleResultDto;
 	myGambleResult: MyGambleResultDto | null;
 	pk: number;
-	homeScore: number | null;
-	awayScore: number | null;
+	homeScore: number | null; // 실제 경기 결과
+	awayScore: number | null; // 실제 경기 결과
 	round: string;
 	homePenaltyScore: number | null;
 	awayPenaltyScore: number | null;
 	gameStatus: 'PENDING' | 'PROCEEDING' | 'CANCELED' | 'HOME' | 'AWAY' | 'DRAW' | 'POSTPONED';
 	startAt: string;
 }
-
-export interface GambleTeamDto {
-	pk: number;
-	name: string;
-	logoUrl: string;
-}
-
 // 예측 현황 비율
 export interface GambleResultDto {
 	home: number;

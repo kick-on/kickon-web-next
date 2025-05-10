@@ -1,15 +1,41 @@
 import { SuccessResponse } from '@/services/config/dto';
-import { UserDto } from '../news/dto';
 import { TeamDto } from '../team/dto';
+import { UserDto } from '@/services/auth/dto';
 
+// 게시글 리스트 조회
+export interface GetBoardListRequest {
+	team?: number;
+	size: number;
+	page: number;
+	order: string;
+	infinite?: boolean;
+	lastBoard?: number;
+	lastViewCount?: number;
+}
+
+export type GetBoardListResponse = SuccessResponse<BoardItemDto[]>;
+
+// 함께 볼 만한 게시글 조회
 export type GetRecommendedBoardsResponse = SuccessResponse<RecommendedBoardDto[]>;
 
+// 내부 DTO
 export interface RecommendedBoardDto {
 	pk: number;
 	title: string;
 	user: UserDto;
 	team: TeamDto;
 	createdAt: string;
+	views: number;
+	likes: number;
+	replies: number;
+}
+
+export interface BoardItemDto {
+	pk: number;
+	title: string;
+	user: UserDto;
+	createdAt: string;
+	hasImage: boolean;
 	views: number;
 	likes: number;
 	replies: number;

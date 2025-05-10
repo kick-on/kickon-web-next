@@ -1,4 +1,9 @@
+'use client';
+
+import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import clsx from 'clsx';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
 export default function OptionItem({
 	pk,
@@ -11,10 +16,17 @@ export default function OptionItem({
 	logoUrl: string;
 	onClick: (number) => void;
 }) {
+	const pathname = usePathname();
+	const isPost = pathname.startsWith('/post');
+	const { isDesktop } = getServerDeviceType();
+
 	return (
 		<button
 			onClick={() => onClick(pk)}
-			className="w-full h-8 flex gap-4 items-center pl-6 body5-regular text-black-900"
+			className={clsx(
+				'w-full flex gap-4 items-center px-6 body5-regular text-black-900 whitespace-nowrap',
+				isPost ? 'h-9' : `${isDesktop ? 'h-9' : 'h-[2.875rem]'}`,
+			)}
 		>
 			<Image
 				className="w-4 h-4 object-contain"

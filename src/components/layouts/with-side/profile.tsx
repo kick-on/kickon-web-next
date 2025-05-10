@@ -1,8 +1,8 @@
 'use client';
 
 import ComponentFrame from '@/components/common/component-frame';
-import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import { getUserInfo } from '@/services/auth';
@@ -16,26 +16,22 @@ export default function Profile() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 
-	const previousPage = typeof window !== 'undefined' ? sessionStorage.getItem('previousPage') : null;
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(!!searchParams.get('login'));
+	const { openLoginModal } = useIsLoginModalOpenStore();
 
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const { currentUserInfo, setCurrentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
 
-	const fullUrl = !!searchParams.get('login')
-		? '/'
-		: `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 
 	const handleLoginButtonClick = () => {
-		setIsLoginModalOpen(true);
-	};
-
-	const handleLoginModalClose = () => {
-		setIsLoginModalOpen(false);
-		if (previousPage === '/') {
-			router.replace(previousPage);
+		if (pathname.split('/').includes('signup')) {
+			router.push('/');
+			sessionStorage.setItem('previousPage', '/');
+		} else {
+			sessionStorage.setItem('previousPage', fullUrl);
 		}
+		openLoginModal();
 	};
 
 	const handleLogoutButtonClick = () => {
@@ -45,10 +41,6 @@ export default function Profile() {
 
 		router.push('/');
 	};
-
-	useEffect(() => {
-		sessionStorage.setItem('previousPage', fullUrl);
-	}, [fullUrl]);
 
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
@@ -68,7 +60,7 @@ export default function Profile() {
 
 		// 저장된 유저 정보가 있으면 사용자 프로필 렌더링
 		if (currentUserInfo) {
-			const getExtraUserInfo = async () => {
+			const getUserPointRankingInfo = async () => {
 				const response = await getUserPointRanking();
 
 				if (typeof response === 'string') {
@@ -81,14 +73,13 @@ export default function Profile() {
 				}
 			};
 
-			getExtraUserInfo();
+			getUserPointRankingInfo();
 			setIsLoggedIn(true);
 		}
 	}, [currentUserInfo, setCurrentUserInfo]);
 
 	return (
 		<>
-			{isLoginModalOpen && <LoginModal onClose={handleLoginModalClose} />}
 			<ComponentFrame>
 				{isLoggedIn ? (
 					<div>
@@ -109,13 +100,13 @@ export default function Profile() {
 											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
 											<div className="body3-regular text-black-800">님</div>
 										</div>
-										{currentUserInfo?.teamName && (
+										{currentUserInfo?.favoriteTeam && (
 											<Image
-												className="w-4 h-4 my-auto"
+												className="w-4 h-4 object-contain my-auto"
 												width={16}
 												height={16}
-												src={currentUserInfo?.teamLogoUrl}
-												alt={`${currentUserInfo?.teamName} 로고`}
+												src={currentUserInfo.favoriteTeam.logoUrl}
+												alt={`${currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn} 로고`}
 											/>
 										)}
 									</div>
@@ -136,7 +127,7 @@ export default function Profile() {
 							<div className="flex border-r border-black-200">
 								<div className="mx-auto my-[0.5625rem] text-center items-center">
 									<div className="caption2-regular h-4">
-										이번 시즌 {currentUserInfo?.teamName ? '우리 팀 내' : '전체'} 순위
+										이번 시즌 {currentUserInfo?.favoriteTeam ? '우리 팀 내' : '전체'} 순위
 									</div>
 									<div className="body4-semibold">{extraUserInfo?.ranking || '-'}위</div>
 								</div>

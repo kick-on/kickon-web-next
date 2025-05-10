@@ -12,11 +12,13 @@ import { getUserInfo, updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getAccessToken } from '@/lib/utils/getAccessToken';
+import { setCookie } from '@/lib/utils/cookie';
 
 export default function Page() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
-	const [nickname, setNickname] = useState('');
+	const [isDuplicated, setIsDuplicated] = useState(false);
+	const [nickname, setNickname] = useState<string | null>(null);
 	const [league, setLeague] = useState<LeagueDto>({
 		pk: NO_CHEERING_TEAM_PK,
 		nameKr: '응원팀이 없어요.',
@@ -30,7 +32,7 @@ export default function Page() {
 		logoUrl: '/ban.svg',
 	});
 
-	const route = useRouter();
+	const router = useRouter();
 
 	const isEditable = false;
 	const hasTeam = league.nameKr !== '응원팀이 없어요.';
@@ -38,6 +40,9 @@ export default function Page() {
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
+		if (isDuplicated) {
+			setIsDuplicated(false);
+		}
 	};
 
 	const handleLeagueChange = (selectedLeague) => {
@@ -51,7 +56,7 @@ export default function Page() {
 	};
 
 	const handleCancelButtonClick = () => {
-		route.push('/');
+		router.push('/');
 	};
 
 	const handleCompleteButtonClick = () => {
@@ -67,19 +72,22 @@ export default function Page() {
 	const editUserInfo = async (body: UpdateUserInfoRequest) => {
 		const response = await updateUserInfo(body);
 
-		if (typeof response === 'string') {
+		if (response === 'DUPLICATED_NICKNAME') {
+			setIsDuplicated(true);
+		} else if (typeof response === 'string') {
 			alert(response);
+			setIsDuplicated(false);
 		} else {
-			route.push('/');
+			router.push('/');
 		}
 	};
 
 	useEffect(() => {
 		if (!getAccessToken()) {
 			alert('로그인이 필요한 서비스입니다. 홈으로 이동합니다.');
-			route.push('/?login=true');
+			router.replace('/');
 		}
-	}, [route]);
+	}, [router]);
 
 	useEffect(() => {
 		// 새로고침해도 유저 정보 유지 -> persist로 대체 가능
@@ -90,18 +98,22 @@ export default function Page() {
 				setCurrentUserInfo(response.data);
 
 				setNickname(response.data.nickname);
-				setLeague({
-					pk: response.data.leaguePk || -1,
-					nameKr: response.data.leagueName || '응원팀이 없어요.',
-					nameEn: response.data.leagueName || 'no cheering team',
-					logoUrl: response.data.leagueLogoUrl || '/ban.svg',
-				});
-				setTeam({
-					pk: response.data.teamPk || -1,
-					nameKr: response.data.teamName || '응원팀이 없어요.',
-					nameEn: response.data.teamName || 'no cheering team',
-					logoUrl: response.data.teamLogoUrl || '/ban.svg',
-				});
+				if (response.data.league) {
+					setLeague({
+						pk: response.data.league.pk,
+						nameKr: response.data.league.nameKr,
+						nameEn: response.data.league.nameEn,
+						logoUrl: response.data.league.logoUrl,
+					});
+				}
+				if (response.data.favoriteTeam) {
+					setTeam({
+						pk: response.data.favoriteTeam.pk,
+						nameKr: response.data.favoriteTeam.nameKr,
+						nameEn: response.data.favoriteTeam.nameEn,
+						logoUrl: response.data.favoriteTeam.logoUrl,
+					});
+				}
 			}
 		};
 		getCurrentUserInfo();
@@ -127,36 +139,47 @@ export default function Page() {
 			</div>
 
 			<div className="flex flex-col gap-6">
-				<Nickname nickname={nickname} onChange={handleNicknameChange} />
+				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 				<AccountSelectBox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
 				{hasTeam && (
 					<AccountSelectBox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
 				)}
 			</div>
 
-			<div className="flex flex-col gap-2 mt-[4.25rem]">
-				<div className="flex gap-1.5 items-center subtitle1-medium">계정 관리</div>
+			<div className="relative flex flex-col gap-2 mt-[4.25rem]">
+				<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">계정 관리</div>
 				<div
-					className="flex gap-2.5 items-center px-4 py-3 w-full
+					className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-14
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
 				>
 					<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo?.providerType} 로고`} />
 					{currentUserInfo?.email}
 				</div>
+
+				<button
+					onClick={() => {
+						router.push('/withdrawal');
+						setCookie('fromProfile', 'true', 60);
+					}}
+					className="absolute -bottom-8 right-0 text-black-500 button5-regular underline"
+				>
+					회원 탈퇴
+				</button>
 			</div>
 
 			<div className="mt-[6.25rem] flex gap-4">
 				<button
 					onClick={handleCancelButtonClick}
-					className="w-full h-11 flex justify-center items-center
+					className="w-full h-11 flex justify-center items-center @mobile:text-15
             rounded-lg bg-black-200 button2-semibold text-black-700"
 				>
 					취소
 				</button>
 				<button
+					disabled={!nickname || isDuplicated}
 					onClick={handleCompleteButtonClick}
-					className="w-full h-11 flex justify-center items-center
-            rounded-lg bg-primary-900 button2-semibold text-black-000"
+					className="w-full h-11 flex justify-center items-center @mobile:text-15
+            rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
 				>
 					수정 완료
 				</button>

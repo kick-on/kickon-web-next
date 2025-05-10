@@ -4,6 +4,8 @@ import '@/styles/globals.css';
 import Navbar from '@/components/layouts/root/navbar';
 import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
+import MinWidth from '@/components/layouts/root/min-width';
+import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -25,10 +27,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
-				<Navbar />
-				<Banner />
-				<div className="pb-[9.375rem]">{children}</div>
-				<Footer />
+				<div className="@container">
+					<Navbar />
+					<LoginPortal />
+					<div className="@mobile:mt-16">
+						<Banner />
+						<div className="pb-[9.375rem]">{children}</div>
+						<Footer />
+						<MinWidth />
+					</div>
+				</div>
 			</body>
 		</html>
 	);
