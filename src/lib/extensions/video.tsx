@@ -1,4 +1,3 @@
-// extensions/Video.ts
 import { Node, mergeAttributes } from '@tiptap/core';
 
 export const Video = Node.create({
@@ -25,6 +24,6 @@ export const Video = Node.create({
 	},
 
 	renderHTML({ HTMLAttributes }) {
-		return ['video', mergeAttributes(HTMLAttributes, { controls: '', class: 'responsive-video' })];
+		return ['video', mergeAttributes(HTMLAttributes, { controls: '', class: 'responsive-youtube' })];
 	},
 });
