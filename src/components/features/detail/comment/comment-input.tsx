@@ -3,9 +3,9 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
-import { CommentInputProps } from '@/services/apis/detail/comment/dto';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import { CommentInputProps } from './type';
 
 const CommentInput = ({
 	type = 'comment',

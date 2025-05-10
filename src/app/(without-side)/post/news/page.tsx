@@ -323,16 +323,18 @@ export default function Page() {
 					)}
 				</div>
 
-				<div ref={dropdownRef} className="relative w-fit button4-medium tablet:text-14 @mobile:text-13">
+				<div
+					ref={dropdownRef}
+					className="relative w-[148px] @mobile:w-[132px] button4-medium tablet:text-14 @mobile:text-13"
+				>
 					<button
 						onClick={handleDropdownToggle}
-						className={`flex items-center h-auto border border-black-300 rounded-lg px-4 py-[9px] @mobile:pr-[12px]
-							${isShortened ? '@mobile:gap-[5px]' : '@mobile:gap-[14px]'} gap-8`}
+						className="flex items-center justify-between w-full h-auto border border-black-300 rounded-lg px-4 py-[9px] @mobile:pr-[10px]"
 					>
 						<div
-							className={`${
-								originalLabel === '탭 선택하기' || originalLabel === '탭 선택' ? 'text-black-600' : 'text-black-900'
-							}`}
+							className={clsx(
+								originalLabel === '탭 선택하기' || originalLabel === '탭 선택' ? 'text-black-600' : 'text-black-900',
+							)}
 						>
 							{displayLabel}
 						</div>
@@ -340,7 +342,7 @@ export default function Page() {
 					</button>
 
 					{isVisibleDropdown && (
-						<div className="z-50 absolute top-10 w-[9.125rem] @mobile:w-[97px] bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
+						<div className="z-50 absolute top-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
 							{categories.map((option, index) => (
 								<div
 									key={option.value}
@@ -355,6 +357,7 @@ export default function Page() {
 						</div>
 					)}
 				</div>
+
 				<button
 					onClick={() => {
 						if (window) {
