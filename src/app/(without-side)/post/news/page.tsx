@@ -221,7 +221,16 @@ export default function Page() {
 			console.error('게시글 작성 실패:', error);
 		}
 	};
-	const isSpecial = isMobile && selectedOption.label === '현지 팬 반응';
+
+	const shortenMap = {
+		'감독 교체': '감독 교...',
+		'현지 팬 반응': '현지 팬...',
+	};
+
+	const originalLabel = selectedOption.label.trim();
+	const isShortened = isMobile && shortenMap[originalLabel];
+	const displayLabel = isShortened ? shortenMap[originalLabel] : originalLabel;
+
 	return (
 		<div className="flex flex-col w-full">
 			{selectedImage ? (
@@ -317,17 +326,15 @@ export default function Page() {
 				<div ref={dropdownRef} className="relative w-fit button4-medium tablet:text-14 @mobile:text-13">
 					<button
 						onClick={handleDropdownToggle}
-						className={`flex items-center h-9 border border-black-300 rounded-lg 
-						${isSpecial ? 'gap-0.5 px-1' : 'gap-8 @mobile:gap-2.5 px-4 @mobile:px-3'}`}
+						className={`flex items-center h-auto border border-black-300 rounded-lg px-4 py-[9px] @mobile:pr-[12px]
+							${isShortened ? '@mobile:gap-[5px]' : '@mobile:gap-[14px]'} gap-8`}
 					>
 						<div
-							className={` ${
-								selectedOption.label === '탭 선택하기' || selectedOption.label === '탭 선택'
-									? 'text-black-600'
-									: 'text-black-900'
+							className={`${
+								originalLabel === '탭 선택하기' || originalLabel === '탭 선택' ? 'text-black-600' : 'text-black-900'
 							}`}
 						>
-							{selectedOption.label}
+							{displayLabel}
 						</div>
 						<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 					</button>
