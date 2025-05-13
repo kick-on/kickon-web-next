@@ -49,10 +49,11 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 				},
 			}),
 		],
-		content: '',
+		content: '<p></p>',
+		editable: true,
 		editorProps: {
 			attributes: {
-				class: 'focus:outline-none',
+				class: 'tiptap ProseMirror focus:outline-none',
 			},
 		},
 		onUpdate: ({ editor }) => {

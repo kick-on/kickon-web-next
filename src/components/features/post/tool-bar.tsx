@@ -16,7 +16,7 @@ import SortNumericIcon from '@/assets/editor/sort-numeric.svg';
 import QuoteIcon from '@/assets/editor/quote.svg';
 import lineIcon from '@/assets/editor/line.svg';
 
-export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-2" />;
+export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-[7.5px]" />;
 
 export default function Toolbar() {
 	const {

@@ -12,7 +12,7 @@ const EditorBody = () => {
 			<Toolbar />
 			<EditorContent
 				editor={editor}
-				className="rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg overflow-y-auto custom-scrollbar border border-black-300 px-4 py-6 w-full mb-7.5 h-[460px] focus:outline-none"
+				className="rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg overflow-y-auto custom-scrollbar border border-black-300 pl-4 p-3 min-w-[311px] mb-7.5 h-[460px] focus:outline-none"
 			/>
 		</>
 	);
