@@ -1,27 +1,39 @@
 // app/api/proxy/route.ts
 
+import { SERVER_URL } from '@/services/config/constants';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: Request) {
+export interface ProxyParameter {
+	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+	endpoint: string;
+	headers?: Record<string, string>;
+	body?: Record<string, string>;
+}
+
+export async function POST(req: Request) {
+	const { method, endpoint, headers, body }: ProxyParameter = await req.json();
+
 	// 쿠키에서 액세스 토큰을 읽음
 	const cookieStore = await cookies();
-	const token = cookieStore.get('accessToken'); // 쿠키에서 액세스 토큰을 가져옵니다.
+	const accessToken = cookieStore.get('accessToken'); // 쿠키에서 액세스 토큰을 가져옵니다.
 
 	// 토큰이 없다면, 요청을 거절할 수 있음
-	if (!token) {
+	if (!accessToken) {
 		return NextResponse.json({ message: 'Unauthorized: No token found' }, { status: 401 });
 	}
 
 	try {
 		// 백엔드 API 호출
-		console.log(token);
-		const apiResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/api/actual-season-ranking?league=1`, {
-			method: 'GET',
+		const hasBody = body !== undefined;
+		const apiResponse = await fetch(`${SERVER_URL}${endpoint}`, {
+			method: method,
 			headers: {
-				'Content-Type': 'application/json',
-				Authorization: `Bearer ${token.value}`, // 헤더에 토큰을 추가
+				Authorization: `Bearer ${accessToken.value}`, // 헤더에 토큰을 추가
+				...(hasBody ? { 'Content-Type': 'application/json' } : {}), // body가 있는 경우 헤더 추가
+				...headers, // 기타 추가 헤더 설정
 			},
+			body: hasBody ? JSON.stringify(body) : undefined, // body가 있는 경우 바디 추가
 		});
 
 		const data = await apiResponse.json();
