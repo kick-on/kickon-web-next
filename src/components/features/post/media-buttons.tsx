@@ -66,7 +66,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 						<button
 							key={btn.key}
 							onClick={btn.onClick}
-							className="px-[5px] bg-black-000 border border-black-300 rounded-sm"
+							className="w-[34px] px-[5px] bg-black-000 border border-black-300 rounded-sm"
 						>
 							<div className={clsx('w-6 h-6 flex items-center justify-center rounded-sm', isActive && 'bg-primary-50')}>
 								<btn.Icon className={`${isActive ? 'stroke-primary-900' : 'stroke-black-600'}`} />
@@ -80,7 +80,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 					<label
 						key={btn.key}
 						onClick={btn.onClick}
-						className="flex items-center cursor-pointer px-[5px] bg-black-000 border border-black-300 rounded-sm"
+						className="w-[34px] flex items-center cursor-pointer px-[5px] bg-black-000 border border-black-300 rounded-sm"
 					>
 						<div className="w-6 h-6 flex items-center justify-center">
 							{btn.icon ? btn.icon : btn.Icon && <btn.Icon className="stroke-black-600" />}

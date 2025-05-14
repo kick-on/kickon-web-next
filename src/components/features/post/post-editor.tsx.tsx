@@ -10,10 +10,9 @@ const EditorBody = () => {
 	return (
 		<>
 			<Toolbar />
-			<EditorContent
-				editor={editor}
-				className="rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg overflow-y-auto custom-scrollbar border border-black-300 px-4 py-6 w-full mb-7.5 h-[460px] focus:outline-none"
-			/>
+			<div className="h-[460px] overflow-y-auto custom-scrollbar rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg border border-black-300 mb-7.5">
+				<EditorContent editor={editor} className="pl-4 p-3 min-w-[311px] focus:outline-none" />
+			</div>
 		</>
 	);
 };
