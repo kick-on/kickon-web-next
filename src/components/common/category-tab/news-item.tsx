@@ -61,7 +61,7 @@ export default function NewsItem({
 				<footer className="flex flex-col gap-0.5 w-full text-black-600 body6-regular">
 					<div className="flex items-center gap-2">
 						<Image
-							src={user.profileImageUrl}
+							src={user.profileImageUrl || '/default-profile.svg'}
 							alt={`${user.nickname} 프로필 사진`}
 							width={24}
 							height={24}

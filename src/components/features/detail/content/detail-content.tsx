@@ -111,7 +111,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				<div className="flex items-center gap-2">
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
-							src={data.user.profileImageUrl}
+							src={data.user.profileImageUrl || '/default-profile.svg'}
 							alt="작성자 프로필"
 							width={24}
 							height={24}

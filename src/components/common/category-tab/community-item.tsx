@@ -30,7 +30,7 @@ export default function CommunityItem({ pk, title, replies, user, createdAt, has
 						width={18}
 						height={18}
 						className="@mobile:hidden rounded-full w-[1.125rem] h-[1.125rem] object-cover"
-						src={user.profileImageUrl}
+						src={user.profileImageUrl || '/default-profile.svg'}
 						alt={`${user.nickname} 프로필 사진`}
 					/>
 					<div className="w-[5.625rem] @mobile:w-fit">{user.nickname}</div>

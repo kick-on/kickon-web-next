@@ -34,7 +34,7 @@ function CommentItem({
 		<>
 			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10', isReplyInputOpen && '@mobile:pb-10')}>
 				<Image
-					src={content.user?.profileImageUrl ?? '/default-profile.svg'}
+					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
 					width={24}
 					height={24}
