@@ -32,9 +32,8 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	// league.pk가 변경될 때마다 getRanking 재생성
 	const getRanking = useCallback(async () => {
 		const leaguePk = league.pk;
-		const response =
-			mode === 'season' ? await getActualSeasonRanking(leaguePk) : await getGambleSeasonRanking(leaguePk);
-		setRanking(response?.data || null);
+		const response = mode === 'season' ? await fetch('/api/proxy') : await getGambleSeasonRanking(leaguePk);
+		// setRanking(response?.data || null);
 		console.log(response);
 	}, [league.pk, mode]);
 
