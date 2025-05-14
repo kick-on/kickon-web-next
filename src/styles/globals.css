@@ -38,13 +38,18 @@
 	}
 
 	h1 {
-		font-size: 20px;
-		font-weight: 700;
+		font-size: 24px;
+		font-weight: 600;
 	}
 
 	h2 {
-		font-size: 18px;
+		font-size: 20px;
 		font-weight: 600;
+	}
+
+	h3 {
+		font-size: 18px;
+		font-weight: 500;
 	}
 
 	ul {
@@ -121,8 +126,13 @@ body.overflow-hidden {
 	margin: 16px 0;
 }
 
-.tiptap .ProseMirror {
+.ProseMirror {
 	height: 100%; /* 에디터 전체 영역을 인풋으로 받음 */
+}
+
+.tiptap p {
+	margin-top: 12px;
+	margin-bottom: 24px;
 }
 
 .responsive-youtube iframe {
