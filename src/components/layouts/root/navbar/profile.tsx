@@ -18,10 +18,10 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 
 	const handleLogoutButtonClick = () => {
 		onClickButton();
-		clearCurrentUserInfo();
-		localStorage.clear();
-
-		router.push('/');
+		fetch('/api/logout', { method: 'POST' }).then(() => {
+			clearCurrentUserInfo(); // 클라이언트 user info 초기화
+			router.push('/');
+		});
 	};
 
 	useEffect(() => {
