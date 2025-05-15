@@ -11,7 +11,7 @@ export async function fetcher<T>(body: ProxyParameter, revalidate?: number) {
 	});
 
 	if (!response.ok) {
-		throw new Error(`proxy 호출 실패: ${response.status}`);
+		throw new Error(`${response.status}`);
 	}
 
 	const data: T = await response.json();
