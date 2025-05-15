@@ -7,7 +7,7 @@ export interface ProxyParameter {
 	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 	url: string;
 	headers?: Record<string, string>;
-	body?: Record<string, string>;
+	body?: Record<string, any>;
 }
 
 export async function POST(req: Request) {
