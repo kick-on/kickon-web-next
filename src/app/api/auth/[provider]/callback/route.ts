@@ -21,7 +21,6 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
 		return NextResponse.redirect(redirectUrl);
 	}
 
-	// TODO: error를 상태코드로 관리(query에 error message가 들어가는 방식을 수정)
 	// redirect 분기
 	const redirectUrl = new URL(req.nextUrl.origin);
 	console.log('redirectUrl: ', redirectUrl);
