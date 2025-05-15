@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ActualRankingDto, GambleRankingDto, GetGambleSeasonRankingResponse } from '@/services/apis/ranking/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { usePathname } from 'next/navigation';
-import { fetcher } from '@/lib/utils/fetcher';
+import { fetcher } from '@/lib/server/fetcher';
 
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
