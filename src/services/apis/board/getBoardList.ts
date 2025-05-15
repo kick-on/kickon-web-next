@@ -1,6 +1,5 @@
-import { SERVER_URL } from '@/services/config/constants';
 import { GetBoardListRequest, GetBoardListResponse } from './dto';
-import axiosInstance from '@/services/config/axiosInstance';
+import { fetcher } from '@/lib/server/fetcher';
 
 export const getBoardList = async ({
 	team,
@@ -16,6 +15,7 @@ export const getBoardList = async ({
 	params.append('size', String(size));
 	params.append('page', String(page));
 	params.append('order', String(order));
+
 	// 무한 스크롤
 	if (infinite !== undefined) params.append('infinite', String(infinite));
 	if (lastBoard !== undefined) params.append('lastNews', String(lastBoard));
@@ -23,10 +23,13 @@ export const getBoardList = async ({
 
 	if (team !== undefined) params.append('team', String(team));
 
-	const response = await axiosInstance.get<GetBoardListResponse | null>(`${SERVER_URL}/api/board?${params.toString()}`);
+	const response = await fetcher<GetBoardListResponse | null>({
+		method: 'GET',
+		url: `/api/board?${params.toString()}`,
+	});
 
 	if (!response.code.split('_').includes('SUCCESS')) {
-		console.error('게시글 리스트 조회 실패: ', `${SERVER_URL}/api/board?${params.toString()}`, response);
+		console.error('게시글 리스트 조회 실패: ', `/api/board?${params.toString()}`, response);
 		return null;
 	}
 	return response;
