@@ -5,13 +5,13 @@ import { NextResponse } from 'next/server';
 
 export interface ProxyParameter {
 	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
-	endpoint: string;
+	url: string;
 	headers?: Record<string, string>;
 	body?: Record<string, string>;
 }
 
 export async function POST(req: Request) {
-	const { method, endpoint, headers, body }: ProxyParameter = await req.json();
+	const { method, url, headers, body }: ProxyParameter = await req.json();
 
 	// 요청을 시도한 주소
 	const requestOrigin = req.headers.get('origin');
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
 	return await callBackendApi({
 		method,
-		endpoint,
+		url,
 		headers,
 		body,
 		accessToken,

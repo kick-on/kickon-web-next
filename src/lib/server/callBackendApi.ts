@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export default async function callBackendApi({
 	method,
-	endpoint,
+	url,
 	headers,
 	body,
 	accessToken,
@@ -14,7 +14,7 @@ export default async function callBackendApi({
 	const hasBody = !!body;
 
 	// 백엔드 api 호출
-	const response = await fetch(`${SERVER_URL}${endpoint}`, {
+	const response = await fetch(`${SERVER_URL}${url}`, {
 		method,
 		headers: {
 			...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
@@ -42,7 +42,7 @@ export default async function callBackendApi({
 			// api 다시 호출
 			const retriedResponse = await callBackendApi({
 				method,
-				endpoint,
+				url,
 				headers,
 				body,
 				accessToken: newAccessToken,

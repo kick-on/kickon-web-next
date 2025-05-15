@@ -33,10 +33,10 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	// league.pk가 변경될 때마다 getRanking 재생성
 	const getRanking = useCallback(async () => {
 		const leaguePk = league.pk;
-		const endpoint = mode === 'predict' ? '/api/gamble-season-ranking' : '/api/actual-season-ranking';
+		const url = mode === 'predict' ? '/api/gamble-season-ranking' : '/api/actual-season-ranking';
 		const response = await fetcher<GetGambleSeasonRankingResponse>({
 			method: 'GET',
-			endpoint: `${endpoint}?league=${leaguePk}`,
+			url: `${url}?league=${leaguePk}`,
 		});
 		setRanking(response?.data || null);
 	}, [league.pk, mode]);
