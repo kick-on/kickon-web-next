@@ -11,13 +11,13 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
 	// 에러 처리
 	if (errorCode === 'FORBIDDEN_RESISTER') {
 		const redirectUrl = new URL('/', req.nextUrl.origin);
-		redirectUrl.searchParams.set('error', '탈퇴 후 7일이 지나지 않아 재가입할 수 없습니다.');
+		redirectUrl.searchParams.set('errorCode', 'REJOIN_LIMIT');
 		return NextResponse.redirect(redirectUrl);
 	}
 
 	if (!accessToken || !refreshToken) {
 		const redirectUrl = new URL('/', req.nextUrl.origin);
-		redirectUrl.searchParams.set('error', '알 수 없는 오류가 발생했습니다.');
+		redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
 		return NextResponse.redirect(redirectUrl);
 	}
 
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
 			console.error(await userInfoResponse.json());
 
 			const redirectUrl = new URL('/', req.nextUrl.origin);
-			redirectUrl.searchParams.set('error', '알 수 없는 오류가 발생했습니다.');
+			redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
 			return NextResponse.redirect(redirectUrl);
 		}
 	} catch (error) {
@@ -50,12 +50,13 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
 		console.error(error);
 
 		const redirectUrl = new URL('/', req.nextUrl.origin);
-		redirectUrl.searchParams.set('error', '알 수 없는 오류가 발생했습니다.');
+		redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
 		return NextResponse.redirect(redirectUrl);
 	}
 
 	const response = NextResponse.redirect(redirectUrl);
 
+	// 정상적으로 로그인 or 회원가입 한 경우 쿠키 설정
 	if (typeof accessToken === 'string') {
 		response.cookies.set({
 			name: 'accessToken',
