@@ -229,7 +229,7 @@ function CommentSection({
 				/>
 			)}
 
-			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
+			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-200 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개
 			</p>
 

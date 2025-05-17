@@ -36,7 +36,7 @@ function CommentItem({
 	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
 	const moreButtonRef = useRef(null);
 	return (
-		<>
+		<div>
 			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10', isReplyInputOpen && '@mobile:pb-10')}>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
@@ -76,7 +76,7 @@ function CommentItem({
 							{isCommentAllowed && !isReply && (!isMobile || !isReplyInputOpen) && (
 								<button
 									className={clsx(
-										'button5-regular rounded-sm px-2 py-1 w-fit',
+										'button5-regular rounded-sm px-2 py-1 mb-0.5 w-fit',
 										isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
 									)}
 									onClick={() => handleReply(content.pk)}
@@ -129,8 +129,8 @@ function CommentItem({
 					)}
 				</div>
 			</div>
-			<hr className="border-t border-black-300 -mx-6 -ml-4" />
-		</>
+			<hr className="border-t border-black-200 -mx-6 -ml-4" />
+		</div>
 	);
 }
 
