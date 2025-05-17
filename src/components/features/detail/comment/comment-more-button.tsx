@@ -1,0 +1,73 @@
+'use client';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { useEffect, useRef, useState } from 'react';
+import AlertModal from '../alert-modal';
+
+export const CommentMoreButton = () => {
+	const [isOpen, setIsOpen] = useState(false);
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+	const menuRef = useRef<HTMLDivElement>(null);
+	const buttonRef = useRef<HTMLButtonElement>(null);
+
+	const handleDeleteClick = () => {
+		setIsOpen(false);
+		setShowDeleteConfirm(true);
+	};
+
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			const menuEl = menuRef.current;
+			const buttonEl = buttonRef.current;
+
+			if (menuEl && buttonEl && !menuEl.contains(event.target as Node) && !buttonEl.contains(event.target as Node)) {
+				setIsOpen(false);
+			}
+		};
+
+		if (isOpen) {
+			document.addEventListener('mousedown', handleClickOutside);
+		}
+
+		return () => {
+			document.removeEventListener('mousedown', handleClickOutside);
+		};
+	}, [isOpen]);
+
+	return (
+		<div className="relative inline-block">
+			<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
+				<Image src="/more-horizontal.svg" alt="더보기" width={20} height={20} className="@mobile:w-4.5 @mobile:h-4.5" />
+			</button>
+
+			{isOpen && (
+				<div
+					ref={menuRef}
+					className={clsx(
+						'absolute z-50 mt-2 flex flex-col rounded-lg border border-black-300 bg-black-000 text-black-900 button4-medium @mobile:text-13 shadow-[0_4px_10px_0_rgba(0,0,0,0.16)]',
+						'w-[6.5625rem]',
+						'@mobile:right-0',
+					)}
+				>
+					<button
+						className="block w-full text-center px-[27px] py-[10px] whitespace-nowrap @mobile:px-[30px] @mobile:py-[15px] rounded-t-[7px] hover:bg-black-200 @mobile:active:bg-black-200 transition-colors"
+						onClick={() => console.log('수정 클릭')}
+					>
+						수정하기
+					</button>
+					<button
+						className="block w-full text-center px-[27px] py-[10px] whitespace-nowrap rounded-b-[7px] @mobile:px-[30px] @mobile:py-[15px] hover:bg-black-200 @mobile:active:bg-black-200 transition-colors"
+						onClick={handleDeleteClick}
+					>
+						삭제하기
+					</button>
+				</div>
+			)}
+
+			{showDeleteConfirm && (
+				<AlertModal description="댓글을 삭제할까요?" onCancel={() => setShowDeleteConfirm(false)} />
+			)}
+		</div>
+	);
+};

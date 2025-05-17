@@ -7,8 +7,8 @@ import CommentInput from './comment-input';
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { CommentItemProps } from './type';
-import MoreActionsButton from '../content/more-actions-button';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { CommentMoreButton } from './comment-more-button';
 
 function CommentItem({
 	content,
@@ -59,7 +59,7 @@ function CommentItem({
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
-								<MoreActionsButton mode="comment" pk={content.pk} />
+								<CommentMoreButton />
 							</div>
 						)}
 					</div>

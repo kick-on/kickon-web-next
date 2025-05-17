@@ -1,6 +1,6 @@
 'use client';
 
-import Toolbar from './tool-bar';
+import Toolbar from './editor/tool-bar';
 import { EditorContent } from '@tiptap/react';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import { EditorProvider } from '@/lib/contexts/editor/provider';

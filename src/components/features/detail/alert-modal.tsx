@@ -39,6 +39,8 @@ const AlertModal = ({
 		}
 	};
 
+	if (isMobile === null) return null;
+
 	return (
 		<div onClick={handleBackdropClick} className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
 			<div

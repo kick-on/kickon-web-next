@@ -5,18 +5,15 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import ReportModal from './report-modal';
 import EditIcon from '@/assets/edit.svg';
-import AlertModal from './alert-modal';
+import AlertModal from '../alert-modal';
 import { useRouter } from 'next/navigation';
 
 interface MoreActionsButtonProps {
 	type?: 'news' | 'board';
-	mode?: 'detail' | 'comment';
 	pk?: number;
 	isMyContent?: boolean;
 	commentId?: number;
 }
-
-// 뉴스를 삭제하는지, 커뮤니티를 삭제하는지 -> api 호출에 쓰고 라우팅에 쓰기
 
 const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMyContent = 'true' }) => {
 	const router = useRouter();
@@ -57,6 +54,11 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 		setShowReportModal(true);
 	};
 
+	const handleEditClick = () => {
+		setIsOpen(false);
+		router.push(`/post/${type}/edit?pk=${pk}`);
+	}; // 수정 버튼 클릭 시에 해당 게시글의 pk 전달. 게시글 정보 자체를 전역으로 관리할까 했지만 수정은 옵셔널한 것이라 수정을 할 때만 edit 페이지에서 해당 pk를 가지고 fetch 하는 것도 괜찮을 듯. 이때 한 번 수정하면 재수정할 확률이 높아지니까 캐싱을 해야 하나.
+
 	const handleDeleteClick = () => {
 		setIsOpen(false);
 		setShowDeleteConfirm(true);
@@ -93,18 +95,18 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 					>
 						{isMyContent ? (
 							<div className="flex flex-col gap-5 @mobile:gap-[30px]">
-								<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleDeleteClick}>
+								<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleEditClick}>
 									<EditIcon alt="수정하기 버튼" width={18} height={18} className="w-[18px] h-[18px] stroke-black-600" />
 									수정하기
 								</button>
 								<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleDeleteClick}>
-									<Image src="/trash.svg" alt="삭제하기 버튼" width={18} height={18} />
+									<Image src="/trash.svg" alt="삭제하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
 									삭제하기
 								</button>
 							</div>
 						) : (
 							<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleReportButtonClick}>
-								<Image src="/report.svg" alt="신고하기 버튼" width={18} height={18} />
+								<Image src="/report.svg" alt="신고하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
 								신고하기
 							</button>
 						)}
@@ -112,7 +114,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 							<p className="w-[99px] h-[1px] border border-black-200 -mr-1 my-[12px] @mobile:my-[16px]" />
 						)}
 						<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleShareButtonClick}>
-							<Image src="/share.svg" alt="공유하기 버튼" width={18} height={18} />
+							<Image src="/share.svg" alt="공유하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
 							공유하기
 						</button>
 					</div>
