@@ -9,14 +9,16 @@ import AlertModal from './alert-modal';
 import { useRouter } from 'next/navigation';
 
 interface MoreActionsButtonProps {
-	type: 'news' | 'board';
-	pk: number;
-	isMyContent: boolean;
+	type?: 'news' | 'board';
+	mode?: 'detail' | 'comment';
+	pk?: number;
+	isMyContent?: boolean;
+	commentId?: number;
 }
 
 // 뉴스를 삭제하는지, 커뮤니티를 삭제하는지 -> api 호출에 쓰고 라우팅에 쓰기
 
-const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk, isMyContent }) => {
+const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMyContent = 'true' }) => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [showReportModal, setShowReportModal] = useState(false);
