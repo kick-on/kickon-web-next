@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
@@ -15,10 +15,13 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
+import { getDetailContent } from '@/services/apis/detail';
 
 export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
+	const searchParams = useSearchParams();
+	const editingPk = searchParams.get('editingPk');
 
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
@@ -44,6 +47,37 @@ export default function Page() {
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
 
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
+
+	useEffect(() => {
+		const fetchData = async () => {
+			if (!editingPk) return;
+
+			try {
+				const response = await getDetailContent('news', Number(editingPk));
+				const data = response?.data;
+
+				if (data) {
+					setSelectedTeam({
+						id: data.team.pk,
+						name: data.team.nameKr,
+						logo: data.team.logoUrl,
+					});
+
+					setSelectedImage(data.thumbnailUrl ?? '');
+					setSelectedOption({
+						label: data.category ?? '',
+						value: data.category ?? '',
+					});
+					setTitle(data.title);
+					setBody(data.content);
+				}
+			} catch (err) {
+				console.error('게시글 불러오기 실패:', err);
+			}
+		};
+
+		fetchData();
+	}, [editingPk]);
 
 	useEffect(() => {
 		if (hasShownAlert.current) return;
@@ -80,7 +114,12 @@ export default function Page() {
 		};
 
 		try {
-			const response = await postNewContents(requestBody, true);
+			let response;
+			if (editingPk) {
+				// response = await updateNewsContents(Number(editingPk), requestBody);
+			} else {
+				response = await postNewContents(requestBody, true);
+			}
 
 			router.push(`/news/${response.data.pk}`);
 		} catch (error) {

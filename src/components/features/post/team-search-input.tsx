@@ -27,6 +27,12 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 	const [isVisibleSearchResults, setIsVisibleSearchResults] = useState(false);
 	const searchRef = useRef<HTMLDivElement>(null);
 
+	useEffect(() => {
+		if (selectedTeam) {
+			setSearchTerm(selectedTeam.name);
+		}
+	}, [selectedTeam]);
+
 	const getTeamLists = useCallback(async (term: string) => {
 		if (!term) {
 			setTeams([]);
