@@ -7,10 +7,9 @@ import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { useCallback, useEffect, useState } from 'react';
-import { ActualRankingDto, GambleRankingDto, GetGambleSeasonRankingResponse } from '@/services/apis/ranking/dto';
+import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { usePathname } from 'next/navigation';
-import { fetcher } from '@/lib/server/fetcher';
 
 export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -33,11 +32,8 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 	// league.pk가 변경될 때마다 getRanking 재생성
 	const getRanking = useCallback(async () => {
 		const leaguePk = league.pk;
-		const url = mode === 'predict' ? '/api/gamble-season-ranking' : '/api/actual-season-ranking';
-		const response = await fetcher<GetGambleSeasonRankingResponse>({
-			method: 'GET',
-			url: `${url}?league=${leaguePk}`,
-		});
+		const response =
+			mode === 'season' ? await getActualSeasonRanking(leaguePk) : await getGambleSeasonRanking(leaguePk);
 		setRanking(response?.data || null);
 	}, [league.pk, mode]);
 
