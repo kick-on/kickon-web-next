@@ -8,47 +8,47 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
 	const refreshToken = searchParams.get('refreshToken');
 	const provider = params.provider;
 
+	const redirectUrl = new URL(req.nextUrl.origin);
+	const finalizePath = '/auth/finalize';
+
 	// 에러 처리
 	if (errorCode === 'FORBIDDEN_RESISTER') {
-		const redirectUrl = new URL('/', req.nextUrl.origin);
+		redirectUrl.pathname = finalizePath;
 		redirectUrl.searchParams.set('errorCode', 'REJOIN_LIMIT');
 		return NextResponse.redirect(redirectUrl);
 	}
 
 	if (!accessToken || !refreshToken) {
-		const redirectUrl = new URL('/', req.nextUrl.origin);
+		redirectUrl.pathname = finalizePath;
 		redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
 		return NextResponse.redirect(redirectUrl);
 	}
 
 	// redirect 분기
-	const redirectUrl = new URL(req.nextUrl.origin);
-	console.log('redirectUrl: ', redirectUrl);
-
 	try {
 		const userInfoResponse = await fetch(`${SERVER_URL}/api/user/me`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		});
 
 		if (userInfoResponse.ok) {
-			// 200~299: 로그인 완료 페이지로 리디렉션
-			redirectUrl.pathname = '/auth/finalize';
+			// 200~299: finalize 페이지로 리디렉션
+			redirectUrl.pathname = finalizePath;
 		} else if (userInfoResponse.status === 401 || userInfoResponse.status === 403) {
 			// 401 or 403: 회원가입 페이지로 리디렉션
 			redirectUrl.pathname = `/signup?provider=${provider}`;
 		} else {
-			// 그 외: 바로 홈으로 리디렉션
+			// 그 외: errorCode와 함께 finalize 페이지로 리디렉션
 			console.error(await userInfoResponse.json());
 
-			const redirectUrl = new URL('/', req.nextUrl.origin);
+			redirectUrl.pathname = finalizePath;
 			redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
 			return NextResponse.redirect(redirectUrl);
 		}
 	} catch (error) {
-		// 시스템 에러: 바로 홈으로 리디렉션
+		// 시스템 에러: errorCode와 함께 finalize 페이지로 리디렉션
 		console.error(error);
 
-		const redirectUrl = new URL('/', req.nextUrl.origin);
+		redirectUrl.pathname = finalizePath;
 		redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
 		return NextResponse.redirect(redirectUrl);
 	}
