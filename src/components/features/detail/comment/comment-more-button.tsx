@@ -27,14 +27,16 @@ export const CommentMoreButton = () => {
 		};
 
 		if (isOpen) {
-			document.addEventListener('mousedown', handleClickOutside);
+			document.addEventListener('click', handleClickOutside);
 		}
 
 		return () => {
-			document.removeEventListener('mousedown', handleClickOutside);
+			document.removeEventListener('click', handleClickOutside);
 		};
 	}, [isOpen]);
 
+	const buttonCommonClass =
+		'block w-full text-center px-[27px] py-[10px] whitespace-nowrap @mobile:px-[30px] @mobile:py-[15px] hover:bg-black-200 @mobile:active:bg-black-200';
 	return (
 		<div className="relative inline-block">
 			<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
@@ -50,16 +52,10 @@ export const CommentMoreButton = () => {
 						'@mobile:right-0',
 					)}
 				>
-					<button
-						className="block w-full text-center px-[27px] py-[10px] whitespace-nowrap @mobile:px-[30px] @mobile:py-[15px] rounded-t-[7px] hover:bg-black-200 @mobile:active:bg-black-200 transition-colors"
-						onClick={() => console.log('수정 클릭')}
-					>
+					<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={() => console.log('수정 클릭')}>
 						수정하기
 					</button>
-					<button
-						className="block w-full text-center px-[27px] py-[10px] whitespace-nowrap rounded-b-[7px] @mobile:px-[30px] @mobile:py-[15px] hover:bg-black-200 @mobile:active:bg-black-200 transition-colors"
-						onClick={handleDeleteClick}
-					>
+					<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleDeleteClick}>
 						삭제하기
 					</button>
 				</div>
