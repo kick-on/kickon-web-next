@@ -70,6 +70,8 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 		router.push(`/${type}?q=전체`);
 	};
 
+	const buttonCommonClass =
+		'flex w-full justify-center py-[15px] gap-2 whitespace-nowrap hover:bg-black-200 @mobile:active:bg-black-200';
 	return (
 		<>
 			<div className="relative inline-block">
@@ -88,32 +90,29 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 						ref={menuRef}
 						className={clsx(
 							'absolute z-50 mt-2 flex flex-col items-center rounded-lg border border-black-300 bg-black-000 text-black-900 shadow-[0_4px_10px_0_rgba(0,0,0,0.16)]',
-							'w-[7.1875rem] px-5 py-[11px] button4-medium',
-							'@mobile:right-0 @mobile:pr-6 @mobile:py-4',
-							!isMyContent && 'gap-5',
+							'w-[7.1875rem] button4-medium',
+							'@mobile:right-0 @mobile:text-13',
 						)}
 					>
 						{isMyContent ? (
-							<div className="flex flex-col gap-5 @mobile:gap-[30px]">
-								<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleEditClick}>
+							<div className="flex flex-col w-full">
+								<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={handleEditClick}>
 									<EditIcon alt="수정하기 버튼" width={18} height={18} className="w-[18px] h-[18px] stroke-black-600" />
 									수정하기
 								</button>
-								<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleDeleteClick}>
+								<button className={`${buttonCommonClass}`} onClick={handleDeleteClick}>
 									<Image src="/trash.svg" alt="삭제하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
 									삭제하기
 								</button>
 							</div>
 						) : (
-							<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleReportButtonClick}>
+							<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={handleReportButtonClick}>
 								<Image src="/report.svg" alt="신고하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
 								신고하기
 							</button>
 						)}
-						{isMyContent && (
-							<p className="w-[99px] h-[1px] border border-black-200 -mr-1 my-[12px] @mobile:my-[16px]" />
-						)}
-						<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleShareButtonClick}>
+						{isMyContent && <p className="w-[99px] h-[1px] border border-black-200 -mr-1" />}
+						<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleShareButtonClick}>
 							<Image src="/share.svg" alt="공유하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
 							공유하기
 						</button>
