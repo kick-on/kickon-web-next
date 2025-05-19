@@ -17,9 +17,10 @@ type EditorProviderProps = {
 	children: React.ReactNode;
 	setBody: (body: string) => void;
 	isNews: boolean;
+	initialBody: string;
 };
 
-export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProps) => {
+export const EditorProvider = ({ children, setBody, isNews, initialBody }: EditorProviderProps) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [showLinkInput, setShowLinkInput] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -45,11 +46,11 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 			}),
 			Youtube.configure({
 				HTMLAttributes: {
-					class: 'responsive-youtube',
+					class: 'responsive-youtube iframe',
 				},
 			}),
 		],
-		content: '',
+		content: initialBody || '',
 		editorProps: {
 			attributes: {
 				class: 'focus:outline-none',

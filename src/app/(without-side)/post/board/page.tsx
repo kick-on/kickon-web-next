@@ -6,20 +6,56 @@ import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { getUserInfo } from '@/services/auth';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { getDetailContent } from '@/services/apis/detail';
 
 export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const searchParams = useSearchParams();
+	const editingPk = searchParams.get('editingPk');
+
+	useEffect(() => {
+		const getDetailContentData = async () => {
+			if (!editingPk) return;
+
+			try {
+				const response = await getDetailContent('board', Number(editingPk));
+				const data = response?.data;
+
+				if (data) {
+					const teamOption = data.team
+						? {
+								label: data.team.nameKr ?? '',
+								value: String(data.team.pk),
+								logo: data.team.logoUrl ?? '',
+							}
+						: {
+								label: '전체',
+								value: '전체',
+							};
+
+					setSelectedOption(teamOption);
+
+					setTitle(data.title);
+					setBody(data.content);
+				}
+			} catch (err) {
+				console.error('게시글 불러오기 실패:', err);
+			}
+		};
+
+		getDetailContentData();
+	}, [editingPk]);
 
 	const teams: { label: string; value: string; logo?: string }[] = [
-		{ label: '전체', value: '' },
+		{ label: '전체', value: '전체' },
 		...(currentUserInfo?.favoriteTeam?.pk
 			? [
 					{
@@ -168,7 +204,9 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} />
+			{(editingPk ? body !== '' : true) && (
+				<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} initialTitle={title} initialBody={body} />
+			)}
 
 			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
 				<button

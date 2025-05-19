@@ -49,7 +49,7 @@ export default function Page() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
 
 	useEffect(() => {
-		const fetchData = async () => {
+		const getDetailContentData = async () => {
 			if (!editingPk) return;
 
 			try {
@@ -57,11 +57,15 @@ export default function Page() {
 				const data = response?.data;
 
 				if (data) {
-					setSelectedTeam({
-						id: data.team.pk,
-						name: data.team.nameKr,
-						logo: data.team.logoUrl,
-					});
+					if (data.team) {
+						setSelectedTeam({
+							id: data.team.pk,
+							name: data.team.nameKr,
+							logo: data.team.logoUrl,
+						});
+					} else {
+						setSelectedTeam(null); // 전체글일 때
+					}
 
 					setSelectedImage(data.thumbnailUrl ?? '');
 					setSelectedOption({
@@ -76,7 +80,7 @@ export default function Page() {
 			}
 		};
 
-		fetchData();
+		getDetailContentData();
 	}, [editingPk]);
 
 	useEffect(() => {
@@ -117,11 +121,11 @@ export default function Page() {
 			let response;
 			if (editingPk) {
 				// response = await updateNewsContents(Number(editingPk), requestBody);
+				console.log('수정 api 호출해야 함');
 			} else {
 				response = await postNewContents(requestBody, true);
+				router.push(`/news/${response.data.pk}`); // 수정 api 엮고 if-else 문 밖으로 이동
 			}
-
-			router.push(`/news/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
@@ -146,7 +150,10 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} />
+
+			{(editingPk ? body !== '' : true) && (
+				<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} initialTitle={title} initialBody={body} />
+			)}
 
 			<div className="flex justify-center gap-4 mt-4">
 				<button
