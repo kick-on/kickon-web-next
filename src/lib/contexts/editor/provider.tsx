@@ -55,6 +55,25 @@ export const EditorProvider = ({ children, setBody, isNews, initialBody }: Edito
 			attributes: {
 				class: 'focus:outline-none',
 			},
+			handleKeyDown(view, event) {
+				// 엔터 키로 다음 단락 넘어가면 텍스트 포맷 초기화
+				if (event.key === 'Enter') {
+					const { state, dispatch } = view;
+					const { tr } = state;
+
+					const marksToRemove = ['bold', 'italic', 'underline'];
+
+					marksToRemove.forEach((mark) => {
+						const type = state.schema.marks[mark];
+						if (type) {
+							tr.removeStoredMark(type);
+						}
+					});
+
+					dispatch(tr);
+				}
+				return false;
+			},
 		},
 		onUpdate: ({ editor }) => {
 			const html = editor.getHTML().trim();
@@ -63,7 +82,22 @@ export const EditorProvider = ({ children, setBody, isNews, initialBody }: Edito
 				.replace(/\u00A0/g, ' ')
 				.trim();
 			const isTrulyEmpty = text === '';
-			setBody(isTrulyEmpty ? '' : html);
+
+			if (isTrulyEmpty) {
+				// 본문 내용이 모두 지워지면 텍스트 포맷 초기화
+				const { state, view } = editor;
+				const { tr } = state;
+				['bold', 'italic', 'underline'].forEach((mark) => {
+					const type = state.schema.marks[mark];
+					if (type) {
+						tr.removeStoredMark(type);
+					}
+				});
+				view.dispatch(tr);
+				setBody('');
+			} else {
+				setBody(html);
+			}
 		},
 	});
 
