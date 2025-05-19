@@ -204,9 +204,7 @@ export default function Page() {
 				)}
 			</div>
 
-			{(editingPk ? body !== '' : true) && (
-				<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} initialTitle={title} initialBody={body} />
-			)}
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} initialTitle={title} initialBody={body} />
 
 			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
 				<button

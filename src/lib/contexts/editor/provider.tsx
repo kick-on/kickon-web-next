@@ -8,7 +8,7 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import FontFamily from '@tiptap/extension-font-family';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
@@ -100,6 +100,12 @@ export const EditorProvider = ({ children, setBody, isNews, initialBody }: Edito
 			}
 		},
 	});
+
+	useEffect(() => {
+		if (editor && initialBody !== undefined && initialBody !== null) {
+			editor.commands.setContent(initialBody);
+		}
+	}, [initialBody, editor]);
 
 	const isValidUrl = (url: string) => {
 		try {
