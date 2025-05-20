@@ -6,7 +6,6 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { getTeam } from '@/services/apis/team';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 
 interface Team {
 	id: number;
@@ -107,9 +106,9 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 				<input
 					type="text"
 					placeholder="팀명"
-					value={isMobile ? trimTextWithoutSpaces(searchTerm) : searchTerm}
+					value={searchTerm}
 					onChange={handleSearchChange}
-					className="w-full focus:outline-none"
+					className={clsx('w-full focus:outline-none', isMobile && 'max-w-[120px] truncate')}
 				/>
 
 				{searchTerm ? (
@@ -125,7 +124,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 					<Image width={16} height={16} src="/search.svg" alt="검색" />
 				)}
 			</div>
-
+			{/*max-w 조정 필요*/}
 			{isVisibleSearchResults && (
 				<div className="z-50 absolute top-10 w-full bg-black-000 border border-black-200 button4-medium @mobile:text-13 rounded-lg shadow-lg overflow-hidden">
 					{teams.length > 0 ? (
@@ -133,7 +132,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 							<div
 								key={team.id}
 								className={clsx(
-									'flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors',
+									'@mobile:max-w-41.5 @mobile:truncate flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors',
 									{
 										'rounded-b-sm': index === teams.length - 1,
 									},
@@ -141,7 +140,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 								onClick={() => handleSelectTeam(team)}
 							>
 								<Image className="w-4 h-4 object-contain" src={team.logo} alt={team.name} width={16} height={16} />
-								{isMobile ? trimTextWithoutSpaces(team.name) : team.name}
+								{team.name}
 							</div>
 						))
 					) : (

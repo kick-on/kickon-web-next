@@ -4,7 +4,6 @@ import { useRef, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { categories } from '@/lib/constants/options';
-import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 
 type CategoryOption = {
 	label: string;
@@ -14,10 +13,9 @@ type CategoryOption = {
 interface CategoryDropdownProps {
 	selectedOption: CategoryOption;
 	setSelectedOption: (option: CategoryOption) => void;
-	isMobile: boolean;
 }
 
-export default function CategoryDropdown({ selectedOption, setSelectedOption, isMobile }: CategoryDropdownProps) {
+export default function CategoryDropdown({ selectedOption, setSelectedOption }: CategoryDropdownProps) {
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -30,9 +28,6 @@ export default function CategoryDropdown({ selectedOption, setSelectedOption, is
 		setIsVisibleDropdown(false);
 	};
 
-	const originalLabel = selectedOption.label.trim();
-	const displayLabel = isMobile ? trimTextWithoutSpaces(originalLabel, 3) : originalLabel;
-
 	return (
 		<div
 			ref={dropdownRef}
@@ -44,10 +39,13 @@ export default function CategoryDropdown({ selectedOption, setSelectedOption, is
 			>
 				<div
 					className={clsx(
-						originalLabel === '탭 선택하기' || originalLabel === '탭 선택' ? 'text-black-600' : 'text-black-900',
+						'@mobile:max-w-[132px] @mobile:truncate',
+						selectedOption.label === '탭 선택하기' || selectedOption.label === '탭 선택'
+							? 'text-black-600'
+							: 'text-black-900',
 					)}
 				>
-					{displayLabel}
+					{selectedOption.label}
 				</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
 			</button>

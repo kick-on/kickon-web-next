@@ -138,7 +138,7 @@ export default function Page() {
 			<div className="flex gap-4 mb-4">
 				<TeamSearchInput selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} />
 
-				<CategoryDropdown selectedOption={selectedOption} setSelectedOption={setSelectedOption} isMobile={isMobile} />
+				<CategoryDropdown selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
 
 				<button
 					onClick={() => {
