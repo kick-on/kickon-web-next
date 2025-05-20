@@ -217,12 +217,9 @@ const CommentInput = ({
 			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
 			<div className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-26')}>
 				<div
-					className={clsx(
-						'relative w-full h-full bg-black-000 rounded-l-[0.625rem] resize-none @mobile:h-[110px] @mobile:rounded-[0.625rem]',
-						{
-							'@mobile:pb-10.5 @mobile:border @mobile:border-black-200': type === 'reply',
-						},
-					)}
+					className={clsx('relative w-full h-full bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
+						'@mobile:pb-10.5 @mobile:border @mobile:border-black-200': type === 'reply',
+					})}
 				>
 					<div
 						ref={inputRef}
@@ -243,12 +240,7 @@ const CommentInput = ({
 					/>
 
 					{isMobile && (
-						<div
-							className={clsx(
-								'flex gap-4 justify-end',
-								type === 'reply' ? 'absolute bottom-3 right-4' : '@mobile:mt-3',
-							)}
-						>
+						<div className={clsx('flex gap-4 justify-end', type === 'reply' ? 'absolute bottom-3 right-4' : 'mt-3')}>
 							<button
 								onClick={handleSubmit}
 								disabled={isSubmitting || content.trim().length === 0}
@@ -263,7 +255,8 @@ const CommentInput = ({
 					)}
 				</div>
 
-				{/* 스크롤바 */}
+				{/* 스크롤바 -> 이것도... 그냥 스크롤바로 일단 대체할까 ㅠㅠ
+
 				<div
 					className={`@mobile:hidden relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
 				>
@@ -272,8 +265,8 @@ const CommentInput = ({
 						className="absolute top-0 left-0 w-full bg-black-500 rounded-full"
 						style={{ height: `${scrollThumbHeight}px` }}
 					/>
-				</div>
-				{/* 등록 버튼 */}
+				</div> */}
+				{/* 등록 버튼 -> 모바일과 같은 모양으로 수정되었어용~~
 				<button
 					onClick={handleSubmit}
 					disabled={isSubmitting || content.trim().length === 0}
@@ -283,7 +276,7 @@ const CommentInput = ({
 					)}
 				>
 					등록
-				</button>
+				</button> */}
 			</div>
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
