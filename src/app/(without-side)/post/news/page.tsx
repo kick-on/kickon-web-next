@@ -11,7 +11,6 @@ import { postNewContents } from '@/services/apis/post';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { useRouter } from 'next/navigation';
 import { getTeam } from '@/services/apis/team';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -58,7 +57,7 @@ export default function Page() {
 		if (hasShownAlert.current) return;
 		hasShownAlert.current = true;
 
-		const isLoggedIn = getAccessToken() && getRefreshToken();
+		const isLoggedIn = !currentUserInfo;
 		if (!isLoggedIn) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
@@ -203,7 +202,7 @@ export default function Page() {
 	};
 
 	const postNewsContents = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			return;
 		}
 		const requestBody: PostNewsContentsRequest = {

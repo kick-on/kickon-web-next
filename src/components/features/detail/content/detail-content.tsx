@@ -6,10 +6,11 @@ import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
+	const currentUserInfo = useCurrentUserInfoStore();
 	const isNews = type === 'news';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
 	const [isLiked, setIsLiked] = useState(data.isKicked);
@@ -49,7 +50,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 	const handleLikeButtonClick = async () => {
 		// 비회원인 경우 클릭 차단 & 알림 표시
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
