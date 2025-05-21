@@ -5,33 +5,41 @@ import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
 
 interface AlertModalProps {
-	type?: 'confirm' | 'info';
+	type?: 'info' | 'alert' | 'confirm';
 	description: string;
-	confirmText?: string;
-	cancelText?: string;
+	confirmButtonText?: string;
+	cancelButtonText?: string;
 	onConfirm?: () => void;
 	onCancel?: () => void;
 }
 
 const AlertModal = ({
-	type = 'confirm',
+	type = 'info',
 	description,
-	confirmText = '확인',
-	cancelText = '취소',
+	confirmButtonText = '확인',
+	cancelButtonText = '취소',
 	onConfirm,
 	onCancel,
 }: AlertModalProps) => {
 	const isMobile = useIsMobile();
 	const confirmButtonRef = useRef<HTMLButtonElement>(null);
 
+	// info 모달일 때 자동 닫힘 처리
 	useEffect(() => {
-		if (type === 'confirm') {
+		if (type === 'info' && onCancel) {
 			const timer = setTimeout(() => {
-				confirmButtonRef.current?.focus();
+				onCancel();
+			}, 1000);
+			return () => clearTimeout(timer);
+		}
+
+		if ((type === 'alert' || type === 'confirm') && confirmButtonRef.current) {
+			const timer = setTimeout(() => {
+				confirmButtonRef.current?.focus(); // 확인 버튼에 자동 포커싱
 			}, 100);
 			return () => clearTimeout(timer);
 		}
-	}, [type]);
+	}, [type, onCancel]);
 
 	const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
 		if (e.target === e.currentTarget && onCancel) {
@@ -50,39 +58,34 @@ const AlertModal = ({
 					isMobile ? 'pt-[50px] pb-8 gap-[42px]' : 'pt-[68px] pb-[36px] gap-[54px]',
 				)}
 			>
-				<p className={clsx('body2-semibold @mobile:text-18 text-center text-black-900', type === 'info' && 'text-lg')}>
-					{description}
-				</p>
+				<p className="body2-semibold @mobile:text-18 text-center text-black-900">{description}</p>
 
-				<div
-					className={clsx(
-						'button2-semibold @mobile:text-15 w-full flex',
-						type === 'confirm' ? 'justify-end gap-4' : 'justify-center',
-					)}
-				>
-					{type === 'confirm' ? (
-						<>
-							<button onClick={onCancel} className="w-1/2 p-[10px] bg-black-200 text-black-700 rounded-md">
-								{cancelText}
-							</button>
-							<button
-								ref={confirmButtonRef}
-								onClick={onConfirm}
-								className="w-1/2 px-4 py-2.5 bg-primary-900 text-black-000 rounded-md"
-							>
-								{confirmText}
-							</button>
-						</>
-					) : (
+				{type === 'alert' && (
+					<div className="button2-semibold @mobile:text-15 w-full flex justify-center">
 						<button
 							ref={confirmButtonRef}
-							onClick={onCancel}
+							onClick={onConfirm}
 							className="w-full px-4 py-2.5 bg-primary-900 text-black-000 rounded-md"
 						>
-							{confirmText}
+							{confirmButtonText}
 						</button>
-					)}
-				</div>
+					</div>
+				)}
+
+				{type === 'confirm' && (
+					<div className="button2-semibold @mobile:text-15 w-full flex justify-end gap-4">
+						<button onClick={onCancel} className="w-1/2 p-[10px] bg-black-200 text-black-700 rounded-md">
+							{cancelButtonText}
+						</button>
+						<button
+							ref={confirmButtonRef}
+							onClick={onConfirm}
+							className="w-1/2 px-4 py-2.5 bg-primary-900 text-black-000 rounded-md"
+						>
+							{confirmButtonText}
+						</button>
+					</div>
+				)}
 			</div>
 		</div>
 	);
