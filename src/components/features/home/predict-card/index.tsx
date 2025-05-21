@@ -41,7 +41,7 @@ export default function PredictCard({
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
 
 	const [isClicked, setIsClicked] = useState(false);
-	const [isCompleted, setIsCompleted] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(!!myGambleResult);
 	const [isEditing, setIsEditing] = useState(false);
 
 	// proceeding 카드: 내 예측 점수 또는 0으로 초기화
