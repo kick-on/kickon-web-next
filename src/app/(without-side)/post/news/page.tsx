@@ -16,6 +16,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
+import { extractImageFilenamesFromContent } from '@/lib/utils/addTimestampToFileName';
 
 export default function Page() {
 	const router = useRouter();
@@ -206,12 +207,18 @@ export default function Page() {
 		if (!getAccessToken() || !getRefreshToken()) {
 			return;
 		}
+
+		const trimmedBody = body.trim();
+		const usedImageKeys = extractImageFilenamesFromContent(trimmedBody); // body에서 이미지 파일명 추출
+		console.log(usedImageKeys); // 배열로 잘 오는지, 파일명 잘 오는지 확인 필요
+
 		const requestBody: PostNewsContentsRequest = {
 			team: selectedTeam?.id || null,
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
 			category: selectedOption.value,
+			usedImageKeys,
 		};
 
 		try {

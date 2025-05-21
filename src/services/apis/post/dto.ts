@@ -6,4 +6,5 @@ export interface PostNewsContentsRequest {
 	thumbnailUrl?: string;
 	category?: string;
 	hasImage?: boolean;
+	usedImageKeys?: string[];
 }

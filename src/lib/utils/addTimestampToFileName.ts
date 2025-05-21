@@ -14,8 +14,8 @@ export const addTimestampToFileName = (originalName: string) => {
 
 	const parts = formatter.formatToParts(now);
 	const timestamp = parts
-		.filter(part => part.type !== 'literal') // '.', ' ', ':' 같은 구분자는 제외
-		.map(part => part.value)
+		.filter((part) => part.type !== 'literal') // '.', ' ', ':' 같은 구분자는 제외
+		.map((part) => part.value)
 		.join(''); // "20250503145809" 같은 문자열로 변환
 
 	const dotIndex = originalName.lastIndexOf('.');
@@ -26,4 +26,14 @@ export const addTimestampToFileName = (originalName: string) => {
 	const cleanedName = name.replace(/[^\p{L}\p{N}\s]/gu, '').replace(/\s+/g, '_');
 
 	return `${cleanedName}_${timestamp}${ext}`;
+};
+
+export const extractImageFilenamesFromContent = (content: string): string[] => {
+	const regex = /https:\/\/[^\/]+\/([^\/]+\.(png|jpe?g|gif|webp))/gi;
+	const filenames = new Set<string>();
+	let match;
+	while ((match = regex.exec(content)) !== null) {
+		filenames.add(match[1]); // 파일명만 추출
+	}
+	return Array.from(filenames);
 };
