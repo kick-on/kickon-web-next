@@ -84,6 +84,11 @@ export default async function callBackendApi({
 
 	// 기본 api 응답 (새 토큰 발급을 시도하지 않은 경우)
 	// ex. accessToken이 정상적으로 있었던 경우 또는 refreshToken 자체가 없는 경우 등
-	const data = await response.json();
-	return NextResponse.json(data, { status: response.status });
+	try {
+		const data = await response.json();
+		return NextResponse.json(data, { status: response.status });
+	} catch (error) {
+		const message = error instanceof Error ? error.message : 'Unknown error occurred';
+		return NextResponse.json({ message, raw: String(error) }, { status: response.status });
+	}
 }
