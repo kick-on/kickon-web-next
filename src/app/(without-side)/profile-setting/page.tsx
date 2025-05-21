@@ -11,7 +11,6 @@ import { UpdateUserInfoRequest } from '@/services/auth/dto';
 import { getUserInfo, updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getAccessToken } from '@/lib/utils/getAccessToken';
 import { setCookie } from '@/lib/utils/cookie';
 
 export default function Page() {
@@ -78,16 +77,10 @@ export default function Page() {
 			alert(response);
 			setIsDuplicated(false);
 		} else {
+			setCurrentUserInfo({ ...currentUserInfo, nickname });
 			router.push('/');
 		}
 	};
-
-	useEffect(() => {
-		if (!getAccessToken()) {
-			alert('로그인이 필요한 서비스입니다. 홈으로 이동합니다.');
-			router.replace('/');
-		}
-	}, [router]);
 
 	useEffect(() => {
 		// 새로고침해도 유저 정보 유지 -> persist로 대체 가능

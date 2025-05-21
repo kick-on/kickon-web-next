@@ -1,4 +1,4 @@
-import axiosInstance from '@/services/config/axiosInstance';
+import { fetcher } from '@/lib/server/fetcher';
 import { EmptySuccessResponse } from '@/services/config/dto';
 
 export const postContentLike = async (id: number, isNews: boolean = false): Promise<EmptySuccessResponse> => {
@@ -8,7 +8,7 @@ export const postContentLike = async (id: number, isNews: boolean = false): Prom
 
 		console.log(body);
 
-		const response = await axiosInstance.post<EmptySuccessResponse>(endpoint, body);
+		const response = await fetcher<EmptySuccessResponse>({ method: 'POST', url: endpoint, body });
 
 		return response;
 	} catch (error) {

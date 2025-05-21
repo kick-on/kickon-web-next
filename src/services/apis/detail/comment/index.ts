@@ -1,7 +1,7 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { createNewReplyRequest, GetCommentsResponse, PostCommentKickRequest } from './dto';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
-import axiosInstance from '@/services/config/axiosInstance';
+import { fetcher } from '@/lib/server/fetcher';
 
 export const getCommentList = async (
 	id: number,
@@ -33,7 +33,7 @@ export const postCommentKick = async (id: number, isNews: boolean = false): Prom
 		const endpoint = isNews ? 'news-reply-kick' : 'board-reply-kick';
 
 		const body: PostCommentKickRequest = { reply: id };
-		const response = await axiosInstance.post<SuccessResponse<null>>(`/api/${endpoint}`, body);
+		const response = await fetcher<SuccessResponse<null>>({ method: 'POST', url: `/api/${endpoint}`, body });
 
 		return response;
 	} catch (error) {
@@ -49,7 +49,7 @@ export const postCreateReply = async (
 	try {
 		const endpoint = type === 'news' ? '/api/news-reply' : '/api/board-reply';
 
-		const response = await axiosInstance.post<EmptySuccessResponse>(endpoint, requestBody);
+		const response = await fetcher<EmptySuccessResponse>({ method: 'POST', url: endpoint, body: requestBody });
 
 		return response;
 	} catch (error) {
