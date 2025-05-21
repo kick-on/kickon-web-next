@@ -1,7 +1,7 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { GetNewsListRequest, GetNewsListResponse } from './dto';
-import axiosInstance from '@/services/config/axiosInstance';
 import { FailResponse } from '@/services/config/dto';
+import { fetcher } from '@/lib/server/fetcher';
 
 export const getNewsList = async ({
 	team,
@@ -27,9 +27,10 @@ export const getNewsList = async ({
 	if (lastViewCount !== undefined) params.append('lastViewCount', String(lastViewCount));
 
 	try {
-		const response = await axiosInstance.get<GetNewsListResponse | FailResponse>(
-			`${SERVER_URL}/api/news?${params.toString()}`,
-		);
+		const response = await fetcher<GetNewsListResponse | FailResponse>({
+			method: 'GET',
+			url: `/api/news?${params.toString()}`,
+		});
 
 		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, response);

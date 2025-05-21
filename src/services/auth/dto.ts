@@ -18,13 +18,6 @@ export interface UpdateUserInfoRequest {
 // 유저 정보 조회
 export type GetUserInfoResponse = SuccessResponse<UserInfoDto>;
 
-// 토큰 재발급
-export interface PostNewTokenRequest {
-	refreshToken: string;
-}
-
-export type PostNewTokenResponse = SuccessResponse<NewTokenDto>;
-
 // 내부 DTO
 export interface UserInfoDto {
 	id: string;

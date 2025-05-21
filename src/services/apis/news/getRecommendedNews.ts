@@ -1,15 +1,15 @@
-import axiosInstance from '@/services/config/axiosInstance';
 import { GetRecommendedNewsRequest, GetRecommendedNewsResponse } from './dto';
-import { SERVER_URL } from '@/services/config/constants';
+import { fetcher } from '@/lib/server/fetcher';
 
 export const getRecommendedNews = async ({ type }: GetRecommendedNewsRequest) => {
 	const params = new URLSearchParams();
 
 	if (type !== undefined) params.append('type', type);
 
-	const response = await axiosInstance.get<GetRecommendedNewsResponse | null>(
-		`${SERVER_URL}/api/news/home?${params.toString()}`,
-	);
+	const response = await fetcher<GetRecommendedNewsResponse | null>({
+		method: 'GET',
+		url: `/api/news/home?${params.toString()}`,
+	});
 
 	if (!response.code.split('_').includes('SUCCESS')) {
 		console.error(response);
