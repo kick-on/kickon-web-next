@@ -38,11 +38,15 @@ export async function GET(req: NextRequest, { params }: { params: { provider: st
 			redirectUrl.pathname = `/signup?provider=${provider}`;
 		} else {
 			// 그 외: errorCode와 함께 finalize 페이지로 리디렉션
-			console.error(await userInfoResponse.json());
-
-			redirectUrl.pathname = finalizePath;
-			redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
-			return NextResponse.redirect(redirectUrl);
+			try {
+				console.error(await userInfoResponse.json());
+			} catch (error) {
+				console.error(error);
+			} finally {
+				redirectUrl.pathname = finalizePath;
+				redirectUrl.searchParams.set('errorCode', 'UNKNOWN');
+				return NextResponse.redirect(redirectUrl);
+			}
 		}
 	} catch (error) {
 		// 시스템 에러: errorCode와 함께 finalize 페이지로 리디렉션
