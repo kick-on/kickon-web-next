@@ -67,7 +67,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 	const handleConfirmDelete = () => {
 		console.log('삭제.'); // api 호출
 		setShowDeleteConfirm(false); // 모달 닫고
-		router.push(`/${type}?q=전체`);
+		router.replace(`/${type}?q=전체`);
 	};
 
 	const buttonCommonClass =
