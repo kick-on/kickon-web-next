@@ -135,7 +135,7 @@ body.overflow-hidden {
 	margin-bottom: 24px;
 }
 
-.responsive-youtube iframe {
+iframe.responsive-youtube {
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	max-width: 100%;

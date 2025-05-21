@@ -6,8 +6,8 @@ import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const isNews = type === 'news';
@@ -20,6 +20,8 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
+
+	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {
@@ -49,7 +51,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 	const handleLikeButtonClick = async () => {
 		// 비회원인 경우 클릭 차단 & 알림 표시
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
@@ -68,6 +70,8 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
 		}
 	};
+
+	const isMyContents = data?.user?.id === currentUserInfo?.id;
 
 	return (
 		<div className="px-4">
@@ -136,7 +140,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
 						<span>{data.replies}</span>
 					</div>
-					<MoreActionsButton type={type} pk={data.pk} />
+					<MoreActionsButton type={type} pk={data.pk} isMyContent={isMyContents} />
 				</div>
 			</div>
 

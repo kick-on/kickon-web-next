@@ -1,11 +1,11 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { postCreateReply } from '@/services/apis/detail/comment';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const CommentInput = ({
 	type = 'comment',
@@ -16,6 +16,7 @@ const CommentInput = ({
 	onCommentSubmit,
 	onCommentCancel,
 }: CommentInputProps) => {
+	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
 	const thumbRef = useRef<HTMLDivElement>(null);
 
@@ -161,7 +162,7 @@ const CommentInput = ({
 
 	// 댓글 등록
 	const handleSubmit = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}

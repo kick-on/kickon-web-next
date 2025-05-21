@@ -8,10 +8,10 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
 import LoginModal from '@/components/common/login-modal/login-modal';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentSectionProps } from './type';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 function CommentSection({
 	type,
@@ -20,6 +20,7 @@ function CommentSection({
 	totalreplies = 0,
 	setTotalReplies,
 }: CommentSectionProps) {
+	const currentUserInfo = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const isNews = type === 'news';
@@ -159,7 +160,7 @@ function CommentSection({
 	// 좋아요 토글
 	const toggleCommentLike = async (commentId: number) => {
 		// 로그인 안 되어 있으면 모달 열기
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
@@ -229,7 +230,7 @@ function CommentSection({
 				/>
 			)}
 
-			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
+			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-200 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개
 			</p>
 
