@@ -1,12 +1,12 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest, { params }: { params: { provider: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
 	const searchParams = req.nextUrl.searchParams;
 	const errorCode = searchParams.get('errorCode');
 	const accessToken = searchParams.get('accessToken');
 	const refreshToken = searchParams.get('refreshToken');
-	const provider = params.provider;
+	const { provider } = await params;
 
 	const redirectUrl = new URL(req.nextUrl.origin);
 	const finalizePath = '/auth/finalize';
