@@ -21,20 +21,20 @@ const PostEditor = ({
 	setTitle,
 	setBody,
 	isNews,
-	initialTitle,
-	initialBody,
+	editedTitle,
+	editedBody,
 }: {
 	setTitle: (title: string) => void;
 	setBody: (body: string) => void;
 	isNews: boolean;
-	initialBody: string;
-	initialTitle: string;
+	editedTitle: string;
+	editedBody: string;
 }) => {
 	return (
-		<EditorProvider setBody={setBody} isNews={isNews} initialBody={initialBody}>
+		<EditorProvider setBody={setBody} isNews={isNews} initialBody={editedBody}>
 			<input
 				placeholder="제목"
-				value={initialTitle ?? ''}
+				value={editedTitle ?? ''}
 				className="title1-bold @mobile:text-20 w-full @mobile:font-semibold h-[3.5rem] @mobile:h-12 px-4 py-[15px] @mobile:py-3 border border-black-300 rounded-lg mb-8 focus:outline-none"
 				onChange={(e) => setTitle(e.target.value)}
 			/>

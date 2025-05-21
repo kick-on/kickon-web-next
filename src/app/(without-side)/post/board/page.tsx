@@ -8,51 +8,30 @@ import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { getUserInfo } from '@/services/auth';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { getDetailContent } from '@/services/apis/detail';
 
 export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
-	const editingPk = searchParams.get('editingPk');
+	const isEditMode = searchParams.get('edit') === 'true';
 
 	useEffect(() => {
-		const getDetailContentData = async () => {
-			if (!editingPk) return;
+		if (!isEditMode) return;
 
-			try {
-				const response = await getDetailContent('board', Number(editingPk));
-				const data = response?.data;
+		const storedData = sessionStorage.getItem('detailContent');
+		if (!storedData) return;
 
-				if (data) {
-					const teamOption = data.team
-						? {
-								label: data.team.nameKr ?? '',
-								value: String(data.team.pk),
-								logo: data.team.logoUrl ?? '',
-							}
-						: {
-								label: '전체',
-								value: '전체',
-							};
-
-					setSelectedOption(teamOption);
-
-					setTitle(data.title);
-					setBody(data.content);
-				}
-			} catch (err) {
-				console.error('게시글 불러오기 실패:', err);
-			}
-		};
-
-		getDetailContentData();
-	}, [editingPk]);
+		try {
+			const parsedData = JSON.parse(storedData);
+			setBody(parsedData.contents || '');
+		} catch (error) {
+			console.error('잘못된 데이터 형식:', error);
+		}
+	}, [isEditMode]);
 
 	const teams: { label: string; value: string; logo?: string }[] = [
 		{ label: '전체', value: '전체' },
@@ -94,8 +73,7 @@ export default function Page() {
 		if (hasShownAlert.current) return;
 		hasShownAlert.current = true;
 
-		const isLoggedIn = getAccessToken() && getRefreshToken();
-		if (!isLoggedIn) {
+		if (!currentUserInfo) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
@@ -127,7 +105,7 @@ export default function Page() {
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
 	const postCommunityContents = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			return;
 		}
 		if (!isFormValid) return;
@@ -204,7 +182,7 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} initialTitle={title} initialBody={body} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
 			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
 				<button

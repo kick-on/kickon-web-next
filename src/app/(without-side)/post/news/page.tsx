@@ -8,26 +8,43 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
-import { getDetailContent } from '@/services/apis/detail';
 
 export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
-	const searchParams = useSearchParams();
-	const editingPk = searchParams.get('editingPk');
-
+	const hasShownAlert = useRef(false);
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
 		label: '',
 		value: '',
 	});
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const [title, setTitle] = useState('');
+	const [body, setBody] = useState('');
+	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
+	const searchParams = useSearchParams();
+	const isEditMode = searchParams.get('edit') === 'true';
+
+	useEffect(() => {
+		if (!isEditMode) return;
+
+		const storedData = sessionStorage.getItem('detailContent');
+		if (!storedData) return;
+
+		try {
+			const parsedData = JSON.parse(storedData);
+			setBody(parsedData.contents || '');
+		} catch (error) {
+			console.error('잘못된 데이터 형식:', error);
+		}
+	}, [isEditMode]);
 
 	// isMobile이 null이 아니게 되면 label 설정
 	useEffect(() => {
@@ -38,57 +55,12 @@ export default function Page() {
 			});
 		}
 	}, [isMobile]);
-	const hasShownAlert = useRef(false);
-
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-	const [title, setTitle] = useState('');
-	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
-
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
-
-	useEffect(() => {
-		const getDetailContentData = async () => {
-			if (!editingPk) return;
-
-			try {
-				const response = await getDetailContent('news', Number(editingPk));
-				const data = response?.data;
-
-				if (data) {
-					if (data.team) {
-						setSelectedTeam({
-							id: data.team.pk,
-							name: data.team.nameKr,
-							logo: data.team.logoUrl,
-						});
-					} else {
-						setSelectedTeam(null); // 전체글일 때
-					}
-
-					setSelectedImage(data.thumbnailUrl ?? '');
-					setSelectedOption({
-						label: data.category ?? '',
-						value: data.category ?? '',
-					});
-					setTitle(data.title);
-					setBody(data.content);
-				}
-			} catch (err) {
-				console.error('게시글 불러오기 실패:', err);
-			}
-		};
-
-		getDetailContentData();
-	}, [editingPk]);
 
 	useEffect(() => {
 		if (hasShownAlert.current) return;
 		hasShownAlert.current = true;
 
-		const isLoggedIn = getAccessToken() && getRefreshToken();
-		if (!isLoggedIn) {
+		if (!currentUserInfo) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
@@ -106,7 +78,7 @@ export default function Page() {
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
 	const postNewsContents = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			return;
 		}
 		const requestBody: PostNewsContentsRequest = {
@@ -119,7 +91,7 @@ export default function Page() {
 
 		try {
 			let response;
-			if (editingPk) {
+			if (isEditMode) {
 				// response = await updateNewsContents(Number(editingPk), requestBody);
 				console.log('수정 api 호출해야 함');
 			} else {
@@ -151,7 +123,7 @@ export default function Page() {
 				</button>
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} initialTitle={title} initialBody={body} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
 			<div className="flex justify-center gap-4 mt-4">
 				<button

@@ -56,8 +56,8 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 
 	const handleEditClick = () => {
 		setIsOpen(false);
-		router.push(`/post/${type}?editingPk=${pk}`);
-	}; // 수정 버튼 클릭 시에 해당 게시글의 pk 전달. 게시글 정보 자체를 전역으로 관리할까 했지만 수정은 옵셔널한 것이라 수정을 할 때만 edit 페이지에서 해당 pk를 가지고 fetch 하는 것도 괜찮을 듯. 이때 한 번 수정하면 재수정할 확률이 높아지니까 캐싱을 해야 하나.
+		router.push(`/post/${type}?edit=true`);
+	}; // boolean 값을 넘기는 것으로 수정
 
 	const handleDeleteClick = () => {
 		setIsOpen(false);
