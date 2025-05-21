@@ -138,7 +138,7 @@ const DetailPage = () => {
 
 			<RecommendedContent
 				mode={type}
-				teamLogo={currentUserInfo?.favoriteTeam.logoUrl}
+				teamLogo={currentUserInfo?.favoriteTeam?.logoUrl}
 				teamName={isOurTeam ? contents?.data.team?.nameKr : ''}
 			/>
 		</div>
