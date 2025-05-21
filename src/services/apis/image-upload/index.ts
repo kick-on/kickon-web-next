@@ -19,10 +19,14 @@ export async function getPresignedUrl(fileName: string, isNews: boolean): Promis
 	});
 
 	if (!response.ok) {
-		const errorText = await response.text();
-		console.error('presigned Url 요청 실패 - 응답 상태:', response.status, response.statusText);
-		console.error('서버 응답 본문:', errorText);
-		throw new Error('presigned Url 요청 실패');
+		try {
+			const errorText = await response.text();
+			console.error('presigned Url 요청 실패 - 응답 상태:', response.status, response.statusText);
+			console.error('서버 응답 본문:', errorText);
+			throw new Error('presigned Url 요청 실패');
+		} catch (error) {
+			console.error(error); // text로 파싱이 불가능한 경우 방어
+		}
 	}
 
 	return response.json();

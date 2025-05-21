@@ -36,10 +36,10 @@ export default function Profile() {
 
 	const handleLogoutButtonClick = () => {
 		setIsLoggedIn(false);
-		clearCurrentUserInfo();
-		localStorage.clear();
-
-		router.push('/');
+		fetch('/api/logout', { method: 'POST' }).then(() => {
+			clearCurrentUserInfo(); // 클라이언트 user info 초기화
+			router.push('/');
+		});
 	};
 
 	useEffect(() => {
