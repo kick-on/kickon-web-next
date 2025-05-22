@@ -29,7 +29,7 @@ const AlertModal = ({
 		if (type === 'info' && onCancel) {
 			const timer = setTimeout(() => {
 				onCancel();
-			}, 1000);
+			}, 2000);
 			return () => clearTimeout(timer);
 		}
 

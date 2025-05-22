@@ -10,7 +10,7 @@ import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
-	const currentUserInfo = useCurrentUserInfoStore();
+	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isNews = type === 'news';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
 	const [isLiked, setIsLiked] = useState(data.isKicked);
@@ -21,8 +21,6 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
-
-	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {

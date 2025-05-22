@@ -27,7 +27,8 @@ export default function Page() {
 
 		try {
 			const parsedData = JSON.parse(storedData);
-			setBody(parsedData.contents || '');
+			setTitle(parsedData.data.title || '');
+			setBody(parsedData.data.contents || '');
 		} catch (error) {
 			console.error('잘못된 데이터 형식:', error);
 		}
