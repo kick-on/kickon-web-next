@@ -5,7 +5,6 @@ import { useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
-import useIsMobile from '@/lib/hooks/useIsMobile';
 import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
@@ -25,12 +24,12 @@ function CommentItem({
 	parentReply,
 	isReply = false,
 	onCommentSubmit,
+	onEditSubmit,
 	editingCommentId,
 	setEditingCommentId,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isMyComment = currentUserInfo.id === content.user.id;
-	const isMobile = useIsMobile();
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
@@ -38,10 +37,18 @@ function CommentItem({
 	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
 	const moreButtonRef = useRef(null);
 
-	const isEditing = editingCommentId === content.pk; // 현재 코멘트가 수정하려고 하는 코멘트이면
+	const isEditing = editingCommentId === content.pk;
+	// 현재 코멘트가 수정하려고 하는 코멘트이면...! (editingCommentId를 상위에서 하나만 관리하고, 모든 CommentItem이 동일한 상태를 참조하게 하기. 한 번에 한 댓글만 수정하려면...)
+
 	return (
 		<div>
-			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10', isReplyInputOpen && '@mobile:pb-10')}>
+			<div
+				className={clsx(
+					'flex items-start mt-5',
+					isReply && 'pl-10',
+					isReplyInputOpen || isEditing ? 'pb-10' : 'pb-3.5',
+				)}
+			>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
@@ -77,7 +84,7 @@ function CommentItem({
 					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
 					<div className="flex justify-between items-center gap-3.5">
 						<div className="flex flex-col gap-3.5">
-							{isCommentAllowed && !isReply && (!isMobile || !isReplyInputOpen) && (
+							{isCommentAllowed && !isReply && !isReplyInputOpen && (
 								<button
 									className={clsx(
 										'button5-regular rounded-sm px-2 py-1 mb-0.5 w-fit',
@@ -120,15 +127,29 @@ function CommentItem({
 					</div>
 
 					{/* 댓글 입력창 */}
-					{isReplyInputOpen && (
+					{(isReplyInputOpen || isEditing) && (
 						<CommentInput
-							type="reply"
+							type={isEditing ? 'edit' : 'reply'}
 							contentsId={contentsId}
-							parentReplyId={content.pk}
+							parentReplyId={isEditing ? undefined : content.pk}
 							contentType={type}
-							mentionNickname={content.user.nickname}
-							onCommentSubmit={(isReply) => onCommentSubmit(isReply, content.pk)}
-							onCommentCancel={() => closeReplyInput(content.pk)}
+							mentionNickname={isEditing ? undefined : content.user.nickname}
+							defaultContent={isEditing ? content.contents : ''}
+							onCommentSubmit={(isReply) => {
+								if (isEditing) {
+									onEditSubmit(isReply, content.pk);
+								} else {
+									onCommentSubmit(isReply, content.pk);
+								}
+							}}
+							onCommentCancel={() => {
+								if (isEditing) {
+									setEditingCommentId(null);
+									closeReplyInput(content.pk);
+								} else {
+									closeReplyInput(content.pk);
+								}
+							}}
 						/>
 					)}
 				</div>

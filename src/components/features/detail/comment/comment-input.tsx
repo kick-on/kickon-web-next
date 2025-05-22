@@ -13,18 +13,17 @@ const CommentInput = ({
 	contentsId,
 	parentReplyId,
 	contentType,
+	defaultContent,
 	onCommentSubmit,
+	onCommentCancel,
 }: CommentInputProps) => {
 	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
-	const thumbRef = useRef<HTMLDivElement>(null);
-
-	const [scrollThumbHeight, setScrollThumbHeight] = useState(0);
 	const [content, setContent] = useState('');
 	const [, setCharCount] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [hasScroll, setHasScroll] = useState(false);
+	const [hasScroll] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
 
@@ -47,30 +46,6 @@ const CommentInput = ({
 				sel?.addRange(range);
 			}
 		}
-	};
-
-	// 커스텀 스크롤 위치 및 thumb 계산
-	const updateScrollThumb = () => {
-		const input = inputRef.current;
-		const thumb = thumbRef.current;
-		if (!input || !thumb) return;
-
-		const { scrollTop, scrollHeight, clientHeight } = input;
-		if (scrollHeight <= clientHeight) {
-			thumb.style.opacity = '0';
-			setHasScroll(false);
-			return;
-		}
-
-		thumb.style.opacity = '1';
-		setHasScroll(true);
-
-		const thumbHeight = (clientHeight / scrollHeight) * clientHeight;
-		const scrollRatio = scrollTop / (scrollHeight - clientHeight);
-		const thumbTop = scrollRatio * (clientHeight - thumbHeight);
-
-		setScrollThumbHeight(thumbHeight);
-		thumb.style.transform = `translateY(${thumbTop}px)`;
 	};
 
 	// 키 이벤트 처리 (엔터, 백스페이스 등)
@@ -194,31 +169,27 @@ const CommentInput = ({
 		setIsSubmitting(false);
 	};
 
-	// useEffect 모음
 	useEffect(insertMentionIfNeeded, [mentionNickname, type]);
-
 	useEffect(() => {
-		updateScrollThumb();
-		const input = inputRef.current;
-		input?.addEventListener('scroll', updateScrollThumb);
-		window.addEventListener('resize', updateScrollThumb);
-		return () => {
-			input?.removeEventListener('scroll', updateScrollThumb);
-			window.removeEventListener('resize', updateScrollThumb);
-		};
-	}, []);
+		if (type === 'edit' && defaultContent && inputRef.current) {
+			inputRef.current.innerText = defaultContent;
+			setContent(defaultContent);
+		}
+	}, [type, defaultContent]);
 
 	return (
 		<div
 			className={
-				type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
+				type !== 'comment' ? 'mt-5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
 			}
 		>
-			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-26')}>
+			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
+			<div
+				className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type !== 'comment' ? 'h-20' : 'h-26')}
+			>
 				<div
-					className={clsx('relative w-full h-full bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
-						'@mobile:pb-10.5 @mobile:border @mobile:border-black-200': type === 'reply',
+					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
+						'@mobile:pb-10.5 border border-black-200 h-[94px] @mobile:h-[178px]': type !== 'comment',
 					})}
 				>
 					<div
@@ -226,57 +197,46 @@ const CommentInput = ({
 						contentEditable
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
-						className={clsx(
-							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left',
-							type === 'reply' ? '@mobile:h-[70px]' : '@mobile:h-[110px]',
-							{
-								'empty-placeholder': content.trim().length === 0,
-								'overflow-y-scroll custom-scrollbar': isMobile,
-								'overflow-y-scroll no-scrollbar': !isMobile,
-							},
-						)}
+						className={clsx('p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left', {
+							'empty-placeholder': content.trim().length === 0,
+							'overflow-y-scroll custom-scrollbar': isMobile,
+							'overflow-y-scroll no-scrollbar': !isMobile,
+						})}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
 
-					{isMobile && (
-						<div className={clsx('flex gap-4 justify-end', type === 'reply' ? 'absolute bottom-3 right-4' : 'mt-3')}>
-							<button
-								onClick={handleSubmit}
-								disabled={isSubmitting || content.trim().length === 0}
-								className={clsx(
-									'w-10.5 h-7 text-black-000 button5-medium rounded-[0.375rem]',
-									isSubmitting || content.trim().length === 0 ? 'bg-black-600' : 'bg-primary-900',
-								)}
-							>
-								등록
-							</button>
-						</div>
-					)}
-				</div>
-
-				{/* 스크롤바 -> 이것도... 그냥 스크롤바로 일단 대체할까 ㅠㅠ
-
-				<div
-					className={`@mobile:hidden relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
-				>
 					<div
-						ref={thumbRef}
-						className="absolute top-0 left-0 w-full bg-black-500 rounded-full"
-						style={{ height: `${scrollThumbHeight}px` }}
-					/>
-				</div> */}
-				{/* 등록 버튼 -> 모바일과 같은 모양으로 수정되었어용~~
-				<button
-					onClick={handleSubmit}
-					disabled={isSubmitting || content.trim().length === 0}
-					className={clsx(
-						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem] @mobile:hidden',
-						isSubmitting || content.trim().length === 0 ? 'bg-black-400' : 'bg-primary-900',
-					)}
-				>
-					등록
-				</button> */}
+						className={clsx(
+							'flex gap-4 justify-end @mobile:mt-3',
+							type === 'reply' || !isMobile ? 'absolute bottom-4 right-4' : '',
+						)}
+					>
+						{type !== 'comment' && (
+							<button
+								onClick={onCommentCancel}
+								className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
+							>
+								취소
+							</button>
+						)}
+						<button
+							onClick={() => {
+								if (type === 'edit') {
+									console.log('수정 제출');
+								}
+								handleSubmit();
+							}}
+							disabled={isSubmitting || content.trim().length === 0}
+							className={clsx(
+								'w-10.5 h-7 text-black-000 button5-medium rounded-[0.375rem]',
+								isSubmitting || content.trim().length === 0 ? 'bg-black-400' : 'bg-primary-900',
+							)}
+						>
+							{type === 'edit' ? '수정' : '등록'}
+						</button>
+					</div>
+				</div>
 			</div>
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}

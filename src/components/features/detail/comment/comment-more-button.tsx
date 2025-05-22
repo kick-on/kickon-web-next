@@ -55,7 +55,13 @@ export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 						'@mobile:right-0',
 					)}
 				>
-					<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={() => onEditClick()}>
+					<button
+						className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')}
+						onClick={() => {
+							setIsOpen(false);
+							onEditClick();
+						}}
+					>
 						수정하기
 					</button>
 					<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleDeleteClick}>

@@ -207,6 +207,10 @@ function CommentSection({
 		setReplyingTo((prev) => prev.filter((i) => i !== id));
 	};
 
+	const handleCommentEdit = () => {
+		console.log('수정');
+	};
+
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {
 		type,
@@ -248,6 +252,7 @@ function CommentSection({
 								onCommentSubmit={handleCommentSubmit}
 								editingCommentId={editingCommentId}
 								setEditingCommentId={setEditingCommentId}
+								onEditSubmit={handleCommentEdit}
 							/>
 							{replyVisibilities[comment.pk] &&
 								comment.replies?.map((reply) => (
@@ -258,6 +263,9 @@ function CommentSection({
 										parentReply={comment.user.nickname}
 										{...commentItemProps}
 										onCommentSubmit={handleCommentSubmit}
+										onEditSubmit={handleCommentEdit}
+										editingCommentId={editingCommentId}
+										setEditingCommentId={setEditingCommentId}
 									/>
 								))}
 						</div>
