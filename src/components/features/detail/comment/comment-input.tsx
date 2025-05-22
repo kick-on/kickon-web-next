@@ -189,7 +189,7 @@ const CommentInput = ({
 			>
 				<div
 					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
-						'@mobile:pb-10.5 border border-black-200 h-[94px] @mobile:min-h-[178px]': type !== 'comment',
+						'pb-11.5 border border-black-200 h-[130px] @mobile:min-h-[178px]': type !== 'comment',
 					})}
 				>
 					<div
@@ -210,7 +210,7 @@ const CommentInput = ({
 					<div
 						className={clsx(
 							'flex gap-4 justify-end @mobile:mt-3',
-							type === 'reply' || !isMobile ? 'absolute bottom-4 right-4' : '',
+							(type !== 'comment' || !isMobile) && 'absolute bottom-4 right-4',
 						)}
 					>
 						{type !== 'comment' && (

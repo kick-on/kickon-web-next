@@ -48,7 +48,7 @@ function CommentItem({
 				className={clsx(
 					'flex items-start mt-5 pb-3.5',
 					isReply && 'pl-10',
-					(isReplyInputOpen || isEditing) && (isMobile ? 'pb-30' : 'pb-10'),
+					(isReplyInputOpen || isEditing) && (isMobile ? 'pb-30' : 'pb-15'),
 				)}
 			>
 				<Image
