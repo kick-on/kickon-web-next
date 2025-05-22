@@ -189,7 +189,7 @@ const CommentInput = ({
 			>
 				<div
 					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
-						'@mobile:pb-10.5 border border-black-200 h-[94px] @mobile:h-[178px]': type !== 'comment',
+						'@mobile:pb-10.5 border border-black-200 h-[94px] @mobile:min-h-[178px]': type !== 'comment',
 					})}
 				>
 					<div
@@ -197,11 +197,12 @@ const CommentInput = ({
 						contentEditable
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
-						className={clsx('p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left', {
-							'empty-placeholder': content.trim().length === 0,
-							'overflow-y-scroll custom-scrollbar': isMobile,
-							'overflow-y-scroll no-scrollbar': !isMobile,
-						})}
+						className={clsx(
+							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar',
+							{
+								'empty-placeholder': content.trim().length === 0,
+							},
+						)}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
