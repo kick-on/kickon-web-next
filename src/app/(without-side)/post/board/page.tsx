@@ -6,9 +6,8 @@ import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import { getUserInfo } from '@/services/auth';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -17,9 +16,25 @@ export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const searchParams = useSearchParams();
+	const isEditMode = searchParams.get('edit') === 'true';
+
+	useEffect(() => {
+		if (!isEditMode) return;
+
+		const storedData = sessionStorage.getItem('detailContent');
+		if (!storedData) return;
+
+		try {
+			const parsedData = JSON.parse(storedData);
+			setBody(parsedData.contents || '');
+		} catch (error) {
+			console.error('잘못된 데이터 형식:', error);
+		}
+	}, [isEditMode]);
 
 	const teams: { label: string; value: string; logo?: string }[] = [
-		{ label: '전체', value: '' },
+		{ label: '전체', value: '전체' },
 		...(currentUserInfo?.favoriteTeam?.pk
 			? [
 					{
@@ -58,8 +73,7 @@ export default function Page() {
 		if (hasShownAlert.current) return;
 		hasShownAlert.current = true;
 
-		const isLoggedIn = getAccessToken() && getRefreshToken();
-		if (!isLoggedIn) {
+		if (!currentUserInfo) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
@@ -91,7 +105,7 @@ export default function Page() {
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
 	const postCommunityContents = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			return;
 		}
 		if (!isFormValid) return;
@@ -168,7 +182,7 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
 			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
 				<button

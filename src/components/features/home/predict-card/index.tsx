@@ -11,8 +11,8 @@ import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
 import getServerDeviceType from '@/lib/utils/getServerDeviceType';
-import { getAccessToken } from '@/lib/utils/getAccessToken';
 import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function PredictCard({
 	game,
@@ -41,8 +41,10 @@ export default function PredictCard({
 	const isGameCompleted = gameStatus === 'HOME' || gameStatus === 'DRAW' || gameStatus === 'AWAY';
 
 	const [isClicked, setIsClicked] = useState(false);
-	const [isCompleted, setIsCompleted] = useState(false);
+	const [isCompleted, setIsCompleted] = useState(!!myGambleResult);
 	const [isEditing, setIsEditing] = useState(false);
+
+	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	// proceeding 카드: 내 예측 점수 또는 0으로 초기화
 	// finished 카드: 실제 경기 득점 또는 경기 중이면 -1로 초기화
@@ -82,7 +84,7 @@ export default function PredictCard({
 
 	const handleTeamButtonClick = async (e) => {
 		// 로그인 하지 않은 경우 사용 제한
-		if (!getAccessToken()) {
+		if (!currentUserInfo) {
 			alert(`로그인이 필요한 서비스입니다.\n로그인 후 이용해 주세요.`);
 			return;
 		}

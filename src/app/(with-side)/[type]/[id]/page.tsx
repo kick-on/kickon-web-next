@@ -79,15 +79,19 @@ const DetailPage = () => {
 				// shouldCallApi -> true: 글을 처음 본 상태, 조회수 +1, false: 이미 본 적 있음
 				const clientViewCount = shouldCallApi ? serverViewCount + 1 : serverViewCount;
 
-				setContents({
+				const finalContents = {
 					...contentData,
 					data: {
 						...contentData.data,
 						views: clientViewCount, // 수정한 조회수만 덮어씀
 					},
-				});
+				};
 
+				setContents(finalContents);
 				setTotalReplies(contentData.data.replies);
+
+				// 세션 스토리지에 저장 (같은 키로 항상 덮어쓰기)
+				sessionStorage.setItem('detailContent', JSON.stringify(finalContents));
 				console.log('상세조회', contentData);
 			} catch (error) {
 				console.error('데이터 불러오기 실패:', error);
@@ -138,7 +142,7 @@ const DetailPage = () => {
 
 			<RecommendedContent
 				mode={type}
-				teamLogo={currentUserInfo?.favoriteTeam.logoUrl}
+				teamLogo={currentUserInfo?.favoriteTeam?.logoUrl}
 				teamName={isOurTeam ? contents?.data.team?.nameKr : ''}
 			/>
 		</div>

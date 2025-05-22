@@ -35,7 +35,6 @@ export default function RankingList({ mode }: { mode: 'season' | 'predict' }) {
 		const response =
 			mode === 'season' ? await getActualSeasonRanking(leaguePk) : await getGambleSeasonRanking(leaguePk);
 		setRanking(response?.data || null);
-		console.log(response);
 	}, [league.pk, mode]);
 
 	// getRanking이 변경되면, 즉 league.pk가 변경되면 실행

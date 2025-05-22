@@ -47,13 +47,15 @@ export default async function CategoryTab({
 	};
 	const response = isNews ? await getNewsList(request) : await getBoardList(request);
 
-	const moreListProps: MoreListProps = {
-		mode: mode,
-		initialLastPk: response.data.at(-1)?.pk || 0,
-		initialLastViewCount: response.data.at(-1)?.views || 0,
-		initialRequest: request,
-		initialMeta: response.meta,
-	};
+	const moreListProps: MoreListProps = response
+		? {
+				mode: mode,
+				initialLastPk: response.data.at(-1)?.pk || 0,
+				initialLastViewCount: response.data.at(-1)?.views || 0,
+				initialRequest: request,
+				initialMeta: response.meta,
+			}
+		: null;
 
 	return (
 		<div className="flex flex-col w-full @mobile:w-[calc(100vw-34px)]">

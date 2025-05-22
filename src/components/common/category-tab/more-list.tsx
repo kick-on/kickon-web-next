@@ -6,7 +6,6 @@ import { getBoardList } from '@/services/apis/board/getBoardList';
 import NewsItem from './news-item';
 import CommunityItem from './community-item';
 import { renderItems } from './category-tab';
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { GetNewsListRequest } from '@/services/apis/news/dto';
 import { GetBoardListRequest } from '@/services/apis/board/dto';
 import { MetaDto } from '@/services/config/dto';

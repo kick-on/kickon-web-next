@@ -1,17 +1,15 @@
-import type {
-	PostNewTokenRequest,
-	PostNewTokenResponse,
-	GetUserInfoResponse,
-	UpdatePrivacyRequest,
-	UpdateUserInfoRequest,
-} from './dto';
+import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
 import type { EmptySuccessResponse, FailResponse } from '../config/dto';
-import axiosInstance from '../config/axiosInstance';
+import { fetcher } from '@/lib/server/fetcher';
 
 // 개인정보 동의 업데이트
 export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
 	try {
-		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user/privacy', body);
+		const response = await fetcher<EmptySuccessResponse | FailResponse>({
+			method: 'PATCH',
+			url: '/api/user/privacy',
+			body,
+		});
 
 		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
@@ -26,7 +24,11 @@ export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
 // 유저 정보 수정
 export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 	try {
-		const response = await axiosInstance.patch<EmptySuccessResponse | FailResponse>('/api/user', body);
+		const response = await fetcher<EmptySuccessResponse | FailResponse>({
+			method: 'PATCH',
+			url: '/api/user',
+			body,
+		});
 
 		if (response.code === 'DUPLICATED_NICKNAME') {
 			return response.code;
@@ -43,7 +45,7 @@ export const updateUserInfo = async (body: UpdateUserInfoRequest) => {
 // 유저 정보 조회
 export const getUserInfo = async () => {
 	try {
-		const response = await axiosInstance.get<GetUserInfoResponse | FailResponse>('/api/user/me');
+		const response = await fetcher<GetUserInfoResponse | FailResponse>({ method: 'GET', url: '/api/user/me' });
 
 		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
@@ -59,7 +61,11 @@ export const getUserInfo = async () => {
 export const deleteUserMe = async (body: { reason: string }) => {
 	try {
 		// delete에서는 두 번째 인자로 body가 아닌 config 객체를 받기 때문에 data에 body를 넣어줘야 함
-		const response = await axiosInstance.delete<EmptySuccessResponse | FailResponse>('/api/user/me', { data: body });
+		const response = await fetcher<EmptySuccessResponse | FailResponse>({
+			method: 'DELETE',
+			url: '/api/user/me',
+			body,
+		});
 
 		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);
@@ -68,20 +74,5 @@ export const deleteUserMe = async (body: { reason: string }) => {
 		return response;
 	} catch (error) {
 		console.error('회원 탈퇴 실패: ', error);
-	}
-};
-
-// 토큰 재발급
-export const postNewToken = async (body: PostNewTokenRequest) => {
-	try {
-		const response = await axiosInstance.post<PostNewTokenResponse | FailResponse>('/auth/refresh', body);
-
-		if (!response.code.split('_').includes('SUCCESS')) {
-			console.error(response);
-			return response.message;
-		}
-		return response.data;
-	} catch (error) {
-		console.error('토큰 발급 실패: ', error);
 	}
 };
