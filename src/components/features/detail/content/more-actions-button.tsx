@@ -4,15 +4,23 @@ import { useState, useRef, useEffect, FC } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import ReportModal from './report-modal';
+import EditIcon from '@/assets/edit.svg';
+import AlertModal from '../alert-modal';
+import { useRouter } from 'next/navigation';
 
 interface MoreActionsButtonProps {
-	type: 'news' | 'board';
-	pk: number;
+	type?: 'news' | 'board';
+	pk?: number;
+	isMyContent?: boolean;
+	commentId?: number;
 }
 
-const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
+const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMyContent = 'true' }) => {
+	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
 	const [showReportModal, setShowReportModal] = useState(false);
+	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+	const [showShareAlert, setShowShareAlert] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -33,9 +41,9 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 	const handleShareButtonClick = async () => {
 		try {
 			await navigator.clipboard.writeText(window.location.href);
-			alert('URL이 복사되었습니다!');
+			setShowShareAlert(true); // 성공 시 모달 표시
 		} catch (err) {
-			console.log(err);
+			console.error(err);
 			alert('URL 복사에 실패했습니다.');
 		}
 		setIsOpen(false);
@@ -46,6 +54,24 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 		setShowReportModal(true);
 	};
 
+	const handleEditClick = () => {
+		setIsOpen(false);
+		router.push(`/post/${type}?edit=true`);
+	}; // boolean 값을 넘기는 것으로 수정
+
+	const handleDeleteClick = () => {
+		setIsOpen(false);
+		setShowDeleteConfirm(true);
+	};
+
+	const handleConfirmDelete = () => {
+		console.log('삭제.'); // api 호출
+		setShowDeleteConfirm(false); // 모달 닫고
+		router.replace(`/${type}?q=전체`);
+	};
+
+	const buttonCommonClass =
+		'flex w-full justify-center py-[15px] gap-2 whitespace-nowrap hover:bg-black-200 @mobile:active:bg-black-200';
 	return (
 		<>
 			<div className="relative inline-block">
@@ -63,22 +89,49 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type, pk }) => {
 					<div
 						ref={menuRef}
 						className={clsx(
-							'absolute @mobile:right-0 mt-2 items-center',
-							'w-[7.1875rem] bg-black-000 rounded-lg border border-black-300 z-50',
-							'flex flex-col px-5 py-[0.625rem] gap-5 button4-medium text-black-900',
+							'absolute z-50 mt-2 flex flex-col items-center rounded-lg border border-black-300 bg-black-000 text-black-900 shadow-[0_4px_10px_0_rgba(0,0,0,0.16)]',
+							'w-[7.1875rem] button4-medium',
+							'@mobile:right-0 @mobile:text-13',
 						)}
 					>
-						<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleShareButtonClick}>
-							<Image src="/share_black.svg" alt="공유하기 버튼" width={18} height={18} /> 공유하기
-						</button>
-						<button className="flex items-center gap-2 whitespace-nowrap" onClick={handleReportButtonClick}>
-							<Image src="/report.svg" alt="신고하기기 버튼" width={18} height={18} /> 신고하기
+						{isMyContent ? (
+							<div className="flex flex-col w-full">
+								<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={handleEditClick}>
+									<EditIcon alt="수정하기 버튼" width={18} height={18} className="w-[18px] h-[18px] stroke-black-600" />
+									수정하기
+								</button>
+								<button className={`${buttonCommonClass}`} onClick={handleDeleteClick}>
+									<Image src="/trash.svg" alt="삭제하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
+									삭제하기
+								</button>
+							</div>
+						) : (
+							<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={handleReportButtonClick}>
+								<Image src="/report.svg" alt="신고하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
+								신고하기
+							</button>
+						)}
+						{isMyContent && <p className="w-[99px] h-[1px] border border-black-200 -mr-1" />}
+						<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleShareButtonClick}>
+							<Image src="/share.svg" alt="공유하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
+							공유하기
 						</button>
 					</div>
 				)}
 			</div>
 
 			{showReportModal && <ReportModal type={type} pk={pk} onClose={() => setShowReportModal(false)} />}
+
+			{showDeleteConfirm && (
+				<AlertModal
+					description="게시글을 삭제할까요?"
+					onConfirm={handleConfirmDelete}
+					onCancel={() => setShowDeleteConfirm(false)}
+				/>
+			)}
+			{showShareAlert && (
+				<AlertModal type="info" description="URL이 복사되었습니다." onCancel={() => setShowShareAlert(false)} />
+			)}
 		</>
 	);
 };

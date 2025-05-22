@@ -1,31 +1,50 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import debounce from 'lodash/debounce';
+import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { useRouter, useSearchParams } from 'next/navigation';
+
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { categories } from '@/lib/constants/options';
 import { PostNewsContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
-import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
-import { useRouter } from 'next/navigation';
-import { getTeam } from '@/services/apis/team';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
+import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
+import TeamSearchInput from '@/components/features/post/team-search-input';
+import CategoryDropdown from '@/components/features/post/category-dropdown';
 
 export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
-
-	const [searchTerm, setSearchTerm] = useState('');
+	const hasShownAlert = useRef(false);
 	const [selectedTeam, setSelectedTeam] = useState<{ id: number; name: string; logo: string } | null>(null);
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string }>({
 		label: '',
 		value: '',
 	});
+	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const [title, setTitle] = useState('');
+	const [body, setBody] = useState('');
+	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
+	const searchParams = useSearchParams();
+	const isEditMode = searchParams.get('edit') === 'true';
+
+	useEffect(() => {
+		if (!isEditMode) return;
+
+		const storedData = sessionStorage.getItem('detailContent');
+		if (!storedData) return;
+
+		try {
+			const parsedData = JSON.parse(storedData);
+			setBody(parsedData.contents || '');
+		} catch (error) {
+			console.error('잘못된 데이터 형식:', error);
+		}
+	}, [isEditMode]);
 
 	// isMobile이 null이 아니게 되면 label 설정
 	useEffect(() => {
@@ -37,28 +56,11 @@ export default function Page() {
 		}
 	}, [isMobile]);
 
-	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
-	const [isVisibleSearchResults, setIsVisibleSearchResults] = useState(false);
-	const dropdownRef = useRef<HTMLDivElement>(null);
-	const searchRef = useRef<HTMLDivElement>(null);
-	const fileInputRef = useRef(null);
-	const hasShownAlert = useRef(false);
-
-	const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-	const [title, setTitle] = useState('');
-	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
-	const [teams, setTeams] = useState<{ id: number; name: string; logo: string }[]>([]);
-
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore(); // 페이지 새로고침 시 유저 정보 초기화, persist 필요
-
 	useEffect(() => {
 		if (hasShownAlert.current) return;
 		hasShownAlert.current = true;
 
-		const isLoggedIn = !currentUserInfo;
-		if (!isLoggedIn) {
+		if (!currentUserInfo) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
@@ -75,132 +77,6 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
-	const getTeamLists = useCallback(async (term: string) => {
-		// 검색어가 없으면 필터링 결과를 초기화하고 종료
-		if (!term) {
-			setTeams([]);
-			return;
-		}
-		try {
-			const response = await getTeam(undefined, term);
-			const teamData = response.data.map((team) => ({
-				id: team.pk,
-				name: team.nameKr ?? team.nameEn,
-				logo: team.logoUrl,
-			}));
-
-			setTeams(teamData);
-		} catch (error) {
-			console.error('팀 리스트 가져오기 실패:', error);
-			setTeams([]);
-		}
-	}, []);
-
-	// 마지막 글자가 입력된 뒤 0.5초 후 api 호출
-	const debouncedFetchTeams = useRef(debounce(getTeamLists, 300)).current;
-
-	useEffect(() => {
-		debouncedFetchTeams(searchTerm); // 검색어가 변경될 때마다 디바운스된 함수 호출
-
-		return () => {
-			debouncedFetchTeams.cancel();
-		};
-	}, [searchTerm, debouncedFetchTeams]);
-
-	const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const value = e.target.value.trim();
-		setSearchTerm(value);
-		setSelectedTeam(null);
-		setIsVisibleSearchResults(value.length > 0);
-	};
-
-	const handleSelectTeam = (team: { id: number; name: string; logo: string }) => {
-		setSelectedTeam(team);
-		setSearchTerm(team.name);
-		setIsVisibleSearchResults(false);
-		setIsVisibleDropdown(false);
-	};
-
-	// 검색 초기화 핸들러 (X 버튼)
-	const handleClearSearch = () => {
-		setSearchTerm('');
-		setSelectedTeam(null);
-	};
-
-	// 홈 드롭다운 코드 참고
-	const handleDropdownToggle = () => {
-		setIsVisibleDropdown((prev) => !prev);
-	};
-
-	const handleNewsOptionClick = (option: { label: string; value: string }) => {
-		setSelectedOption(option);
-		setIsVisibleDropdown(false);
-	};
-
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-				setIsVisibleSearchResults(false);
-				setIsVisibleDropdown(false);
-			}
-		};
-		document.addEventListener('click', handleClickOutside);
-		return () => {
-			document.removeEventListener('click', handleClickOutside);
-		};
-	}, []);
-
-	const [isPortrait, setIsPortrait] = useState(false);
-
-	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (!file) return;
-
-		try {
-			// 이미지 비율 체크
-			if (typeof window !== 'undefined') {
-				// 브라우저 환경에서만 실행
-				const img = document.createElement('img');
-				img.src = URL.createObjectURL(file);
-				img.onload = async () => {
-					if (img.height > img.width) {
-						setIsPortrait(true); // 세로
-					} else {
-						setIsPortrait(false); // 가로
-					}
-
-					// 1. Presigned URL 요청
-					const presignedResponse = await getPresignedUrl(file.name, true);
-					const { presignedUrl, s3Url } = presignedResponse.data;
-
-					// 2. Presigned URL을 사용해 S3에 업로드
-					await uploadToS3(presignedUrl, file);
-
-					// 3. 업로드된 S3 URL을 상태에 저장
-					setSelectedImage(s3Url);
-				};
-			}
-		} catch (error) {
-			console.error('파일 업로드 실패:', error);
-		}
-	};
-
-	const handleRemoveImage = () => {
-		setSelectedImage(null);
-
-		// file input의 값을 초기화해서 동일한 파일 다시 선택 가능하게 함
-		if (fileInputRef.current) {
-			fileInputRef.current.value = '';
-		}
-	};
-
-	// 대표 이미지 클릭 시 파일 업로드 창 열기
-	const handleImageClick = () => {
-		if (fileInputRef.current) {
-			fileInputRef.current.click();
-		}
-	};
-
 	const postNewsContents = async () => {
 		if (!currentUserInfo) {
 			return;
@@ -214,141 +90,27 @@ export default function Page() {
 		};
 
 		try {
-			const response = await postNewContents(requestBody, true);
-
-			router.push(`/news/${response.data.pk}`);
+			let response;
+			if (isEditMode) {
+				// response = await updateNewsContents(Number(editingPk), requestBody);
+				console.log('수정 api 호출해야 함');
+			} else {
+				response = await postNewContents(requestBody, true);
+				router.push(`/news/${response.data.pk}`); // 수정 api 엮고 if-else 문 밖으로 이동
+			}
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}
 	};
 
-	const originalLabel = selectedOption.label.trim();
-	const displayLabel = isMobile ? trimTextWithoutSpaces(originalLabel, 3) : originalLabel;
-
 	return (
 		<div className="flex flex-col w-full">
-			{selectedImage ? (
-				<div className="relative w-full h-80.5 @mobile:h-47.5 mb-4 bg-black-200 rounded-[10px] overflow-hidden flex items-center justify-center">
-					<Image
-						src={selectedImage}
-						alt="업로드된 대표 이미지"
-						layout="fill"
-						objectFit={isPortrait ? 'contain' : 'cover'} // 세로면 contain, 아니면 cover
-						className="rounded-[10px]"
-					/>
-					<button
-						onClick={handleRemoveImage}
-						className={clsx('absolute top-2 right-2 p-1 rounded-full', isPortrait ? 'bg-black-300' : 'bg-black-200')}
-					>
-						<Image src="/x.svg" alt="삭제 버튼" width={18} height={18} />
-					</button>
-				</div>
-			) : (
-				<div
-					className="flex items-center gap-2 cursor-pointer button4-medium text-black-600 mb-7.5"
-					onClick={handleImageClick}
-				>
-					<Image src="/image.svg" width={20} height={20} alt="앨범 아이콘" />
-					대표 이미지 추가
-				</div>
-			)}
-
-			<input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} accept="image/*" />
+			<ThumbnailUploader selectedImage={selectedImage} onChange={setSelectedImage} />
 
 			<div className="flex gap-4 mb-4">
-				<div ref={searchRef} className="relative w-71 @mobile:w-41.5">
-					<div className="relative button4-medium @mobile:text-13 flex items-center border border-black-300 rounded-lg h-9 px-4 py-[0.5625rem]">
-						{selectedTeam && (
-							<Image
-								src={selectedTeam.logo}
-								alt={selectedTeam.name}
-								width={16}
-								height={16}
-								className="mr-2 w-4 h-4 object-contain"
-							/>
-						)}
+				<TeamSearchInput selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} />
 
-						<input
-							type="text"
-							placeholder="팀명"
-							value={isMobile ? trimTextWithoutSpaces(searchTerm) : searchTerm}
-							onChange={handleSearchChange}
-							className="w-full focus:outline-none"
-						/>
-
-						{searchTerm ? (
-							<Image
-								width={16}
-								height={16}
-								src="/x.svg"
-								alt="초기화"
-								onClick={handleClearSearch}
-								className="cursor-pointer"
-							/>
-						) : (
-							<Image width={16} height={16} src="/search.svg" alt="검색" />
-						)}
-					</div>
-
-					{isVisibleSearchResults && (
-						<div className="z-50 absolute top-10 w-full bg-black-000 border border-black-200 button4-medium @mobile:text-13 rounded-lg shadow-lg overflow-hidden">
-							{teams.length > 0 ? (
-								teams.map((team, index) => (
-									<div
-										key={team.id}
-										className={clsx(
-											'flex items-center gap-2 px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors',
-											{
-												'rounded-b-sm': index === teams.length - 1,
-											},
-										)}
-										onClick={() => handleSelectTeam(team)}
-									>
-										<Image className="w-4 h-4 object-contain" src={team.logo} alt={team.name} width={16} height={16} />
-										{isMobile ? trimTextWithoutSpaces(team.name) : team.name}
-									</div>
-								))
-							) : (
-								<div className="px-4 py-2.5 text-black-300">검색 결과 없음</div>
-							)}
-						</div>
-					)}
-				</div>
-
-				<div
-					ref={dropdownRef}
-					className="relative w-[148px] @mobile:w-[132px] button4-medium tablet:text-14 @mobile:text-13"
-				>
-					<button
-						onClick={handleDropdownToggle}
-						className="flex items-center justify-between w-full h-auto border border-black-300 rounded-lg px-4 py-[9px] @mobile:pr-[10px]"
-					>
-						<div
-							className={clsx(
-								originalLabel === '탭 선택하기' || originalLabel === '탭 선택' ? 'text-black-600' : 'text-black-900',
-							)}
-						>
-							{displayLabel}
-						</div>
-						<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
-					</button>
-
-					{isVisibleDropdown && (
-						<div className="z-50 absolute top-10 w-full bg-white border border-gray-300 rounded-lg shadow-lg overflow-hidden">
-							{categories.map((option, index) => (
-								<div
-									key={option.value}
-									className={clsx('px-4 py-2.5 cursor-pointer hover:bg-black-200 transition-colors', {
-										'rounded-b-sm': index === categories.length - 1,
-									})}
-									onClick={() => handleNewsOptionClick(option)}
-								>
-									{option.label}
-								</div>
-							))}
-						</div>
-					)}
-				</div>
+				<CategoryDropdown selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
 
 				<button
 					onClick={() => {
@@ -360,7 +122,8 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} />
+
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
 			<div className="flex justify-center gap-4 mt-4">
 				<button
