@@ -68,8 +68,7 @@ export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 						삭제하기
 					</button>
 				</div>
-			)}{' '}
-			{/*수정하기 버튼을 누르면 해당 코멘트 pk가 편집 중인 pk인 걸 아려면 상위 컴포넌트인 comment-section에 set함수를 이용해서 editing comment pk라는 걸 알리고 그리고 그걸 comment Item에 전달해서 그 pk가... */}
+			)}
 			{showDeleteConfirm && (
 				<AlertModal type="confirm" description="댓글을 삭제할까요?" onCancel={() => setShowDeleteConfirm(false)} />
 			)}
