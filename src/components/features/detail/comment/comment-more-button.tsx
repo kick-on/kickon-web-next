@@ -4,7 +4,11 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import AlertModal from '../alert-modal';
 
-export const CommentMoreButton = () => {
+interface CommentMoreButtonProps {
+	onEditClick: () => void;
+}
+
+export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -42,7 +46,6 @@ export const CommentMoreButton = () => {
 			<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
 				<Image src="/more-horizontal.svg" alt="더보기" width={20} height={20} className="@mobile:w-4.5 @mobile:h-4.5" />
 			</button>
-
 			{isOpen && (
 				<div
 					ref={menuRef}
@@ -52,18 +55,18 @@ export const CommentMoreButton = () => {
 						'@mobile:right-0',
 					)}
 				>
-					<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={() => console.log('수정 클릭')}>
+					<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={() => onEditClick()}>
 						수정하기
 					</button>
 					<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleDeleteClick}>
 						삭제하기
 					</button>
 				</div>
-			)}
-
+			)}{' '}
+			{/*수정하기 버튼을 누르면 해당 코멘트 pk가 편집 중인 pk인 걸 아려면 상위 컴포넌트인 comment-section에 set함수를 이용해서 editing comment pk라는 걸 알리고 그리고 그걸 comment Item에 전달해서 그 pk가... */}
 			{showDeleteConfirm && (
 				<AlertModal description="댓글을 삭제할까요?" onCancel={() => setShowDeleteConfirm(false)} />
 			)}
 		</div>
 	);
-};
+}

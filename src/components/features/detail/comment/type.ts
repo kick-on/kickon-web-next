@@ -25,6 +25,8 @@ export interface CommentItemProps {
 	parentReply?: string;
 	isReply?: boolean;
 	onCommentSubmit: (isReply: boolean, pk?: number) => void;
+	editingCommentId?: number;
+	setEditingCommentId?: (id: number | null) => void;
 }
 
 // 코멘트 입력 props

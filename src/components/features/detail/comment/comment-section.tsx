@@ -34,7 +34,6 @@ function CommentSection({
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false);
-	// 로드된 페이지들을 추적하는 상태 추가
 	const [loadedPages, setLoadedPages] = useState([1]);
 
 	// 현재 페이지 추출
@@ -42,6 +41,8 @@ function CommentSection({
 	const [currentPage, setCurrentPage] = useState(pageParam ? Number(pageParam) : 1);
 
 	const commentsPerPage = 10;
+
+	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
 	const fetchComments = useCallback(
 		async (page: number, append = false) => {
@@ -245,6 +246,8 @@ function CommentSection({
 								{...commentItemProps}
 								parentReply={comment.user.nickname}
 								onCommentSubmit={handleCommentSubmit}
+								editingCommentId={editingCommentId}
+								setEditingCommentId={setEditingCommentId}
 							/>
 							{replyVisibilities[comment.pk] &&
 								comment.replies?.map((reply) => (

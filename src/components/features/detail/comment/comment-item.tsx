@@ -25,6 +25,8 @@ function CommentItem({
 	parentReply,
 	isReply = false,
 	onCommentSubmit,
+	editingCommentId,
+	setEditingCommentId,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isMyComment = currentUserInfo.id === content.user.id;
@@ -35,6 +37,8 @@ function CommentItem({
 
 	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
 	const moreButtonRef = useRef(null);
+
+	const isEditing = editingCommentId === content.pk; // 현재 코멘트가 수정하려고 하는 코멘트이면
 	return (
 		<div>
 			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10', isReplyInputOpen && '@mobile:pb-10')}>
@@ -59,7 +63,7 @@ function CommentItem({
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
-								<CommentMoreButton />
+								<CommentMoreButton onEditClick={() => setEditingCommentId(content.pk)} />
 							</div>
 						)}
 					</div>
