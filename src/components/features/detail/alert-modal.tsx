@@ -55,7 +55,13 @@ const AlertModal = ({
 				onClick={(e) => e.stopPropagation()}
 				className={clsx(
 					'flex flex-col justify-center bg-black-000 rounded-lg px-7 w-[344px] @mobile:w-77.75',
-					isMobile ? 'pt-[50px] pb-8 gap-[42px]' : 'pt-[68px] pb-[36px] gap-[54px]',
+					type === 'info'
+						? isMobile
+							? 'p-[50px] gap-[42px]'
+							: 'p-[68px] gap-[54px]'
+						: isMobile
+							? 'pt-[50px] pb-8 gap-[42px]'
+							: 'pt-[68px] pb-[36px] gap-[54px]',
 				)}
 			>
 				<p className="body2-semibold @mobile:text-18 text-center text-black-900">{description}</p>
