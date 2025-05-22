@@ -62,7 +62,7 @@ const AlertModal = ({
 						: isMobile
 							? 'pt-[50px] pb-8 gap-[42px]'
 							: 'pt-[68px] pb-[36px] gap-[54px]',
-				)}
+				)} //type이 info인데, 모바일일 때와 아닐 때 / type이 info가 아닌데, 모바일일 때와 아닐 때
 			>
 				<p className="body2-semibold @mobile:text-18 text-center text-black-900">{description}</p>
 
