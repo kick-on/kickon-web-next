@@ -102,10 +102,13 @@ export const EditorProvider = ({ children, setBody, isNews, initialBody }: Edito
 	});
 
 	useEffect(() => {
-		if (editor && initialBody !== undefined && initialBody !== null) {
-			editor.commands.setContent(initialBody);
+		if (editor && editor.isEditable && initialBody !== undefined && initialBody !== null) {
+			// 현재 내용과 초기값이 다를 때만 설정
+			if (editor.getHTML() !== initialBody) {
+				editor.commands.setContent(initialBody, false);
+			}
 		}
-	}, [initialBody, editor]);
+	}, [editor, initialBody]);
 
 	const isValidUrl = (url: string) => {
 		try {
