@@ -28,12 +28,20 @@ export const addTimestampToFileName = (originalName: string) => {
 	return `${cleanedName}_${timestamp}${ext}`;
 };
 
-export const extractImageFilenamesFromContent = (content: string): string[] => {
-	const regex = /https:\/\/[^\/]+\/([^\/]+\.(png|jpe?g|gif|webp))/gi;
-	const filenames = new Set<string>();
-	let match;
+export function extractImageFilenamesFromContent(content: string): string[] {
+	const regex = /<img[^>]+src=["']([^"']+)["']/g;
+	// <img 태그로 시작하고, src 속성이 올 때까지 모든 속성을 허용
+	// src="..." 또는 src='...' 형태의 URL을 추출
+
+	const matches = []; // 추출한 파일명을 담을 배열
+	let match; // regex.exec()로 찾은 결과를 저장할 변수
+
 	while ((match = regex.exec(content)) !== null) {
-		filenames.add(match[1]); // 파일명만 추출
+		// 정규식을 이용해 content 문자열에서 <img src="...">를 반복으로 찾아냄
+		const url = match[1];
+		const filename = decodeURIComponent(url.split('/').pop() || '');
+		if (filename) matches.push(filename);
 	}
-	return Array.from(filenames);
-};
+
+	return matches;
+}
