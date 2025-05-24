@@ -35,7 +35,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 			redirectUrl.pathname = finalizePath;
 		} else if (userInfoResponse.status === 401 || userInfoResponse.status === 403) {
 			// 401 or 403: 회원가입 페이지로 리디렉션
-			redirectUrl.pathname = `/signup?provider=${provider}`;
+			redirectUrl.pathname = `/signup`;
+			redirectUrl.searchParams.set('provider', provider);
 		} else {
 			// 그 외: errorCode와 함께 finalize 페이지로 리디렉션
 			try {
@@ -79,6 +80,15 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 			secure: true,
 			path: '/',
 			maxAge: 60 * 60 * 24 * 30, // 30일
+		});
+	}
+
+	if (redirectUrl.pathname === '/signup') {
+		response.cookies.set({
+			name: 'fromLogin',
+			value: 'true',
+			path: '/',
+			maxAge: 60,
 		});
 	}
 
