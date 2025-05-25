@@ -4,7 +4,11 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import AlertModal from '../alert-modal';
 
-export const CommentMoreButton = () => {
+interface CommentMoreButtonProps {
+	onEditClick: () => void;
+}
+
+export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -42,7 +46,6 @@ export const CommentMoreButton = () => {
 			<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
 				<Image src="/more-horizontal.svg" alt="더보기" width={20} height={20} className="@mobile:w-4.5 @mobile:h-4.5" />
 			</button>
-
 			{isOpen && (
 				<div
 					ref={menuRef}
@@ -52,7 +55,13 @@ export const CommentMoreButton = () => {
 						'@mobile:right-0',
 					)}
 				>
-					<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={() => console.log('수정 클릭')}>
+					<button
+						className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')}
+						onClick={() => {
+							setIsOpen(false);
+							onEditClick();
+						}}
+					>
 						수정하기
 					</button>
 					<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleDeleteClick}>
@@ -60,10 +69,9 @@ export const CommentMoreButton = () => {
 					</button>
 				</div>
 			)}
-
 			{showDeleteConfirm && (
-				<AlertModal description="댓글을 삭제할까요?" onCancel={() => setShowDeleteConfirm(false)} />
+				<AlertModal type="confirm" description="댓글을 삭제할까요?" onCancel={() => setShowDeleteConfirm(false)} />
 			)}
 		</div>
 	);
-};
+}

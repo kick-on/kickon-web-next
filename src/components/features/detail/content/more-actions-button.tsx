@@ -124,14 +124,13 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 
 			{showDeleteConfirm && (
 				<AlertModal
+					type="confirm"
 					description="게시글을 삭제할까요?"
 					onConfirm={handleConfirmDelete}
 					onCancel={() => setShowDeleteConfirm(false)}
 				/>
 			)}
-			{showShareAlert && (
-				<AlertModal type="info" description="URL이 복사되었습니다." onCancel={() => setShowShareAlert(false)} />
-			)}
+			{showShareAlert && <AlertModal description="URL이 복사되었습니다." onCancel={() => setShowShareAlert(false)} />}
 		</>
 	);
 };
