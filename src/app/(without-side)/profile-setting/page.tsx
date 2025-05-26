@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import AccountSelectBox from '@/components/common/account-selectbox';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
@@ -12,10 +12,13 @@ import { getUserInfo, updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { setCookie } from '@/lib/utils/cookie';
+import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
+import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
 export default function Page() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
+	const [profileImageUrl, setProfileImageUrl] = useState('');
 	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [nickname, setNickname] = useState<string | null>(null);
 	const [league, setLeague] = useState<LeagueDto>({
@@ -33,9 +36,36 @@ export default function Page() {
 
 	const router = useRouter();
 
+	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const isEditable = false;
 	const hasTeam = league.nameKr !== '응원팀이 없어요.';
 	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
+
+	// 이미지 업로드
+	const handleCameraButtonClick = async () => {
+		if (fileInputRef && fileInputRef.current) {
+			fileInputRef.current.click();
+		}
+	};
+
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (!file) return;
+
+		if (!file.type.startsWith('image/')) {
+			alert('파일 형식이 올바르지 않습니다.');
+			return;
+		}
+
+		const formattedFileName = addTimestampToFileName(file.name);
+		const presignedResponse = await getPresignedUrl(formattedFileName, false, 'profile-images');
+
+		if (presignedResponse) {
+			const { presignedUrl, s3Url } = presignedResponse.data;
+			await uploadToS3(presignedUrl, file);
+			setProfileImageUrl(s3Url);
+		}
+	};
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -60,12 +90,14 @@ export default function Page() {
 
 	const handleCompleteButtonClick = () => {
 		const body: UpdateUserInfoRequest = {
+			profileImageUrl,
 			nickname,
 			team: team.pk === -1 ? undefined : team.pk, // 응원하는 팀이 없는 경우 team을 undefined로
 			// league: league.pk, 현재 서버에서 league를 처리하지 않음
 		};
 
 		editUserInfo(body);
+		setCurrentUserInfo({ ...currentUserInfo, profileImageUrl });
 	};
 
 	const editUserInfo = async (body: UpdateUserInfoRequest) => {
@@ -90,6 +122,7 @@ export default function Page() {
 			if (typeof response !== 'string') {
 				setCurrentUserInfo(response.data);
 
+				setProfileImageUrl(response.data.profileImageUrl);
 				setNickname(response.data.nickname);
 				if (response.data.league) {
 					setLeague({
@@ -114,21 +147,22 @@ export default function Page() {
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
-			<div className="relative mb-7 w-[68px] h-[68px] rounded-full overflow-hidden">
+			<div className="relative mb-7 w-[68px] h-[68px]">
 				<Image
-					className="w-full h-full object-cover"
+					className="w-full h-full rounded-full object-cover"
 					width={68}
 					height={68}
-					src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
+					src={profileImageUrl || '/default-profile.svg'}
 					alt="프로필 이미지"
 				/>
-				{/* <button
-				onClick={()=>{}}
+				<button
+					onClick={handleCameraButtonClick}
 					className="absolute z-10 left-11 top-11
             bg-black-000 border border-black-200 rounded-full p-[0.3125rem]"
 				>
 					<Image width={18} height={18} src="/camera.svg" alt="프로필 사진 변경" />
-				</button> */}
+				</button>
+				<input ref={fileInputRef} type="file" onChange={handleFileChange} className="hidden" />
 			</div>
 
 			<div className="flex flex-col gap-6">

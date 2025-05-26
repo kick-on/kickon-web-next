@@ -10,6 +10,7 @@ export interface UpdatePrivacyRequest {
 
 // 유저 정보 수정
 export interface UpdateUserInfoRequest {
+	profileImageUrl: string;
 	nickname: string;
 	team?: number;
 	league?: number;

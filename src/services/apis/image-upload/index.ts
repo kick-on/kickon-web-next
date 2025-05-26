@@ -2,15 +2,19 @@ import { SERVER_URL } from '@/services/config/constants';
 import { PresignedUrlRequest, GetPresignedUrlResponse } from './dto';
 import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
 
-export async function getPresignedUrl(fileName: string, isNews: boolean): Promise<GetPresignedUrlResponse> {
+export async function getPresignedUrl(
+	fileName: string,
+	isNews: boolean,
+	type?: string,
+): Promise<GetPresignedUrlResponse> {
 	const timestampedFileName = addTimestampToFileName(fileName);
 
 	const requestBody: PresignedUrlRequest = {
-		type: isNews ? 'news-files' : 'board-files',
+		type: type ? type : isNews ? 'news-files' : 'board-files',
 		fileName: timestampedFileName,
 	};
 
-	const response = await fetch(`${SERVER_URL}/api/aws/presigned-url`, {
+	const response = await fetch(`${SERVER_URL}/aws/presigned-url`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
