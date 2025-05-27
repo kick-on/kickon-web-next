@@ -17,8 +17,8 @@ export default function NotFound() {
 	}, []);
 
 	return (
-		<div className="fixed top-0 left-0 z-1000 w-full h-full flex justify-center items-center bg-black-100">
-			<div className="flex flex-col items-center">
+		<div className="fixed top-0 left-0 z-1000 w-full h-full bg-black-100">
+			<div className="flex flex-col items-center mt-[10dvh]">
 				<div className="relative w-114 h-[20.4375rem] @mobile:w-70 @mobile:h-[12.5625rem] mb-[50px]">
 					<Image src={'/not-found.svg'} alt="404 페이지 아이콘" fill className="w-auto h-auto object-contain" />
 				</div>
