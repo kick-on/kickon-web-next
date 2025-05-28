@@ -20,10 +20,8 @@ const CommentInput = ({
 	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
 	const [content, setContent] = useState('');
-	const [, setCharCount] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [hasScroll] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
 
@@ -126,11 +124,9 @@ const CommentInput = ({
 			const inputText = inputRef.current.innerText;
 			const textWithoutMention = inputText.replace(`@${mentionNickname}`, '').trim();
 			setContent(textWithoutMention);
-			setCharCount(textWithoutMention.length);
 		} else {
 			const inputText = inputRef.current.innerText.trim();
 			setContent(inputText);
-			setCharCount(inputText.length);
 		}
 	};
 
@@ -184,9 +180,7 @@ const CommentInput = ({
 			}
 		>
 			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div
-				className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type !== 'comment' ? 'h-20' : 'h-26')}
-			>
+			<div className={clsx('flex @mobile:flex-col', type !== 'comment' ? 'h-20' : 'h-26')}>
 				<div
 					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
 						'pb-11.5 border border-black-200 h-[130px] @mobile:min-h-[178px]': type !== 'comment',
