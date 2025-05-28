@@ -212,7 +212,6 @@ function CommentSection({
 
 	const handleEditClick = (commentId: number) => {
 		if (editingCommentId && editingCommentId !== commentId) {
-			// 모달 띄우기
 			setPendingCommentId(commentId);
 			setShowConfirmModal(true);
 			return;

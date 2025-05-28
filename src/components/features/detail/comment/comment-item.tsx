@@ -74,7 +74,7 @@ function CommentItem({
 								<CommentMoreButton
 									commentId={content.pk}
 									onEditClick={(id) => {
-										onEditSubmit(id); // 상위로 전달
+										onEditSubmit(id);
 									}}
 								/>
 							</div>
