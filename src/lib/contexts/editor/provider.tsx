@@ -163,7 +163,11 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 
 		try {
 			// Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name, isNews);
+			const presignedResponse = await getPresignedUrl({
+				type: isNews ? 'news-files' : 'board-files',
+				fileName: file.name,
+			});
+
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			console.log('S3 업로드 요청:', presignedResponse);
@@ -211,7 +215,11 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 
 		try {
 			// Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name, isNews);
+			const presignedResponse = await getPresignedUrl({
+				type: isNews ? 'news-files' : 'board-files',
+				fileName: file.name,
+			});
+
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			// S3에 업로드
