@@ -12,6 +12,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentSectionProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import AlertModal from '../alert-modal';
 
 function CommentSection({
 	type,
@@ -31,6 +32,8 @@ function CommentSection({
 	const [replyingTo, setReplyingTo] = useState([]);
 	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null);
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false);
@@ -209,11 +212,12 @@ function CommentSection({
 
 	const handleEditClick = (commentId: number) => {
 		if (editingCommentId && editingCommentId !== commentId) {
-			const confirmChange = window.confirm('기존에 수정 중이던 내용은 사라집니다. 계속하시겠습니까?');
-			if (!confirmChange) return; // 취소 시 아무 것도 안 함
+			// 모달 띄우기
+			setPendingCommentId(commentId);
+			setShowConfirmModal(true);
+			return;
 		}
-
-		setEditingCommentId(commentId); // 새로운 댓글 수정 시작
+		setEditingCommentId(commentId);
 	};
 
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
@@ -296,6 +300,23 @@ function CommentSection({
 			)}
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
+			{showConfirmModal && (
+				<AlertModal
+					type="confirm"
+					description={`작성 중인 수정 사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
+					onCancel={() => {
+						setShowConfirmModal(false);
+						setPendingCommentId(null);
+					}}
+					onConfirm={() => {
+						if (pendingCommentId !== null) {
+							setEditingCommentId(pendingCommentId);
+						}
+						setShowConfirmModal(false);
+						setPendingCommentId(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 }
