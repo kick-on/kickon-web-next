@@ -31,7 +31,7 @@ function CommentItem({
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isMobile = useIsMobile();
-	const isMyComment = currentUserInfo.id === content.user.id;
+	const isMyComment = currentUserInfo?.id === content.user.id;
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);

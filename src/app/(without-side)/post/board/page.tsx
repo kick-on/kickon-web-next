@@ -39,9 +39,9 @@ export default function Page() {
 		...(currentUserInfo?.favoriteTeam?.pk
 			? [
 					{
-						label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
-						value: String(currentUserInfo.favoriteTeam.pk),
-						logo: currentUserInfo.favoriteTeam.logoUrl,
+						label: currentUserInfo?.favoriteTeam.nameKr || currentUserInfo?.favoriteTeam.nameEn || '내 팀',
+						value: String(currentUserInfo?.favoriteTeam.pk),
+						logo: currentUserInfo?.favoriteTeam.logoUrl,
 					},
 				]
 			: []),
