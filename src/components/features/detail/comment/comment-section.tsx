@@ -207,8 +207,13 @@ function CommentSection({
 		setReplyingTo((prev) => prev.filter((i) => i !== id));
 	};
 
-	const handleCommentEdit = () => {
-		console.log('수정');
+	const handleEditClick = (commentId: number) => {
+		if (editingCommentId && editingCommentId !== commentId) {
+			const confirmChange = window.confirm('기존에 수정 중이던 내용은 사라집니다. 계속하시겠습니까?');
+			if (!confirmChange) return; // 취소 시 아무 것도 안 함
+		}
+
+		setEditingCommentId(commentId); // 새로운 댓글 수정 시작
 	};
 
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
@@ -252,7 +257,7 @@ function CommentSection({
 								onCommentSubmit={handleCommentSubmit}
 								editingCommentId={editingCommentId}
 								setEditingCommentId={setEditingCommentId}
-								onEditSubmit={handleCommentEdit}
+								onEditSubmit={handleEditClick}
 							/>
 							{replyVisibilities[comment.pk] &&
 								comment.replies?.map((reply) => (
@@ -263,7 +268,7 @@ function CommentSection({
 										parentReply={comment.user.nickname}
 										{...commentItemProps}
 										onCommentSubmit={handleCommentSubmit}
-										onEditSubmit={handleCommentEdit}
+										onEditSubmit={handleEditClick}
 										editingCommentId={editingCommentId}
 										setEditingCommentId={setEditingCommentId}
 									/>

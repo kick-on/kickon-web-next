@@ -5,10 +5,11 @@ import { useEffect, useRef, useState } from 'react';
 import AlertModal from '../alert-modal';
 
 interface CommentMoreButtonProps {
-	onEditClick: () => void;
+	onEditClick: (commentId: number) => void;
+	commentId: number;
 }
 
-export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
+export function CommentMoreButton({ onEditClick, commentId }: CommentMoreButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -59,7 +60,7 @@ export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 						className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')}
 						onClick={() => {
 							setIsOpen(false);
-							onEditClick();
+							onEditClick(commentId);
 						}}
 					>
 						수정하기

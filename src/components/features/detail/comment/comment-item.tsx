@@ -40,7 +40,6 @@ function CommentItem({
 	const moreButtonRef = useRef(null);
 
 	const isEditing = editingCommentId === content.pk;
-	// 현재 코멘트가 수정하려고 하는 코멘트이면...! (editingCommentId를 상위에서 하나만 관리하고, 모든 CommentItem이 동일한 상태를 참조하게 하기. 한 번에 한 댓글만 수정하려면...)
 
 	return (
 		<div>
@@ -72,7 +71,12 @@ function CommentItem({
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
-								<CommentMoreButton onEditClick={() => setEditingCommentId(content.pk)} />
+								<CommentMoreButton
+									commentId={content.pk}
+									onEditClick={(id) => {
+										onEditSubmit(id); // 상위로 전달
+									}}
+								/>
 							</div>
 						)}
 					</div>
@@ -139,7 +143,7 @@ function CommentItem({
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
 								if (isEditing) {
-									onEditSubmit(isReply, content.pk);
+									onEditSubmit(content.pk, isReply);
 								} else {
 									onCommentSubmit(isReply, content.pk);
 								}
