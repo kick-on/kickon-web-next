@@ -1,5 +1,5 @@
-import { SERVER_URL } from '@/services/config/constants';
 import { NextRequest, NextResponse } from 'next/server';
+import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
 	const searchParams = req.nextUrl.searchParams;
@@ -8,7 +8,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 	const refreshToken = searchParams.get('refreshToken');
 	const { provider } = await params;
 
-	const redirectUrl = new URL(req.nextUrl.origin);
+	const redirectUrl = new URL(DOMAIN_URL);
 	const finalizePath = '/auth/finalize';
 
 	// 에러 처리

@@ -29,7 +29,7 @@ const AlertModal = ({
 		if (type === 'info' && onCancel) {
 			const timer = setTimeout(() => {
 				onCancel();
-			}, 1000);
+			}, 2000);
 			return () => clearTimeout(timer);
 		}
 
@@ -55,8 +55,14 @@ const AlertModal = ({
 				onClick={(e) => e.stopPropagation()}
 				className={clsx(
 					'flex flex-col justify-center bg-black-000 rounded-lg px-7 w-[344px] @mobile:w-77.75',
-					isMobile ? 'pt-[50px] pb-8 gap-[42px]' : 'pt-[68px] pb-[36px] gap-[54px]',
-				)}
+					type === 'info'
+						? isMobile
+							? 'p-[50px] gap-[42px]'
+							: 'p-[68px] gap-[54px]'
+						: isMobile
+							? 'pt-[50px] pb-8 gap-[42px]'
+							: 'pt-[68px] pb-[36px] gap-[54px]',
+				)} //type이 info인데, 모바일일 때와 아닐 때 / type이 info가 아닌데, 모바일일 때와 아닐 때
 			>
 				<p className="body2-semibold @mobile:text-18 text-center text-black-900">{description}</p>
 

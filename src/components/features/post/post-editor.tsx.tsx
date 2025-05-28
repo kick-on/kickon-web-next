@@ -31,7 +31,7 @@ const PostEditor = ({
 	editedBody: string;
 }) => {
 	return (
-		<EditorProvider setBody={setBody} isNews={isNews} initialBody={editedBody}>
+		<EditorProvider setBody={setBody} isNews={isNews} editedBody={editedBody}>
 			<input
 				placeholder="제목"
 				value={editedTitle ?? ''}

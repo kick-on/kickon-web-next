@@ -10,6 +10,10 @@ export async function fetcher<T>(body: ProxyParameter, revalidate?: number) {
 		next: { revalidate: revalidate ?? 0 }, // revalidate를 안 넘기면 캐싱 안 함
 	});
 
+	if (!response.ok) {
+		throw new Error(`${response.status}`);
+	}
+
 	const data: T = await response.json();
 	return data;
 }

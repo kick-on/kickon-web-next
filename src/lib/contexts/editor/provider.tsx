@@ -17,10 +17,10 @@ type EditorProviderProps = {
 	children: React.ReactNode;
 	setBody: (body: string) => void;
 	isNews: boolean;
-	initialBody: string;
+	editedBody: string;
 };
 
-export const EditorProvider = ({ children, setBody, isNews, initialBody }: EditorProviderProps) => {
+export const EditorProvider = ({ children, setBody, isNews, editedBody }: EditorProviderProps) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [showLinkInput, setShowLinkInput] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -50,7 +50,7 @@ export const EditorProvider = ({ children, setBody, isNews, initialBody }: Edito
 				},
 			}),
 		],
-		content: initialBody || '',
+		content: editedBody || '',
 		editorProps: {
 			attributes: {
 				class: 'focus:outline-none',
@@ -102,13 +102,10 @@ export const EditorProvider = ({ children, setBody, isNews, initialBody }: Edito
 	});
 
 	useEffect(() => {
-		if (editor && editor.isEditable && initialBody !== undefined && initialBody !== null) {
-			// 현재 내용과 초기값이 다를 때만 설정
-			if (editor.getHTML() !== initialBody) {
-				editor.commands.setContent(initialBody, false);
-			}
+		if (editor && editedBody !== undefined && editedBody !== null) {
+			editor.commands.setContent(editedBody);
 		}
-	}, [editor, initialBody]);
+	}, [editedBody, editor]);
 
 	const isValidUrl = (url: string) => {
 		try {
