@@ -176,11 +176,11 @@ const CommentInput = ({
 	return (
 		<div
 			className={
-				type !== 'comment' ? 'mt-5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
+				type === 'comment' ? 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5' : 'mt-5'
 			}
 		>
 			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div className={clsx('flex @mobile:flex-col', type !== 'comment' ? 'h-20' : 'h-26')}>
+			<div className={clsx('flex @mobile:flex-col', type === 'comment' ? 'h-26' : 'h-20')}>
 				<div
 					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
 						'pb-11.5 border border-black-200 h-[130px] @mobile:min-h-[178px]': type !== 'comment',
