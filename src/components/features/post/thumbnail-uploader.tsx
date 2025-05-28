@@ -24,11 +24,14 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 			img.onload = async () => {
 				setIsPortrait(img.height > img.width);
 
-				const presignedResponse = await getPresignedUrl(file.name, true);
+				const presignedResponse = await getPresignedUrl({
+					type: 'news-files',
+					fileName: file.name,
+				});
+
 				const { presignedUrl, s3Url } = presignedResponse.data;
 
 				await uploadToS3(presignedUrl, file);
-
 				onChange(s3Url);
 			};
 		} catch (error) {
