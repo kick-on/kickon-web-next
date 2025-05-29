@@ -6,6 +6,7 @@ export interface UserDto {
 	profileImageUrl: string;
 }
 
+// 댓글 조회
 export interface CommentDto {
 	pk: number;
 	contents: string;
@@ -15,6 +16,9 @@ export interface CommentDto {
 	replies: string[];
 	kicked: boolean;
 }
+
+// 댓글 조회 응답
+export type GetCommentsResponse = SuccessResponse<CommentDto[]>;
 
 // 댓글 킥 요청
 export interface PostCommentKickRequest {
@@ -29,5 +33,8 @@ export interface createNewReplyRequest {
 	contents: string;
 }
 
-// 댓글 조회 응답
-export type GetCommentsResponse = SuccessResponse<CommentDto[]>;
+// 댓글 수정 요청
+export interface patchReplyRequest {
+	contents: string;
+	usedImageKeys?: string[];
+}
