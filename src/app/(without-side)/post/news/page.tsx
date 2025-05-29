@@ -14,6 +14,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
+import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 
 export default function Page() {
 	const router = useRouter();
@@ -83,23 +84,29 @@ export default function Page() {
 		if (!currentUserInfo) {
 			return;
 		}
+		const usedImageKeysFromBody = extractImageFilenamesFromContent(body.trim()); // editor로부터 받아온 body에서 파일명 추출
+
+		console.log(selectedImage); // s3 url -> 여기에서 파일명 추출 필요
+		let thumbnailFilename = '';
+		if (selectedImage) {
+			thumbnailFilename = decodeURIComponent(selectedImage.split('/').pop() || '');
+		}
+
+		const usedImageKeys = [...usedImageKeysFromBody, ...(thumbnailFilename ? [thumbnailFilename] : [])];
+		console.log('usedImageKeys:', usedImageKeys); // 이미지 키 추출 확인
+
 		const requestBody: PostNewsContentsRequest = {
 			team: selectedTeam?.id || null,
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
 			category: selectedOption.value,
+			usedImageKeys,
 		};
 
 		try {
-			let response;
-			if (isEditMode) {
-				// response = await updateNewsContents(Number(editingPk), requestBody);
-				console.log('수정 api 호출해야 함');
-			} else {
-				response = await postNewContents(requestBody, true);
-				router.push(`/news/${response.data.pk}`); // 수정 api 엮고 if-else 문 밖으로 이동
-			}
+			const response = await postNewContents(requestBody, true);
+			router.push(`/news/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
 		}

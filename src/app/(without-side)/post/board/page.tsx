@@ -11,6 +11,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 
 export default function Page() {
 	const router = useRouter();
@@ -111,17 +112,19 @@ export default function Page() {
 		}
 		if (!isFormValid) return;
 
+		const usedImageKeys = extractImageFilenamesFromContent(body.trim());
+
 		const requestBody: PostNewsContentsRequest = {
 			team: selectedOption.value ? Number(selectedOption.value) : null,
 			title: title.trim(),
 			contents: body.trim(),
 			hasImage: hasImage,
+			usedImageKeys,
 		};
 
-		console.log(requestBody);
 		try {
 			const response = await postNewContents(requestBody);
-
+			console.log(requestBody);
 			router.push(`/board/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
