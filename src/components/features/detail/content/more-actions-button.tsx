@@ -7,6 +7,7 @@ import ReportModal from './report-modal';
 import EditIcon from '@/assets/edit.svg';
 import AlertModal from '../alert-modal';
 import { useRouter } from 'next/navigation';
+import { deleteDetailContent } from '@/services/apis/detail/actions';
 
 interface MoreActionsButtonProps {
 	type?: 'news' | 'board';
@@ -64,9 +65,10 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 		setShowDeleteConfirm(true);
 	};
 
-	const handleConfirmDelete = () => {
-		console.log('삭제.'); // api 호출
-		setShowDeleteConfirm(false); // 모달 닫고
+	const handleConfirmDelete = async () => {
+		const response = await deleteDetailContent(pk, type === 'news');
+		console.log(response); // 게시글 삭제 응답
+		setShowDeleteConfirm(false);
 		router.replace(`/${type}?q=전체`);
 	};
 

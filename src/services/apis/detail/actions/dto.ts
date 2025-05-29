@@ -4,3 +4,5 @@ export interface PostReportDetailRequest {
 	board?: number;
 	reason: string;
 }
+
+// 수정하기 요청
