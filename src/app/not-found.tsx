@@ -28,7 +28,8 @@ export default function NotFound() {
 				</span>
 				<button
 					onClick={() => router.replace('/')}
-					className="w-45 h-[50px] flex justify-center items-center bg-black-900 rounded-full button1-medium text-black-000"
+					className="shadow-kick-button w-45 h-[3.125rem] @mobile:w-[10.375rem] @mobile:h-[2.875rem] @mobile:text-14
+						flex justify-center items-center bg-black-900 rounded-full button1-medium text-black-000"
 				>
 					홈으로 이동하기
 				</button>
