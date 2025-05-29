@@ -52,7 +52,7 @@ function CommentSection({
 			if (!contentsId || contentsId < 1) return;
 			try {
 				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
-
+				console.log(response);
 				if (append) {
 					// 중복되지 않는 새 댓글만 추가
 					setComments((prev) => {
@@ -254,6 +254,7 @@ function CommentSection({
 					{comments.map((comment) => (
 						<div key={comment.pk}>
 							<CommentItem
+								key={comment.pk}
 								content={comment}
 								{...commentItemProps}
 								parentReply={comment.user.nickname}

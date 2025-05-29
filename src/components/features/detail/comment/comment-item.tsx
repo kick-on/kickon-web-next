@@ -40,6 +40,9 @@ function CommentItem({
 	const moreButtonRef = useRef(null);
 
 	const isEditing = editingCommentId === content.pk;
+	console.log('editingCommentId:', editingCommentId, typeof editingCommentId);
+	console.log('content.pk:', content.pk, typeof content.pk);
+	console.log(isEditing);
 
 	return (
 		<div>

@@ -26,6 +26,7 @@ const CommentInput = ({
 	const [hasNewLine, setHasNewLine] = useState(false);
 
 	const isMobile = useIsMobile();
+	console.log(type);
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -219,8 +220,9 @@ const CommentInput = ({
 							onClick={() => {
 								if (type === 'edit') {
 									console.log('수정 제출');
+								} else {
+									handleSubmit();
 								}
-								handleSubmit();
 							}}
 							disabled={isSubmitting || content.trim().length === 0}
 							className={clsx(
