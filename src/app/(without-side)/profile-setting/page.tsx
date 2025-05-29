@@ -12,7 +12,6 @@ import { getUserInfo, updateUserInfo } from '@/services/auth';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { setCookie } from '@/lib/utils/cookie';
-import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 
 export default function Page() {
@@ -57,8 +56,10 @@ export default function Page() {
 			return;
 		}
 
-		const formattedFileName = addTimestampToFileName(file.name);
-		const presignedResponse = await getPresignedUrl(formattedFileName, false, 'profile-images');
+		const presignedResponse = await getPresignedUrl({
+			type: 'profile-images',
+			fileName: file.name,
+		});
 
 		if (presignedResponse) {
 			const { presignedUrl, s3Url } = presignedResponse.data;
