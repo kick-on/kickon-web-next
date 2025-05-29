@@ -1,16 +1,17 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { PresignedUrlRequest, GetPresignedUrlResponse } from './dto';
-import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
+import { addTimestampToFileName } from '@/lib/utils/filenameUtils';
 
-export async function getPresignedUrl(
-	fileName: string,
-	isNews: boolean,
-	type?: string,
-): Promise<GetPresignedUrlResponse> {
+interface GetPresignedUrlParams {
+	type: 'news-files' | 'board-files' | 'comment-files' | 'profile-images'; // 추후 스웨거의 enum 확인
+	fileName: string;
+}
+
+export async function getPresignedUrl({ type, fileName }: GetPresignedUrlParams): Promise<GetPresignedUrlResponse> {
 	const timestampedFileName = addTimestampToFileName(fileName);
 
 	const requestBody: PresignedUrlRequest = {
-		type: type ? type : isNews ? 'news-files' : 'board-files',
+		type,
 		fileName: timestampedFileName,
 	};
 
@@ -24,7 +25,6 @@ export async function getPresignedUrl(
 
 	if (!response.ok) {
 		let errorText: string;
-
 		try {
 			errorText = await response.text();
 		} catch {
@@ -36,7 +36,6 @@ export async function getPresignedUrl(
 		throw new Error('presigned Url 요청 실패');
 	}
 
-	// ok일 때만 json() 호출
 	return await response.json();
 }
 

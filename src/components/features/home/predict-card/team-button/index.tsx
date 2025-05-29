@@ -181,7 +181,8 @@ export default function TeamButton({
 							'border-black-200': side === 'draw' && (!isFinished || (isFinished && isGameInProgress)),
 							'border-black-300': side === 'draw' && isFinished && !isGameInProgress,
 							[bgClass200(side)]: isFinished && !isGameInProgress && myGambleResult && sides[side].isActive,
-							[shadowClass300(side)]: sides[side].isActive && (isCompleted || isClicked),
+							[shadowClass300(side)]:
+								sides[side].isActive && (isCompleted || isClicked) && !(isFinished && isGameInProgress),
 							// 데스크톱 스타일
 							'px-4 rounded-l-lg': side === 'home' && isDesktop,
 							'px-4 rounded-r-lg': side === 'away' && isDesktop,
