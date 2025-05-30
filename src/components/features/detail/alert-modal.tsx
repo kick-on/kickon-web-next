@@ -63,7 +63,7 @@ const AlertModal = ({
 					'pt-[68px] pb-[36px] gap-[54px]': type !== 'info' && !isMobile,
 				})}
 			>
-				<p className="body2-semibold @mobile:text-18 text-center text-black-900">{description}</p>
+				<p className="body2-semibold @mobile:text-18 text-center text-black-900 whitespace-pre-line">{description}</p>
 
 				{type === 'alert' && (
 					<div className="button2-semibold @mobile:text-15 w-full flex justify-center">

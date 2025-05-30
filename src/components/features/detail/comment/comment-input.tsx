@@ -26,7 +26,6 @@ const CommentInput = ({
 	const [hasNewLine, setHasNewLine] = useState(false);
 
 	const isMobile = useIsMobile();
-	console.log(type);
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -157,13 +156,26 @@ const CommentInput = ({
 			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 
-		const response = await postCreateReply(contentType, requestBody);
-		console.log('작성한 댓글', requestBody, response);
+		try {
+			let response;
 
-		setContent('');
-		if (inputRef.current) inputRef.current.innerHTML = '';
-		setHasNewLine(false);
-		setIsSubmitting(false);
+			if (type === 'edit') {
+				// response = await putEditReply(contentType, contentsId, requestBody);
+				console.log('수정 제출');
+			} else {
+				response = await postCreateReply(contentType, requestBody);
+			}
+
+			console.log('댓글 응답', requestBody, response);
+			setContent('');
+			if (inputRef.current) inputRef.current.innerHTML = '';
+			setHasNewLine(false);
+		} catch (error) {
+			console.error('댓글 처리 중 오류', error);
+			alert('댓글 처리 중 오류가 발생했습니다.');
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	useEffect(insertMentionIfNeeded, [mentionNickname, type]);
@@ -218,11 +230,7 @@ const CommentInput = ({
 						)}
 						<button
 							onClick={() => {
-								if (type === 'edit') {
-									console.log('수정 제출');
-								} else {
-									handleSubmit();
-								}
+								handleSubmit();
 							}}
 							disabled={isSubmitting || content.trim().length === 0}
 							className={clsx(

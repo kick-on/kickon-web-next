@@ -11,13 +11,13 @@ import MobileLinkInput from './mobile-link-input';
 const MediaButtons = ({ mediaButtonRef }) => {
 	const isMobile = useIsMobile();
 	const {
-		showLinkInput,
-		setShowLinkInput,
+		isshowLinkInput,
+		setIsShowLinkInput,
 		linkUrl,
 		setLinkUrl,
 		handleInsertLink,
-		showYoutubeInput,
-		setShowYoutubeInput,
+		isshowYoutubeInput,
+		setIsShowYoutubeInput,
 		handleAddImage,
 		handleAddVideo,
 	} = useEditorContext();
@@ -27,8 +27,8 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			key: 'link',
 			Icon: LinkIcon,
 			onClick: () => {
-				if (showYoutubeInput) setShowYoutubeInput(false);
-				setShowLinkInput(!showLinkInput);
+				if (isshowYoutubeInput) setIsShowYoutubeInput(false);
+				setIsShowLinkInput(!isshowLinkInput);
 			},
 			isLabel: false,
 		},
@@ -36,8 +36,8 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			key: 'image',
 			icon: <Image src="/image.svg" alt="사진 붙여넣기" width={20} height={20} />,
 			onClick: () => {
-				if (showLinkInput) setShowLinkInput(false);
-				if (showYoutubeInput) setShowYoutubeInput(false);
+				if (isshowLinkInput) setIsShowLinkInput(false);
+				if (isshowYoutubeInput) setIsShowYoutubeInput(false);
 			},
 			onChange: handleAddImage,
 			accept: 'image/*',
@@ -47,7 +47,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			key: 'video',
 			Icon: VideoIcon,
 			onClick: () => {
-				if (showLinkInput) setShowLinkInput(false);
+				if (isshowLinkInput) setIsShowLinkInput(false);
 			},
 			onChange: handleAddVideo,
 			accept: 'video/*',
@@ -60,7 +60,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			{mediaButtons.map((btn) => {
 				// 링크 버튼은 버튼만 렌더링
 				if (btn.key === 'link') {
-					const isActive = showLinkInput;
+					const isActive = isshowLinkInput;
 
 					return (
 						<button
@@ -97,9 +97,9 @@ const MediaButtons = ({ mediaButtonRef }) => {
 			})}
 
 			{/*링크 input*/}
-			{showLinkInput &&
+			{isshowLinkInput &&
 				(isMobile ? (
-					<MobileLinkInput onClose={() => setShowLinkInput(false)} />
+					<MobileLinkInput onClose={() => setIsShowLinkInput(false)} />
 				) : (
 					<div className="absolute top-full left-0 mt-1 flex gap-0.5 h-10 z-50">
 						<input
@@ -115,7 +115,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 							onClick={() => {
 								if (!linkUrl) return;
 								handleInsertLink();
-								setShowLinkInput(false);
+								setIsShowLinkInput(false);
 								setLinkUrl('');
 							}}
 							disabled={!linkUrl}

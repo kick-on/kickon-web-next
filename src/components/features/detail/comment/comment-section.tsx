@@ -210,7 +210,8 @@ function CommentSection({
 		setReplyingTo((prev) => prev.filter((i) => i !== id));
 	};
 
-	const handleEditClick = (commentId: number) => {
+	// 수정 모드로 진입
+	const handleEnterEditMode = (commentId: number) => {
 		if (editingCommentId && editingCommentId !== commentId) {
 			setPendingCommentId(commentId);
 			setIsShowConfirmModal(true);
@@ -231,6 +232,10 @@ function CommentSection({
 		replyVisibilities,
 		isCommentAllowed,
 		contentsId,
+		onCommentSubmit: handleCommentSubmit,
+		onEnterEditMode: handleEnterEditMode,
+		editingCommentId,
+		setEditingCommentId,
 	};
 
 	return (
@@ -256,12 +261,8 @@ function CommentSection({
 							<CommentItem
 								key={comment.pk}
 								content={comment}
-								{...commentItemProps}
 								parentReply={comment.user.nickname}
-								onCommentSubmit={handleCommentSubmit}
-								editingCommentId={editingCommentId}
-								setEditingCommentId={setEditingCommentId}
-								onEditSubmit={handleEditClick}
+								{...commentItemProps}
 							/>
 							{replyVisibilities[comment.pk] &&
 								comment.replies?.map((reply) => (
@@ -271,10 +272,6 @@ function CommentSection({
 										isReply
 										parentReply={comment.user.nickname}
 										{...commentItemProps}
-										onCommentSubmit={handleCommentSubmit}
-										onEditSubmit={handleEditClick}
-										editingCommentId={editingCommentId}
-										setEditingCommentId={setEditingCommentId}
 									/>
 								))}
 						</div>
@@ -303,7 +300,7 @@ function CommentSection({
 			{isshowConfirmModal && (
 				<AlertModal
 					type="confirm"
-					description={`작성 중인 수정 사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
+					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
 					onCancel={() => {
 						setIsShowConfirmModal(false);
 						setPendingCommentId(null);

@@ -25,7 +25,7 @@ function CommentItem({
 	parentReply,
 	isReply = false,
 	onCommentSubmit,
-	onEditSubmit,
+	onEnterEditMode,
 	editingCommentId,
 	setEditingCommentId,
 }: CommentItemProps) {
@@ -73,7 +73,7 @@ function CommentItem({
 							<div ref={moreButtonRef} className="relative">
 								<CommentMoreButton
 									onEditClick={() => {
-										setEditingCommentId(content.pk);
+										onEnterEditMode(content.pk);
 									}}
 								/>
 							</div>
@@ -139,11 +139,7 @@ function CommentItem({
 							mentionNickname={isEditing ? undefined : content.user.nickname}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
-								if (isEditing) {
-									onEditSubmit(content.pk, isReply);
-								} else {
-									onCommentSubmit(isReply, content.pk);
-								}
+								onCommentSubmit(isReply, content.pk);
 							}}
 							onCommentCancel={() => {
 								if (isEditing) {
