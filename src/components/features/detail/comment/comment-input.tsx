@@ -1,7 +1,7 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { postCreateReply } from '@/services/apis/detail/comment';
+import { patchReply, postCreateReply } from '@/services/apis/detail/comment';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
@@ -12,6 +12,7 @@ const CommentInput = ({
 	mentionNickname,
 	contentsId,
 	parentReplyId,
+	editingCommentId,
 	contentType,
 	defaultContent,
 	onCommentSubmit,
@@ -156,12 +157,16 @@ const CommentInput = ({
 			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 
+		const editedRequestBody = {
+			contents: sanitizedContent,
+		};
+
 		try {
 			let response;
 
 			if (type === 'edit') {
-				// response = await putEditReply(contentType, contentsId, requestBody);
-				console.log('수정 제출');
+				response = await patchReply(contentType, editingCommentId, editedRequestBody);
+				console.log('댓글 수정 완료:', response);
 			} else {
 				response = await postCreateReply(contentType, requestBody);
 			}

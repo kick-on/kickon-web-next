@@ -37,6 +37,7 @@ export interface CommentInputProps {
 	type?: 'comment' | 'reply' | 'edit';
 	mentionNickname?: string;
 	parentReplyId?: number;
+	editingCommentId: number;
 	contentType: 'news' | 'board';
 	defaultContent?: string;
 	contentsId: number;

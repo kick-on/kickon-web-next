@@ -221,8 +221,6 @@ function CommentSection({
 	};
 	const handleDeleteComment = async (commentId: number, parentReplyId: number) => {
 		try {
-			console.log('내 아이디', commentId);
-			console.log('부모 댓글 id', parentReplyId);
 			const response = await deleteReply(commentId, type);
 			console.log('댓글 삭제', response);
 			if (response?.code === 'GET_SUCCESS') {
@@ -282,6 +280,7 @@ function CommentSection({
 				<CommentInput
 					contentType={type}
 					contentsId={contentsId}
+					editingCommentId={editingCommentId}
 					onCommentSubmit={(isReply) => handleCommentSubmit(isReply)}
 				/>
 			)}

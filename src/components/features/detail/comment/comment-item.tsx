@@ -142,12 +142,14 @@ function CommentItem({
 						<CommentInput
 							type={isEditing ? 'edit' : 'reply'}
 							contentsId={contentsId}
+							editingCommentId={editingCommentId}
 							parentReplyId={isEditing ? undefined : content.pk}
 							contentType={type}
 							mentionNickname={isEditing ? undefined : content.user.nickname}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
 								onCommentSubmit(isReply, content.pk);
+								setEditingCommentId(null);
 							}}
 							onCommentCancel={() => {
 								if (isEditing) {
