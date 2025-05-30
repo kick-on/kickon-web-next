@@ -139,7 +139,8 @@ export default function Page() {
 					onClick={() => {
 						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
 						if (confirmCancel) {
-							router.back();
+							const previousPage = sessionStorage.getItem('previousPage');
+							router.push(previousPage);
 						}
 					}}
 					className="w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
