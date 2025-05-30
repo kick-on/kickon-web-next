@@ -15,6 +15,7 @@ import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { categories } from '@/lib/constants/options';
 
 export default function Page() {
 	const router = useRouter();
@@ -41,6 +42,7 @@ export default function Page() {
 
 		try {
 			const parsedData = JSON.parse(storedData);
+			console.log('꺼내온 데이터', parsedData);
 			setTitle(parsedData.data.title || '');
 			setSelectedImage(parsedData.data.thumbnailUrl || '');
 			setBody(parsedData.data.content || '');
@@ -52,6 +54,15 @@ export default function Page() {
 					logo: parsedData.data.team.logoUrl || '',
 				});
 			}
+			const matchedOption = categories.find((opt) => opt.label === parsedData.data.category);
+			if (matchedOption) {
+				setSelectedOption(matchedOption);
+			} else {
+				setSelectedOption({
+					label: parsedData.data.category,
+					value: parsedData.data.category,
+				});
+			}
 		} catch (error) {
 			console.error('잘못된 데이터 형식:', error);
 		}
@@ -59,13 +70,15 @@ export default function Page() {
 
 	// isMobile이 null이 아니게 되면 label 설정
 	useEffect(() => {
+		if (isEditMode) return;
+
 		if (isMobile !== null) {
 			setSelectedOption({
 				label: isMobile ? '탭 선택' : '탭 선택하기',
 				value: '',
 			});
 		}
-	}, [isMobile]);
+	}, [isMobile, isEditMode]);
 
 	useEffect(() => {
 		if (hasShownAlert.current) return;
