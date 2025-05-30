@@ -38,7 +38,7 @@ const DetailPage = () => {
 	const isOurTeam = currentUserInfo?.favoriteTeam?.pk === contents?.data?.team?.pk;
 	const isCommentAllowed = isTeamNull || isOurTeam;
 
-	const [shouldCallApi, setShouldCallApi] = useState(false);
+	const [isshouldCallApi, setIsShouldCallApi] = useState(false);
 
 	useEffect(() => {
 		// (24시간 이내 열람한 게시글 id):(열람 시각) 쌍의 객체
@@ -58,7 +58,7 @@ const DetailPage = () => {
 
 		// 24시간이 지났거나, 처음 보는 글이면 API 호출
 		if (!lastViewed || now - lastViewed > POST_VIEW_EXPIRY) {
-			setShouldCallApi(true);
+			setIsShouldCallApi(true);
 			viewedPosts[id] = now;
 			setCookie('viewedPosts', JSON.stringify(viewedPosts), 60 * 60 * 24); // max-age(24시간) in seconds
 		}
@@ -77,7 +77,7 @@ const DetailPage = () => {
 				const serverViewCount = contentData.data.views;
 
 				// shouldCallApi -> true: 글을 처음 본 상태, 조회수 +1, false: 이미 본 적 있음
-				const clientViewCount = shouldCallApi ? serverViewCount + 1 : serverViewCount;
+				const clientViewCount = isshouldCallApi ? serverViewCount + 1 : serverViewCount;
 
 				const finalContents = {
 					...contentData,
@@ -101,12 +101,12 @@ const DetailPage = () => {
 		};
 
 		getDetailContentData();
-	}, [type, id, currentPage, router, isNews, shouldCallApi]);
+	}, [type, id, currentPage, router, isNews, isshouldCallApi]);
 
 	const viewSent = useRef(false);
 
 	useEffect(() => {
-		if (!contents || viewSent.current || !shouldCallApi) return; // 중복 호출 방지
+		if (!contents || viewSent.current || !isshouldCallApi) return; // 중복 호출 방지
 
 		PostContentView({
 			requestBody: { [type === 'news' ? 'news' : 'board']: id },
@@ -114,7 +114,7 @@ const DetailPage = () => {
 		}).then(console.log);
 
 		viewSent.current = true;
-	}, [contents, type, id, shouldCallApi]);
+	}, [contents, type, id, isshouldCallApi]);
 
 	return (
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">

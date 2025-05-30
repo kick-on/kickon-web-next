@@ -20,10 +20,8 @@ const CommentInput = ({
 	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
 	const [content, setContent] = useState('');
-	const [, setCharCount] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [hasScroll] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
 
@@ -126,11 +124,9 @@ const CommentInput = ({
 			const inputText = inputRef.current.innerText;
 			const textWithoutMention = inputText.replace(`@${mentionNickname}`, '').trim();
 			setContent(textWithoutMention);
-			setCharCount(textWithoutMention.length);
 		} else {
 			const inputText = inputRef.current.innerText.trim();
 			setContent(inputText);
-			setCharCount(inputText.length);
 		}
 	};
 
@@ -160,13 +156,26 @@ const CommentInput = ({
 			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 
-		const response = await postCreateReply(contentType, requestBody);
-		console.log('작성한 댓글', requestBody, response);
+		try {
+			let response;
 
-		setContent('');
-		if (inputRef.current) inputRef.current.innerHTML = '';
-		setHasNewLine(false);
-		setIsSubmitting(false);
+			if (type === 'edit') {
+				// response = await putEditReply(contentType, contentsId, requestBody);
+				console.log('수정 제출');
+			} else {
+				response = await postCreateReply(contentType, requestBody);
+			}
+
+			console.log('댓글 응답', requestBody, response);
+			setContent('');
+			if (inputRef.current) inputRef.current.innerHTML = '';
+			setHasNewLine(false);
+		} catch (error) {
+			console.error('댓글 처리 중 오류', error);
+			alert('댓글 처리 중 오류가 발생했습니다.');
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
 	useEffect(insertMentionIfNeeded, [mentionNickname, type]);
@@ -180,13 +189,11 @@ const CommentInput = ({
 	return (
 		<div
 			className={
-				type !== 'comment' ? 'mt-5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
+				type === 'comment' ? 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5' : 'mt-5'
 			}
 		>
 			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div
-				className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type !== 'comment' ? 'h-20' : 'h-26')}
-			>
+			<div className={clsx('flex @mobile:flex-col', type === 'comment' ? 'h-26' : 'h-20')}>
 				<div
 					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
 						'pb-11.5 border border-black-200 h-[130px] @mobile:min-h-[178px]': type !== 'comment',
@@ -223,9 +230,6 @@ const CommentInput = ({
 						)}
 						<button
 							onClick={() => {
-								if (type === 'edit') {
-									console.log('수정 제출');
-								}
 								handleSubmit();
 							}}
 							disabled={isSubmitting || content.trim().length === 0}

@@ -5,14 +5,14 @@ import { Editor } from '@tiptap/react';
 
 interface EditorContextProps {
 	editor: Editor | null;
-	showLinkInput: boolean;
-	setShowLinkInput: (val: boolean) => void;
+	isshowLinkInput: boolean;
+	setIsShowLinkInput: (val: boolean) => void;
 	linkUrl: string;
 	setLinkUrl: (val: string) => void;
 	handleInsertLink: () => void;
 
-	showYoutubeInput: boolean;
-	setShowYoutubeInput: (val: boolean) => void;
+	isshowYoutubeInput: boolean;
+	setIsShowYoutubeInput: (val: boolean) => void;
 	youtubeUrl: string;
 	setYoutubeUrl: (val: string) => void;
 
