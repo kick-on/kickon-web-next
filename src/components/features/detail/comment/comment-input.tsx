@@ -21,18 +21,20 @@ const CommentInput = ({
 	const isMobile = useIsMobile();
 	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
-	const [inputHeight, setInputHeight] = useState(() => {
-		if (type === 'comment') {
-			return isMobile ? 102 : 104;
-		} else {
-			return isMobile ? 92 : 102;
-		}
-	});
+	const [inputHeight, setInputHeight] = useState(0);
 	const [content, setContent] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
+
+	useEffect(() => {
+		if (type === 'comment') {
+			setInputHeight(isMobile ? 110 : 104);
+		} else {
+			setInputHeight(isMobile ? 92 : 102);
+		}
+	}, [isMobile, type]);
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -99,7 +101,7 @@ const CommentInput = ({
 		const newScrollHeight = el.scrollHeight;
 
 		if (type === 'comment') {
-			const baseHeight = isMobile ? 102 : 104;
+			const baseHeight = isMobile ? 110 : 104;
 			const maxHeight = isMobile ? 110 : 168;
 
 			const clampedHeight = Math.min(Math.max(baseHeight, newScrollHeight), maxHeight);
