@@ -18,9 +18,9 @@ interface MoreActionsButtonProps {
 const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMyContent = 'true' }) => {
 	const router = useRouter();
 	const [isOpen, setIsOpen] = useState(false);
-	const [isshowReportModal, setIsShowReportModal] = useState(false);
-	const [isshowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
-	const [isshowShareAlert, setIsShowShareAlert] = useState(false);
+	const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+	const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+	const [isShareAlertVisible, setIsShareAlertVisible] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -41,7 +41,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 	const handleShareButtonClick = async () => {
 		try {
 			await navigator.clipboard.writeText(window.location.href);
-			setIsShowShareAlert(true); // 성공 시 모달 표시
+			setIsShareAlertVisible(true); // 성공 시 모달 표시
 		} catch (err) {
 			console.error(err);
 			alert('URL 복사에 실패했습니다.');
@@ -51,7 +51,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 
 	const handleReportButtonClick = () => {
 		setIsOpen(false);
-		setIsShowReportModal(true);
+		setIsReportModalOpen(true);
 	};
 
 	const handleEditClick = () => {
@@ -61,12 +61,12 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 
 	const handleDeleteClick = () => {
 		setIsOpen(false);
-		setIsShowDeleteConfirm(true);
+		setIsDeleteConfirmOpen(true);
 	};
 
 	const handleConfirmDelete = () => {
 		console.log('삭제.'); // api 호출
-		setIsShowDeleteConfirm(false); // 모달 닫고
+		setIsDeleteConfirmOpen(false); // 모달 닫고
 		router.replace(`/${type}?q=전체`);
 	};
 
@@ -120,18 +120,18 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 				)}
 			</div>
 
-			{isshowReportModal && <ReportModal type={type} pk={pk} onClose={() => setIsShowReportModal(false)} />}
+			{isReportModalOpen && <ReportModal type={type} pk={pk} onClose={() => setIsReportModalOpen(false)} />}
 
-			{isshowDeleteConfirm && (
+			{isDeleteConfirmOpen && (
 				<AlertModal
 					type="confirm"
 					description="게시글을 삭제할까요?"
 					onConfirm={handleConfirmDelete}
-					onCancel={() => setIsShowDeleteConfirm(false)}
+					onCancel={() => setIsDeleteConfirmOpen(false)}
 				/>
 			)}
-			{isshowShareAlert && (
-				<AlertModal description="URL이 복사되었습니다." onCancel={() => setIsShowShareAlert(false)} />
+			{isShareAlertVisible && (
+				<AlertModal description="URL이 복사되었습니다." onCancel={() => setIsShareAlertVisible(false)} />
 			)}
 		</>
 	);

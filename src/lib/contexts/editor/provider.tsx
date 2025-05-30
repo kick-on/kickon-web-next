@@ -22,9 +22,9 @@ type EditorProviderProps = {
 
 export const EditorProvider = ({ children, setBody, isNews, editedBody }: EditorProviderProps) => {
 	const [linkUrl, setLinkUrl] = useState('');
-	const [isshowLinkInput, setIsShowLinkInput] = useState(false);
+	const [isLinkInputOpen, setIsLinkInputOpen] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
-	const [isshowYoutubeInput, setIsShowYoutubeInput] = useState(false);
+	const [isYoutubeInputOpen, setIsYoutubeInputOpen] = useState(false);
 
 	const editor = useEditor({
 		extensions: [
@@ -206,7 +206,7 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 			.createParagraphNear() // 커서 아래로 이동
 			.run();
 		setLinkUrl('');
-		setIsShowLinkInput(false);
+		setIsLinkInputOpen(false);
 	};
 
 	const handleAddVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,16 +252,16 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 		<EditorContext.Provider
 			value={{
 				editor,
-				isshowLinkInput,
-				setIsShowLinkInput,
+				isLinkInputOpen,
+				setIsLinkInputOpen,
 				linkUrl,
 				setLinkUrl,
 				handleInsertLink,
 				handleAddImage,
 				handleTextFormatToggle,
 				handleHeadingChange,
-				isshowYoutubeInput,
-				setIsShowYoutubeInput,
+				isYoutubeInputOpen,
+				setIsYoutubeInputOpen,
 				youtubeUrl,
 				setYoutubeUrl,
 				handleAddVideo,

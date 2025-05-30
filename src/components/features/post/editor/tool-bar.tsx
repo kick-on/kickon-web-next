@@ -21,12 +21,12 @@ export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-
 export default function Toolbar() {
 	const {
 		editor,
-		isshowLinkInput,
-		setIsShowLinkInput,
+		isLinkInputOpen,
+		setIsLinkInputOpen,
 		handleTextFormatToggle,
 		handleHeadingChange,
-		isshowYoutubeInput,
-		setIsShowYoutubeInput,
+		isYoutubeInputOpen,
+		setIsYoutubeInputOpen,
 	} = useEditorContext();
 	const isMobile = useIsMobile();
 	const [hasMounted, setHasMounted] = useState(false);
@@ -41,7 +41,7 @@ export default function Toolbar() {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 	const linkInputRef = useRef<HTMLDivElement>(null);
 	const youtubeInputRef = useRef<HTMLDivElement>(null);
-	const mediaButtonRef = isshowLinkInput ? linkInputRef : isshowYoutubeInput ? youtubeInputRef : null;
+	const mediaButtonRef = isLinkInputOpen ? linkInputRef : isYoutubeInputOpen ? youtubeInputRef : null;
 
 	const textFormatButtons = [
 		{ key: 'bold', Icon: BoldIcon },
@@ -101,16 +101,16 @@ export default function Toolbar() {
 			}
 			// Link Input
 			if (linkInputRef.current && !linkInputRef.current.contains(target)) {
-				setIsShowLinkInput(false);
+				setIsLinkInputOpen(false);
 			}
 			// Youtube Input
 			if (youtubeInputRef.current && !youtubeInputRef.current.contains(target)) {
-				setIsShowYoutubeInput(false);
+				setIsYoutubeInputOpen(false);
 			}
 		};
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
-	}, [setIsShowLinkInput, setIsShowYoutubeInput]);
+	}, [setIsLinkInputOpen, setIsYoutubeInputOpen]);
 
 	if (!hasMounted) return null;
 

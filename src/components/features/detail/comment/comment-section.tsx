@@ -32,7 +32,7 @@ function CommentSection({
 	const [replyingTo, setReplyingTo] = useState([]);
 	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [isshowConfirmModal, setIsShowConfirmModal] = useState(false);
+	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null);
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
@@ -214,7 +214,7 @@ function CommentSection({
 	const handleEnterEditMode = (commentId: number) => {
 		if (editingCommentId && editingCommentId !== commentId) {
 			setPendingCommentId(commentId);
-			setIsShowConfirmModal(true);
+			setIsConfirmModalOpen(true);
 			return;
 		}
 		setEditingCommentId(commentId);
@@ -297,19 +297,19 @@ function CommentSection({
 			)}
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
-			{isshowConfirmModal && (
+			{isConfirmModalOpen && (
 				<AlertModal
 					type="confirm"
 					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
 					onCancel={() => {
-						setIsShowConfirmModal(false);
+						setIsConfirmModalOpen(false);
 						setPendingCommentId(null);
 					}}
 					onConfirm={() => {
 						if (pendingCommentId !== null) {
 							setEditingCommentId(pendingCommentId);
 						}
-						setIsShowConfirmModal(false);
+						setIsConfirmModalOpen(false);
 						setPendingCommentId(null);
 					}}
 				/>
