@@ -10,14 +10,14 @@ interface CommentMoreButtonProps {
 
 export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
-	const [isshowDeleteConfirm, setIsShowDeleteConfirm] = useState(false);
+	const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
 	const menuRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	const handleDeleteClick = () => {
 		setIsOpen(false);
-		setIsShowDeleteConfirm(true);
+		setIsDeleteConfirmOpen(true);
 	};
 
 	useEffect(() => {
@@ -69,8 +69,8 @@ export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 					</button>
 				</div>
 			)}
-			{isshowDeleteConfirm && (
-				<AlertModal type="confirm" description="댓글을 삭제할까요?" onCancel={() => setIsShowDeleteConfirm(false)} />
+			{isDeleteConfirmOpen && (
+				<AlertModal type="confirm" description="댓글을 삭제할까요?" onCancel={() => setIsDeleteConfirmOpen(false)} />
 			)}
 		</div>
 	);
