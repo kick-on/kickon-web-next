@@ -146,7 +146,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
 			<div
-				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube"
+				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap"
 				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 			/>
 

@@ -81,10 +81,10 @@ function CommentItem({
 						)}
 					</div>
 					{/* 본문 */}
-					<p className="body5-regular text-black-900 mt-3 mb-3.5">
+					<div className="body5-regular text-black-900 mt-3 mb-3.5 whitespace-pre-line">
 						{isReply && <span className="text-[#890f0e] mr-1">@{parentReply}</span>}
 						{content.contents}
-					</p>
+					</div>
 					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
 					<div className="flex justify-between items-center gap-3.5">
 						<div className="flex flex-col gap-3.5">
