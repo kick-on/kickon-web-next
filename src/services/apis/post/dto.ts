@@ -1,5 +1,5 @@
 // 게시글 생성 요청
-export interface PostNewsContentsRequest {
+export interface PostContentsRequest {
 	team: number;
 	title: string;
 	contents: string;

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { PostNewsContentsRequest } from '@/services/apis/post/dto';
+import { PostContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/auth';
@@ -95,7 +95,7 @@ export default function Page() {
 		const usedImageKeys = [...usedImageKeysFromBody, ...(thumbnailFilename ? [thumbnailFilename] : [])];
 		console.log('usedImageKeys:', usedImageKeys); // 이미지 키 추출 확인
 
-		const requestBody: PostNewsContentsRequest = {
+		const requestBody: PostContentsRequest = {
 			team: selectedTeam?.id || null,
 			title: title.trim(),
 			contents: body.trim(),

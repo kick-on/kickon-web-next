@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { PostNewsContentsRequest } from '@/services/apis/post/dto';
+import { PostContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
@@ -12,6 +12,7 @@ import { getUserInfo } from '@/services/auth';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { patchDetailContent } from '@/services/apis/detail/actions';
 
 export default function Page() {
 	const router = useRouter();
@@ -114,20 +115,35 @@ export default function Page() {
 
 		const usedImageKeys = extractImageFilenamesFromContent(body.trim());
 
-		const requestBody: PostNewsContentsRequest = {
-			team: selectedOption.value ? Number(selectedOption.value) : null,
-			title: title.trim(),
-			contents: body.trim(),
-			hasImage: hasImage,
-			usedImageKeys,
-		};
+		if (isEditMode) {
+			const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
+			const contentPk = parsedData.data.pk;
+			const teamValue = selectedOption.value;
+			const parsedTeam = teamValue !== '' ? Number(teamValue) : null;
 
-		try {
-			const response = await postNewContents(requestBody);
-			console.log(requestBody);
+			const patchBody: Partial<PostContentsRequest> = {
+				title: title.trim(),
+				contents: body.trim(),
+				hasImage,
+				usedImageKeys,
+				team: parsedTeam,
+			};
+			console.log(patchBody);
+			const response = await patchDetailContent(contentPk, false, patchBody);
+			console.log('수정 성공', response);
+			router.replace(`/board/${contentPk}`);
+		} else {
+			const postBody: PostContentsRequest = {
+				title: title.trim(),
+				contents: body.trim(),
+				hasImage,
+				usedImageKeys,
+				team: selectedOption.value ? Number(selectedOption.value) : null,
+			};
+
+			console.log(postBody);
+			const response = await postNewContents(postBody);
 			router.push(`/board/${response.data.pk}`);
-		} catch (error) {
-			console.error('게시글 작성 실패:', error);
 		}
 	};
 

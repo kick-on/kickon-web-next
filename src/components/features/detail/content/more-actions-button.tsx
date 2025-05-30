@@ -58,7 +58,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 	const handleEditClick = () => {
 		setIsOpen(false);
 		router.push(`/post/${type}?edit=true`);
-	}; // boolean 값을 넘기는 것으로 수정
+	};
 
 	const handleDeleteClick = () => {
 		setIsOpen(false);
