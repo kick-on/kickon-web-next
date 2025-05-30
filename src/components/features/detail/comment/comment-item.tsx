@@ -9,7 +9,6 @@ import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-
 function CommentItem({
 	content,
 	type,
@@ -24,8 +23,10 @@ function CommentItem({
 	contentsId,
 	parentReply,
 	isReply = false,
+	parentReplyId,
 	onCommentSubmit,
 	onEnterEditMode,
+	onDeleteComment,
 	editingCommentId,
 	setEditingCommentId,
 }: CommentItemProps) {
@@ -72,6 +73,13 @@ function CommentItem({
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
 								<CommentMoreButton
+									onDeleteClick={() => {
+										if (isReply) {
+											onDeleteComment(content.pk, parentReplyId);
+										} else {
+											onDeleteComment(content.pk);
+										}
+									}}
 									onEditClick={() => {
 										onEnterEditMode(content.pk);
 									}}

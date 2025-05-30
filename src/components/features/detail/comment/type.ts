@@ -23,9 +23,11 @@ export interface CommentItemProps {
 	isCommentAllowed: boolean;
 	contentsId: number;
 	parentReply?: string;
+	parentReplyId?: number;
 	isReply?: boolean;
 	onCommentSubmit: (isReply: boolean, pk?: number) => void;
 	onEnterEditMode: (commentId: number, isReply?: boolean) => void;
+	onDeleteComment: (commentId: number, parentReplyId?: number) => void;
 	editingCommentId?: number;
 	setEditingCommentId?: (id: number | null) => void;
 }

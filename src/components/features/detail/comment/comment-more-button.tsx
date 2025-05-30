@@ -6,9 +6,10 @@ import AlertModal from '../alert-modal';
 
 interface CommentMoreButtonProps {
 	onEditClick: () => void;
+	onDeleteClick: () => void;
 }
 
-export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
+export function CommentMoreButton({ onEditClick, onDeleteClick }: CommentMoreButtonProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
 
@@ -16,8 +17,14 @@ export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
 	const handleDeleteClick = () => {
-		setIsOpen(false);
-		setIsDeleteConfirmOpen(true);
+		setIsOpen(false); // 메뉴 닫기
+		setIsDeleteConfirmOpen(true); // 모달 열기
+	};
+
+	// 확인 누를 때 실행될 함수
+	const handleConfirmDelete = () => {
+		onDeleteClick(); // 삭제
+		setIsDeleteConfirmOpen(false); // 모달 닫기
 	};
 
 	useEffect(() => {
@@ -70,7 +77,12 @@ export function CommentMoreButton({ onEditClick }: CommentMoreButtonProps) {
 				</div>
 			)}
 			{isDeleteConfirmOpen && (
-				<AlertModal type="confirm" description="댓글을 삭제할까요?" onCancel={() => setIsDeleteConfirmOpen(false)} />
+				<AlertModal
+					type="confirm"
+					description="댓글을 삭제할까요?"
+					onConfirm={handleConfirmDelete}
+					onCancel={() => setIsDeleteConfirmOpen(false)}
+				/>
 			)}
 		</div>
 	);
