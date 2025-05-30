@@ -77,7 +77,7 @@ function CommentItem({
 								<CommentMoreButton
 									commentId={content.pk}
 									onEditClick={(id) => {
-										onEditSubmit(id);
+										setEditingCommentId(id);
 									}}
 								/>
 							</div>
