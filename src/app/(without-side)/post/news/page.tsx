@@ -44,6 +44,14 @@ export default function Page() {
 			setTitle(parsedData.data.title || '');
 			setSelectedImage(parsedData.data.thumbnailUrl || '');
 			setBody(parsedData.data.content || '');
+
+			if (parsedData.data.team) {
+				setSelectedTeam({
+					id: parsedData.data.team.pk,
+					name: parsedData.data.team.nameKr || parsedData.data.team.nameEn || '팀명 없음',
+					logo: parsedData.data.team.logoUrl || '',
+				});
+			}
 		} catch (error) {
 			console.error('잘못된 데이터 형식:', error);
 		}

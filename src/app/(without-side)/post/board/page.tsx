@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
@@ -21,38 +21,24 @@ export default function Page() {
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
-	useEffect(() => {
-		if (!isEditMode) return;
-
-		const storedData = sessionStorage.getItem('detailContent');
-		if (!storedData) return;
-
-		try {
-			const parsedData = JSON.parse(storedData);
-			setTitle(parsedData.data.title || '');
-			setBody(parsedData.data.content || '');
-		} catch (error) {
-			console.error('잘못된 데이터 형식:', error);
-		}
-	}, [isEditMode]);
-
-	const teams: { label: string; value: string; logo?: string }[] = [
-		{ label: '전체', value: '전체' },
-		...(currentUserInfo?.favoriteTeam?.pk
-			? [
-					{
-						label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
-						value: String(currentUserInfo.favoriteTeam.pk),
-						logo: currentUserInfo.favoriteTeam.logoUrl,
-					},
-				]
-			: []),
-	];
-
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string; logo?: string }>({
 		label: '탭 선택하기',
 		value: '',
 	});
+	const teams = useMemo(() => {
+		return [
+			{ label: '전체', value: '전체' },
+			...(currentUserInfo?.favoriteTeam?.pk
+				? [
+						{
+							label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
+							value: String(currentUserInfo.favoriteTeam.pk),
+							logo: currentUserInfo.favoriteTeam.logoUrl,
+						},
+					]
+				: []),
+		];
+	}, [currentUserInfo]);
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
@@ -71,6 +57,26 @@ export default function Page() {
 	};
 
 	const hasShownAlert = useRef(false);
+
+	useEffect(() => {
+		if (!isEditMode || teams.length === 0) return;
+
+		const storedData = sessionStorage.getItem('detailContent');
+		if (!storedData) return;
+
+		try {
+			const parsedData = JSON.parse(storedData);
+			setTitle(parsedData.data.title || '');
+			setBody(parsedData.data.content || '');
+
+			const teamValue = String(parsedData.data.team?.pk);
+			const matchedOption = teams.find((option) => option.value === teamValue);
+
+			setSelectedOption(matchedOption ?? { label: '탭 선택하기', value: '' });
+		} catch (error) {
+			console.error('잘못된 데이터 형식:', error);
+		}
+	}, [isEditMode, teams]);
 
 	useEffect(() => {
 		if (hasShownAlert.current) return;
@@ -118,15 +124,17 @@ export default function Page() {
 		if (isEditMode) {
 			const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
 			const contentPk = parsedData.data.pk;
-			const teamValue = selectedOption.value;
-			const parsedTeam = teamValue !== '' ? Number(teamValue) : null;
+			const teamValue =
+				selectedOption.value === '' || selectedOption.value === '전체' ? null : Number(selectedOption.value);
+
+			const finalTeam = isNaN(teamValue) ? null : teamValue;
 
 			const patchBody: Partial<PostContentsRequest> = {
 				title: title.trim(),
 				contents: body.trim(),
 				hasImage,
 				usedImageKeys,
-				team: parsedTeam,
+				team: finalTeam,
 			};
 			console.log(patchBody);
 			const response = await patchDetailContent(contentPk, false, patchBody);
