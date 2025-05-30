@@ -40,9 +40,6 @@ function CommentItem({
 	const moreButtonRef = useRef(null);
 
 	const isEditing = editingCommentId === content.pk;
-	console.log('editingCommentId:', editingCommentId, typeof editingCommentId);
-	console.log('content.pk:', content.pk, typeof content.pk);
-	console.log(isEditing);
 
 	return (
 		<div>
@@ -83,13 +80,11 @@ function CommentItem({
 							</div>
 						)}
 					</div>
-
 					{/* 본문 */}
 					<p className="body5-regular text-black-900 mt-3 mb-3.5">
 						{isReply && <span className="text-[#890f0e] mr-1">@{parentReply}</span>}
 						{content.contents}
 					</p>
-
 					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
 					<div className="flex justify-between items-center gap-3.5">
 						<div className="flex flex-col gap-3.5">
