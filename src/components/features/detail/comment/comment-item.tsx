@@ -72,9 +72,8 @@ function CommentItem({
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
 								<CommentMoreButton
-									commentId={content.pk}
-									onEditClick={(id) => {
-										setEditingCommentId(id);
+									onEditClick={() => {
+										setEditingCommentId(content.pk);
 									}}
 								/>
 							</div>
