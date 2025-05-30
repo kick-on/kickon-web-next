@@ -8,7 +8,7 @@ import { formatStringToDate } from '@/lib/utils/formatStringToDate';
 import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
-import useIsMobile from '@/lib/hooks/useIsMobile';
+
 function CommentItem({
 	content,
 	type,
@@ -31,7 +31,6 @@ function CommentItem({
 	setEditingCommentId,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const isMobile = useIsMobile();
 	const isMyComment = currentUserInfo?.id === content.user.id;
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
@@ -44,13 +43,7 @@ function CommentItem({
 
 	return (
 		<div>
-			<div
-				className={clsx(
-					'flex items-start mt-5 pb-3.5',
-					isReply && 'pl-10',
-					(isReplyInputOpen || isEditing) && (isMobile ? 'pb-30' : 'pb-15'),
-				)}
-			>
+			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
