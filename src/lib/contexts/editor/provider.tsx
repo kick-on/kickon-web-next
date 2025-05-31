@@ -8,7 +8,7 @@ import HorizontalRule from '@tiptap/extension-horizontal-rule';
 import Image from '@tiptap/extension-image';
 import Youtube from '@tiptap/extension-youtube';
 import FontFamily from '@tiptap/extension-font-family';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
@@ -17,13 +17,14 @@ type EditorProviderProps = {
 	children: React.ReactNode;
 	setBody: (body: string) => void;
 	isNews: boolean;
+	editedBody: string;
 };
 
-export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProps) => {
+export const EditorProvider = ({ children, setBody, isNews, editedBody }: EditorProviderProps) => {
 	const [linkUrl, setLinkUrl] = useState('');
-	const [showLinkInput, setShowLinkInput] = useState(false);
+	const [isLinkInputOpen, setIsLinkInputOpen] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
-	const [showYoutubeInput, setShowYoutubeInput] = useState(false);
+	const [isYoutubeInputOpen, setIsYoutubeInputOpen] = useState(false);
 
 	const editor = useEditor({
 		extensions: [
@@ -45,14 +46,33 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 			}),
 			Youtube.configure({
 				HTMLAttributes: {
-					class: 'responsive-youtube',
+					class: 'responsive-youtube iframe',
 				},
 			}),
 		],
-		content: '',
+		content: editedBody || '',
 		editorProps: {
 			attributes: {
 				class: 'focus:outline-none',
+			},
+			handleKeyDown(view, event) {
+				// 엔터 키로 다음 단락 넘어가면 텍스트 포맷 초기화
+				if (event.key === 'Enter') {
+					const { state, dispatch } = view;
+					const { tr } = state;
+
+					const marksToRemove = ['bold', 'italic', 'underline'];
+
+					marksToRemove.forEach((mark) => {
+						const type = state.schema.marks[mark];
+						if (type) {
+							tr.removeStoredMark(type);
+						}
+					});
+
+					dispatch(tr);
+				}
+				return false;
 			},
 		},
 		onUpdate: ({ editor }) => {
@@ -62,9 +82,33 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 				.replace(/\u00A0/g, ' ')
 				.trim();
 			const isTrulyEmpty = text === '';
-			setBody(isTrulyEmpty ? '' : html);
+
+			if (isTrulyEmpty) {
+				// 본문 내용이 모두 지워지면 텍스트 포맷 초기화
+				const { state, view } = editor;
+				const { tr } = state;
+				['bold', 'italic', 'underline'].forEach((mark) => {
+					const type = state.schema.marks[mark];
+					if (type) {
+						tr.removeStoredMark(type);
+					}
+				});
+				view.dispatch(tr);
+				setBody('');
+			} else {
+				setBody(html);
+			}
 		},
 	});
+
+	useEffect(() => {
+		if (editor && editor.isEditable && editedBody !== undefined && editedBody !== null) {
+			// 현재 내용과 초기값이 다를 때만 설정
+			if (editor.getHTML() !== editedBody) {
+				editor.commands.setContent(editedBody, false);
+			}
+		}
+	}, [editor, editedBody]);
 
 	const isValidUrl = (url: string) => {
 		try {
@@ -122,7 +166,11 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 
 		try {
 			// Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name, isNews);
+			const presignedResponse = await getPresignedUrl({
+				type: isNews ? 'news-files' : 'board-files',
+				fileName: file.name,
+			});
+
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			console.log('S3 업로드 요청:', presignedResponse);
@@ -161,7 +209,7 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 			.createParagraphNear() // 커서 아래로 이동
 			.run();
 		setLinkUrl('');
-		setShowLinkInput(false);
+		setIsLinkInputOpen(false);
 	};
 
 	const handleAddVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,7 +218,11 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 
 		try {
 			// Presigned URL 요청
-			const presignedResponse = await getPresignedUrl(file.name, isNews);
+			const presignedResponse = await getPresignedUrl({
+				type: isNews ? 'news-files' : 'board-files',
+				fileName: file.name,
+			});
+
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
 			// S3에 업로드
@@ -203,16 +255,16 @@ export const EditorProvider = ({ children, setBody, isNews }: EditorProviderProp
 		<EditorContext.Provider
 			value={{
 				editor,
-				showLinkInput,
-				setShowLinkInput,
+				isLinkInputOpen,
+				setIsLinkInputOpen,
 				linkUrl,
 				setLinkUrl,
 				handleInsertLink,
 				handleAddImage,
 				handleTextFormatToggle,
 				handleHeadingChange,
-				showYoutubeInput,
-				setShowYoutubeInput,
+				isYoutubeInputOpen,
+				setIsYoutubeInputOpen,
 				youtubeUrl,
 				setYoutubeUrl,
 				handleAddVideo,

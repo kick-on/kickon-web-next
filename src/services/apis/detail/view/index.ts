@@ -1,6 +1,6 @@
 import { EmptySuccessResponse } from '@/services/config/dto';
 import { PostContentViewRequest } from './dto';
-import axiosInstance from '@/services/config/axiosInstance';
+import { fetcher } from '@/lib/server/fetcher';
 
 interface PostContentViewProps {
 	requestBody: PostContentViewRequest;
@@ -14,7 +14,7 @@ export const PostContentView = async ({
 	try {
 		const endpoint = isNews ? '/api/news-view-history' : '/api/board-view-history';
 
-		const response = await axiosInstance.post<EmptySuccessResponse>(endpoint, requestBody);
+		const response = await fetcher<EmptySuccessResponse>({ method: 'POST', url: endpoint, body: requestBody });
 
 		return response;
 	} catch (error) {

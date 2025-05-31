@@ -15,9 +15,9 @@ export default function LoginModal({ onClose }) {
 	};
 
 	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
-		router.push(
-			`${SERVER_URL}/oauth2/authorization/${provider}?state=${DOMAIN_URL || 'http://localhost:3000'}/login/${provider}`,
-		);
+		// api route 호출
+		const redirectUrl = `${DOMAIN_URL || 'http://localhost:3000'}/api/auth/${provider}/callback`;
+		router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=${redirectUrl}`);
 	};
 
 	useEffect(() => {

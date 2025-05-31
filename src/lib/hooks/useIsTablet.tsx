@@ -1,24 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { UAParser } from 'ua-parser-js';
 
 export default function useIsTablet() {
-	const [isTablet, setIsTablet] = useState<boolean>(() =>
-		typeof window !== 'undefined' ? window.innerWidth <= 1440 : false,
-	);
+	const [isTablet, setIsTablet] = useState<boolean | null>(null);
 
 	useEffect(() => {
-		const handleResize = () => {
-			setIsTablet(window.innerWidth <= 1440);
-		};
-
-		window.addEventListener('resize', handleResize);
-		// 초기에도 한번 체크
-		handleResize();
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		};
+		const device = UAParser().device;
+		setIsTablet(device.type === 'tablet');
 	}, []);
 
 	return isTablet;

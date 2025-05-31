@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
-import useIsTablet from '@/lib/hooks/useIsTablet';
+import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
 import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
@@ -15,7 +15,7 @@ export default function Navbar() {
 	const isHome = pathname === '/';
 
 	const isMobile = useIsMobile();
-	const isTablet = useIsTablet();
+	const isTabletWidth = useIsTabletWidth();
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
 	const navButtonProps: NavButtonProps[] = [
@@ -33,7 +33,7 @@ export default function Navbar() {
 	return isMobile ? (
 		<MobileNavbar />
 	) : (
-		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-10 transition-colors ease-out`}>
+		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-30 transition-colors ease-out`}>
 			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] min-w-[48rem] max-[1094px]:w-[48rem] max-[1440px]:w-[62.5rem] m-auto">
 				<nav className="flex items-center">
 					<Image
@@ -46,7 +46,7 @@ export default function Navbar() {
 					/>
 					{navButtonProps.map((props) => props && <NavButton key={props.href} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTablet) && <LoginButton />}
+				{(pathname === '/signup' || isTabletWidth) && <LoginButton />}
 			</div>
 		</header>
 	);

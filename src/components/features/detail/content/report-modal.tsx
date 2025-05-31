@@ -1,9 +1,9 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { reportOptions } from '@/lib/constants/options';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
-import { postReportDetail } from '@/services/apis/detail/report';
-import { PostReportDetailRequest } from '@/services/apis/detail/report/dto';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { postReportDetail } from '@/services/apis/detail/actions';
+import { PostReportDetailRequest } from '@/services/apis/detail/actions/dto';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -13,6 +13,7 @@ interface ReportModalProps {
 	pk: number;
 }
 export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
+	const currentUserInfo = useCurrentUserInfoStore();
 	const [selectedReason, setSelectedReason] = useState<string | null>(null);
 	const [otherReason, setOtherReason] = useState('');
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -26,7 +27,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 	const isSubmitEnabled = selectedReason !== null && (selectedReason !== '기타' || otherReason.trim().length > 0);
 
 	const handleSubmitButtonClick = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}

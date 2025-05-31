@@ -9,7 +9,13 @@ export const getActualSeasonRanking = async (league: number): Promise<GetActualS
 	const response = await fetch(`${SERVER_URL}/api/actual-season-ranking?${params}`);
 
 	if (!response.ok) {
-		console.error(await response.json());
+		let errorPayload: unknown;
+		try {
+			errorPayload = await response.json();
+		} catch (error) {
+			errorPayload = error; // response가 json이 아닌 경우 방어
+		}
+		console.error('경기 랭킹 조회 실패:', errorPayload);
 		return null;
 	}
 	return response.json();
@@ -23,7 +29,13 @@ export const getGambleSeasonRanking = async (league: number): Promise<GetGambleS
 	const response = await fetch(`${SERVER_URL}/api/gamble-season-ranking?${params.toString()}`);
 
 	if (!response.ok) {
-		console.error(await response.json());
+		let errorPayload: unknown;
+		try {
+			errorPayload = await response.json();
+		} catch (error) {
+			errorPayload = error; // response가 json이 아닌 경우 방어
+		}
+		console.error('예측 랭킹 조회 실패:', errorPayload);
 		return null;
 	}
 	return response.json();

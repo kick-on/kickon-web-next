@@ -23,16 +23,23 @@ export interface CommentItemProps {
 	isCommentAllowed: boolean;
 	contentsId: number;
 	parentReply?: string;
+	parentReplyId?: number;
 	isReply?: boolean;
 	onCommentSubmit: (isReply: boolean, pk?: number) => void;
+	onEnterEditMode: (commentId: number, isReply?: boolean) => void;
+	onDeleteComment: (commentId: number, parentReplyId?: number) => void;
+	editingCommentId?: number;
+	setEditingCommentId?: (id: number | null) => void;
 }
 
 // 코멘트 입력 props
 export interface CommentInputProps {
-	type?: 'comment' | 'reply';
+	type?: 'comment' | 'reply' | 'edit';
 	mentionNickname?: string;
 	parentReplyId?: number;
+	editingCommentId: number;
 	contentType: 'news' | 'board';
+	defaultContent?: string;
 	contentsId: number;
 	onCommentSubmit?: (isReply: boolean) => void;
 	onCommentCancel?: () => void;

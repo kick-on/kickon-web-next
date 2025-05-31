@@ -36,10 +36,15 @@ export default function Profile() {
 
 	const handleLogoutButtonClick = () => {
 		setIsLoggedIn(false);
-		clearCurrentUserInfo();
-		localStorage.clear();
+		fetch('/api/logout', { method: 'POST' }).then(() => {
+			clearCurrentUserInfo(); // 클라이언트 user info 초기화
+			router.push('/');
+		});
+	};
 
-		router.push('/');
+	const handleProfileSettingButtonClick = () => {
+		const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+		sessionStorage.setItem('previousPage', fullUrl);
 	};
 
 	useEffect(() => {
@@ -110,7 +115,11 @@ export default function Profile() {
 											/>
 										)}
 									</div>
-									<Link href="/profile-setting" className="flex gap-0.5 button6-regular text-black-700 underline">
+									<Link
+										onClick={handleProfileSettingButtonClick}
+										href="/profile-setting"
+										className="flex gap-0.5 button6-regular text-black-700 underline"
+									>
 										프로필 설정
 										<Image width={10} height={10} src="/chevron/right-gray.svg" alt="바로가기" />
 									</Link>

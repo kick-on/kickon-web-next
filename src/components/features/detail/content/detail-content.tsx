@@ -1,15 +1,16 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import LoginModal from '@/components/common/login-modal/login-modal';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
+	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isNews = type === 'news';
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
 	const [isLiked, setIsLiked] = useState(data.isKicked);
@@ -49,7 +50,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 	const handleLikeButtonClick = async () => {
 		// 비회원인 경우 클릭 차단 & 알림 표시
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
@@ -68,6 +69,8 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			alert('네트워크 오류가 발생했습니다. 다시 시도해주세요.');
 		}
 	};
+
+	const isMyContents = data?.user?.id === currentUserInfo?.id;
 
 	return (
 		<div className="px-4">
@@ -136,14 +139,16 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
 						<span>{data.replies}</span>
 					</div>
-					<MoreActionsButton type={type} pk={data.pk} />
+					<Suspense>
+						<MoreActionsButton type={type} pk={data.pk} isMyContent={isMyContents} />
+					</Suspense>
 				</div>
 			</div>
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
 			<div
-				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube"
+				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap"
 				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 			/>
 

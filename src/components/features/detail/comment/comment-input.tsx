@@ -1,34 +1,40 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
-import { postCreateReply } from '@/services/apis/detail/comment';
+import { patchReply, postCreateReply } from '@/services/apis/detail/comment';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 const CommentInput = ({
 	type = 'comment',
 	mentionNickname,
 	contentsId,
 	parentReplyId,
+	editingCommentId,
 	contentType,
+	defaultContent,
 	onCommentSubmit,
 	onCommentCancel,
 }: CommentInputProps) => {
+	const isMobile = useIsMobile();
+	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
-	const thumbRef = useRef<HTMLDivElement>(null);
-
-	const [scrollThumbHeight, setScrollThumbHeight] = useState(0);
+	const [inputHeight, setInputHeight] = useState(0);
 	const [content, setContent] = useState('');
-	const [, setCharCount] = useState(0);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [hasScroll, setHasScroll] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
 
-	const isMobile = useIsMobile();
+	useEffect(() => {
+		if (type === 'comment') {
+			setInputHeight(isMobile ? 110 : 104);
+		} else {
+			setInputHeight(isMobile ? 92 : 102);
+		}
+	}, [isMobile, type]);
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -47,30 +53,6 @@ const CommentInput = ({
 				sel?.addRange(range);
 			}
 		}
-	};
-
-	// 커스텀 스크롤 위치 및 thumb 계산
-	const updateScrollThumb = () => {
-		const input = inputRef.current;
-		const thumb = thumbRef.current;
-		if (!input || !thumb) return;
-
-		const { scrollTop, scrollHeight, clientHeight } = input;
-		if (scrollHeight <= clientHeight) {
-			thumb.style.opacity = '0';
-			setHasScroll(false);
-			return;
-		}
-
-		thumb.style.opacity = '1';
-		setHasScroll(true);
-
-		const thumbHeight = (clientHeight / scrollHeight) * clientHeight;
-		const scrollRatio = scrollTop / (scrollHeight - clientHeight);
-		const thumbTop = scrollRatio * (clientHeight - thumbHeight);
-
-		setScrollThumbHeight(thumbHeight);
-		thumb.style.transform = `translateY(${thumbTop}px)`;
 	};
 
 	// 키 이벤트 처리 (엔터, 백스페이스 등)
@@ -115,6 +97,22 @@ const CommentInput = ({
 
 		const html = inputRef.current.innerHTML;
 		setHasNewLine(/<br>|<div>/i.test(html));
+		const el = inputRef.current;
+		const newScrollHeight = el.scrollHeight;
+
+		if (type === 'comment') {
+			const baseHeight = isMobile ? 110 : 104;
+			const maxHeight = isMobile ? 110 : 168;
+
+			const clampedHeight = Math.min(Math.max(baseHeight, newScrollHeight), maxHeight);
+			setInputHeight(clampedHeight);
+		} else {
+			const baseHeight = isMobile ? 92 : 102;
+			const maxHeight = isMobile ? 182 : 174;
+
+			const clampedHeight = Math.min(Math.max(baseHeight, newScrollHeight), maxHeight);
+			setInputHeight(clampedHeight);
+		}
 
 		if (hasMention) {
 			const mentionEl = inputRef.current.querySelector('.mention');
@@ -151,17 +149,15 @@ const CommentInput = ({
 			const inputText = inputRef.current.innerText;
 			const textWithoutMention = inputText.replace(`@${mentionNickname}`, '').trim();
 			setContent(textWithoutMention);
-			setCharCount(textWithoutMention.length);
 		} else {
 			const inputText = inputRef.current.innerText.trim();
 			setContent(inputText);
-			setCharCount(inputText.length);
 		}
 	};
 
 	// 댓글 등록
 	const handleSubmit = async () => {
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
@@ -185,44 +181,54 @@ const CommentInput = ({
 			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 
-		const response = await postCreateReply(contentType, requestBody);
-		console.log('작성한 댓글', requestBody, response);
+		const editedRequestBody = {
+			contents: sanitizedContent,
+		};
 
-		setContent('');
-		if (inputRef.current) inputRef.current.innerHTML = '';
-		setHasNewLine(false);
-		setIsSubmitting(false);
+		try {
+			let response;
+
+			if (type === 'edit') {
+				response = await patchReply(contentType, editingCommentId, editedRequestBody);
+				console.log('댓글 수정 완료:', response);
+			} else {
+				response = await postCreateReply(contentType, requestBody);
+			}
+
+			console.log('댓글 응답', requestBody, response);
+			setContent('');
+			if (inputRef.current) inputRef.current.innerHTML = '';
+			setHasNewLine(false);
+		} catch (error) {
+			console.error('댓글 처리 중 오류', error);
+			alert('댓글 처리 중 오류가 발생했습니다.');
+		} finally {
+			setIsSubmitting(false);
+		}
 	};
 
-	// useEffect 모음
 	useEffect(insertMentionIfNeeded, [mentionNickname, type]);
-
 	useEffect(() => {
-		updateScrollThumb();
-		const input = inputRef.current;
-		input?.addEventListener('scroll', updateScrollThumb);
-		window.addEventListener('resize', updateScrollThumb);
-		return () => {
-			input?.removeEventListener('scroll', updateScrollThumb);
-			window.removeEventListener('resize', updateScrollThumb);
-		};
-	}, []);
+		if (type === 'edit' && defaultContent && inputRef.current) {
+			inputRef.current.innerText = defaultContent;
+			setContent(defaultContent);
+		}
+	}, [type, defaultContent]);
 
 	return (
 		<div
 			className={
-				type === 'reply' ? 'mt-3.5' : 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5'
+				type === 'comment' ? 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5' : 'mt-5'
 			}
 		>
-			{type !== 'reply' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div className={clsx('flex @mobile:flex-col', hasScroll ? 'gap-1' : 'gap-0', type === 'reply' ? 'h-20' : 'h-26')}>
+			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
+			<div className="flex @mobile:flex-col h-full">
 				<div
-					className={clsx(
-						'relative w-full h-full bg-black-000 rounded-l-[0.625rem] resize-none @mobile:h-[110px] @mobile:rounded-[0.625rem]',
-						{
-							'@mobile:pb-10.5 @mobile:border @mobile:border-black-200': type === 'reply',
-						},
-					)}
+					className={clsx('relative w-full bg-black-000 rounded-[0.625rem] resize-none', {
+						'pb-11.5': type !== 'comment' || !isMobile,
+						'border border-black-200': type !== 'comment',
+					})}
+					style={{ height: `${inputHeight}px` }}
 				>
 					<div
 						ref={inputRef}
@@ -230,75 +236,43 @@ const CommentInput = ({
 						onInput={handleInput}
 						onKeyDown={handleKeyDown}
 						className={clsx(
-							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left',
-							type === 'reply' ? '@mobile:h-[70px]' : '@mobile:h-[110px]',
+							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar',
 							{
 								'empty-placeholder': content.trim().length === 0,
-								'overflow-y-scroll custom-scrollbar': isMobile,
-								'overflow-y-scroll no-scrollbar': !isMobile,
 							},
 						)}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
 
-					{isMobile && (
-						<div
-							className={clsx(
-								'flex gap-4 justify-end',
-								type === 'reply' ? 'absolute bottom-3 right-4' : '@mobile:mt-3',
-							)}
-						>
+					<div
+						className={clsx(
+							'flex gap-4 justify-end @mobile:mt-3',
+							(type !== 'comment' || !isMobile) && 'absolute bottom-4 right-4',
+						)}
+					>
+						{type !== 'comment' && (
 							<button
-								onClick={
-									type === 'reply'
-										? onCommentCancel
-										: () => {
-												setContent('');
-												if (inputRef.current) {
-													inputRef.current.innerHTML = '';
-												}
-											}
-								}
+								onClick={onCommentCancel}
 								className="w-10.5 h-7 text-black-700 button5-medium rounded-[0.375rem] bg-black-300"
 							>
 								취소
 							</button>
-							<button
-								onClick={handleSubmit}
-								disabled={isSubmitting || content.trim().length === 0}
-								className={clsx(
-									'w-10.5 h-7 text-black-000 button5-medium rounded-[0.375rem]',
-									isSubmitting || content.trim().length === 0 ? 'bg-black-600' : 'bg-primary-900',
-								)}
-							>
-								등록
-							</button>
-						</div>
-					)}
+						)}
+						<button
+							onClick={() => {
+								handleSubmit();
+							}}
+							disabled={isSubmitting || content.trim().length === 0}
+							className={clsx(
+								'w-10.5 h-7 text-black-000 button5-medium rounded-[0.375rem]',
+								isSubmitting || content.trim().length === 0 ? 'bg-black-400' : 'bg-primary-900',
+							)}
+						>
+							{type === 'edit' ? '수정' : '등록'}
+						</button>
+					</div>
 				</div>
-
-				{/* 스크롤바 */}
-				<div
-					className={`@mobile:hidden relative ${hasScroll ? 'w-[0.5rem]' : 'w-0'} rounded-md overflow-hidden ${type === 'reply' ? 'bg-black-200 h-20' : 'h-full'}`}
-				>
-					<div
-						ref={thumbRef}
-						className="absolute top-0 left-0 w-full bg-black-500 rounded-full"
-						style={{ height: `${scrollThumbHeight}px` }}
-					/>
-				</div>
-				{/* 등록 버튼 */}
-				<button
-					onClick={handleSubmit}
-					disabled={isSubmitting || content.trim().length === 0}
-					className={clsx(
-						'w-13.5 h-full border border-black-300 text-black-000 button3-regular rounded-r-[0.625rem] @mobile:hidden',
-						isSubmitting || content.trim().length === 0 ? 'bg-black-400' : 'bg-primary-900',
-					)}
-				>
-					등록
-				</button>
 			</div>
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}

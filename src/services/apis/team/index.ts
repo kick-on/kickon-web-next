@@ -1,7 +1,7 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { GetTeamResponse } from './dto';
 
-// 승부예측 순위 조회
+// 팀 조회
 export const getTeam = async (league?: number, keyword?: string): Promise<GetTeamResponse | null> => {
 	const params = new URLSearchParams();
 
@@ -16,7 +16,13 @@ export const getTeam = async (league?: number, keyword?: string): Promise<GetTea
 	const response = await fetch(`${SERVER_URL}/api/team?${params.toString()}`);
 
 	if (!response.ok) {
-		console.error(await response.json());
+		let errorPayload: unknown;
+		try {
+			errorPayload = await response.json();
+		} catch (error) {
+			errorPayload = error; // response가 json이 아닌 경우 방어
+		}
+		console.error('팀 조회 실패:', errorPayload);
 		return null;
 	}
 	return response.json();

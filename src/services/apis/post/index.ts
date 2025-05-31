@@ -1,17 +1,12 @@
-import axiosInstance from '@/services/config/axiosInstance';
-import { PostNewsContentsRequest } from './dto';
+import { PostContentsRequest } from './dto';
 import { GetDetailResponse } from '../detail/dto';
+import { fetcher } from '@/lib/server/fetcher';
 
-export async function postNewContents(
-	data: PostNewsContentsRequest,
-	isNews: boolean = false,
-): Promise<GetDetailResponse> {
+export async function postNewContents(data: PostContentsRequest, isNews: boolean = false): Promise<GetDetailResponse> {
 	try {
 		const endpoint = isNews ? '/api/news' : '/api/board';
-
-		console.log(data);
-
-		const response = await axiosInstance.post<GetDetailResponse>(endpoint, data);
+		console.log(endpoint);
+		const response = await fetcher<GetDetailResponse>({ method: 'POST', url: endpoint, body: data });
 
 		return response;
 	} catch (error) {

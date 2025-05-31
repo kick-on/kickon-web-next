@@ -3,15 +3,16 @@
 import { useCallback, useEffect, useState } from 'react';
 import CommentInput from './comment-input';
 import CommentItem from './comment-item';
-import { getCommentList, postCommentKick } from '@/services/apis/detail/comment';
+import { deleteReply, getCommentList, postCommentKick } from '@/services/apis/detail/comment';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
 import LoginModal from '@/components/common/login-modal/login-modal';
-import { getAccessToken, getRefreshToken } from '@/lib/utils/getAccessToken';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentSectionProps } from './type';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import AlertModal from '../alert-modal';
 
 function CommentSection({
 	type,
@@ -20,6 +21,7 @@ function CommentSection({
 	totalreplies = 0,
 	setTotalReplies,
 }: CommentSectionProps) {
+	const currentUserInfo = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const isNews = type === 'news';
@@ -30,10 +32,11 @@ function CommentSection({
 	const [replyingTo, setReplyingTo] = useState([]);
 	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null);
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false);
-	// 로드된 페이지들을 추적하는 상태 추가
 	const [loadedPages, setLoadedPages] = useState([1]);
 
 	// 현재 페이지 추출
@@ -42,12 +45,14 @@ function CommentSection({
 
 	const commentsPerPage = 10;
 
+	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+
 	const fetchComments = useCallback(
 		async (page: number, append = false) => {
 			if (!contentsId || contentsId < 1) return;
 			try {
 				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
-
+				console.log('댓글 리스트', response);
 				if (append) {
 					// 중복되지 않는 새 댓글만 추가
 					setComments((prev) => {
@@ -159,7 +164,7 @@ function CommentSection({
 	// 좋아요 토글
 	const toggleCommentLike = async (commentId: number) => {
 		// 로그인 안 되어 있으면 모달 열기
-		if (!getAccessToken() || !getRefreshToken()) {
+		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
@@ -205,6 +210,51 @@ function CommentSection({
 		setReplyingTo((prev) => prev.filter((i) => i !== id));
 	};
 
+	// 수정 모드로 진입
+	const handleEnterEditMode = (commentId: number) => {
+		if (editingCommentId && editingCommentId !== commentId) {
+			setPendingCommentId(commentId);
+			setIsConfirmModalOpen(true);
+			return;
+		}
+		setEditingCommentId(commentId);
+	};
+	const handleDeleteComment = async (commentId: number, parentReplyId: number) => {
+		try {
+			const response = await deleteReply(commentId, type);
+			console.log('댓글 삭제', response);
+			if (response?.code === 'GET_SUCCESS') {
+				// 삭제 성공 시, 상태 업데이트
+				if (parentReplyId) {
+					// 대댓글 삭제
+					setComments((prev) =>
+						prev.map((comment) =>
+							comment.pk === parentReplyId
+								? {
+										...comment,
+										replies: comment.replies?.filter((reply) => reply.pk !== commentId),
+									}
+								: comment,
+						),
+					);
+				} else {
+					// 댓글 삭제
+					setComments((prev) => prev.filter((comment) => comment.pk !== commentId));
+				}
+				setTotalReplies(totalreplies - 1);
+
+				// 만약 현재 수정 중이던 댓글을 삭제했다면, 수정 상태도 초기화
+				if (editingCommentId === commentId) {
+					setEditingCommentId(null);
+				}
+			} else {
+				console.error('댓글 삭제 실패', response);
+			}
+		} catch (error) {
+			console.error('댓글 삭제 중 오류 발생', error);
+		}
+	};
+
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {
 		type,
@@ -217,6 +267,11 @@ function CommentSection({
 		replyVisibilities,
 		isCommentAllowed,
 		contentsId,
+		onCommentSubmit: handleCommentSubmit,
+		onEnterEditMode: handleEnterEditMode,
+		onDeleteComment: handleDeleteComment,
+		editingCommentId,
+		setEditingCommentId,
 	};
 
 	return (
@@ -225,11 +280,12 @@ function CommentSection({
 				<CommentInput
 					contentType={type}
 					contentsId={contentsId}
+					editingCommentId={editingCommentId}
 					onCommentSubmit={(isReply) => handleCommentSubmit(isReply)}
 				/>
 			)}
 
-			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-300 px-4 py-3">
+			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-200 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개
 			</p>
 
@@ -240,10 +296,10 @@ function CommentSection({
 					{comments.map((comment) => (
 						<div key={comment.pk}>
 							<CommentItem
+								key={comment.pk}
 								content={comment}
-								{...commentItemProps}
 								parentReply={comment.user.nickname}
-								onCommentSubmit={handleCommentSubmit}
+								{...commentItemProps}
 							/>
 							{replyVisibilities[comment.pk] &&
 								comment.replies?.map((reply) => (
@@ -252,8 +308,8 @@ function CommentSection({
 										content={reply}
 										isReply
 										parentReply={comment.user.nickname}
+										parentReplyId={comment.pk}
 										{...commentItemProps}
-										onCommentSubmit={handleCommentSubmit}
 									/>
 								))}
 						</div>
@@ -279,6 +335,23 @@ function CommentSection({
 			)}
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
+			{isConfirmModalOpen && (
+				<AlertModal
+					type="confirm"
+					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
+					onCancel={() => {
+						setIsConfirmModalOpen(false);
+						setPendingCommentId(null);
+					}}
+					onConfirm={() => {
+						if (pendingCommentId !== null) {
+							setEditingCommentId(pendingCommentId);
+						}
+						setIsConfirmModalOpen(false);
+						setPendingCommentId(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 }

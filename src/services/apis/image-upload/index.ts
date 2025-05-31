@@ -1,16 +1,21 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { PresignedUrlRequest, GetPresignedUrlResponse } from './dto';
-import { addTimestampToFileName } from '@/lib/utils/addTimestampToFileName';
+import { addTimestampToFileName } from '@/lib/utils/filenameUtils';
 
-export async function getPresignedUrl(fileName: string, isNews: boolean): Promise<GetPresignedUrlResponse> {
+interface GetPresignedUrlParams {
+	type: 'news-files' | 'board-files' | 'comment-files' | 'profile-images'; // 추후 스웨거의 enum 확인
+	fileName: string;
+}
+
+export async function getPresignedUrl({ type, fileName }: GetPresignedUrlParams): Promise<GetPresignedUrlResponse> {
 	const timestampedFileName = addTimestampToFileName(fileName);
 
 	const requestBody: PresignedUrlRequest = {
-		type: isNews ? 'news-files' : 'board-files',
+		type,
 		fileName: timestampedFileName,
 	};
 
-	const response = await fetch(`${SERVER_URL}/api/aws/presigned-url`, {
+	const response = await fetch(`${SERVER_URL}/aws/presigned-url`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -19,13 +24,19 @@ export async function getPresignedUrl(fileName: string, isNews: boolean): Promis
 	});
 
 	if (!response.ok) {
-		const errorText = await response.text();
+		let errorText: string;
+		try {
+			errorText = await response.text();
+		} catch {
+			errorText = '응답 본문 파싱 실패';
+		}
+
 		console.error('presigned Url 요청 실패 - 응답 상태:', response.status, response.statusText);
 		console.error('서버 응답 본문:', errorText);
 		throw new Error('presigned Url 요청 실패');
 	}
 
-	return response.json();
+	return await response.json();
 }
 
 export async function uploadToS3(presignedUrl: string, file: File): Promise<void> {

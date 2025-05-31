@@ -1,12 +1,13 @@
-import axiosInstance from '@/services/config/axiosInstance';
 import { GetUserPointRankingResponse } from './dto';
 import { FailResponse } from '@/services/config/dto';
+import { fetcher } from '@/lib/server/fetcher';
 
 export const getUserPointRanking = async () => {
 	try {
-		const response = await axiosInstance.get<GetUserPointRankingResponse | FailResponse>(
-			'/api/user-point-event/ranking',
-		);
+		const response = await fetcher<GetUserPointRankingResponse | FailResponse>({
+			method: 'GET',
+			url: '/api/user-point-event/ranking',
+		});
 
 		if (!response.code.split('_').includes('SUCCESS')) {
 			console.error(response);

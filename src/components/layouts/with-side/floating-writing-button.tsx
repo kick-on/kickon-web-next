@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import Image from 'next/image';
+import EditIcon from '@/assets/edit.svg';
 
 const FloatingWritingButton = () => {
 	const router = useRouter();
@@ -35,7 +35,7 @@ const FloatingWritingButton = () => {
 				desktop:hover:w-[20.125rem] desktop:hover:pl-[3.75rem] @mobile:mr-[1px]"
 			>
 				<div className="flex items-center gap-2 px-[15px] w-full">
-					<Image src="/edit.svg" alt="아이콘" width={28} height={28} className="min-w-7" />
+					<EditIcon alt="아이콘" width={28} height={28} className="min-w-7 stroke-black-000" />
 					<span className="button2-semibold whitespace-nowrap opacity-0 desktop:group-hover:opacity-100 transition-opacity">
 						새로운 글 작성하기
 					</span>
