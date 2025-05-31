@@ -8,7 +8,6 @@ import { formatStringToDate } from '@/lib/utils/formatStringToDate';
 import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
-import useIsMobile from '@/lib/hooks/useIsMobile';
 
 function CommentItem({
 	content,
@@ -24,13 +23,14 @@ function CommentItem({
 	contentsId,
 	parentReply,
 	isReply = false,
+	parentReplyId,
 	onCommentSubmit,
 	onEnterEditMode,
+	onDeleteComment,
 	editingCommentId,
 	setEditingCommentId,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const isMobile = useIsMobile();
 	const isMyComment = currentUserInfo?.id === content.user.id;
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
@@ -43,13 +43,7 @@ function CommentItem({
 
 	return (
 		<div>
-			<div
-				className={clsx(
-					'flex items-start mt-5 pb-3.5',
-					isReply && 'pl-10',
-					(isReplyInputOpen || isEditing) && (isMobile ? 'pb-30' : 'pb-15'),
-				)}
-			>
+			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
@@ -72,6 +66,13 @@ function CommentItem({
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
 								<CommentMoreButton
+									onDeleteClick={() => {
+										if (isReply) {
+											onDeleteComment(content.pk, parentReplyId);
+										} else {
+											onDeleteComment(content.pk);
+										}
+									}}
 									onEditClick={() => {
 										onEnterEditMode(content.pk);
 									}}
@@ -80,10 +81,10 @@ function CommentItem({
 						)}
 					</div>
 					{/* 본문 */}
-					<p className="body5-regular text-black-900 mt-3 mb-3.5">
+					<div className="body5-regular text-black-900 mt-3 mb-3.5 whitespace-pre-line">
 						{isReply && <span className="text-[#890f0e] mr-1">@{parentReply}</span>}
 						{content.contents}
-					</p>
+					</div>
 					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
 					<div className="flex justify-between items-center gap-3.5">
 						<div className="flex flex-col gap-3.5">
@@ -134,12 +135,14 @@ function CommentItem({
 						<CommentInput
 							type={isEditing ? 'edit' : 'reply'}
 							contentsId={contentsId}
+							editingCommentId={editingCommentId}
 							parentReplyId={isEditing ? undefined : content.pk}
 							contentType={type}
 							mentionNickname={isEditing ? undefined : content.user.nickname}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
 								onCommentSubmit(isReply, content.pk);
+								setEditingCommentId(null);
 							}}
 							onCommentCancel={() => {
 								if (isEditing) {

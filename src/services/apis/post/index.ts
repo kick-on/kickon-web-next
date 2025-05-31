@@ -8,6 +8,7 @@ export async function postNewContents(
 ): Promise<GetDetailResponse> {
 	try {
 		const endpoint = isNews ? '/api/news' : '/api/board';
+		console.log(endpoint);
 		const response = await fetcher<GetDetailResponse>({ method: 'POST', url: endpoint, body: data });
 
 		return response;
