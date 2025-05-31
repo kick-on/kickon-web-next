@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react';
 
-export default function useIsTablet() {
-	const [isTablet, setIsTablet] = useState<boolean>(() =>
+export default function useIsTabletWidth() {
+	const [isTabletWidth, setIsTabletWidth] = useState<boolean>(() =>
 		typeof window !== 'undefined' ? window.innerWidth <= 1440 : false,
 	);
 
 	useEffect(() => {
 		const handleResize = () => {
-			setIsTablet(window.innerWidth <= 1440);
+			setIsTabletWidth(window.innerWidth <= 1440);
 		};
 
 		window.addEventListener('resize', handleResize);
@@ -21,5 +21,5 @@ export default function useIsTablet() {
 		};
 	}, []);
 
-	return isTablet;
+	return isTabletWidth;
 }
