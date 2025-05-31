@@ -1,11 +1,8 @@
-import { PostNewsContentsRequest } from './dto';
+import { PostContentsRequest } from './dto';
 import { GetDetailResponse } from '../detail/dto';
 import { fetcher } from '@/lib/server/fetcher';
 
-export async function postNewContents(
-	data: PostNewsContentsRequest,
-	isNews: boolean = false,
-): Promise<GetDetailResponse> {
+export async function postNewContents(data: PostContentsRequest, isNews: boolean = false): Promise<GetDetailResponse> {
 	try {
 		const endpoint = isNews ? '/api/news' : '/api/board';
 		console.log(endpoint);

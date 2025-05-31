@@ -2,8 +2,8 @@
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { reportOptions } from '@/lib/constants/options';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { postReportDetail } from '@/services/apis/detail/report';
-import { PostReportDetailRequest } from '@/services/apis/detail/report/dto';
+import { postReportDetail } from '@/services/apis/detail/actions';
+import { PostReportDetailRequest } from '@/services/apis/detail/actions/dto';
 import Image from 'next/image';
 import { useState } from 'react';
 

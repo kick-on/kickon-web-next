@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { PostNewsContentsRequest } from '@/services/apis/post/dto';
+import { PostContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
@@ -12,6 +12,7 @@ import { getUserInfo } from '@/services/auth';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { patchDetailContent } from '@/services/apis/detail/actions';
 
 export default function Page() {
 	const router = useRouter();
@@ -20,38 +21,24 @@ export default function Page() {
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
-	useEffect(() => {
-		if (!isEditMode) return;
-
-		const storedData = sessionStorage.getItem('detailContent');
-		if (!storedData) return;
-
-		try {
-			const parsedData = JSON.parse(storedData);
-			setTitle(parsedData.data.title || '');
-			setBody(parsedData.data.content || '');
-		} catch (error) {
-			console.error('잘못된 데이터 형식:', error);
-		}
-	}, [isEditMode]);
-
-	const teams: { label: string; value: string; logo?: string }[] = [
-		{ label: '전체', value: '전체' },
-		...(currentUserInfo?.favoriteTeam?.pk
-			? [
-					{
-						label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
-						value: String(currentUserInfo.favoriteTeam.pk),
-						logo: currentUserInfo.favoriteTeam.logoUrl,
-					},
-				]
-			: []),
-	];
-
 	const [selectedOption, setSelectedOption] = useState<{ label: string; value: string; logo?: string }>({
 		label: '탭 선택하기',
 		value: '',
 	});
+	const teams = useMemo(() => {
+		return [
+			{ label: '전체', value: '전체' },
+			...(currentUserInfo?.favoriteTeam?.pk
+				? [
+						{
+							label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
+							value: String(currentUserInfo.favoriteTeam.pk),
+							logo: currentUserInfo.favoriteTeam.logoUrl,
+						},
+					]
+				: []),
+		];
+	}, [currentUserInfo]);
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
@@ -70,6 +57,26 @@ export default function Page() {
 	};
 
 	const hasShownAlert = useRef(false);
+
+	useEffect(() => {
+		if (!isEditMode || teams.length === 0) return;
+
+		const storedData = sessionStorage.getItem('detailContent');
+		if (!storedData) return;
+
+		try {
+			const parsedData = JSON.parse(storedData);
+			setTitle(parsedData.data.title || '');
+			setBody(parsedData.data.content || '');
+
+			const teamValue = String(parsedData.data.team?.pk);
+			const matchedOption = teams.find((option) => option.value === teamValue);
+
+			setSelectedOption(matchedOption ?? { label: '탭 선택하기', value: '' });
+		} catch (error) {
+			console.error('잘못된 데이터 형식:', error);
+		}
+	}, [isEditMode, teams]);
 
 	useEffect(() => {
 		if (hasShownAlert.current) return;
@@ -114,21 +121,39 @@ export default function Page() {
 
 		const usedImageKeys = extractImageFilenamesFromContent(body.trim());
 
-		const requestBody: PostNewsContentsRequest = {
-			team: selectedOption.value ? Number(selectedOption.value) : null,
-			title: title.trim(),
-			contents: body.trim(),
-			hasImage: hasImage,
-			usedImageKeys,
-		};
+		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
 
-		try {
-			const response = await postNewContents(requestBody);
-			console.log('게시글 생성 request body', requestBody);
-			console.log('게시글 생성 응답', response);
-			router.replace(`/board/${response.data.pk}`);
-		} catch (error) {
-			console.error('게시글 작성 실패:', error);
+		if (isEditMode) {
+			const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
+			const contentPk = parsedData.data.pk;
+			const teamValue =
+				selectedOption.value === '' || selectedOption.value === '전체' ? null : Number(selectedOption.value);
+
+			const finalTeam = isNaN(teamValue) ? null : teamValue;
+
+			const patchBody: Partial<PostContentsRequest> = {
+				title: title.trim(),
+				contents: body.trim(),
+				hasImage,
+				usedImageKeys,
+				team: finalTeam,
+			};
+			console.log(patchBody);
+			const response = await patchDetailContent(contentPk, false, patchBody);
+			console.log('수정 성공', response);
+			router.replace(`/board/${contentPk}`);
+		} else {
+			const postBody: PostContentsRequest = {
+				title: title.trim(),
+				contents: body.trim(),
+				hasImage,
+				usedImageKeys,
+				team: selectedOption.value ? Number(selectedOption.value) : null,
+			};
+
+			console.log(postBody);
+			const response = await postNewContents(postBody);
+			router.push(`/board/${response.data.pk}`);
 		}
 	};
 
