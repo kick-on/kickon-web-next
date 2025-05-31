@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import NavButton, { NavButtonProps } from './nav-button';
 import Image from 'next/image';
-import useIsTablet from '@/lib/hooks/useIsTablet';
+import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
 import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
@@ -15,7 +15,7 @@ export default function Navbar() {
 	const isHome = pathname === '/';
 
 	const isMobile = useIsMobile();
-	const isTablet = useIsTablet();
+	const isTabletWidth = useIsTabletWidth();
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
 	const navButtonProps: NavButtonProps[] = [
@@ -46,7 +46,7 @@ export default function Navbar() {
 					/>
 					{navButtonProps.map((props) => props && <NavButton key={props.href} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTablet) && <LoginButton />}
+				{(pathname === '/signup' || isTabletWidth) && <LoginButton />}
 			</div>
 		</header>
 	);
