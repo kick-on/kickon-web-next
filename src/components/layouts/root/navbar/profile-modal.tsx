@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Profile from './profile';
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 
 export default function ProfileModal({ onClickButton }: { onClickButton: () => void }) {
 	const modalRef = useRef<HTMLDivElement | null>(null);
@@ -42,7 +42,9 @@ export default function ProfileModal({ onClickButton }: { onClickButton: () => v
 			<button className="ml-auto w-6 h-6">
 				<Image onClick={onClickButton} className="brightness-0" src={'/x.svg'} alt="닫기" width={24} height={24} />
 			</button>
-			<Profile onClickButton={onClickButton} />
+			<Suspense>
+				<Profile onClickButton={onClickButton} />
+			</Suspense>
 		</div>
 	);
 }

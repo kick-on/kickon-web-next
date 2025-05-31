@@ -42,6 +42,11 @@ export default function Profile() {
 		});
 	};
 
+	const handleProfileSettingButtonClick = () => {
+		const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+		sessionStorage.setItem('previousPage', fullUrl);
+	};
+
 	useEffect(() => {
 		// 저장된 유저 정보가 없으면 jwt 기반으로 유저 정보 불러와 전역 상태 관리
 		if (!currentUserInfo) {
@@ -110,7 +115,11 @@ export default function Profile() {
 											/>
 										)}
 									</div>
-									<Link href="/profile-setting" className="flex gap-0.5 button6-regular text-black-700 underline">
+									<Link
+										onClick={handleProfileSettingButtonClick}
+										href="/profile-setting"
+										className="flex gap-0.5 button6-regular text-black-700 underline"
+									>
 										프로필 설정
 										<Image width={10} height={10} src="/chevron/right-gray.svg" alt="바로가기" />
 									</Link>

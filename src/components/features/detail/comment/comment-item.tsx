@@ -25,13 +25,13 @@ function CommentItem({
 	parentReply,
 	isReply = false,
 	onCommentSubmit,
-	onEditSubmit,
+	onEnterEditMode,
 	editingCommentId,
 	setEditingCommentId,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isMobile = useIsMobile();
-	const isMyComment = currentUserInfo.id === content.user.id;
+	const isMyComment = currentUserInfo?.id === content.user.id;
 	const isRepliesOpen = useMemo(() => {
 		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
 	}, [content.replies, isReply]);
@@ -40,7 +40,6 @@ function CommentItem({
 	const moreButtonRef = useRef(null);
 
 	const isEditing = editingCommentId === content.pk;
-	// 현재 코멘트가 수정하려고 하는 코멘트이면...! (editingCommentId를 상위에서 하나만 관리하고, 모든 CommentItem이 동일한 상태를 참조하게 하기. 한 번에 한 댓글만 수정하려면...)
 
 	return (
 		<div>
@@ -72,17 +71,19 @@ function CommentItem({
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
 							<div ref={moreButtonRef} className="relative">
-								<CommentMoreButton onEditClick={() => setEditingCommentId(content.pk)} />
+								<CommentMoreButton
+									onEditClick={() => {
+										onEnterEditMode(content.pk);
+									}}
+								/>
 							</div>
 						)}
 					</div>
-
 					{/* 본문 */}
 					<p className="body5-regular text-black-900 mt-3 mb-3.5">
 						{isReply && <span className="text-[#890f0e] mr-1">@{parentReply}</span>}
 						{content.contents}
 					</p>
-
 					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
 					<div className="flex justify-between items-center gap-3.5">
 						<div className="flex flex-col gap-3.5">
@@ -138,11 +139,7 @@ function CommentItem({
 							mentionNickname={isEditing ? undefined : content.user.nickname}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
-								if (isEditing) {
-									onEditSubmit(isReply, content.pk);
-								} else {
-									onCommentSubmit(isReply, content.pk);
-								}
+								onCommentSubmit(isReply, content.pk);
 							}}
 							onCommentCancel={() => {
 								if (isEditing) {

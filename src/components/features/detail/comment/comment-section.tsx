@@ -12,6 +12,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentSectionProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import AlertModal from '../alert-modal';
 
 function CommentSection({
 	type,
@@ -31,6 +32,8 @@ function CommentSection({
 	const [replyingTo, setReplyingTo] = useState([]);
 	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null);
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false);
@@ -49,7 +52,7 @@ function CommentSection({
 			if (!contentsId || contentsId < 1) return;
 			try {
 				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
-
+				console.log(response);
 				if (append) {
 					// 중복되지 않는 새 댓글만 추가
 					setComments((prev) => {
@@ -207,8 +210,14 @@ function CommentSection({
 		setReplyingTo((prev) => prev.filter((i) => i !== id));
 	};
 
-	const handleCommentEdit = () => {
-		console.log('수정');
+	// 수정 모드로 진입
+	const handleEnterEditMode = (commentId: number) => {
+		if (editingCommentId && editingCommentId !== commentId) {
+			setPendingCommentId(commentId);
+			setIsConfirmModalOpen(true);
+			return;
+		}
+		setEditingCommentId(commentId);
 	};
 
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
@@ -223,6 +232,10 @@ function CommentSection({
 		replyVisibilities,
 		isCommentAllowed,
 		contentsId,
+		onCommentSubmit: handleCommentSubmit,
+		onEnterEditMode: handleEnterEditMode,
+		editingCommentId,
+		setEditingCommentId,
 	};
 
 	return (
@@ -246,13 +259,10 @@ function CommentSection({
 					{comments.map((comment) => (
 						<div key={comment.pk}>
 							<CommentItem
+								key={comment.pk}
 								content={comment}
-								{...commentItemProps}
 								parentReply={comment.user.nickname}
-								onCommentSubmit={handleCommentSubmit}
-								editingCommentId={editingCommentId}
-								setEditingCommentId={setEditingCommentId}
-								onEditSubmit={handleCommentEdit}
+								{...commentItemProps}
 							/>
 							{replyVisibilities[comment.pk] &&
 								comment.replies?.map((reply) => (
@@ -262,10 +272,6 @@ function CommentSection({
 										isReply
 										parentReply={comment.user.nickname}
 										{...commentItemProps}
-										onCommentSubmit={handleCommentSubmit}
-										onEditSubmit={handleCommentEdit}
-										editingCommentId={editingCommentId}
-										setEditingCommentId={setEditingCommentId}
 									/>
 								))}
 						</div>
@@ -291,6 +297,23 @@ function CommentSection({
 			)}
 
 			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
+			{isConfirmModalOpen && (
+				<AlertModal
+					type="confirm"
+					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
+					onCancel={() => {
+						setIsConfirmModalOpen(false);
+						setPendingCommentId(null);
+					}}
+					onConfirm={() => {
+						if (pendingCommentId !== null) {
+							setEditingCommentId(pendingCommentId);
+						}
+						setIsConfirmModalOpen(false);
+						setPendingCommentId(null);
+					}}
+				/>
+			)}
 		</div>
 	);
 }

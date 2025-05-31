@@ -1,11 +1,14 @@
 'use client';
 
+import useIsTablet from '@/lib/hooks/useIsTablet';
 import useOverflowHidden from '@/lib/hooks/useOverflowHidden';
+import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
 	const router = useRouter();
+	const isTablet = useIsTablet();
 	useOverflowHidden();
 
 	return (
@@ -20,8 +23,12 @@ export default function NotFound() {
 				</span>
 				<button
 					onClick={() => router.replace('/')}
-					className="shadow-kick-button w-45 h-[3.125rem] @mobile:w-[10.375rem] @mobile:h-[2.875rem] @mobile:text-14
-						flex justify-center items-center bg-black-900 rounded-full button1-medium text-black-000"
+					className={clsx(
+						`flex justify-center items-center bg-black-900 rounded-full text-black-000 shadow-kick-button`,
+						isTablet
+							? 'w-52 h-[3.625rem] text-20'
+							: ' w-45 h-[3.125rem] button1-medium @mobile:w-[10.375rem] @mobile:h-[2.875rem] @mobile:text-14',
+					)}
 				>
 					홈으로 이동하기
 				</button>
