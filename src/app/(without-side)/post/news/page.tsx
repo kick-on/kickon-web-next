@@ -108,6 +108,7 @@ export default function Page() {
 		}
 
 		const usedImageKeysFromBody = extractImageFilenamesFromContent(body.trim());
+		console.log(body.trim());
 
 		let thumbnailFilename = '';
 		if (selectedImage) {
@@ -136,7 +137,7 @@ export default function Page() {
 					...requestBody,
 				};
 
-				console.log(patchBody);
+				console.log('수정 바디', patchBody);
 				const response = await patchDetailContent(contentPk, true, patchBody);
 				console.log('수정 성공', response);
 				router.replace(`/news/${contentPk}`);
@@ -170,7 +171,7 @@ export default function Page() {
 				</button>
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} editedTitle={title} editedBody={body} />
 
 			<div className="flex justify-center gap-4 mt-4">
 				<button
