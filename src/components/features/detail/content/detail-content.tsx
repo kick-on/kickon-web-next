@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
@@ -139,14 +139,16 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
 						<span>{data.replies}</span>
 					</div>
-					<MoreActionsButton type={type} pk={data.pk} isMyContent={isMyContents} />
+					<Suspense>
+						<MoreActionsButton type={type} pk={data.pk} isMyContent={isMyContents} />
+					</Suspense>
 				</div>
 			</div>
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
 			<div
-				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube"
+				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap"
 				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
 			/>
 

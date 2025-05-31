@@ -1,7 +1,7 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { postCreateReply } from '@/services/apis/detail/comment';
+import { patchReply, postCreateReply } from '@/services/apis/detail/comment';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
@@ -12,20 +12,29 @@ const CommentInput = ({
 	mentionNickname,
 	contentsId,
 	parentReplyId,
+	editingCommentId,
 	contentType,
 	defaultContent,
 	onCommentSubmit,
 	onCommentCancel,
 }: CommentInputProps) => {
+	const isMobile = useIsMobile();
 	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
+	const [inputHeight, setInputHeight] = useState(0);
 	const [content, setContent] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const [hasMention, setHasMention] = useState(false);
 	const [hasNewLine, setHasNewLine] = useState(false);
 
-	const isMobile = useIsMobile();
+	useEffect(() => {
+		if (type === 'comment') {
+			setInputHeight(isMobile ? 110 : 104);
+		} else {
+			setInputHeight(isMobile ? 92 : 102);
+		}
+	}, [isMobile, type]);
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
@@ -88,6 +97,22 @@ const CommentInput = ({
 
 		const html = inputRef.current.innerHTML;
 		setHasNewLine(/<br>|<div>/i.test(html));
+		const el = inputRef.current;
+		const newScrollHeight = el.scrollHeight;
+
+		if (type === 'comment') {
+			const baseHeight = isMobile ? 110 : 104;
+			const maxHeight = isMobile ? 110 : 168;
+
+			const clampedHeight = Math.min(Math.max(baseHeight, newScrollHeight), maxHeight);
+			setInputHeight(clampedHeight);
+		} else {
+			const baseHeight = isMobile ? 92 : 102;
+			const maxHeight = isMobile ? 182 : 174;
+
+			const clampedHeight = Math.min(Math.max(baseHeight, newScrollHeight), maxHeight);
+			setInputHeight(clampedHeight);
+		}
 
 		if (hasMention) {
 			const mentionEl = inputRef.current.querySelector('.mention');
@@ -156,12 +181,16 @@ const CommentInput = ({
 			...(contentType === 'board' ? { board: contentsId } : {}),
 		};
 
+		const editedRequestBody = {
+			contents: sanitizedContent,
+		};
+
 		try {
 			let response;
 
 			if (type === 'edit') {
-				// response = await putEditReply(contentType, contentsId, requestBody);
-				console.log('수정 제출');
+				response = await patchReply(contentType, editingCommentId, editedRequestBody);
+				console.log('댓글 수정 완료:', response);
 			} else {
 				response = await postCreateReply(contentType, requestBody);
 			}
@@ -193,11 +222,13 @@ const CommentInput = ({
 			}
 		>
 			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
-			<div className={clsx('flex @mobile:flex-col', type === 'comment' ? 'h-26' : 'h-20')}>
+			<div className="flex @mobile:flex-col h-full">
 				<div
-					className={clsx('relative w-full h-[104px] bg-black-000 rounded-[0.625rem] resize-none @mobile:h-[110px]', {
-						'pb-11.5 border border-black-200 h-[130px] @mobile:min-h-[178px]': type !== 'comment',
+					className={clsx('relative w-full bg-black-000 rounded-[0.625rem] resize-none', {
+						'pb-11.5': type !== 'comment' || !isMobile,
+						'border border-black-200': type !== 'comment',
 					})}
+					style={{ height: `${inputHeight}px` }}
 				>
 					<div
 						ref={inputRef}

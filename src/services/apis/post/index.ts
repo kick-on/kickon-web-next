@@ -5,6 +5,7 @@ import { fetcher } from '@/lib/server/fetcher';
 export async function postNewContents(data: PostContentsRequest, isNews: boolean = false): Promise<GetDetailResponse> {
 	try {
 		const endpoint = isNews ? '/api/news' : '/api/board';
+		console.log(endpoint);
 		const response = await fetcher<GetDetailResponse>({ method: 'POST', url: endpoint, body: data });
 
 		return response;

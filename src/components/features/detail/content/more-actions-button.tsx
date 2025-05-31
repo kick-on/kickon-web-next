@@ -6,7 +6,7 @@ import Image from 'next/image';
 import ReportModal from './report-modal';
 import EditIcon from '@/assets/edit.svg';
 import AlertModal from '../alert-modal';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { deleteDetailContent } from '@/services/apis/detail/actions';
 
 interface MoreActionsButtonProps {
@@ -18,10 +18,13 @@ interface MoreActionsButtonProps {
 
 const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMyContent = 'true' }) => {
 	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 	const [isOpen, setIsOpen] = useState(false);
-	const [showReportModal, setShowReportModal] = useState(false);
-	const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-	const [showShareAlert, setShowShareAlert] = useState(false);
+	const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+	const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+	const [isShareAlertVisible, setIsShareAlertVisible] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -42,7 +45,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 	const handleShareButtonClick = async () => {
 		try {
 			await navigator.clipboard.writeText(window.location.href);
-			setShowShareAlert(true); // 성공 시 모달 표시
+			setIsShareAlertVisible(true); // 성공 시 모달 표시
 		} catch (err) {
 			console.error(err);
 			alert('URL 복사에 실패했습니다.');
@@ -52,23 +55,24 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 
 	const handleReportButtonClick = () => {
 		setIsOpen(false);
-		setShowReportModal(true);
+		setIsReportModalOpen(true);
 	};
 
 	const handleEditClick = () => {
 		setIsOpen(false);
+		sessionStorage.setItem('previousPage', fullUrl);
 		router.push(`/post/${type}?edit=true`);
 	};
 
 	const handleDeleteClick = () => {
 		setIsOpen(false);
-		setShowDeleteConfirm(true);
+		setIsDeleteConfirmOpen(true);
 	};
 
 	const handleConfirmDelete = async () => {
 		const response = await deleteDetailContent(pk, type === 'news');
 		console.log(response); // 게시글 삭제 응답
-		setShowDeleteConfirm(false);
+		setIsDeleteConfirmOpen(false);
 		router.replace(`/${type}?q=전체`);
 	};
 
@@ -122,17 +126,19 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 				)}
 			</div>
 
-			{showReportModal && <ReportModal type={type} pk={pk} onClose={() => setShowReportModal(false)} />}
+			{isReportModalOpen && <ReportModal type={type} pk={pk} onClose={() => setIsReportModalOpen(false)} />}
 
-			{showDeleteConfirm && (
+			{isDeleteConfirmOpen && (
 				<AlertModal
 					type="confirm"
 					description="게시글을 삭제할까요?"
 					onConfirm={handleConfirmDelete}
-					onCancel={() => setShowDeleteConfirm(false)}
+					onCancel={() => setIsDeleteConfirmOpen(false)}
 				/>
 			)}
-			{showShareAlert && <AlertModal description="URL이 복사되었습니다." onCancel={() => setShowShareAlert(false)} />}
+			{isShareAlertVisible && (
+				<AlertModal description="URL이 복사되었습니다." onCancel={() => setIsShareAlertVisible(false)} />
+			)}
 		</>
 	);
 };

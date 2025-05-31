@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import CommentInput from './comment-input';
 import CommentItem from './comment-item';
-import { getCommentList, postCommentKick } from '@/services/apis/detail/comment';
+import { deleteReply, getCommentList, postCommentKick } from '@/services/apis/detail/comment';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
@@ -52,7 +52,7 @@ function CommentSection({
 			if (!contentsId || contentsId < 1) return;
 			try {
 				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
-				console.log(response);
+				console.log('댓글 리스트', response);
 				if (append) {
 					// 중복되지 않는 새 댓글만 추가
 					setComments((prev) => {
@@ -219,6 +219,41 @@ function CommentSection({
 		}
 		setEditingCommentId(commentId);
 	};
+	const handleDeleteComment = async (commentId: number, parentReplyId: number) => {
+		try {
+			const response = await deleteReply(commentId, type);
+			console.log('댓글 삭제', response);
+			if (response?.code === 'GET_SUCCESS') {
+				// 삭제 성공 시, 상태 업데이트
+				if (parentReplyId) {
+					// 대댓글 삭제
+					setComments((prev) =>
+						prev.map((comment) =>
+							comment.pk === parentReplyId
+								? {
+										...comment,
+										replies: comment.replies?.filter((reply) => reply.pk !== commentId),
+									}
+								: comment,
+						),
+					);
+				} else {
+					// 댓글 삭제
+					setComments((prev) => prev.filter((comment) => comment.pk !== commentId));
+				}
+				setTotalReplies(totalreplies - 1);
+
+				// 만약 현재 수정 중이던 댓글을 삭제했다면, 수정 상태도 초기화
+				if (editingCommentId === commentId) {
+					setEditingCommentId(null);
+				}
+			} else {
+				console.error('댓글 삭제 실패', response);
+			}
+		} catch (error) {
+			console.error('댓글 삭제 중 오류 발생', error);
+		}
+	};
 
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {
@@ -234,6 +269,7 @@ function CommentSection({
 		contentsId,
 		onCommentSubmit: handleCommentSubmit,
 		onEnterEditMode: handleEnterEditMode,
+		onDeleteComment: handleDeleteComment,
 		editingCommentId,
 		setEditingCommentId,
 	};
@@ -244,6 +280,7 @@ function CommentSection({
 				<CommentInput
 					contentType={type}
 					contentsId={contentsId}
+					editingCommentId={editingCommentId}
 					onCommentSubmit={(isReply) => handleCommentSubmit(isReply)}
 				/>
 			)}
@@ -271,6 +308,7 @@ function CommentSection({
 										content={reply}
 										isReply
 										parentReply={comment.user.nickname}
+										parentReplyId={comment.pk}
 										{...commentItemProps}
 									/>
 								))}
