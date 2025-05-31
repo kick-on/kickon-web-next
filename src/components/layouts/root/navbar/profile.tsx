@@ -6,7 +6,7 @@ import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Divider from '../mobile-navbar/sidebar/divider';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
 
@@ -15,6 +15,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const router = useRouter();
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
 
 	const handleLogoutButtonClick = () => {
 		onClickButton();
@@ -22,6 +23,15 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 			clearCurrentUserInfo(); // 클라이언트 user info 초기화
 			router.push('/');
 		});
+	};
+
+	const handleLinkClick = () => {
+		// previous page 설정
+		const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
+		sessionStorage.setItem('previousPage', fullUrl);
+
+		// 모달 or 사이드바 닫기
+		setTimeout(onClickButton, 200);
 	};
 
 	useEffect(() => {
@@ -110,7 +120,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 				<Divider />
 
 				<Link
-					onClick={() => setTimeout(onClickButton, 200)}
+					onClick={handleLinkClick}
 					href={'/profile-setting'}
 					className={clsx('w-[calc(100%+32px)] -ml-4 mt-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
 						'text-primary-900 button2-semibold': pathname === '/profile-setting',

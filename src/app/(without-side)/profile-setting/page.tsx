@@ -86,7 +86,8 @@ export default function Page() {
 	};
 
 	const handleCancelButtonClick = () => {
-		router.push('/');
+		const previousPage = sessionStorage.getItem('previousPage');
+		router.push(previousPage);
 	};
 
 	const handleCompleteButtonClick = () => {
@@ -98,7 +99,6 @@ export default function Page() {
 		};
 
 		editUserInfo(body);
-		setCurrentUserInfo({ ...currentUserInfo, profileImageUrl });
 	};
 
 	const editUserInfo = async (body: UpdateUserInfoRequest) => {
@@ -110,8 +110,10 @@ export default function Page() {
 			alert(response);
 			setIsDuplicated(false);
 		} else {
-			setCurrentUserInfo({ ...currentUserInfo, nickname });
-			router.push('/');
+			setCurrentUserInfo({ ...currentUserInfo, nickname, profileImageUrl });
+
+			const previousPage = sessionStorage.getItem('previousPage');
+			router.push(previousPage);
 		}
 	};
 
