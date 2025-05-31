@@ -124,7 +124,8 @@ export default function Page() {
 
 		try {
 			const response = await postNewContents(requestBody);
-			console.log(requestBody);
+			console.log('게시글 생성 request body', requestBody);
+			console.log('게시글 생성 응답', response);
 			router.replace(`/board/${response.data.pk}`);
 		} catch (error) {
 			console.error('게시글 작성 실패:', error);
@@ -194,7 +195,7 @@ export default function Page() {
 						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
 						if (confirmCancel) {
 							const previousPage = sessionStorage.getItem('previousPage');
-							router.push(previousPage);
+							router.replace(previousPage);
 						}
 					}}
 					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"

@@ -225,8 +225,8 @@ const CommentInput = ({
 			<div className="flex @mobile:flex-col h-full">
 				<div
 					className={clsx('relative w-full bg-black-000 rounded-[0.625rem] resize-none', {
-						'pb-11.5 border border-black-200': type !== 'comment',
-						'pb-10': !isMobile,
+						'pb-11.5': type !== 'comment' || !isMobile,
+						'border border-black-200': type !== 'comment',
 					})}
 					style={{ height: `${inputHeight}px` }}
 				>

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import ReportModal from './report-modal';
 import EditIcon from '@/assets/edit.svg';
 import AlertModal from '../alert-modal';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 interface MoreActionsButtonProps {
 	type?: 'news' | 'board';
@@ -17,6 +17,9 @@ interface MoreActionsButtonProps {
 
 const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMyContent = 'true' }) => {
 	const router = useRouter();
+	const pathname = usePathname();
+	const searchParams = useSearchParams();
+	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 	const [isOpen, setIsOpen] = useState(false);
 	const [isReportModalOpen, setIsReportModalOpen] = useState(false);
 	const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -56,6 +59,7 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 
 	const handleEditClick = () => {
 		setIsOpen(false);
+		sessionStorage.setItem('previousPage', fullUrl);
 		router.push(`/post/${type}?edit=true`);
 	}; // boolean 값을 넘기는 것으로 수정
 
