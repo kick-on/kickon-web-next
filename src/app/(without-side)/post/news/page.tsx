@@ -16,6 +16,7 @@ import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { categories } from '@/lib/constants/options';
+import { patchDetailContent } from '@/services/apis/detail/actions';
 
 export default function Page() {
 	const router = useRouter();
@@ -105,17 +106,18 @@ export default function Page() {
 		if (!currentUserInfo) {
 			return;
 		}
-		const usedImageKeysFromBody = extractImageFilenamesFromContent(body.trim()); // editor로부터 받아온 body에서 파일명 추출
 
-		console.log(selectedImage); // s3 url -> 여기에서 파일명 추출 필요
+		const usedImageKeysFromBody = extractImageFilenamesFromContent(body.trim());
+
 		let thumbnailFilename = '';
 		if (selectedImage) {
 			thumbnailFilename = decodeURIComponent(selectedImage.split('/').pop() || '');
 		}
-
 		const usedImageKeys = [...usedImageKeysFromBody, ...(thumbnailFilename ? [thumbnailFilename] : [])];
-		console.log('usedImageKeys:', usedImageKeys); // 이미지 키 추출 확인
 
+		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
+
+		// 공통 요청 데이터
 		const requestBody: PostContentsRequest = {
 			team: selectedTeam?.id || null,
 			title: title.trim(),
@@ -126,10 +128,25 @@ export default function Page() {
 		};
 
 		try {
-			const response = await postNewContents(requestBody, true);
-			router.push(`/news/${response.data.pk}`);
+			if (isEditMode) {
+				const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
+				const contentPk = parsedData.data.pk;
+
+				const patchBody: Partial<PostContentsRequest> = {
+					...requestBody,
+				};
+
+				console.log(patchBody);
+				const response = await patchDetailContent(contentPk, true, patchBody);
+				console.log('수정 성공', response);
+				router.replace(`/news/${contentPk}`);
+			} else {
+				const response = await postNewContents(requestBody, true);
+				console.log('작성 성공', response);
+				router.replace(`/news/${response.data.pk}`);
+			}
 		} catch (error) {
-			console.error('게시글 작성 실패:', error);
+			console.error(isEditMode ? '게시글 수정 실패:' : '게시글 작성 실패:', error);
 		}
 	};
 

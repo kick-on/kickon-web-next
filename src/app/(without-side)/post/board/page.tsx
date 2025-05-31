@@ -121,6 +121,8 @@ export default function Page() {
 
 		const usedImageKeys = extractImageFilenamesFromContent(body.trim());
 
+		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
+
 		if (isEditMode) {
 			const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
 			const contentPk = parsedData.data.pk;
