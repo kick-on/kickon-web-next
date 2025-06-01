@@ -31,8 +31,16 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 		});
 
 		if (userInfoResponse.ok) {
-			// 200~299: finalize 페이지로 리디렉션
-			redirectUrl.pathname = finalizePath;
+			// 200~299: 로그인 내역은 있는 경우
+			const isSignedUp = !!(await userInfoResponse.json()).data.privacyAgreedAt;
+			if (isSignedUp) {
+				// 개인정보 동의 내역이 있는 경우 로그인 처리
+				redirectUrl.pathname = finalizePath;
+			} else {
+				// 개인정보 동의 내역이 없는 경우 회원가입 페이지로 리디렉션
+				redirectUrl.pathname = `/signup`;
+				redirectUrl.searchParams.set('provider', provider);
+			}
 		} else if (userInfoResponse.status === 401 || userInfoResponse.status === 403) {
 			// 401 or 403: 회원가입 페이지로 리디렉션
 			redirectUrl.pathname = `/signup`;

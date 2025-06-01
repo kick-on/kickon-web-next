@@ -100,9 +100,8 @@ export default function Page() {
 				console.log(privacyResponse);
 			} else {
 				// 성공 시 재로그인
-				router.push(
-					`${SERVER_URL}/oauth2/authorization/${provider}?state=${DOMAIN_URL || 'http://localhost:3000'}/login/${provider}`,
-				);
+				const redirectUrl = `${DOMAIN_URL || 'http://localhost:3000'}/api/auth/${provider}/callback`;
+				router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=${redirectUrl}`);
 			}
 		}
 	};
