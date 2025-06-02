@@ -45,16 +45,23 @@ export default function MoreList({
 	useEffect(() => {
 		if (!targetRef.current) return;
 
-		observerRef.current = new IntersectionObserver(([entry]) => {
-			setIsIntersecting(entry.isIntersecting);
-		});
+		observerRef.current = new IntersectionObserver(
+			([entry]) => {
+				setIsIntersecting(entry.isIntersecting);
+			},
+			{
+				root: null,
+				rootMargin: '400px',
+				threshold: 0.1,
+			},
+		);
 
 		observerRef.current.observe(targetRef.current);
 
 		return () => {
 			if (observerRef.current) observerRef.current.disconnect();
 		};
-	}, [targetRef]);
+	}, [isMobile]);
 
 	// 스크롤에 따라 추가 데이터 페칭
 	useEffect(() => {
