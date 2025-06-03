@@ -1,7 +1,7 @@
 'use client';
 
 import Checkbox from '@/components/features/signup/checkbox';
-import AccountSelectbox from '@/components/common/account-selectbox';
+import Selectbox from '@/components/common/account/selectbox';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
@@ -138,9 +138,9 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] @mobile:mb-6 w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
+				<Selectbox category="리그" content={league} onChange={handleLeagueChange} />
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
-					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
+					<Selectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
 				)}
 			</div>
 

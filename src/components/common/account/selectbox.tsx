@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import OptionItem from './option-item';
+import OptionItem from '@/components/common/option-item';
 import clsx from 'clsx';
 import { getLeague } from '@/services/apis/league';
 import { getTeam } from '@/services/apis/team';
@@ -10,7 +10,7 @@ import { TeamDto } from '@/services/apis/team/dto';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
-export default function AccountSelectBox({
+export default function Selectbox({
 	category,
 	league,
 	content,
