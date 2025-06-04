@@ -15,6 +15,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 import FavoriteTeamList from '@/components/common/account/favorite-team-list';
+import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 export default function Page() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -136,15 +137,15 @@ export default function Page() {
 				<div className="body3-regular @mobile:text-14">계정으로 가입을 진행하고 있어요.</div>
 			</div>
 
-			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] @mobile:mb-6 w-full flex flex-col gap-6">
+			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] w-full flex flex-col gap-[3.125rem] @mobile:gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 
-				<FavoriteTeamList />
+				<FavoriteTeamSection />
 
-				<Selectbox category="리그" content={league} onChange={handleLeagueChange} />
+				{/* <Selectbox category="리그" content={league} onChange={handleLeagueChange} />
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
 					<Selectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
-				)}
+				)} */}
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">

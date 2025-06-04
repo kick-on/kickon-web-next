@@ -89,20 +89,6 @@ export default function Selectbox({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">
-				{category}
-				{isLeagueSelectBox && (
-					<Image
-						title="리그가 종료되면 다시 선택할 수 있어요."
-						width={12}
-						height={12}
-						src="/help-circle.svg"
-						alt="리그 선택 도움말"
-						className="cursor-pointer"
-					/>
-				)}
-			</div>
-
 			<div ref={dropboxRef} className="w-full flex flex-col gap-1">
 				<button
 					onClick={handleSelectBoxClick}
@@ -120,7 +106,7 @@ export default function Selectbox({
 							alt={content.nameKr}
 						/>
 					)}
-					{content ? content.nameKr : '선택해 주세요.'}
+					{content ? content.nameKr : `${isLeagueSelectBox ? '리그를' : '팀을'} 선택해 주세요.`}
 					{isEditable && (
 						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
 					)}
