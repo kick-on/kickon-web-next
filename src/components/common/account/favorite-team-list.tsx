@@ -8,16 +8,21 @@ import Image from 'next/image';
 export default function FavoriteTeamList({
 	favoriteTeams,
 	setFavoriteTeams,
+	selectedTeamIndex,
+	setSelectedTeamIndex,
+	clearSelectbox,
 }: {
 	favoriteTeams: (TeamDto | null)[];
 	setFavoriteTeams: Dispatch<SetStateAction<TeamDto[]>>;
+	selectedTeamIndex: number;
+	setSelectedTeamIndex: Dispatch<SetStateAction<number>>;
+	clearSelectbox: () => void;
 }) {
-	const [selectedTeamIndex, setSelectedTeamIndex] = useState(0);
-
 	// favorite team item 추가 버튼 클릭 핸들러
 	const handleAddButtonClick = () => {
 		setFavoriteTeams([...favoriteTeams, null]);
 		setSelectedTeamIndex(favoriteTeams.length);
+		clearSelectbox();
 	};
 
 	// favorite team item 내부 x 버튼 클릭 핸들러
