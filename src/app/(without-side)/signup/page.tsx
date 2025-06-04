@@ -14,7 +14,7 @@ import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
-
+import FavoriteTeamList from '@/components/common/account/favorite-team-list';
 export default function Page() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -107,24 +107,24 @@ export default function Page() {
 	};
 
 	// 소셜 로그인을 통한 접근이 아닌 경우 홈으로 리디렉션
-	useEffect(() => {
-		const fromLogin = getCookie('fromLogin');
+	// useEffect(() => {
+	// 	const fromLogin = getCookie('fromLogin');
 
-		if (fromLogin === 'true') {
-			setIsValidAccess(true);
-		} else {
-			alert('잘못된 접근입니다.');
-			router.replace('/');
-		}
-	}, [router]);
+	// 	if (fromLogin === 'true') {
+	// 		setIsValidAccess(true);
+	// 	} else {
+	// 		alert('잘못된 접근입니다.');
+	// 		router.replace('/');
+	// 	}
+	// }, [router]);
 
-	useEffect(() => {
-		return () => {
-			if (isValidAccess) {
-				setCookie('fromLogin', '', 0);
-			}
-		};
-	}, [isValidAccess]);
+	// useEffect(() => {
+	// 	return () => {
+	// 		if (isValidAccess) {
+	// 			setCookie('fromLogin', '', 0);
+	// 		}
+	// 	};
+	// }, [isValidAccess]);
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
@@ -138,6 +138,9 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] @mobile:mb-6 w-full flex flex-col gap-6">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
+
+				<FavoriteTeamList />
+
 				<Selectbox category="리그" content={league} onChange={handleLeagueChange} />
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
 					<Selectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
