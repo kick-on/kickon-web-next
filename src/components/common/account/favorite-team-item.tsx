@@ -59,7 +59,7 @@ export default function FavoriteTeamItem({
 				{team && (
 					<>
 						<div className="relative w-auto grow aspect-square">
-							<Image className="w-auto h-auto object-cover" src="/logo/icon-red.svg" alt="로고" fill />
+							<Image className="w-auto h-auto object-contain" src={team.logoUrl} alt="로고" fill />
 						</div>
 						<div className="flex gap-0.5">
 							<Image src="/draggable.svg" alt="왼쪽 화살표" width={18} height={18} />

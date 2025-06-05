@@ -7,28 +7,37 @@ import { TeamDto } from '@/services/apis/team/dto';
 import FavoriteTeamList from './favorite-team-list';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
+export interface TeamLeagueMap {
+	team: TeamDto;
+	league: LeagueDto;
+}
+
 export default function FavoriteTeamSection() {
-	const [favoriteTeams, setFavoriteTeams] = useState<(TeamDto | null)[]>([null]);
+	const [favoriteTeamLeagueMap, setFavoriteTeamLeagueMap] = useState<(TeamLeagueMap | null)[]>([null]);
 	const [selectedTeamIndex, setSelectedTeamIndex] = useState(0);
-	const favoriteTeamCount = favoriteTeams.filter((team) => team).length;
+	const favoriteTeamCount = favoriteTeamLeagueMap.filter((team) => team).length;
 
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
 
 	// 다른 순위의 팀을 선택했을 때마다 실행 (ex. 1순위 팀 -> 2순위 팀)
 	useEffect(() => {
-		const selectedTeam = favoriteTeams[selectedTeamIndex];
-		setTeam(selectedTeam);
-	}, [selectedTeamIndex]);
+		const selectedMap = favoriteTeamLeagueMap[selectedTeamIndex];
+		setLeague(selectedMap?.league ?? null);
+		setTeam(selectedMap?.team ?? null);
+	}, [selectedTeamIndex, favoriteTeamLeagueMap]);
 
-	const handleTeamChange = (selectedTeam) => {
-		const newFavoriteTeams = favoriteTeams.map((team, i) => (i === selectedTeamIndex ? selectedTeam : team));
-		setFavoriteTeams(newFavoriteTeams);
+	const handleTeamChange = (selectedTeam: TeamDto) => {
+		const newFavoriteTeamLeagueMap = favoriteTeamLeagueMap.map((favorite, i) =>
+			i === selectedTeamIndex ? { league, team: selectedTeam } : favorite,
+		);
+		console.log(newFavoriteTeamLeagueMap);
+		setFavoriteTeamLeagueMap(newFavoriteTeamLeagueMap);
 		setTeam(selectedTeam);
 	};
 
 	const clearSelectbox = () => {
-		// setLeague(null);
+		setLeague(null);
 		setTeam(null);
 	};
 
@@ -41,8 +50,8 @@ export default function FavoriteTeamSection() {
 
 			<div className="mb-[1.125rem]">
 				<FavoriteTeamList
-					favoriteTeams={favoriteTeams}
-					setFavoriteTeams={setFavoriteTeams}
+					favoriteTeamLeagueMap={favoriteTeamLeagueMap}
+					setFavoriteTeamLeagueMap={setFavoriteTeamLeagueMap}
 					selectedTeamIndex={selectedTeamIndex}
 					setSelectedTeamIndex={setSelectedTeamIndex}
 					clearSelectbox={clearSelectbox}
