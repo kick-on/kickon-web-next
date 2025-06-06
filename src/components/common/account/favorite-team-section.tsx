@@ -28,6 +28,13 @@ export default function FavoriteTeamSection() {
 	}, [selectedTeamIndex, favoriteTeamLeagueMap]);
 
 	const handleTeamChange = (selectedTeam: TeamDto) => {
+		// 이미 선택한 팀이면 alert
+		const favoriteTeamPks = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
+		if (favoriteTeamPks.includes(selectedTeam.pk)) {
+			alert('이미 선택된 팀입니다.');
+			return;
+		}
+
 		const newFavoriteTeamLeagueMap = favoriteTeamLeagueMap.map((favorite, i) =>
 			i === selectedTeamIndex ? { league, team: selectedTeam } : favorite,
 		);
