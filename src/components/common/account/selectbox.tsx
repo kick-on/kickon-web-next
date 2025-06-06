@@ -23,7 +23,7 @@ export default function Selectbox({
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
 }) {
-	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
+	const [isVisibleOptions, setIsVisibleOptions] = useState(!!(isEditable && league));
 	const [options, setOptions] = useState<LeagueDto[] | TeamDto[]>([]);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
