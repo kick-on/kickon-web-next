@@ -11,7 +11,6 @@ import {
 	PointerSensor,
 	useSensor,
 	useSensors,
-	TouchSensor,
 	DragEndEvent,
 	DragStartEvent,
 } from '@dnd-kit/core';
@@ -120,7 +119,11 @@ export default function FavoriteTeamList({
 							orderNum={i + 1}
 							team={favorite?.team}
 							isActive={selectedTeamIndex === i}
-							isDisabled={!favorite?.team || favoriteTeamLeagueMap.length === 1}
+							isDisabled={
+								!favorite?.team ||
+								favoriteTeamLeagueMap.length === 1 ||
+								(favoriteTeamLeagueMap.length === 2 && !favoriteTeamLeagueMap.at(-1))
+							}
 							onClickItem={() => handleItemClick(i)}
 							onClickXButton={(e) => handleXButtonClick(e, i)}
 						/>

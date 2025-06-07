@@ -87,12 +87,18 @@ export default function FavoriteTeamItem({
 				{/* 팀 로고 & draggable 아이콘 */}
 				{team && (
 					<>
-						<div className="relative w-auto grow aspect-square">
+						<div
+							className={clsx('relative w-auto grow aspect-square', {
+								'my-3': isDisabled,
+							})}
+						>
 							<Image className="w-auto h-auto object-contain" src={team.logoUrl} alt="로고" fill />
 						</div>
-						<div className={clsx('flex gap-0.5', { 'brightness-0': isDragging })}>
-							<Image src="/draggable.svg" alt="드래그 아이콘" width={18} height={18} />
-						</div>
+						{!isDisabled && (
+							<div className={clsx('flex gap-0.5', { 'brightness-0': isDragging })}>
+								<Image src="/draggable.svg" alt="드래그 아이콘" width={18} height={18} />
+							</div>
+						)}
 					</>
 				)}
 			</div>
