@@ -27,13 +27,13 @@ export default function Selectbox({
 	isEditable?: boolean;
 	isOpen?: boolean;
 }) {
-	const [isVisibleOptions, setIsVisibleOptions] = useState(isOpen);
+	const [isOptionListVisible, setIsOptionListVisible] = useState(isOpen);
 	const [options, setOptions] = useState<LeagueDto[] | TeamDto[]>([]);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
 
 	const handleSelectBoxClick = () => {
-		setIsVisibleOptions(!isVisibleOptions);
+		setIsOptionListVisible(!isOptionListVisible);
 	};
 
 	const handleOptionClick = (selectedPk: number) => {
@@ -60,12 +60,12 @@ export default function Selectbox({
 
 		console.log(selectedOption);
 		onChange(selectedOption);
-		setIsVisibleOptions(false);
+		setIsOptionListVisible(false);
 	};
 
 	useEffect(() => {
-		// props isOpen 값 변경 시마다 isVisibleOptions에 반영
-		setIsVisibleOptions(isOpen);
+		// props isOpen 값 변경 시마다 isOptionListVisible에 반영
+		setIsOptionListVisible(isOpen);
 	}, [isOpen]);
 
 	useEffect(() => {
@@ -80,13 +80,13 @@ export default function Selectbox({
 	}, [isLeagueSelectBox, league]);
 
 	useEffect(() => {
-		// isVisibleOptions가 true일 때만 리스너 등록
-		if (!isVisibleOptions) return;
+		// isOptionListVisible가 true일 때만 리스너 등록
+		if (!isOptionListVisible) return;
 
 		// 드롭박스 외부 클릭 시 닫음
 		const handleOutsideClick = (e: MouseEvent) => {
 			if (!dropboxRef.current.contains(e.target as Node)) {
-				setIsVisibleOptions(false);
+				setIsOptionListVisible(false);
 			}
 		};
 
@@ -94,7 +94,7 @@ export default function Selectbox({
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
 		};
-	}, [isVisibleOptions]);
+	}, [isOptionListVisible]);
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -121,7 +121,7 @@ export default function Selectbox({
 					)}
 				</button>
 
-				{isVisibleOptions && !!options.length && (
+				{isOptionListVisible && !!options.length && (
 					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]">
 						{options.map((option, index) => (
 							<div
