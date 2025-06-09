@@ -12,12 +12,14 @@ import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function Selectbox({
 	category,
+	favoriteTeamLength,
 	league,
 	content,
 	onChange,
 	isEditable = true,
 }: {
 	category: '리그' | '응원팀';
+	favoriteTeamLength?: number;
 	league?: number;
 	content: LeagueDto | TeamDto;
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
@@ -126,7 +128,7 @@ export default function Selectbox({
 								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
-						{isLeagueSelectBox && (
+						{isLeagueSelectBox && favoriteTeamLength === 1 && (
 							<div
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"

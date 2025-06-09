@@ -4,8 +4,21 @@ import { LeagueDto } from '@/services/apis/league/dto';
 import Selectbox from './selectbox';
 import { useEffect, useState } from 'react';
 import { TeamDto } from '@/services/apis/team/dto';
-import FavoriteTeamList from './favorite-team-list';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import dynamic from 'next/dynamic';
+import FavoriteTeamItem from './favorite-team-item';
+
+// dnd-kit 컴포넌트 hydration mismatch 가능성 존재 -> ssr 비활성화
+const FavoriteTeamList = dynamic(() => import('./favorite-team-list'), {
+	ssr: false,
+	loading: () => (
+		<div className="grid grid-cols-3 gap-2.5">
+			<FavoriteTeamItem team={null} orderNum={1} isActive={true} />
+			<div />
+			<div />
+		</div>
+	),
+});
 
 export interface TeamLeagueMap {
 	team: TeamDto;
@@ -27,6 +40,23 @@ export default function FavoriteTeamSection() {
 		setTeam(selectedMap?.team ?? null);
 	}, [selectedTeamIndex, favoriteTeamLeagueMap]);
 
+	const handleLeagueChange = (selectedLeague: LeagueDto) => {
+		setLeague(selectedLeague);
+
+		// 응원팀이 없는 상태 -> 다른 리그를 선택한 경우
+		if (league?.pk === NO_CHEERING_TEAM_PK) {
+			setTeam(null);
+		}
+
+		// 응원팀이 없어요를 선택한 경우
+		if (selectedLeague.pk === NO_CHEERING_TEAM_PK) {
+			const newFavoriteTeamLeagueMap = favoriteTeamLeagueMap.map((favorite, i) =>
+				i === selectedTeamIndex ? { team: selectedLeague, league: selectedLeague } : favorite,
+			);
+			setFavoriteTeamLeagueMap(newFavoriteTeamLeagueMap);
+		}
+	};
+
 	const handleTeamChange = (selectedTeam: TeamDto) => {
 		// 이미 선택한 팀이면 alert
 		const favoriteTeamPks = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
@@ -38,7 +68,6 @@ export default function FavoriteTeamSection() {
 		const newFavoriteTeamLeagueMap = favoriteTeamLeagueMap.map((favorite, i) =>
 			i === selectedTeamIndex ? { league, team: selectedTeam } : favorite,
 		);
-		console.log(newFavoriteTeamLeagueMap);
 		setFavoriteTeamLeagueMap(newFavoriteTeamLeagueMap);
 		setTeam(selectedTeam);
 	};
@@ -66,7 +95,12 @@ export default function FavoriteTeamSection() {
 			</div>
 
 			<div className="space-y-6">
-				<Selectbox category="리그" content={league} onChange={(selectedLeague) => setLeague(selectedLeague)} />
+				<Selectbox
+					category="리그"
+					favoriteTeamLength={favoriteTeamLeagueMap.length}
+					content={league}
+					onChange={handleLeagueChange}
+				/>
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
 					<Selectbox category="응원팀" content={team} league={league.pk} onChange={handleTeamChange} />
 				)}

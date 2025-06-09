@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function FavoriteTeamItem({
 	team,
@@ -17,9 +18,9 @@ export default function FavoriteTeamItem({
 	team: TeamDto | null;
 	orderNum: number;
 	isActive: boolean;
-	isDisabled: boolean;
-	onClickItem: () => void;
-	onClickXButton: (e: React.MouseEvent) => void;
+	isDisabled?: boolean;
+	onClickItem?: () => void;
+	onClickXButton?: (e: React.MouseEvent) => void;
 }) {
 	const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
 		id: team?.pk ?? -1,
@@ -71,8 +72,8 @@ export default function FavoriteTeamItem({
 				)}
 			>
 				{/* 팀 선택 취소 x 버튼 */}
-				{!(orderNum === 1 && !team) && (
-					// 1순위 팀 선택 전에는 x 버튼 표시 안 함
+				{/* // 1순위 팀 선택 전에는 x 버튼 표시 안 함 */}
+				{!(orderNum === 1 && !team) && team?.pk !== NO_CHEERING_TEAM_PK && (
 					<button
 						onClick={onClickXButton}
 						className={clsx(

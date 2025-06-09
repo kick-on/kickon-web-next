@@ -16,6 +16,7 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { arrayMove } from '@dnd-kit/sortable';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function FavoriteTeamList({
 	favoriteTeamLeagueMap,
@@ -122,7 +123,8 @@ export default function FavoriteTeamList({
 							isDisabled={
 								!favorite?.team ||
 								favoriteTeamLeagueMap.length === 1 ||
-								(favoriteTeamLeagueMap.length === 2 && !favoriteTeamLeagueMap.at(-1))
+								(favoriteTeamLeagueMap.length === 2 && !favoriteTeamLeagueMap.at(-1)) ||
+								favorite?.team?.pk === NO_CHEERING_TEAM_PK
 							}
 							onClickItem={() => handleItemClick(i)}
 							onClickXButton={(e) => handleXButtonClick(e, i)}
@@ -130,18 +132,21 @@ export default function FavoriteTeamList({
 					))}
 				</SortableContext>
 				{
-					// 이전 팀 선택이 완료되고 선택 팀이 3개 미만일 때 추가 버튼 표시
-					favoriteTeamLeagueMap.at(-1) !== null && favoriteTeamLeagueMap.length < 3 && (
-						<button
-							onClick={handleAddButtonClick}
-							className="w-full h-auto aspect-[5/4] flex flex-col gap-1 justify-center items-center 
+					// 이전 팀 선택이 완료되고 (응원팀이 없어요 제외)
+					// 선택 팀이 3개 미만일 때 추가 버튼 표시
+					favoriteTeamLeagueMap.at(-1) !== null &&
+						favoriteTeamLeagueMap[0].team.pk !== NO_CHEERING_TEAM_PK &&
+						favoriteTeamLeagueMap.length < 3 && (
+							<button
+								onClick={handleAddButtonClick}
+								className="w-full h-auto aspect-[5/4] flex flex-col gap-1 justify-center items-center 
 								rounded-lg bg-black-000 p-[5px] border border-black-300"
-						>
-							<div className="relative w-12 h-12 @mobile:w-[2.1875rem] @mobile:h-[2.1875rem]">
-								<Image src={'/plus.svg'} alt="팀 추가 버튼" fill className="w-auto h-auto" />
-							</div>
-						</button>
-					)
+							>
+								<div className="relative w-12 h-12 @mobile:w-[2.1875rem] @mobile:h-[2.1875rem]">
+									<Image src={'/plus.svg'} alt="팀 추가 버튼" fill className="w-auto h-auto" />
+								</div>
+							</button>
+						)
 				}
 			</div>
 		</DndContext>
