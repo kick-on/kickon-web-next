@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
 import { useEffect, useRef, useState } from 'react';
-import AccountSelectBox from '@/components/common/account-selectbox';
+import Selectbox from '@/components/common/account/selectbox';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { UpdateUserInfoRequest } from '@/services/auth/dto';
@@ -170,9 +170,9 @@ export default function Page() {
 
 			<div className="flex flex-col gap-6">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<AccountSelectBox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
+				<Selectbox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
 				{hasTeam && (
-					<AccountSelectBox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
+					<Selectbox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
 				)}
 			</div>
 
