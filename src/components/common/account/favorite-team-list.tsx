@@ -19,12 +19,14 @@ import { arrayMove } from '@dnd-kit/sortable';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function FavoriteTeamList({
+	isEditable,
 	favoriteTeamLeagueMap,
 	setFavoriteTeamLeagueMap,
 	selectedTeamIndex,
 	setSelectedTeamIndex,
 	clearSelectbox,
 }: {
+	isEditable: boolean;
 	favoriteTeamLeagueMap: (TeamLeagueMap | null)[];
 	setFavoriteTeamLeagueMap: Dispatch<SetStateAction<TeamLeagueMap[]>>;
 	selectedTeamIndex: number;
@@ -119,8 +121,10 @@ export default function FavoriteTeamList({
 							key={favorite?.team?.pk ?? -1}
 							orderNum={i + 1}
 							team={favorite?.team}
-							isActive={selectedTeamIndex === i}
+							isEditable={isEditable}
+							isActive={isEditable && selectedTeamIndex === i}
 							isDisabled={
+								!isEditable ||
 								!favorite?.team ||
 								favoriteTeamLeagueMap.length === 1 ||
 								(favoriteTeamLeagueMap.length === 2 && !favoriteTeamLeagueMap.at(-1)) ||
@@ -132,9 +136,11 @@ export default function FavoriteTeamList({
 					))}
 				</SortableContext>
 				{
+					// 수정 가능 상태에서
 					// 이전 팀 선택이 완료되고 (응원팀이 없어요 제외)
 					// 선택 팀이 3개 미만일 때 추가 버튼 표시
-					favoriteTeamLeagueMap.at(-1) !== null &&
+					isEditable &&
+						favoriteTeamLeagueMap.at(-1) !== null &&
 						favoriteTeamLeagueMap[0].team.pk !== NO_CHEERING_TEAM_PK &&
 						favoriteTeamLeagueMap.length < 3 && (
 							<button

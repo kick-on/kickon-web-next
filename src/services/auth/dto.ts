@@ -28,7 +28,7 @@ export interface UserInfoDto {
 	providerType: string;
 	privacyAgreedAt: string;
 	marketingAgreedAt: string;
-	favoriteTeam?: TeamDto;
+	favoriteTeams?: TeamDto[];
 	league?: LeagueDto;
 }
 

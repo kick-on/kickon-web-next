@@ -7,13 +7,14 @@ import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import dynamic from 'next/dynamic';
 import FavoriteTeamItem from './favorite-team-item';
+import clsx from 'clsx';
 
 // dnd-kit 컴포넌트 hydration mismatch 가능성 존재 -> ssr 비활성화
 const FavoriteTeamList = dynamic(() => import('./favorite-team-list'), {
 	ssr: false,
 	loading: () => (
 		<div className="grid grid-cols-3 gap-2.5">
-			<FavoriteTeamItem team={null} orderNum={1} isActive={true} />
+			<FavoriteTeamItem team={null} orderNum={1} isActive={false} />
 			<div />
 			<div />
 		</div>
@@ -25,7 +26,15 @@ export interface TeamLeagueMap {
 	league: LeagueDto;
 }
 
-export default function FavoriteTeamSection({ setTeams }: { setTeams: Dispatch<SetStateAction<number[]>> }) {
+export default function FavoriteTeamSection({
+	isEditable = true,
+	setTeams,
+	initialTeams,
+}: {
+	isEditable?: boolean;
+	setTeams?: Dispatch<SetStateAction<number[]>>;
+	initialTeams?: TeamDto[];
+}) {
 	const [favoriteTeamLeagueMap, setFavoriteTeamLeagueMap] = useState<(TeamLeagueMap | null)[]>([null]);
 	const [selectedTeamIndex, setSelectedTeamIndex] = useState(0);
 	const favoriteTeamCount = favoriteTeamLeagueMap.filter((team) => team).length;
@@ -83,19 +92,36 @@ export default function FavoriteTeamSection({ setTeams }: { setTeams: Dispatch<S
 
 	// favoriteTeamLeagueMap 변경될 때마다 pk 배열을 위로 전달
 	useEffect(() => {
+		// optional인 setTeams가 undefined이면 return
+		if (!setTeams) return;
+
 		const teams = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
 		setTeams(teams);
 	}, [favoriteTeamLeagueMap, setTeams]);
 
+	useEffect(() => {
+		if (initialTeams) {
+			const initialFavoriteTeamLeagueMap: TeamLeagueMap[] = initialTeams.map((team) => ({
+				league: { nameEn: '', nameKr: '', pk: 0, logoUrl: '' },
+				team,
+			}));
+			setFavoriteTeamLeagueMap(initialFavoriteTeamLeagueMap);
+		}
+	}, [initialTeams]);
+
 	return (
 		<div className="flex flex-col">
 			<div className="subtitle1-semibold mb-2">
-				MY팀 선택 (<span className="text-primary-900">{favoriteTeamCount}</span>/3)
+				MY팀 {isEditable && '선택'} (
+				<span className={clsx({ 'text-primary-900': isEditable })}>{favoriteTeamCount}</span>/3)
 			</div>
-			<div className="caption1-regular mb-6">* 최대 3순위까지 선택할 수 있으며, 프로필에는 1순위만 표기돼요.</div>
+			<div className="caption1-regular mb-6">
+				* {isEditable && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
+			</div>
 
 			<div className="mb-[1.125rem]">
 				<FavoriteTeamList
+					isEditable={isEditable}
 					favoriteTeamLeagueMap={favoriteTeamLeagueMap}
 					setFavoriteTeamLeagueMap={setFavoriteTeamLeagueMap}
 					selectedTeamIndex={selectedTeamIndex}
@@ -104,23 +130,25 @@ export default function FavoriteTeamSection({ setTeams }: { setTeams: Dispatch<S
 				/>
 			</div>
 
-			<div className="space-y-6">
-				<Selectbox
-					category="리그"
-					favoriteTeamLength={favoriteTeamLeagueMap.length}
-					content={league}
-					onChange={handleLeagueChange}
-				/>
-				{league && league.pk !== NO_CHEERING_TEAM_PK && (
+			{isEditable && (
+				<div className="space-y-6">
 					<Selectbox
-						category="응원팀"
-						isOpen={isDropdownOpen}
-						content={team}
-						league={league.pk}
-						onChange={handleTeamChange}
+						category="리그"
+						favoriteTeamLength={favoriteTeamLeagueMap.length}
+						content={league}
+						onChange={handleLeagueChange}
 					/>
-				)}
-			</div>
+					{league && league.pk !== NO_CHEERING_TEAM_PK && (
+						<Selectbox
+							category="응원팀"
+							isOpen={isDropdownOpen}
+							content={team}
+							league={league.pk}
+							onChange={handleTeamChange}
+						/>
+					)}
+				</div>
+			)}
 		</div>
 	);
 }

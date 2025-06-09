@@ -12,6 +12,7 @@ export default function FavoriteTeamItem({
 	orderNum,
 	isActive,
 	isDisabled,
+	isEditable = true,
 	onClickItem,
 	onClickXButton,
 }: {
@@ -19,6 +20,7 @@ export default function FavoriteTeamItem({
 	orderNum: number;
 	isActive: boolean;
 	isDisabled?: boolean;
+	isEditable?: boolean;
 	onClickItem?: () => void;
 	onClickXButton?: (e: React.MouseEvent) => void;
 }) {
@@ -66,14 +68,15 @@ export default function FavoriteTeamItem({
 					}
 				}}
 				className={clsx(
-					`relative w-full h-auto aspect-[5/4] cursor-pointer
-          flex flex-col gap-1 justify-center items-center rounded-lg bg-black-000`,
+					`relative w-full h-auto aspect-[5/4] flex flex-col gap-1
+					justify-center items-center rounded-lg bg-black-000`,
+					isEditable ? 'cursor-pointer' : 'cursor-default',
 					isActive ? 'p-[4px] pb-[2px] border-2 border-primary-900' : 'p-[5px] pb-[3px] border border-black-300',
 				)}
 			>
 				{/* 팀 선택 취소 x 버튼 */}
-				{/* // 1순위 팀 선택 전에는 x 버튼 표시 안 함 */}
-				{!(orderNum === 1 && !team) && team?.pk !== NO_CHEERING_TEAM_PK && (
+				{/* 1순위 팀 선택 전에는 x 버튼 표시 안 함 */}
+				{isEditable && !(orderNum === 1 && !team) && team?.pk !== NO_CHEERING_TEAM_PK && (
 					<button
 						onClick={onClickXButton}
 						className={clsx(
@@ -95,7 +98,7 @@ export default function FavoriteTeamItem({
 						>
 							<Image className="w-auto h-auto object-contain" src={team.logoUrl} alt="로고" fill />
 						</div>
-						{!isDisabled && (
+						{isEditable && !isDisabled && (
 							<div className={clsx('flex gap-0.5', { 'brightness-0': isDragging })}>
 								<Image src="/draggable.svg" alt="드래그 아이콘" width={18} height={18} />
 							</div>
