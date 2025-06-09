@@ -119,7 +119,7 @@ export default function FavoriteTeamSection({
 				* {isEditable && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
 			</div>
 
-			<div className="mb-[1.125rem]">
+			<div>
 				<FavoriteTeamList
 					isEditable={isEditable}
 					favoriteTeamLeagueMap={favoriteTeamLeagueMap}
@@ -131,7 +131,7 @@ export default function FavoriteTeamSection({
 			</div>
 
 			{isEditable && (
-				<div className="space-y-6">
+				<div className="space-y-6 mt-[1.125rem]">
 					<Selectbox
 						category="리그"
 						favoriteTeamLength={favoriteTeamLeagueMap.length}

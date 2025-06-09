@@ -135,13 +135,15 @@ export default function Page() {
 				<input ref={fileInputRef} type="file" onChange={handleFileChange} className="hidden" />
 			</div>
 
-			<div className="w-full flex flex-col gap-[3.125rem] @mobile:gap-10">
+			<div className="w-full flex flex-col gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 				<FavoriteTeamSection isEditable={isEditable} initialTeams={teams} />
 			</div>
 
-			<div className="relative flex flex-col gap-2 mt-[4.25rem]">
-				<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">계정 관리</div>
+			<hr className="w-full my-10 h-[1px] border-black-200 @mobile:border-black-300" />
+
+			<div className="relative flex flex-col gap-2">
+				<div className="flex gap-1.5 items-center subtitle1-semibold">계정 관리</div>
 				<div
 					className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-14
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
