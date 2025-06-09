@@ -17,6 +17,7 @@ export default function Selectbox({
 	content,
 	onChange,
 	isEditable = true,
+	isOpen = false,
 }: {
 	category: '리그' | '응원팀';
 	favoriteTeamLength?: number;
@@ -24,8 +25,9 @@ export default function Selectbox({
 	content: LeagueDto | TeamDto;
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
+	isOpen?: boolean;
 }) {
-	const [isVisibleOptions, setIsVisibleOptions] = useState(!!(isEditable && league));
+	const [isVisibleOptions, setIsVisibleOptions] = useState(isOpen);
 	const [options, setOptions] = useState<LeagueDto[] | TeamDto[]>([]);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
@@ -60,6 +62,11 @@ export default function Selectbox({
 		onChange(selectedOption);
 		setIsVisibleOptions(false);
 	};
+
+	useEffect(() => {
+		// props isOpen 값 변경 시마다 isVisibleOptions에 반영
+		setIsVisibleOptions(isOpen);
+	}, [isOpen]);
 
 	useEffect(() => {
 		const getOptions = async () => {

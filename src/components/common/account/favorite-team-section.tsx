@@ -32,6 +32,7 @@ export default function FavoriteTeamSection() {
 
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
+	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	// 다른 순위의 팀을 선택했을 때마다 실행 (ex. 1순위 팀 -> 2순위 팀)
 	useEffect(() => {
@@ -41,8 +42,6 @@ export default function FavoriteTeamSection() {
 	}, [selectedTeamIndex, favoriteTeamLeagueMap]);
 
 	const handleLeagueChange = (selectedLeague: LeagueDto) => {
-		setLeague(selectedLeague);
-
 		// 응원팀이 없는 상태 -> 다른 리그를 선택한 경우
 		if (league?.pk === NO_CHEERING_TEAM_PK) {
 			setTeam(null);
@@ -55,6 +54,9 @@ export default function FavoriteTeamSection() {
 			);
 			setFavoriteTeamLeagueMap(newFavoriteTeamLeagueMap);
 		}
+
+		setLeague(selectedLeague);
+		setIsDropdownOpen(true); // 리그 선택 시 팀 선택 드롭다운 자동 오픈
 	};
 
 	const handleTeamChange = (selectedTeam: TeamDto) => {
@@ -68,8 +70,10 @@ export default function FavoriteTeamSection() {
 		const newFavoriteTeamLeagueMap = favoriteTeamLeagueMap.map((favorite, i) =>
 			i === selectedTeamIndex ? { league, team: selectedTeam } : favorite,
 		);
+
 		setFavoriteTeamLeagueMap(newFavoriteTeamLeagueMap);
 		setTeam(selectedTeam);
+		setIsDropdownOpen(false);
 	};
 
 	const clearSelectbox = () => {
@@ -102,7 +106,13 @@ export default function FavoriteTeamSection() {
 					onChange={handleLeagueChange}
 				/>
 				{league && league.pk !== NO_CHEERING_TEAM_PK && (
-					<Selectbox category="응원팀" content={team} league={league.pk} onChange={handleTeamChange} />
+					<Selectbox
+						category="응원팀"
+						isOpen={isDropdownOpen}
+						content={team}
+						league={league.pk}
+						onChange={handleTeamChange}
+					/>
 				)}
 			</div>
 		</div>
