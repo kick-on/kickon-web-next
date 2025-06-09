@@ -2,7 +2,7 @@
 
 import { LeagueDto } from '@/services/apis/league/dto';
 import Selectbox from './selectbox';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TeamDto } from '@/services/apis/team/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import dynamic from 'next/dynamic';
@@ -25,7 +25,7 @@ export interface TeamLeagueMap {
 	league: LeagueDto;
 }
 
-export default function FavoriteTeamSection() {
+export default function FavoriteTeamSection({ setTeams }: { setTeams: Dispatch<SetStateAction<number[]>> }) {
 	const [favoriteTeamLeagueMap, setFavoriteTeamLeagueMap] = useState<(TeamLeagueMap | null)[]>([null]);
 	const [selectedTeamIndex, setSelectedTeamIndex] = useState(0);
 	const favoriteTeamCount = favoriteTeamLeagueMap.filter((team) => team).length;
@@ -80,6 +80,12 @@ export default function FavoriteTeamSection() {
 		setLeague(null);
 		setTeam(null);
 	};
+
+	// favoriteTeamLeagueMap 변경될 때마다 pk 배열을 위로 전달
+	useEffect(() => {
+		const teams = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
+		setTeams(teams);
+	}, [favoriteTeamLeagueMap, setTeams]);
 
 	return (
 		<div className="flex flex-col">

@@ -12,7 +12,7 @@ export interface UpdatePrivacyRequest {
 export interface UpdateUserInfoRequest {
 	profileImageUrl?: string;
 	nickname: string;
-	team?: number;
+	teams?: number[];
 	league?: number;
 }
 
