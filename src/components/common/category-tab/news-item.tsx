@@ -21,7 +21,7 @@ export default function NewsItem({
 }: NewsItemDto & { isMyTeam?: boolean }) {
 	return (
 		<Link href={`/news/${pk}`}>
-			<article className="flex flex-col py-6 px-4 cursor-pointer">
+			<article className="flex flex-col my-2 py-4 px-4 cursor-pointer">
 				<header className="flex gap-2 mb-2.5 items-center">
 					{team && !isMyTeam && (
 						<Image
