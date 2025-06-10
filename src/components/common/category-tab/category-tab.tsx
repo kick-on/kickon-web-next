@@ -58,7 +58,7 @@ export default async function CategoryTab({
 		: null;
 
 	return (
-		<div className="flex flex-col w-full @mobile:w-[calc(100vw-34px)] overflow-hidden">
+		<div className="flex flex-col overflow-hidden">
 			<TabBar mode={mode} q={q} type={type} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (

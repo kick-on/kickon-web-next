@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { getLeague } from '@/services/apis/league';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Selectbox({
 	q,
@@ -20,8 +21,11 @@ export default function Selectbox({
 	const [isVisibleOptions, setIsVisibleOptions] = useState(false);
 	const [options, setOptions] = useState<LeagueDto[] | null>(null);
 	const [league, setLeague] = useState<LeagueDto | null>(null);
+
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
-	const route = useRouter();
+	const router = useRouter();
+
+	const isMobile = useIsMobile();
 
 	const handleSelectBoxClick = () => {
 		setIsVisibleOptions(!isVisibleOptions);
@@ -31,10 +35,10 @@ export default function Selectbox({
 		if (league?.pk === selectedPk) return;
 
 		const selectedLeague = options.find((option) => option.pk === selectedPk);
+
+		router.push(`/news?q=${selectedLeague.nameKr}&type=league&id=${selectedLeague.pk}`);
 		setLeague(selectedLeague);
 		setIsVisibleOptions(false);
-
-		route.push(`/news?q=${selectedLeague.nameKr}&type=league&id=${selectedLeague.pk}`);
 	};
 
 	useEffect(() => {
@@ -52,15 +56,11 @@ export default function Selectbox({
 	}, []);
 
 	useEffect(() => {
-		if (type === 'league' && q) {
-			setLeague({
-				nameKr: q,
-				nameEn: q,
-				pk: -1,
-				logoUrl: '',
-			});
+		if (type === 'league' && q && options) {
+			const selectedLeague = options.find((option) => option.nameKr === q);
+			setLeague(selectedLeague);
 		}
-	}, [type, q]);
+	}, [type, q, options]);
 
 	useEffect(() => {
 		// isVisibleOptions가 true일 때만 리스너 등록
@@ -85,23 +85,34 @@ export default function Selectbox({
 		}
 	}, [isClickedOtherTab]);
 
+	if (isMobile === null) return;
+
 	return (
-		<div ref={dropboxRef} className="relative flex justify-center">
+		<div ref={dropboxRef} className="relative grow">
 			<button
 				onClick={handleSelectBoxClick}
 				className={clsx(
-					`flex items-center gap-2 min-w-[5.625rem] pl-4 pr-1.5 pt-[1.0625rem] pb-[0.9375rem] rounded-t-[0.625rem]`,
+					`flex items-center justify-center gap-2 h-full min-w-[5.625rem] @mobile:w-full
+					pl-4 @mobile:pl-3 pr-1.5 rounded-t-[0.625rem]`,
 					isClickedOtherTab
-						? 'hover:text-black-900 text-black-800'
+						? 'hover:text-black-900 text-black-700'
 						: 'bg-black-000 shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)] header-semibold text-primary-900',
 				)}
 			>
-				<div>{!league ? '리그 선택' : league.nameKr || league.nameEn}</div>
+				{isMobile ? (
+					league ? (
+						<Image className="w-8 h-8 object-contain" src={league.logoUrl} alt="로고" width={32} height={32} />
+					) : (
+						<div>리그 선택</div>
+					)
+				) : (
+					<div>{!league ? '리그 선택' : league.nameKr || league.nameEn}</div>
+				)}
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
 			{isVisibleOptions && (
 				<div
-					className="absolute z-10 w-[12.5rem] top-13 left-0 @mobile:w-max @mobile:right-0
+					className="absolute z-10 w-[12.5rem] top-13 @not-mobile:left-0 @mobile:right-4 @mobile:w-max
 						shadow-select-options border border-black-200 rounded-[0.625rem]"
 				>
 					{!options

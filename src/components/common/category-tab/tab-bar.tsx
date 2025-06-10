@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import Selectbox from './select-box';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import Image from 'next/image';
+import { Suspense } from 'react';
 
 export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: string; type: string }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -14,7 +15,8 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 
 	return (
 		<div
-			className="relative flex rounded-t-[0.625rem] bg-black-200 header-medium
+			className="relative w-full flex rounded-t-[0.625rem] bg-black-200 header-medium
+				@mobile:grid @mobile:grid-cols-[1fr_1fr_1fr_clamp(100px,30vw,150px)]
 				before:content-[''] before:absolute before:-top-1 before:-left-1 before:bottom-0 before:-right-1
 				before:inset-shadow-[0px_-2px_4px_0px_rgba(0,0,0,0.10)]
 				after:content-[''] after:absolute after:-bottom-4 after:left-0 after:right-0
@@ -27,7 +29,7 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 						key={tab}
 						className={clsx(
 							`relative flex pt-[1.0625rem] pb-[0.9375rem] rounded-t-[0.625rem]
-							w-[5.625rem] justify-center @mobile:w-auto before:rounded-t-[0.625rem]
+							w-[5.625rem] @mobile:w-full justify-center before:rounded-t-[0.625rem]
 							before:content-[''] before:absolute before:top-0 before:left-0 before:bottom-0 before:right-0
 							before:bg-black-000 before:shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)]`,
 							q === tab
@@ -51,9 +53,9 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 
 			{/* 리그 선택 */}
 			{isNews && (
-				<div>
+				<Suspense>
 					<Selectbox q={q} type={type} isClickedOtherTab={tabs.includes(q)} />
-				</div>
+				</Suspense>
 			)}
 		</div>
 	);
