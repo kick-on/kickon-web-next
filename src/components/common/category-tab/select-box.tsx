@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { getLeague } from '@/services/apis/league';
 
-export default function SelectBox({
+export default function Selectbox({
 	q,
 	type,
 	isClickedOtherTab = false,
@@ -86,21 +86,22 @@ export default function SelectBox({
 	}, [isClickedOtherTab]);
 
 	return (
-		<div ref={dropboxRef} className="relative w-fit">
-			<button onClick={handleSelectBoxClick} className="flex items-center">
-				<div
-					className={clsx(
-						'border-b-2 py-[0.9375rem] px-2 @max-[350px]:px-1',
-						isClickedOtherTab ? 'border-transparent' : 'border-primary-900 text-primary-900 header-semibold',
-					)}
-				>
-					{!league ? '리그 선택' : league.nameKr || league.nameEn}
-				</div>
+		<div ref={dropboxRef} className="relative flex justify-center">
+			<button
+				onClick={handleSelectBoxClick}
+				className={clsx(
+					`flex items-center gap-2 min-w-[5.625rem] pl-4 pr-1.5 pt-[1.0625rem] pb-[0.9375rem] rounded-t-[0.625rem]`,
+					isClickedOtherTab
+						? 'hover:text-black-900 text-black-800'
+						: 'bg-black-000 shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)] header-semibold text-primary-900',
+				)}
+			>
+				<div>{!league ? '리그 선택' : league.nameKr || league.nameEn}</div>
 				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
 			</button>
 			{isVisibleOptions && (
 				<div
-					className="absolute z-10 w-[12.5rem] top-[2.5625rem] @mobile:w-max @mobile:right-0
+					className="absolute z-10 w-[12.5rem] top-13 left-0 @mobile:w-max @mobile:right-0
 						shadow-select-options border border-black-200 rounded-[0.625rem]"
 				>
 					{!options

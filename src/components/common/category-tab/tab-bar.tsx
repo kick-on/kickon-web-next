@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import clsx from 'clsx';
-import SelectBox from './select-box';
+import Selectbox from './select-box';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import Image from 'next/image';
 
@@ -13,33 +13,46 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 	const isNews = mode === 'news';
 
 	return (
-		<div className="flex gap-3 pt-[0.9375rem] @mobile:pt-2 pl-4 header-medium border-b border-black-300">
+		<div
+			className="relative flex rounded-t-[0.625rem] bg-black-200 header-medium
+				before:content-[''] before:absolute before:-top-1 before:-left-1 before:bottom-0 before:-right-1
+				before:inset-shadow-[0px_-2px_4px_0px_rgba(0,0,0,0.10)]
+				after:content-[''] after:absolute after:-bottom-4 after:left-0 after:right-0
+				after:h-4 after:bg-black-000"
+		>
 			{tabs.map((tab, i) =>
 				!tab ? null : (
 					<Link
 						href={`/${mode}?q=${tab}` + (i === 2 ? `&type=team&id=${currentUserInfo?.favoriteTeams[0]?.pk}` : '')}
 						key={tab}
 						className={clsx(
-							'flex px-2 @max-[350px]:px-1 py-[0.9375rem] border-b-2',
-							q === tab ? 'border-primary-900 text-primary-900 header-semibold' : 'border-transparent',
+							`relative flex pt-[1.0625rem] pb-[0.9375rem] rounded-t-[0.625rem]
+							w-[5.625rem] justify-center @mobile:w-auto before:rounded-t-[0.625rem]
+							before:content-[''] before:absolute before:top-0 before:left-0 before:bottom-0 before:right-0
+							before:bg-black-000 before:shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)]`,
+							q === tab
+								? 'before:block header-semibold text-primary-900'
+								: 'before:hidden text-black-700 hover:text-black-900 ',
 						)}
 					>
-						{tab}
+						<div className="relative z-20">{tab}</div>
 						{i === 2 && (
 							<Image
 								src={currentUserInfo?.favoriteTeams[0]?.logoUrl}
 								alt="로고 이미지"
 								width={16}
 								height={16}
-								className="w-4 h-4 ml-0.5 object-contain"
+								className="w-4 h-4 ml-0.5 object-contain relative z-20"
 							/>
 						)}
 					</Link>
 				),
 			)}
+
+			{/* 리그 선택 */}
 			{isNews && (
 				<div>
-					<SelectBox q={q} type={type} isClickedOtherTab={tabs.includes(q)} />
+					<Selectbox q={q} type={type} isClickedOtherTab={tabs.includes(q)} />
 				</div>
 			)}
 		</div>
