@@ -103,13 +103,11 @@ export default function Page() {
 
 				setProfileImageUrl(response.data.profileImageUrl);
 				setNickname(response.data.nickname);
-				if (response.data.favoriteTeams) {
-					setTeams(
-						response.data.favoriteTeams ?? [
-							{ nameEn: 'no cheering team', nameKr: '응원팀이 없어요.', pk: -1, logoUrl: '/ban.svg' },
-						],
-					);
-				}
+				setTeams(
+					response.data.favoriteTeams ?? [
+						{ nameEn: 'no cheering team', nameKr: '응원팀이 없어요.', pk: -1, logoUrl: '/ban.svg' },
+					],
+				);
 			}
 		};
 		getCurrentUserInfo();
