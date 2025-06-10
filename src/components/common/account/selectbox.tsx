@@ -12,24 +12,28 @@ import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function Selectbox({
 	category,
+	favoriteTeamLength,
 	league,
 	content,
 	onChange,
 	isEditable = true,
+	isOpen = false,
 }: {
 	category: '리그' | '응원팀';
+	favoriteTeamLength?: number;
 	league?: number;
 	content: LeagueDto | TeamDto;
 	onChange: (selectedOption: LeagueDto | TeamDto) => void;
 	isEditable?: boolean;
+	isOpen?: boolean;
 }) {
-	const [isVisibleOptions, setIsVisibleOptions] = useState(!!(isEditable && league));
+	const [isOptionListVisible, setIsOptionListVisible] = useState(isOpen);
 	const [options, setOptions] = useState<LeagueDto[] | TeamDto[]>([]);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
 
 	const handleSelectBoxClick = () => {
-		setIsVisibleOptions(!isVisibleOptions);
+		setIsOptionListVisible(!isOptionListVisible);
 	};
 
 	const handleOptionClick = (selectedPk: number) => {
@@ -56,8 +60,13 @@ export default function Selectbox({
 
 		console.log(selectedOption);
 		onChange(selectedOption);
-		setIsVisibleOptions(false);
+		setIsOptionListVisible(false);
 	};
+
+	useEffect(() => {
+		// props isOpen 값 변경 시마다 isOptionListVisible에 반영
+		setIsOptionListVisible(isOpen);
+	}, [isOpen]);
 
 	useEffect(() => {
 		const getOptions = async () => {
@@ -71,13 +80,13 @@ export default function Selectbox({
 	}, [isLeagueSelectBox, league]);
 
 	useEffect(() => {
-		// isVisibleOptions가 true일 때만 리스너 등록
-		if (!isVisibleOptions) return;
+		// isOptionListVisible가 true일 때만 리스너 등록
+		if (!isOptionListVisible) return;
 
 		// 드롭박스 외부 클릭 시 닫음
 		const handleOutsideClick = (e: MouseEvent) => {
 			if (!dropboxRef.current.contains(e.target as Node)) {
-				setIsVisibleOptions(false);
+				setIsOptionListVisible(false);
 			}
 		};
 
@@ -85,7 +94,7 @@ export default function Selectbox({
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
 		};
-	}, [isVisibleOptions]);
+	}, [isOptionListVisible]);
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -112,7 +121,7 @@ export default function Selectbox({
 					)}
 				</button>
 
-				{isVisibleOptions && !!options.length && (
+				{isOptionListVisible && !!options.length && (
 					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]">
 						{options.map((option, index) => (
 							<div
@@ -126,7 +135,7 @@ export default function Selectbox({
 								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
-						{isLeagueSelectBox && (
+						{isLeagueSelectBox && favoriteTeamLength === 1 && (
 							<div
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"

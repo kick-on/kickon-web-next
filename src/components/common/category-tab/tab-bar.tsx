@@ -9,7 +9,7 @@ import Image from 'next/image';
 export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: string; type: string }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
-	const tabs = ['전체', '인기', currentUserInfo?.favoriteTeam ? 'MY 팀' : null];
+	const tabs = ['전체', '인기', currentUserInfo?.favoriteTeams ? 'MY 팀' : null];
 	const isNews = mode === 'news';
 
 	return (
@@ -17,7 +17,7 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 			{tabs.map((tab, i) =>
 				!tab ? null : (
 					<Link
-						href={`/${mode}?q=${tab}` + (i === 2 ? `&type=team&id=${currentUserInfo?.favoriteTeam?.pk}` : '')}
+						href={`/${mode}?q=${tab}` + (i === 2 ? `&type=team&id=${currentUserInfo?.favoriteTeams[0]?.pk}` : '')}
 						key={tab}
 						className={clsx(
 							'flex px-2 @max-[350px]:px-1 py-[0.9375rem] border-b-2',
@@ -27,7 +27,7 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 						{tab}
 						{i === 2 && (
 							<Image
-								src={currentUserInfo?.favoriteTeam?.logoUrl}
+								src={currentUserInfo?.favoriteTeams[0]?.logoUrl}
 								alt="로고 이미지"
 								width={16}
 								height={16}

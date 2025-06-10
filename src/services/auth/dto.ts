@@ -12,7 +12,7 @@ export interface UpdatePrivacyRequest {
 export interface UpdateUserInfoRequest {
 	profileImageUrl?: string;
 	nickname: string;
-	team?: number;
+	teams?: number[];
 	league?: number;
 }
 
@@ -28,7 +28,7 @@ export interface UserInfoDto {
 	providerType: string;
 	privacyAgreedAt: string;
 	marketingAgreedAt: string;
-	favoriteTeam?: TeamDto;
+	favoriteTeams?: TeamDto[];
 	league?: LeagueDto;
 }
 

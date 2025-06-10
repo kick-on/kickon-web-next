@@ -4,15 +4,13 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
 import { useEffect, useRef, useState } from 'react';
-import Selectbox from '@/components/common/account/selectbox';
-import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { UpdateUserInfoRequest } from '@/services/auth/dto';
 import { getUserInfo, updateUserInfo } from '@/services/auth';
-import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { setCookie } from '@/lib/utils/cookie';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
+import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 
 export default function Page() {
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
@@ -20,24 +18,12 @@ export default function Page() {
 	const [profileImageUrl, setProfileImageUrl] = useState('');
 	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [nickname, setNickname] = useState<string | null>(null);
-	const [league, setLeague] = useState<LeagueDto>({
-		pk: NO_CHEERING_TEAM_PK,
-		nameKr: '응원팀이 없어요.',
-		nameEn: 'no cheering team',
-		logoUrl: '/ban.svg',
-	});
-	const [team, setTeam] = useState<TeamDto>({
-		pk: NO_CHEERING_TEAM_PK,
-		nameKr: '응원팀이 없어요.',
-		nameEn: 'no cheering team',
-		logoUrl: '/ban.svg',
-	});
+	const [teams, setTeams] = useState<(TeamDto | null)[] | null>(null);
 
 	const router = useRouter();
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const isEditable = false;
-	const hasTeam = league.nameKr !== '응원팀이 없어요.';
 	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 
 	// 이미지 업로드
@@ -75,16 +61,6 @@ export default function Page() {
 		}
 	};
 
-	const handleLeagueChange = (selectedLeague) => {
-		if (selectedLeague === league) return;
-		setLeague(selectedLeague);
-	};
-
-	const handleTeamChange = (selectedTeam) => {
-		if (selectedTeam === team) return;
-		setTeam(selectedTeam);
-	};
-
 	const handleCancelButtonClick = () => {
 		const previousPage = sessionStorage.getItem('previousPage');
 		router.push(previousPage);
@@ -94,7 +70,7 @@ export default function Page() {
 		const body: UpdateUserInfoRequest = {
 			profileImageUrl,
 			nickname,
-			team: team.pk === -1 ? undefined : team.pk, // 응원하는 팀이 없는 경우 team을 undefined로
+			teams: !teams || teams[0].pk === -1 ? undefined : teams.map((team) => team?.pk), // 응원하는 팀이 없는 경우 team을 undefined로
 			// league: league.pk, 현재 서버에서 league를 처리하지 않음
 		};
 
@@ -127,21 +103,12 @@ export default function Page() {
 
 				setProfileImageUrl(response.data.profileImageUrl);
 				setNickname(response.data.nickname);
-				if (response.data.league) {
-					setLeague({
-						pk: response.data.league.pk,
-						nameKr: response.data.league.nameKr,
-						nameEn: response.data.league.nameEn,
-						logoUrl: response.data.league.logoUrl,
-					});
-				}
-				if (response.data.favoriteTeam) {
-					setTeam({
-						pk: response.data.favoriteTeam.pk,
-						nameKr: response.data.favoriteTeam.nameKr,
-						nameEn: response.data.favoriteTeam.nameEn,
-						logoUrl: response.data.favoriteTeam.logoUrl,
-					});
+				if (response.data.favoriteTeams) {
+					setTeams(
+						response.data.favoriteTeams ?? [
+							{ nameEn: 'no cheering team', nameKr: '응원팀이 없어요.', pk: -1, logoUrl: '/ban.svg' },
+						],
+					);
 				}
 			}
 		};
@@ -168,16 +135,15 @@ export default function Page() {
 				<input ref={fileInputRef} type="file" onChange={handleFileChange} className="hidden" />
 			</div>
 
-			<div className="flex flex-col gap-6">
+			<div className="w-full flex flex-col gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<Selectbox isEditable={isEditable} category={'리그'} content={league} onChange={handleLeagueChange} />
-				{hasTeam && (
-					<Selectbox isEditable={isEditable} category={'응원팀'} content={team} onChange={handleTeamChange} />
-				)}
+				<FavoriteTeamSection isEditable={isEditable} initialTeams={teams} />
 			</div>
 
-			<div className="relative flex flex-col gap-2 mt-[4.25rem]">
-				<div className="flex gap-1.5 items-center subtitle1-medium @mobile:text-13">계정 관리</div>
+			<hr className="w-full my-10 h-[1px] border-black-200 @mobile:border-black-300" />
+
+			<div className="relative flex flex-col gap-2">
+				<div className="flex gap-1.5 items-center subtitle1-semibold">계정 관리</div>
 				<div
 					className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-14
 						border border-black-300 rounded-lg bg-black-100 body3-regular"
