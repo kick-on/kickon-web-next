@@ -28,14 +28,12 @@ export default function Page() {
 	const teams = useMemo(() => {
 		return [
 			{ label: '전체', value: '전체' },
-			...(currentUserInfo?.favoriteTeam?.pk
-				? [
-						{
-							label: currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn || '내 팀',
-							value: String(currentUserInfo.favoriteTeam.pk),
-							logo: currentUserInfo.favoriteTeam.logoUrl,
-						},
-					]
+			...(currentUserInfo?.favoriteTeams
+				? currentUserInfo.favoriteTeams.map((team) => ({
+						label: team.nameKr || team.nameEn || '내 팀',
+						value: String(team.pk),
+						logo: team.logoUrl,
+					}))
 				: []),
 		];
 	}, [currentUserInfo]);
@@ -195,7 +193,7 @@ export default function Page() {
 								onClick={() => handleOptionClick(option)}
 							>
 								<div className="flex items-center gap-2">
-									{option.logo && (
+									{'logo' in option && (
 										<Image
 											className="w-4 h-4 object-contain"
 											src={option.logo}

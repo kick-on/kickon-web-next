@@ -71,10 +71,10 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 							{currentUserInfo.nickname}
 							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
 						</div>
-						{currentUserInfo.favoriteTeam && (
+						{currentUserInfo.favoriteTeams && (
 							<Image
 								className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
-								src={currentUserInfo.favoriteTeam.logoUrl}
+								src={currentUserInfo.favoriteTeams[0].logoUrl}
 								alt="팀 로고 이미지"
 								width={16}
 								height={16}
@@ -94,7 +94,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 				<div className="flex flex-col gap-3 px-1.5 body4-semibold">
 					<div className="flex justify-between items-center">
 						<span className="body5-regular @mobile:text-12">
-							이번 시즌 {currentUserInfo?.favoriteTeam ? '우리 팀 내' : '전체'} 순위
+							이번 시즌 {currentUserInfo?.favoriteTeams ? '우리 팀 내' : '전체'} 순위
 						</span>
 						{extraUserInfo?.ranking || '- '}위
 					</div>

@@ -35,7 +35,7 @@ const DetailPage = () => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	const isTeamNull = contents?.data?.team == null;
-	const isOurTeam = currentUserInfo?.favoriteTeam?.pk === contents?.data?.team?.pk;
+	const isOurTeam = Boolean(currentUserInfo?.favoriteTeams.find((team) => team?.pk === contents?.data?.team?.pk));
 	const isCommentAllowed = isTeamNull || isOurTeam;
 
 	const [shouldCallApi, setShouldCallApi] = useState(false);
@@ -142,7 +142,7 @@ const DetailPage = () => {
 
 			<RecommendedContent
 				mode={type}
-				teamLogo={currentUserInfo?.favoriteTeam?.logoUrl}
+				teamLogo={currentUserInfo?.favoriteTeams[0]?.logoUrl}
 				teamName={isOurTeam ? contents?.data.team?.nameKr : ''}
 			/>
 		</div>
