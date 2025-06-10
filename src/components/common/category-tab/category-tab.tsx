@@ -66,7 +66,7 @@ export default async function CategoryTab({
 			) : !response.data.length ? (
 				<EmptyState isNews={isNews} />
 			) : (
-				<div className="flex flex-col w-full pb-10 @mobile:pb-0">
+				<div className="flex flex-col w-full">
 					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
 					<MoreList {...moreListProps} />
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />

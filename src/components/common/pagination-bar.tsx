@@ -31,7 +31,7 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 	const isLastGroup = endPage === totalPages;
 
 	return (
-		<div className="flex gap-3 body6-regular items-center mx-auto @mobile:hidden">
+		<div className="flex gap-3 body6-regular items-center mx-auto my-10 @mobile:hidden">
 			{/* 이전 그룹 버튼 */}
 			<button
 				onClick={() => handlePageClick(startPage - 1)}
