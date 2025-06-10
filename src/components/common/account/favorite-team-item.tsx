@@ -70,7 +70,7 @@ export default function FavoriteTeamItem({
 				className={clsx(
 					`relative w-full h-auto aspect-[5/4] flex flex-col gap-1
 					justify-center items-center rounded-lg bg-black-000`,
-					isEditable ? 'cursor-pointer' : 'cursor-default',
+					isEditable ? 'cursor-pointer' : 'pointer-events-none',
 					isActive ? 'p-[4px] pb-[2px] border-2 border-primary-900' : 'p-[5px] pb-[3px] border border-black-300',
 				)}
 			>
