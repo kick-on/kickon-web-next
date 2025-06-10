@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import OptionItem from '../option-item';
 import clsx from 'clsx';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { getLeague } from '@/services/apis/league';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -23,6 +23,7 @@ export default function Selectbox({
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
+	const pathname = usePathname();
 	const router = useRouter();
 
 	const isMobile = useIsMobile();
@@ -36,7 +37,7 @@ export default function Selectbox({
 
 		const selectedLeague = options.find((option) => option.pk === selectedPk);
 
-		router.push(`/news?q=${selectedLeague.nameKr}&type=league&id=${selectedLeague.pk}`);
+		router.push(`${pathname}?q=${selectedLeague.nameKr}&type=league&id=${selectedLeague.pk}`);
 		setLeague(selectedLeague);
 		setIsVisibleOptions(false);
 	};
