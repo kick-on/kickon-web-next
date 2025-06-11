@@ -11,7 +11,7 @@ export default function TeamBar() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const teams = currentUserInfo?.favoriteTeams;
 
-	if (!teams) return;
+	if (teams.length === 0) return;
 
 	return (
 		<>

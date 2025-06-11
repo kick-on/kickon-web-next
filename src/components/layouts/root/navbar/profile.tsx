@@ -71,7 +71,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 							{currentUserInfo.nickname}
 							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
 						</div>
-						{currentUserInfo.favoriteTeams && (
+						{currentUserInfo.favoriteTeams.length > 0 && (
 							<Image
 								className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
 								src={currentUserInfo.favoriteTeams[0].logoUrl}

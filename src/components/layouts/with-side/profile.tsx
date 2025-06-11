@@ -105,7 +105,7 @@ export default function Profile() {
 											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
 											<div className="body3-regular text-black-800">님</div>
 										</div>
-										{currentUserInfo?.favoriteTeams && (
+										{currentUserInfo?.favoriteTeams.length > 0 && (
 											<Image
 												className="w-4 h-4 object-contain my-auto"
 												width={16}

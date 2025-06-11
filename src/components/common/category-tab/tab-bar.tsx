@@ -11,7 +11,7 @@ import TeamBar from './team-bar';
 export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: string; type: string }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
-	const tabs = ['전체', '인기', currentUserInfo?.favoriteTeams ? 'MY 팀' : null];
+	const tabs = ['전체', '인기', currentUserInfo?.favoriteTeams.length > 0 ? 'MY 팀' : null];
 	const isNews = mode === 'news';
 
 	return (
@@ -62,7 +62,7 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 				)}
 			</div>
 
-			{/* 팀 선택 바 */}
+			{/* 팀 선택 바 - 응원팀이 2개 이상일 때 */}
 			{type === 'team' && currentUserInfo?.favoriteTeams?.length > 1 && <TeamBar />}
 		</div>
 	);
