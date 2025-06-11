@@ -59,7 +59,7 @@ export default async function CategoryTab({
 
 	return (
 		<div className="flex flex-col overflow-hidden">
-			<TabBar mode={mode} q={q} type={type} />
+			<TabBar mode={mode} q={q} type={type} id={id} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />

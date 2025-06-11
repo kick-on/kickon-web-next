@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { Suspense } from 'react';
 import TeamBar from './team-bar';
 
-export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: string; type: string }) {
+export default function TabBar({ mode, q, type, id }: { mode: 'news' | 'board'; q: string; type: string; id: string }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	const tabs = ['전체', '인기', currentUserInfo?.favoriteTeams.length > 0 ? 'MY 팀' : null];
@@ -43,7 +43,7 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 							<div className="relative z-20">{tab}</div>
 							{i === 2 && (
 								<Image
-									src={currentUserInfo?.favoriteTeams[0]?.logoUrl}
+									src={currentUserInfo?.favoriteTeams.find((team) => id === String(team.pk))?.logoUrl}
 									alt="로고 이미지"
 									width={16}
 									height={16}
@@ -63,7 +63,7 @@ export default function TabBar({ mode, q, type }: { mode: 'news' | 'board'; q: s
 			</div>
 
 			{/* 팀 선택 바 - 응원팀이 2개 이상일 때 */}
-			{type === 'team' && currentUserInfo?.favoriteTeams?.length > 1 && <TeamBar />}
+			<Suspense>{type === 'team' && currentUserInfo?.favoriteTeams?.length > 1 && <TeamBar />}</Suspense>
 		</div>
 	);
 }
