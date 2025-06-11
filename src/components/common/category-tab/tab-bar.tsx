@@ -44,7 +44,7 @@ export default function TabBar({ mode, q, type, id }: { mode: 'news' | 'board'; 
 							{i === 2 && (
 								<Image
 									src={
-										id
+										type === 'team'
 											? currentUserInfo?.favoriteTeams.find((team) => id === String(team.pk))?.logoUrl
 											: currentUserInfo?.favoriteTeams[0].logoUrl
 									}
