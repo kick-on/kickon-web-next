@@ -93,9 +93,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 
 				<div className="flex flex-col gap-3 px-1.5 body4-semibold">
 					<div className="flex justify-between items-center">
-						<span className="body5-regular @mobile:text-12">
-							이번 시즌 {currentUserInfo?.favoriteTeams ? '우리 팀 내' : '전체'} 순위
-						</span>
+						<span className="body5-regular @mobile:text-12">이번 시즌 전체 순위</span>
 						{extraUserInfo?.ranking || '- '}위
 					</div>
 					<div className="flex justify-between items-center">

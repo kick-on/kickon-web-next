@@ -135,9 +135,7 @@ export default function Profile() {
 						<div className="grid grid-cols-2">
 							<div className="flex border-r border-black-200">
 								<div className="mx-auto my-[0.5625rem] text-center items-center">
-									<div className="caption2-regular h-4">
-										이번 시즌 {currentUserInfo?.favoriteTeams ? '우리 팀 내' : '전체'} 순위
-									</div>
+									<div className="caption2-regular h-4">이번 시즌 전체 순위</div>
 									<div className="body4-semibold">{extraUserInfo?.ranking || '-'}위</div>
 								</div>
 							</div>
