@@ -43,7 +43,11 @@ export default function TabBar({ mode, q, type, id }: { mode: 'news' | 'board'; 
 							<div className="relative z-20">{tab}</div>
 							{i === 2 && (
 								<Image
-									src={currentUserInfo?.favoriteTeams.find((team) => id === String(team.pk))?.logoUrl}
+									src={
+										id
+											? currentUserInfo?.favoriteTeams.find((team) => id === String(team.pk))?.logoUrl
+											: currentUserInfo?.favoriteTeams[0].logoUrl
+									}
 									alt="로고 이미지"
 									width={16}
 									height={16}
