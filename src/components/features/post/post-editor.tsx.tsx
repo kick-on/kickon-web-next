@@ -10,7 +10,7 @@ const EditorBody = () => {
 	return (
 		<>
 			<Toolbar />
-			<div className="h-[460px] overflow-y-auto custom-scrollbar rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg border border-black-300 mb-7.5">
+			<div className="h-[460px] overflow-y-auto custom-scrollbar rounded-lg @mobile:rounded-none @mobile:rounded-bl-lg @mobile:rounded-br-lg border border-black-300">
 				<EditorContent editor={editor} className="pl-4 p-3 min-w-[311px] h-full focus:outline-none" />
 			</div>
 		</>

@@ -173,7 +173,7 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} editedTitle={title} editedBody={body} />
 
-			<div className="flex justify-center gap-4 mt-4">
+			<div className="flex w-full justify-center gap-4 mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]">
 				<button
 					onClick={() => {
 						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');

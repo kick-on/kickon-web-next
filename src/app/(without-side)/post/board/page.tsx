@@ -13,11 +13,13 @@ import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { patchDetailContent } from '@/services/apis/detail/actions';
+import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 
 export default function Page() {
 	const router = useRouter();
 	const isMobile = useIsMobile();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	// currentUserInfo.인플루언서? 일 때만 핀 토글 컴포넌트 렌더링 하고 취소/저장 버튼 mt 조정 pc일 때는 30, 모바일은 38
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
@@ -41,6 +43,7 @@ export default function Page() {
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
 	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
+	const [isPinned, setIsPinned] = useState(false);
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -71,6 +74,7 @@ export default function Page() {
 			const matchedOption = teams.find((option) => option.value === teamValue);
 
 			setSelectedOption(matchedOption ?? { label: '탭 선택하기', value: '' });
+			//setIsPinned(!!parsedData.data.pinned); // 게시글 상세정보의 pinned가 true면 true, 아니면 false -> 실제 dto 바탕으로 수정 필요!!!!
 		} catch (error) {
 			console.error('잘못된 데이터 형식:', error);
 		}
@@ -147,6 +151,7 @@ export default function Page() {
 				hasImage,
 				usedImageKeys,
 				team: selectedOption.value ? Number(selectedOption.value) : null,
+				//pinned: isPinned, // 수정 필요!!
 			};
 
 			console.log(postBody);
@@ -212,7 +217,14 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
-			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
+			<PostPinToggle onPinChange={setIsPinned} />
+
+			<div
+				className={clsx(
+					'flex w-full justify-center gap-4 mx-auto mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]',
+					currentUserInfo.type === 'influence' && 'mb-[60px] @mobile:mb-[50px]',
+				)} // 이런 식으로... 유저 정보에 인플루언서 정보가 오면!!
+			>
 				<button
 					onClick={() => {
 						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
@@ -221,7 +233,7 @@ export default function Page() {
 							router.replace(previousPage);
 						}
 					}}
-					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
+					className="w-41 @mobile:w-37 button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소
 				</button>
@@ -229,7 +241,7 @@ export default function Page() {
 					onClick={isFormValid ? postCommunityContents : undefined}
 					disabled={!isFormValid}
 					className={clsx(
-						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
+						'w-41 @mobile:w-37 button2-semibold px-4 py-2 rounded-lg transition-all',
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>

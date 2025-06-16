@@ -5,8 +5,8 @@ import clsx from 'clsx';
 
 const paddingMap: Record<string, string> = {
 	'/signup': 'py-[6.25rem] @mobile:pt-15',
-	'/post/news': 'py-[1.875rem] @mobile:mt-20',
-	'/post/board': 'py-[1.875rem] @mobile:mt-20',
+	'/post/news': 'pt-[1.875rem] @mobile:mt-20',
+	'/post/board': 'pt-[1.875rem] @mobile:mt-20',
 	'/profile-setting': 'py-[8.25rem] @mobile:pt-15',
 	'/withdrawal': 'py-[6.25rem] @mobile:pt-15',
 };

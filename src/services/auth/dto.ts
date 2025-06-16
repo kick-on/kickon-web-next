@@ -30,6 +30,7 @@ export interface UserInfoDto {
 	marketingAgreedAt: string;
 	favoriteTeams?: TeamDto[];
 	league?: LeagueDto;
+	type?: string; // 임시.
 }
 
 export interface NewTokenDto {

@@ -42,7 +42,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 		const sanitized = DOMPurify.sanitize(data.content, {
-			ADD_TAGS: ['iframe'],
+			ADD_TAGS: ['iframe', 'br', 'p'],
 			ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target'],
 		});
 		setSanitizedContent(sanitized);
