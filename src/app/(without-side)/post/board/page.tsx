@@ -28,15 +28,17 @@ export default function Page() {
 		value: '',
 	});
 	const teams = useMemo(() => {
+		const sortedTeams = currentUserInfo?.favoriteTeams
+			? [...currentUserInfo.favoriteTeams].sort((a, b) => (a.priorityNum ?? 999) - (b.priorityNum ?? 999))
+			: [];
+
 		return [
 			{ label: '전체', value: '전체' },
-			...(currentUserInfo?.favoriteTeams
-				? currentUserInfo.favoriteTeams.map((team) => ({
-						label: team.nameKr || team.nameEn || '내 팀',
-						value: String(team.pk),
-						logo: team.logoUrl,
-					}))
-				: []),
+			...sortedTeams.map((team) => ({
+				label: team.nameKr || team.nameEn || '내 팀',
+				value: String(team.pk),
+				logo: team.logoUrl,
+			})),
 		];
 	}, [currentUserInfo]);
 
