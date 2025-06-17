@@ -104,9 +104,9 @@ export default function Page() {
 				setProfileImageUrl(response.data.profileImageUrl);
 				setNickname(response.data.nickname);
 				setTeams(
-					response.data.favoriteTeams ?? [
-						{ nameEn: 'no cheering team', nameKr: '응원팀이 없어요.', pk: -1, logoUrl: '/ban.svg' },
-					],
+					response.data.favoriteTeams.length > 0
+						? response.data.favoriteTeams
+						: [{ nameEn: 'no cheering team', nameKr: '응원팀이 없어요.', pk: -1, logoUrl: '/ban.svg' }],
 				);
 			}
 		};

@@ -28,13 +28,11 @@ export default function Page() {
 	const teams = useMemo(() => {
 		return [
 			{ label: '전체', value: '전체' },
-			...(currentUserInfo?.favoriteTeams
-				? currentUserInfo.favoriteTeams.map((team) => ({
-						label: team.nameKr || team.nameEn || '내 팀',
-						value: String(team.pk),
-						logo: team.logoUrl,
-					}))
-				: []),
+			...currentUserInfo.favoriteTeams.map((team) => ({
+				label: team.nameKr || team.nameEn || '내 팀',
+				value: String(team.pk),
+				logo: team.logoUrl,
+			})),
 		];
 	}, [currentUserInfo]);
 

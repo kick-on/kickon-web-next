@@ -275,7 +275,7 @@ function CommentSection({
 	};
 
 	return (
-		<div className="px-4 mb-4">
+		<div className="px-4">
 			{isCommentAllowed && (
 				<CommentInput
 					contentType={type}
@@ -327,7 +327,7 @@ function CommentSection({
 							</div>
 						)
 					) : (
-						<div className="flex justify-center mt-10">
+						<div className="flex justify-center">
 							<PaginationBar totalPages={totalPages} baseUrl={baseUrl} />
 						</div>
 					)}
