@@ -50,44 +50,49 @@ export default function Home() {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-8 @mobile:gap-5">
-			{/* 예측 진행 중 경기 */}
-			{/* 예측 진행 중 경기와 예측 종료 경기가 모두 없는 경우 null */}
-			{!(isProceedingGamesEmpty && isFinishedGamesEmpty) && (
-				<div className="flex flex-col gap-4">
-					{!proceedingGames ? (
-						// 데이터 페칭에 실패한 경우 fetching failed card
-						<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
-							<FetchingFailedCard
-								onClick={() => getGamesByStatus('proceeding')}
-								isCardVisible={false}
-								height="8.25rem"
-								marginTop="0"
-							/>
-						</div>
-					) : // 예측 진행 중 경기가 없고, 예측 종료 경기는 있는 경우 no game card
-					isProceedingGamesEmpty && !isFinishedGamesEmpty ? (
-						<NoGameCard />
-					) : (
-						// 그 외에 정상적으로 predict card 렌더링
-						proceedingGames.games.map((game) => (
-							<PredictCard
-								key={game.pk}
-								type={'proceeding'}
-								leagueName={proceedingGames.league.nameKr || proceedingGames.league.nameEn}
-								refetchGames={() => getGamesByStatus('proceeding')}
-								game={game}
-							/>
-						))
-					)}
-				</div>
-			)}
+		<div className="flex flex-col gap-4">
+			{/* 승부예측 */}
+			<div className="flex flex-col gap-8">
+				{/* 예측 진행 중 경기 */}
+				{/* 예측 진행 중 경기와 예측 종료 경기가 모두 없는 경우 null */}
+				{!(isProceedingGamesEmpty && isFinishedGamesEmpty) && (
+					<div className="flex flex-col gap-4">
+						{!proceedingGames ? (
+							// 데이터 페칭에 실패한 경우 fetching failed card
+							<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
+								<FetchingFailedCard
+									onClick={() => getGamesByStatus('proceeding')}
+									isCardVisible={false}
+									height="8.25rem"
+									marginTop="0"
+								/>
+							</div>
+						) : // 예측 진행 중 경기가 없고, 예측 종료 경기는 있는 경우 no game card
+						isProceedingGamesEmpty && !isFinishedGamesEmpty ? (
+							<NoGameCard />
+						) : (
+							// 그 외에 정상적으로 predict card 렌더링
+							<div>
+								{proceedingGames.games.map((game, i) => (
+									<div key={game.pk}>
+										<PredictCard
+											type={'proceeding'}
+											leagueName={proceedingGames.league.nameKr || proceedingGames.league.nameEn}
+											refetchGames={() => getGamesByStatus('proceeding')}
+											game={game}
+										/>
+										{i !== proceedingGames.games.length - 1 && <hr className="mx-4 my-2 border-black-200" />}
+									</div>
+								))}
+							</div>
+						)}
+					</div>
+				)}
 
-			{/* 예측 종료 경기가 정상적으로 렌더링될 때에만 구분선 렌더링 */}
-			{finishedGames && finishedGames.games.length > 0 && <hr className="mx-6 @mobile:mx-4 border-black-600" />}
+				{/* 예측 종료 경기가 정상적으로 렌더링될 때에만 구분선 렌더링 */}
+				{finishedGames && finishedGames.games.length > 0 && <hr className="mx-6 @mobile:mx-4 border-black-300" />}
 
-			{/* 예측 종료 경기 */}
-			<div className="flex flex-col gap-4">
+				{/* 예측 종료 경기 */}
 				{!finishedGames ? (
 					// 데이터 페칭에 실패한 경우 fetching failed card
 					<div className="bg-black-000 rounded-[0.625rem] flex flex-col px-4 py-[1.375rem] ">
@@ -103,28 +108,31 @@ export default function Home() {
 					<NoGameCard />
 				) : (
 					//  그 외 정상적으로 predict card 렌더링
-					finishedGames.games.map((game) => (
-						<PredictCard
-							key={game.pk}
-							type={'finished'}
-							leagueName={finishedGames.league.nameKr || finishedGames.league.nameEn}
-							game={game}
-						/>
-					))
-				)}
 
-				{/* 추천 뉴스 및 게시글 */}
-				<Suspense>
-					<RecommendedContent
-						mode={'news'}
-						teamLogo={currentUserInfo?.favoriteTeams[0]?.logoUrl}
-						teamName={
-							currentUserInfo?.favoriteTeams[0]?.nameKr || currentUserInfo?.favoriteTeams[0]?.nameEn || undefined
-						}
-					/>
-					<RecommendedContent mode={'board'} />
-				</Suspense>
+					<div>
+						{finishedGames.games.map((game, i) => (
+							<div key={game.pk}>
+								<PredictCard
+									type={'finished'}
+									leagueName={finishedGames.league.nameKr || finishedGames.league.nameEn}
+									game={game}
+								/>
+								{i !== finishedGames.games.length - 1 && <hr className="mx-4 my-2 border-black-200" />}
+							</div>
+						))}
+					</div>
+				)}
 			</div>
+
+			{/* 추천 뉴스 및 게시글 */}
+			<Suspense>
+				<RecommendedContent
+					mode={'news'}
+					teamLogo={currentUserInfo?.favoriteTeams[0]?.logoUrl}
+					teamName={currentUserInfo?.favoriteTeams[0]?.nameKr || currentUserInfo?.favoriteTeams[0]?.nameEn || undefined}
+				/>
+				<RecommendedContent mode={'board'} />
+			</Suspense>
 		</div>
 	);
 }
