@@ -92,16 +92,16 @@ export default function Page() {
 	};
 
 	// 소셜 로그인을 통한 접근이 아닌 경우 홈으로 리디렉션
-	// useEffect(() => {
-	// 	const fromLogin = getCookie('fromLogin');
+	useEffect(() => {
+		const fromLogin = getCookie('fromLogin');
 
-	// 	if (fromLogin === 'true') {
-	// 		setIsValidAccess(true);
-	// 	} else {
-	// 		alert('잘못된 접근입니다.');
-	// 		router.replace('/');
-	// 	}
-	// }, [router]);
+		if (fromLogin === 'true') {
+			setIsValidAccess(true);
+		} else {
+			alert('잘못된 접근입니다.');
+			router.replace('/');
+		}
+	}, [router]);
 
 	useEffect(() => {
 		return () => {
