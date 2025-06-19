@@ -38,7 +38,7 @@ export default function NewsItem({
 				<section className={clsx('flex justify-between @mobile:flex-col-reverse @mobile:gap-4')}>
 					<div className={'w-[28rem] @mobile:grow @mobile:w-auto'}>
 						<h2
-							className="title3-semibold mb-2 pr-2 truncate group-hover:underline
+							className="title3-semibold pb-2 pr-2 truncate group-hover:underline group-hover:underline-offset-3
 								@mobile:text-16 @mobile:font-semibold @mobile:leading-4"
 						>
 							{title}

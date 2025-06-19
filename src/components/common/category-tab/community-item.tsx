@@ -12,7 +12,7 @@ export default function CommunityItem({ pk, title, replies, user, createdAt, has
 		>
 			<div className="flex gap-1 items-center pr-2">
 				<h2
-					className="subtitle1-medium max-w-3xs truncate group-hover:underline
+					className="subtitle1-medium max-w-3xs truncate group-hover:underline group-hover:underline-offset-2
 					@mobile:max-w-max @mobile:w-fit @mobile:text-15 @mobile:font-medium @mobile:leading-4"
 				>
 					{title}
