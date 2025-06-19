@@ -8,7 +8,7 @@ import { getGames } from '@/services/apis/user-game-gamble';
 import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function PredictCardList() {
+export default function PredictCardList({ leaguePk }: { leaguePk: number }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const [proceedingGames, setProceedingGames] = useState<GameTaggedLeagueDto | null>(null);
 	const [finishedGames, setFinishedGames] = useState<GameTaggedLeagueDto | null>(null);
@@ -21,7 +21,7 @@ export default function PredictCardList() {
 				status === 'proceeding' ? (value) => setProceedingGames(value) : (value) => setFinishedGames(value);
 
 			const request: GetGamesRequest = {
-				league: currentUserInfo?.league?.pk || 1,
+				league: leaguePk,
 				status: status,
 			};
 			const response = await getGames(request);
@@ -29,10 +29,11 @@ export default function PredictCardList() {
 			if (!response) {
 				setter(null);
 			} else {
+				console.log(response.data);
 				setter(response.data);
 			}
 		},
-		[currentUserInfo?.league?.pk],
+		[leaguePk],
 	);
 
 	useEffect(() => {
