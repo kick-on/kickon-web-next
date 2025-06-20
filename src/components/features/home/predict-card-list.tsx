@@ -8,33 +8,31 @@ import { getGames } from '@/services/apis/user-game-gamble';
 import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function PredictCardList({ leaguePk }: { leaguePk: number }) {
+export default function PredictCardList() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const [proceedingGames, setProceedingGames] = useState<GameTaggedLeagueDto | null>(null);
 	const [finishedGames, setFinishedGames] = useState<GameTaggedLeagueDto | null>(null);
 	const isProceedingGamesEmpty = proceedingGames && proceedingGames.games.length === 0;
 	const isFinishedGamesEmpty = finishedGames && finishedGames.games.length === 0;
 
-	const getGamesByStatus = useCallback(
-		async (status: 'proceeding' | 'finished') => {
-			const setter =
-				status === 'proceeding' ? (value) => setProceedingGames(value) : (value) => setFinishedGames(value);
+	const getGamesByStatus = useCallback(async (status: 'proceeding' | 'finished') => {
+		const setter = status === 'proceeding' ? (value) => setProceedingGames(value) : (value) => setFinishedGames(value);
 
-			const request: GetGamesRequest = {
-				league: leaguePk,
-				status: status,
-			};
-			const response = await getGames(request);
+		const request: GetGamesRequest = {
+			// 응원팀이 있는 경우 league와 관계없이 응원팀 관련 경기 조회
+			// 응원팀이 없거나 비회원인 경우 league에 설정한 1(프리미어리그) 유효
+			league: 1,
+			status: status,
+		};
+		const response = await getGames(request);
 
-			if (!response) {
-				setter(null);
-			} else {
-				console.log(response.data);
-				setter(response.data);
-			}
-		},
-		[leaguePk],
-	);
+		if (!response) {
+			setter(null);
+		} else {
+			console.log(response.data);
+			setter(response.data);
+		}
+	}, []);
 
 	useEffect(() => {
 		getGamesByStatus('proceeding');

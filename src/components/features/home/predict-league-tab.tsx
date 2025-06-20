@@ -72,7 +72,7 @@ export default function PredictLeagueTab() {
 
 			{/* 승부 예측 리스트 */}
 			<div className="pt-7 bg-black-000 rounded-b-[0.625rem]">
-				<PredictCardList leaguePk={1} />
+				<PredictCardList />
 			</div>
 		</div>
 	);
