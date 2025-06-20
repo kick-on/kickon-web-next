@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
+import { compressImage } from '@/lib/utils/compressImage';
 
 type EditorProviderProps = {
 	children: React.ReactNode;
@@ -165,10 +166,12 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 		const file = event.target.files[0];
 
 		try {
+			const compressedFile = await compressImage(file);
+
 			// Presigned URL 요청
 			const presignedResponse = await getPresignedUrl({
 				type: isNews ? 'news-files' : 'board-files',
-				fileName: file.name,
+				fileName: compressedFile.name || file.name,
 			});
 
 			const { presignedUrl, s3Url } = presignedResponse.data;
@@ -176,7 +179,7 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 			console.log('S3 업로드 요청:', presignedResponse);
 
 			// Presigned URL로 S3에 이미지 업로드
-			await uploadToS3(presignedUrl, file);
+			await uploadToS3(presignedUrl, compressedFile);
 			console.log('S3 업로드 완료:', s3Url);
 
 			// 업로드된 이미지 URL을 에디터에 추가
