@@ -71,15 +71,13 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 							{currentUserInfo.nickname}
 							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
 						</div>
-						{currentUserInfo.favoriteTeams.length > 0 && (
-							<Image
-								className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
-								src={currentUserInfo.favoriteTeams[0].logoUrl}
-								alt="팀 로고 이미지"
-								width={16}
-								height={16}
-							/>
-						)}
+						<Image
+							className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
+							src={currentUserInfo.favoriteTeams.length > 0 ? currentUserInfo.favoriteTeams[0].logoUrl : '/ban.svg'}
+							alt="팀 로고 이미지"
+							width={16}
+							height={16}
+						/>
 					</div>
 					<button
 						onClick={handleLogoutButtonClick}
