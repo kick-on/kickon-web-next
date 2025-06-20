@@ -32,8 +32,7 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 				함께 볼 만한
 				{isMyTeam && (
 					<span className="text-primary-900 flex mx-1.5 items-center">
-						MY 팀
-						<Image width={16} height={16} src={teamLogo} alt="팀 로고" className="w-4 h-4 ml-1" />
+						MY 팀{/* <Image width={16} height={16} src={teamLogo} alt="팀 로고" className="w-4 h-4 ml-1" /> */}
 					</span>
 				)}
 				뉴스
@@ -61,7 +60,7 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 		<ComponentFrame isMain={true}>
 			<header
 				className={clsx('flex px-4 justify-between pb-1.5', isNews ? '@mobile:pt-6 pt-7.5' : 'pt-7.5', {
-					'border-b border-black-200 pb-7.5': !isNews,
+					'border-b border-black-900 pb-7.5': !isNews,
 				})}
 			>
 				<h3 className={clsx('@mobile:ml-4', 'title4-semibold', isNews ? '@mobile:text-16' : '@mobile:text-18')}>
