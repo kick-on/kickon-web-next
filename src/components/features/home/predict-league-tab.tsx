@@ -45,13 +45,12 @@ export default function PredictLeagueTab() {
 							setSelectedIndex(i);
 						}}
 						className={clsx(
-							`group relative flex items-center h-[3.3125rem] rounded-t-[0.625rem] transition-opacity
-              w-[5.625rem] @mobile:w-full justify-center before:rounded-t-[0.625rem]
-              before:content-[''] before:absolute before:top-0 before:left-0 before:bottom-0 before:right-0
+							`group relative flex items-center justify-center h-[3.3125rem] rounded-t-[0.625rem]
+							w-[5.625rem] @mobile:w-full transition-opacity text-primary-900 header-semibold
+              before:rounded-t-[0.625rem] before:content-[''] before:absolute
+							before:top-0 before:left-0 before:bottom-0 before:right-0
               before:bg-black-000 before:shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)]`,
-							i === selectedIndex
-								? 'before:block header-semibold text-primary-900'
-								: 'before:hidden opacity-70 hover:opacity-100',
+							i === selectedIndex ? 'before:block' : 'before:hidden opacity-70 hover:opacity-100',
 						)}
 					>
 						{typeof league === 'string' ? (
