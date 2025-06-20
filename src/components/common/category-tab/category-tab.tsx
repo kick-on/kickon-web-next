@@ -58,15 +58,15 @@ export default async function CategoryTab({
 		: null;
 
 	return (
-		<div className="flex flex-col w-full @mobile:w-[calc(100vw-34px)]">
-			<TabBar mode={mode} q={q} type={type} />
+		<div className="flex flex-col overflow-hidden">
+			<TabBar mode={mode} q={q} type={type} id={id} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />
 			) : !response.data.length ? (
 				<EmptyState isNews={isNews} />
 			) : (
-				<div className="flex flex-col w-full pb-10 @mobile:pb-0">
+				<div className="flex flex-col w-full">
 					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
 					<MoreList {...moreListProps} />
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />

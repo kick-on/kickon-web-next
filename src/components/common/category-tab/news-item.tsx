@@ -20,8 +20,8 @@ export default function NewsItem({
 	isMyTeam = false,
 }: NewsItemDto & { isMyTeam?: boolean }) {
 	return (
-		<Link href={`/news/${pk}`}>
-			<article className="flex flex-col py-6 px-4 cursor-pointer">
+		<Link href={`/news/${pk}`} className="group">
+			<article className="flex flex-col my-2 py-4 px-4 cursor-pointer">
 				<header className="flex gap-2 mb-2.5 items-center">
 					{team && !isMyTeam && (
 						<Image
@@ -38,7 +38,7 @@ export default function NewsItem({
 				<section className={clsx('flex justify-between @mobile:flex-col-reverse @mobile:gap-4')}>
 					<div className={'w-[28rem] @mobile:grow @mobile:w-auto'}>
 						<h2
-							className="title3-semibold mb-2 pr-2 truncate
+							className="title3-semibold mb-2 pr-2 truncate group-hover:underline
 								@mobile:text-16 @mobile:font-semibold @mobile:leading-4"
 						>
 							{title}
