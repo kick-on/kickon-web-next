@@ -31,8 +31,8 @@ export interface GameTaggedLeagueDto {
 }
 
 export interface GameDto {
-	homeTeam: TeamDto;
-	awayTeam: TeamDto;
+	homeTeam: GameTeamDto;
+	awayTeam: GameTeamDto;
 	gambleResult: GambleResultDto;
 	myGambleResult: MyGambleResultDto | null;
 	pk: number;
@@ -44,6 +44,13 @@ export interface GameDto {
 	gameStatus: 'PENDING' | 'PROCEEDING' | 'CANCELED' | 'HOME' | 'AWAY' | 'DRAW' | 'POSTPONED';
 	startAt: string;
 }
+
+export interface GameTeamDto extends TeamDto {
+	leagueNameKr: string;
+	leagueNameEn: string;
+	leaguePk: number;
+}
+
 // 예측 현황 비율
 export interface GambleResultDto {
 	home: number;

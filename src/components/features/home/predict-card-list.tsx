@@ -62,12 +62,7 @@ export default function PredictCardList() {
 						<div>
 							{proceedingGames.games.map((game, i) => (
 								<div key={game.pk}>
-									<PredictCard
-										type={'proceeding'}
-										leagueName={proceedingGames.league.nameKr || proceedingGames.league.nameEn}
-										refetchGames={() => getGamesByStatus('proceeding')}
-										game={game}
-									/>
+									<PredictCard type={'proceeding'} refetchGames={() => getGamesByStatus('proceeding')} game={game} />
 									{i !== proceedingGames.games.length - 1 && <hr className="mx-4 my-2 border-black-200" />}
 								</div>
 							))}
@@ -98,11 +93,7 @@ export default function PredictCardList() {
 				<div>
 					{finishedGames.games.map((game, i) => (
 						<div key={game.pk}>
-							<PredictCard
-								type={'finished'}
-								leagueName={finishedGames.league.nameKr || finishedGames.league.nameEn}
-								game={game}
-							/>
+							<PredictCard type={'finished'} game={game} />
 							{i !== finishedGames.games.length - 1 && <hr className="mx-4 my-2 border-black-200" />}
 						</div>
 					))}

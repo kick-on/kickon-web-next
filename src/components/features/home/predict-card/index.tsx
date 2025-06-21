@@ -17,15 +17,13 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 export default function PredictCard({
 	game,
 	type,
-	leagueName,
 	refetchGames,
 }: {
 	game: GameDto;
 	type: 'proceeding' | 'finished';
-	leagueName: string;
 	refetchGames?: () => void;
 }) {
-	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
+	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt, homeTeam } = game;
 
 	const { isMobile, isTablet } = getServerDeviceType();
 
@@ -63,7 +61,7 @@ export default function PredictCard({
 				: 'away';
 
 	const headerProps: HeaderProps = {
-		leagueName,
+		leagueName: homeTeam.leagueNameKr || homeTeam.leagueNameEn,
 		isGambleInProgress,
 		isGameInProgress,
 		isGameCanceled,
