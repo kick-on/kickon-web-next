@@ -23,7 +23,7 @@ export default function PredictCard({
 	type: 'proceeding' | 'finished';
 	refetchGames?: () => void;
 }) {
-	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt, homeTeam } = game;
+	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt, league } = game;
 
 	const { isMobile, isTablet } = getServerDeviceType();
 
@@ -61,7 +61,7 @@ export default function PredictCard({
 				: 'away';
 
 	const headerProps: HeaderProps = {
-		leagueName: homeTeam.leagueNameKr || homeTeam.leagueNameEn,
+		leagueName: league.nameKr || league.nameEn,
 		isGambleInProgress,
 		isGameInProgress,
 		isGameCanceled,
