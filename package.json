@@ -27,6 +27,7 @@
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.1.1",
     "dompurify": "^3.2.4",
+    "html-react-parser": "^5.2.5",
     "lodash": "^4.17.21",
     "next": "15.1.7",
     "react": "^19.0.0",
