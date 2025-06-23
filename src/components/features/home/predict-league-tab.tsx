@@ -8,7 +8,9 @@ import PredictCardList from './predict-card-list';
 
 export default function PredictLeagueTab() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const [selectedTeamPk, setSelectedTeamPk] = useState<undefined | number>(undefined);
+	const [selectedTeamPk, setSelectedTeamPk] = useState<undefined | number>(
+		currentUserInfo?.favoriteTeams?.length > 0 ? undefined : 1,
+	);
 
 	const teams = currentUserInfo?.favoriteTeams ?? [];
 
