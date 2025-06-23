@@ -39,6 +39,8 @@ export interface NewsItemDto {
 	likes: number;
 	replies: number;
 	team: TeamDto | null;
+	isInfluencer?: boolean;
+	isPinned?: boolean;
 }
 
 export interface RecommendedNewsDto {

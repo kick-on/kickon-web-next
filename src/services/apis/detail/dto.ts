@@ -15,6 +15,8 @@ export interface DetailDto {
 	isKicked: boolean;
 	thumbnailUrl?: string;
 	category?: string;
+	isInfluencer?: boolean; // 인플루언서의 글인지 아닌지
+	pinned?: boolean; // 인플루언서가 고정했는지 안 했는지
 }
 
 // 뉴스 상세 조회 응답 타입

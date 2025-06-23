@@ -39,4 +39,6 @@ export interface BoardItemDto {
 	views: number;
 	likes: number;
 	replies: number;
+	isInfluencer?: boolean; // 인플루언서 글인지 아닌지
+	isPinned?: boolean; // 이 글이 고정인지 아닌지 (수정 필요)
 }

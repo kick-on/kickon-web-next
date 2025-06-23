@@ -46,6 +46,7 @@ export default function Page() {
 	const [body, setBody] = useState('');
 	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 	const [isPinned, setIsPinned] = useState(false);
+	const [isInfluencerContent, setIsInfluencerContent] = useState(false);
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -76,7 +77,8 @@ export default function Page() {
 			const matchedOption = teams.find((option) => option.value === teamValue);
 
 			setSelectedOption(matchedOption ?? { label: '탭 선택하기', value: '' });
-			//setIsPinned(!!parsedData.data.pinned); // 게시글 상세정보의 pinned가 true면 true, 아니면 false -> 실제 dto 바탕으로 수정 필요!!!!
+			setIsPinned(parsedData.data.pinned); // 고정 여부 불러오기
+			setIsInfluencerContent(parsedData.data.isInfluencer); // 인플루언서의 글인지 여부
 		} catch (error) {
 			console.error('잘못된 데이터 형식:', error);
 		}
@@ -141,6 +143,7 @@ export default function Page() {
 				hasImage,
 				usedImageKeys,
 				team: finalTeam,
+				...(isInfluencerContent && { pinned: isPinned }), // ← 인플루언서일 때만 포함
 			};
 			console.log(patchBody);
 			const response = await patchDetailContent(contentPk, false, patchBody);
@@ -153,7 +156,7 @@ export default function Page() {
 				hasImage,
 				usedImageKeys,
 				team: selectedOption.value ? Number(selectedOption.value) : null,
-				//pinned: isPinned, // 수정 필요!!
+				...(isInfluencerContent && { pinned: isPinned }), // ← 인플루언서일 때만 포함
 			};
 
 			console.log(postBody);
@@ -219,13 +222,13 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
-			<PostPinToggle onPinChange={setIsPinned} />
+			{isInfluencerContent && <PostPinToggle onPinChange={setIsPinned} />}
 
 			<div
 				className={clsx(
 					'flex w-full justify-center gap-4 mx-auto mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]',
-					currentUserInfo.type === 'influence' && 'mb-[60px] @mobile:mb-[50px]',
-				)} // 이런 식으로... 유저 정보에 인플루언서 정보가 오면!!
+					currentUserInfo.isInfluencer && 'mb-[60px] @mobile:mb-[50px]',
+				)}
 			>
 				<button
 					onClick={() => {
