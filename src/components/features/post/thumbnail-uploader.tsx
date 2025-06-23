@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
+import { compressImage } from '@/lib/utils/compressImage';
 
 interface ThumbnailUploaderProps {
 	selectedImage: string | null;
@@ -19,21 +20,25 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 		if (!file) return;
 
 		try {
+			const compressedFile = await compressImage(file);
+
 			const img = document.createElement('img');
-			img.src = URL.createObjectURL(file);
-			img.onload = async () => {
+			img.src = URL.createObjectURL(compressedFile);
+			img.onload = () => {
 				setIsPortrait(img.height > img.width);
-
-				const presignedResponse = await getPresignedUrl({
-					type: 'news-files',
-					fileName: file.name,
-				});
-
-				const { presignedUrl, s3Url } = presignedResponse.data;
-
-				await uploadToS3(presignedUrl, file);
-				onChange(s3Url);
+				URL.revokeObjectURL(img.src);
 			};
+
+			const presignedResponse = await getPresignedUrl({
+				type: 'news-files',
+				fileName: compressedFile.name || file.name,
+			});
+
+			const { presignedUrl, s3Url } = presignedResponse.data;
+
+			await uploadToS3(presignedUrl, compressedFile);
+
+			onChange(s3Url);
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
 		}
