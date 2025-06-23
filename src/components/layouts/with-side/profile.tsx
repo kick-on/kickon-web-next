@@ -108,7 +108,9 @@ export default function Profile() {
 										<Image
 											className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
 											src={
-												currentUserInfo.favoriteTeams.length > 0 ? currentUserInfo.favoriteTeams[0].logoUrl : '/ban.svg'
+												currentUserInfo?.favoriteTeams.length > 0
+													? currentUserInfo?.favoriteTeams[0].logoUrl
+													: '/ban.svg'
 											}
 											alt="팀 로고 이미지"
 											width={16}
