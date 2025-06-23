@@ -3,7 +3,7 @@
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import clsx from 'clsx';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PredictCardList from './predict-card-list';
 
 export default function PredictLeagueTab() {
@@ -27,6 +27,12 @@ export default function PredictLeagueTab() {
 					type: 'League',
 				};
 	const tabs = [firstTab, ...teams];
+
+	useEffect(() => {
+		// currentUserInfo 변경될 때마다 (로그인 상태가 변경될 때마다)
+		// default 활성탭 업데이트
+		setSelectedTeamPk(currentUserInfo?.favoriteTeams?.length > 0 ? undefined : 1);
+	}, [currentUserInfo]);
 
 	return (
 		<div>
