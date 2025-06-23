@@ -3,11 +3,14 @@ import { GetGamesRequest, GetGamesResponse, PatchGameGambleRequest, PostGameGamb
 import { EmptySuccessResponse, FailResponse } from '@/services/config/dto';
 
 // 매치 리스트 조회
-export const getGames = async ({ league, status }: GetGamesRequest): Promise<GetGamesResponse | null> => {
+export const getGames = async ({ league, status, team }: GetGamesRequest): Promise<GetGamesResponse | null> => {
 	const params = new URLSearchParams();
 
 	params.append('league', String(league));
 	params.append('status', String(status));
+	if (team !== undefined) {
+		params.append('team', String(team));
+	}
 
 	const response = await fetcher<GetGamesResponse | FailResponse>({
 		method: 'GET',

@@ -1,7 +1,7 @@
 'use client';
 
 import RecommendedContent from '@/components/common/recommended-content';
-import PredictCardList from '@/components/features/home/predict-card-list';
+import PredictLeagueTab from '@/components/features/home/predict-league-tab';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { Suspense, useEffect } from 'react';
 
@@ -20,7 +20,7 @@ export default function Home() {
 		<div className="flex flex-col gap-4">
 			{/* 승부 예측 */}
 			<div className="bg-black-000 rounded-[0.625rem]">
-				<PredictCardList />
+				<PredictLeagueTab />
 			</div>
 
 			{/* 추천 뉴스 및 게시글 */}

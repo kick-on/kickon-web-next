@@ -8,16 +8,15 @@ import PredictCardList from './predict-card-list';
 
 export default function PredictLeagueTab() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const [selectedIndex, setSelectedIndex] = useState(0);
-	// TODO: selectedLeaguePk 만들어서 PredictCardList에 leaguePk 넘겨줘야 함
+	const [selectedTeamPk, setSelectedTeamPk] = useState<undefined | number>(undefined);
 
-	const leagues = currentUserInfo?.favoriteTeams ?? [];
+	const teams = currentUserInfo?.favoriteTeams ?? [];
 
 	// 응원팀이 하나 이상 있는 경우 전체 탭
 	// 응원팀이 없거나 비회원인 경우 프리미어리그 탭
 	const firstTab =
 		currentUserInfo?.favoriteTeams.length > 0
-			? '전체'
+			? { content: '전체', isActive: selectedTeamPk === undefined }
 			: {
 					pk: 1,
 					nameKr: '프리미어리그',
@@ -25,7 +24,7 @@ export default function PredictLeagueTab() {
 					logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
 					type: 'League',
 				};
-	const tabs = [firstTab, ...leagues];
+	const tabs = [firstTab, ...teams];
 
 	return (
 		<div>
@@ -38,11 +37,11 @@ export default function PredictLeagueTab() {
           after:content-[''] after:absolute after:-bottom-4 after:left-0 after:right-0
           after:h-4 after:bg-black-000"
 			>
-				{tabs.map((league, i) => (
+				{tabs.map((team) => (
 					<button
-						key={typeof league === 'string' ? league : league.pk}
+						key={'content' in team ? team.content : team.pk}
 						onClick={() => {
-							setSelectedIndex(i);
+							setSelectedTeamPk('content' in team ? undefined : team.pk);
 						}}
 						className={clsx(
 							`group relative flex items-center justify-center h-[3.3125rem] rounded-t-[0.625rem]
@@ -50,19 +49,23 @@ export default function PredictLeagueTab() {
               before:rounded-t-[0.625rem] before:content-[''] before:absolute
 							before:top-0 before:left-0 before:bottom-0 before:right-0
               before:bg-black-000 before:shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)]`,
-							i === selectedIndex ? 'before:block' : 'before:hidden opacity-70 hover:opacity-100',
+							('content' in team && team.isActive) || team.pk === selectedTeamPk
+								? 'before:block'
+								: 'before:hidden opacity-70 hover:opacity-100',
 						)}
 					>
-						{typeof league === 'string' ? (
-							<div className="relative z-20">{league}</div>
+						{'content' in team ? (
+							<div className="relative z-20">{team.content}</div>
 						) : (
 							<div
 								className={clsx(
 									'relative z-20 transition-all',
-									i === selectedIndex ? 'w-7 h-7' : 'group-hover:w-7 group-hover:h-7 w-6 h-6 @mobile:w-7 @mobile:h-7',
+									team.pk === selectedTeamPk
+										? 'w-7 h-7'
+										: 'group-hover:w-7 group-hover:h-7 w-6 h-6 @mobile:w-7 @mobile:h-7',
 								)}
 							>
-								<Image src={league.logoUrl} alt="로고 이미지" fill className="w-auto h-auto object-contain" />
+								<Image src={team.logoUrl} alt="로고 이미지" fill className="w-auto h-auto object-contain" />
 							</div>
 						)}
 					</button>
@@ -71,7 +74,7 @@ export default function PredictLeagueTab() {
 
 			{/* 승부 예측 리스트 */}
 			<div className="pt-7 bg-black-000 rounded-b-[0.625rem]">
-				<PredictCardList />
+				<PredictCardList teamPk={selectedTeamPk} />
 			</div>
 		</div>
 	);

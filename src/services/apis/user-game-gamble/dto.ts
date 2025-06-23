@@ -6,6 +6,7 @@ import { LeagueDto } from '../league/dto';
 export interface GetGamesRequest {
 	league: number;
 	status: 'proceeding' | 'finished';
+	team?: number;
 }
 
 // 승부예측 생성
