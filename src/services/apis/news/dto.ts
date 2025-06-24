@@ -40,7 +40,7 @@ export interface NewsItemDto {
 	replies: number;
 	team: TeamDto | null;
 	isInfluencer?: boolean;
-	isPinned?: boolean;
+	isPinned: boolean;
 }
 
 export interface RecommendedNewsDto {
@@ -55,7 +55,7 @@ export interface RecommendedNewsDto {
 	views: number;
 	likes: number;
 	replies: number;
-	isPinned?: boolean;
+	isPinned: boolean;
 }
 
 export interface HotNewsDto {
