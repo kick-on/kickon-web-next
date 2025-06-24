@@ -16,7 +16,7 @@ export const renderItems = (items, ItemComponent) => (
 			<div key={item.pk}>
 				<ItemComponent {...item} />
 				{index !== items.length - 1 && (
-					<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': ItemComponent === CommunityItem })} />
+					<hr className={clsx('border-black-200', { 'mx-4': ItemComponent === NewsItem })} />
 				)}
 			</div>
 		))}

@@ -6,6 +6,7 @@ import { LeagueDto } from '../league/dto';
 export interface GetGamesRequest {
 	league: number;
 	status: 'proceeding' | 'finished';
+	team?: number;
 }
 
 // 승부예측 생성
@@ -31,6 +32,7 @@ export interface GameTaggedLeagueDto {
 }
 
 export interface GameDto {
+	league: LeagueDto;
 	homeTeam: TeamDto;
 	awayTeam: TeamDto;
 	gambleResult: GambleResultDto;
@@ -44,6 +46,7 @@ export interface GameDto {
 	gameStatus: 'PENDING' | 'PROCEEDING' | 'CANCELED' | 'HOME' | 'AWAY' | 'DRAW' | 'POSTPONED';
 	startAt: string;
 }
+
 // 예측 현황 비율
 export interface GambleResultDto {
 	home: number;

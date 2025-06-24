@@ -172,13 +172,34 @@ iframe.responsive-youtube {
 	background: transparent; /*스크롤바 뒷 배경 색상*/
 }
 
-.no-scrollbar::-webkit-scrollbar {
-	display: none;
+.team-scrollbar {
+	overflow-y: scroll;
+}
+
+/* 스크롤바의 폭 너비 */
+.team-scrollbar::-webkit-scrollbar {
+	width: 20px;
+}
+
+.team-scrollbar::-webkit-scrollbar-thumb {
+	width: 10px;
+	border: 5px solid var(--color-black-200);
+	background: var(--color-black-500);
+	border-radius: 10px;
+}
+
+.team-scrollbar::-webkit-scrollbar-track {
+	border-radius: 0 9px 9px 0;
+	background: var(--color-black-200); /*스크롤바 뒷 배경 색상*/
 }
 
 .no-scrollbar {
 	-ms-overflow-style: none; /* IE */
 	scrollbar-width: none; /* Firefox */
+}
+
+.no-scrollbar::-webkit-scrollbar {
+	display: none;
 }
 
 /* placeholder */
