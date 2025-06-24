@@ -105,15 +105,17 @@ export default function Profile() {
 											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
 											<div className="body3-regular text-black-800">님</div>
 										</div>
-										{currentUserInfo?.favoriteTeams.length > 0 && (
-											<Image
-												className="w-4 h-4 object-contain my-auto"
-												width={16}
-												height={16}
-												src={currentUserInfo.favoriteTeams[0].logoUrl}
-												alt={`${currentUserInfo.favoriteTeams[0].nameKr || currentUserInfo.favoriteTeams[0].nameEn} 로고`}
-											/>
-										)}
+										<Image
+											className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
+											src={
+												currentUserInfo?.favoriteTeams.length > 0
+													? currentUserInfo?.favoriteTeams[0].logoUrl
+													: '/ban.svg'
+											}
+											alt="팀 로고 이미지"
+											width={16}
+											height={16}
+										/>
 									</div>
 									<Link
 										onClick={handleProfileSettingButtonClick}

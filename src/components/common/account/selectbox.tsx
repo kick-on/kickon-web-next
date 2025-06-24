@@ -122,7 +122,12 @@ export default function Selectbox({
 				</button>
 
 				{isOptionListVisible && !!options.length && (
-					<div className="z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]">
+					<div
+						className={clsx(
+							'z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]',
+							{ 'max-h-62.5 overflow-y-scroll team-scrollbar rounded-r-0': !isLeagueSelectBox },
+						)}
+					>
 						{options.map((option, index) => (
 							<div
 								key={option.pk}

@@ -10,6 +10,7 @@ export default function TeamBar() {
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const id = searchParams.get('id');
+	const isNews = pathname.split('/').includes('news');
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const teams = currentUserInfo?.favoriteTeams;
@@ -18,7 +19,7 @@ export default function TeamBar() {
 
 	return (
 		<>
-			<div className="mt-5 mb-3 mx-4 @mobile:mx-0 flex items-center subtitle1-medium">
+			<div className="mt-5 mb-3 flex items-center subtitle1-medium">
 				{teams.map((team, i) => (
 					<div
 						key={team.pk}
@@ -44,7 +45,7 @@ export default function TeamBar() {
 					</div>
 				))}
 			</div>
-			<hr className="mx-4 mb-1.5 w-auto border-black-200" />
+			<hr className={clsx('mb-1.5 w-auto border-black-300', { 'mx-4': isNews })} />
 		</>
 	);
 }

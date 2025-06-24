@@ -102,7 +102,7 @@ export default function Selectbox({
 			>
 				{isMobile ? (
 					league ? (
-						<Image className="w-8 h-8 object-contain" src={league.logoUrl} alt="로고" width={32} height={32} />
+						<Image className="w-7 h-7 object-contain" src={league.logoUrl} alt="로고" width={28} height={28} />
 					) : (
 						<div>리그 선택</div>
 					)
