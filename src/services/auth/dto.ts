@@ -30,6 +30,7 @@ export interface UserInfoDto {
 	marketingAgreedAt: string;
 	favoriteTeams?: TeamDto[];
 	league?: LeagueDto;
+	isInfluencer?: boolean;
 }
 
 export interface NewTokenDto {

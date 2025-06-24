@@ -173,10 +173,12 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} editedTitle={title} editedBody={body} />
 
-			<div className="flex justify-center gap-4 mt-4">
+			<div className="flex w-full justify-center gap-4 mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]">
 				<button
 					onClick={() => {
-						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
+						const confirmCancel = window.confirm(
+							isEditMode ? '게시글 수정을 취소하겠습니까?' : '게시글 작성을 취소하겠습니까?',
+						);
 						if (confirmCancel) {
 							const previousPage = sessionStorage.getItem('previousPage');
 							router.replace(previousPage);
@@ -194,7 +196,7 @@ export default function Page() {
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
-					작성 완료
+					{isEditMode ? '수정 완료' : '작성 완료'}
 				</button>
 			</div>
 		</div>

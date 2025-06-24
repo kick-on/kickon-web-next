@@ -1,19 +1,38 @@
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
 import { BoardItemDto } from '@/services/apis/board/dto';
+import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function CommunityItem({ pk, title, replies, user, createdAt, hasImage, views, likes }: BoardItemDto) {
+type CommunityItemProps = BoardItemDto & {
+	isPinned?: boolean;
+};
+export default function CommunityItem({
+	pk,
+	title,
+	replies,
+	user,
+	createdAt,
+	hasImage,
+	views,
+	likes,
+	isPinned,
+}: CommunityItemProps) {
 	return (
 		<Link
 			href={`/board/${pk}`}
-			className="p-4 flex justify-between cursor-pointer
-				@mobile:flex-col @mobile:gap-3 group"
+			className={clsx(
+				'p-4 flex justify-between cursor-pointer @mobile:flex-col @mobile:gap-3 group',
+				isPinned && 'bg-primary-50',
+			)}
 		>
 			<div className="flex gap-1 items-center pr-2">
 				<h2
-					className="subtitle1-medium max-w-3xs truncate group-hover:underline group-hover:underline-offset-2
-					@mobile:max-w-max @mobile:w-fit @mobile:text-15 @mobile:font-medium @mobile:leading-4"
+					className={clsx(
+						'subtitle1-medium max-w-3xs truncate group-hover:underline',
+						'@mobile:max-w-max @mobile:w-fit @mobile:text-15 @mobile:leading-4',
+						isPinned && 'text-primary-900 font-semibold @mobile:font-semibold',
+					)}
 				>
 					{title}
 				</h2>

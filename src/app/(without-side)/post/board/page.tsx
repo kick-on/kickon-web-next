@@ -13,6 +13,7 @@ import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { patchDetailContent } from '@/services/apis/detail/actions';
+import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 
 export default function Page() {
 	const router = useRouter();
@@ -26,9 +27,13 @@ export default function Page() {
 		value: '',
 	});
 	const teams = useMemo(() => {
+		const sortedTeams = currentUserInfo?.favoriteTeams
+			? [...currentUserInfo.favoriteTeams].sort((a, b) => (a.priorityNum ?? 999) - (b.priorityNum ?? 999))
+			: [];
+
 		return [
 			{ label: '전체', value: '전체' },
-			...currentUserInfo.favoriteTeams.map((team) => ({
+			...sortedTeams.map((team) => ({
 				label: team.nameKr || team.nameEn || '내 팀',
 				value: String(team.pk),
 				logo: team.logoUrl,
@@ -39,6 +44,7 @@ export default function Page() {
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
 	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
+	const [isPinned, setIsPinned] = useState(false);
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
@@ -69,6 +75,7 @@ export default function Page() {
 			const matchedOption = teams.find((option) => option.value === teamValue);
 
 			setSelectedOption(matchedOption ?? { label: '탭 선택하기', value: '' });
+			setIsPinned(parsedData.data.isPinned); // 인플루언서의 고정 여부 불러오기
 		} catch (error) {
 			console.error('잘못된 데이터 형식:', error);
 		}
@@ -133,6 +140,7 @@ export default function Page() {
 				hasImage,
 				usedImageKeys,
 				team: finalTeam,
+				isPinned: isPinned,
 			};
 			console.log(patchBody);
 			const response = await patchDetailContent(contentPk, false, patchBody);
@@ -145,6 +153,7 @@ export default function Page() {
 				hasImage,
 				usedImageKeys,
 				team: selectedOption.value ? Number(selectedOption.value) : null,
+				isPinned: isPinned,
 			};
 
 			console.log(postBody);
@@ -210,16 +219,25 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
-			<div className="flex w-full justify-center gap-4 mt-4 mx-auto">
+			{currentUserInfo.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
+
+			<div
+				className={clsx(
+					'flex w-full justify-center gap-4 mx-auto mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]',
+					currentUserInfo.isInfluencer && 'mb-[60px] @mobile:mb-[50px]',
+				)}
+			>
 				<button
 					onClick={() => {
-						const confirmCancel = window.confirm('게시글 작성을 취소하겠습니까?');
+						const confirmCancel = window.confirm(
+							isEditMode ? '게시글 수정을 취소하겠습니까?' : '게시글 작성을 취소하겠습니까?',
+						);
 						if (confirmCancel) {
 							const previousPage = sessionStorage.getItem('previousPage');
 							router.replace(previousPage);
 						}
 					}}
-					className="w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
+					className="w-41 @mobile:w-37 button2-semibold px-4 py-2 rounded-lg transition-all text-black-700 bg-black-200"
 				>
 					취소
 				</button>
@@ -227,11 +245,11 @@ export default function Page() {
 					onClick={isFormValid ? postCommunityContents : undefined}
 					disabled={!isFormValid}
 					className={clsx(
-						'w-[164px] button2-semibold px-4 py-2 rounded-lg transition-all',
+						'w-41 @mobile:w-37 button2-semibold px-4 py-2 rounded-lg transition-all',
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
-					작성 완료
+					{isEditMode ? '수정 완료' : '작성 완료'}
 				</button>
 			</div>
 		</div>
