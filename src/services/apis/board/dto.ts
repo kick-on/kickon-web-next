@@ -28,6 +28,7 @@ export interface RecommendedBoardDto {
 	views: number;
 	likes: number;
 	replies: number;
+	isPinned: boolean;
 }
 
 export interface BoardItemDto {
@@ -35,7 +36,7 @@ export interface BoardItemDto {
 	title: string;
 	user: UserDto;
 	createdAt: string;
-	hasImage: boolean;
+	hasImage?: boolean;
 	views: number;
 	likes: number;
 	replies: number;

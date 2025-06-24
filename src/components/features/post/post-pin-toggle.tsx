@@ -1,17 +1,18 @@
 import React from 'react';
 
 type PostPinToggleProps = {
+	isPinned: boolean;
 	onPinChange?: (isPinned: boolean) => void;
 };
 
-export const PostPinToggle = ({ onPinChange }: PostPinToggleProps) => {
+export const PostPinToggle = ({ isPinned, onPinChange }: PostPinToggleProps) => {
 	const handlePinToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
 		onPinChange?.(e.target.checked);
 	};
 
 	return (
 		<div className="flex items-center gap-4 mt-5 mx-2 mb-20 px-4 py-2.5 rounded-md bg-primary-50">
-			<input type="checkbox" id="pin-toggle" className="hidden peer" onChange={handlePinToggle} />
+			<input type="checkbox" id="pin-toggle" className="hidden peer" checked={isPinned} onChange={handlePinToggle} />
 			<label
 				htmlFor="pin-toggle"
 				className="w-[1.125rem] h-[1.125rem] inline-block rounded border border-black-400 bg-transparent bg-center bg-no-repeat bg-[length:70%] peer-checked:bg-[url('/check.svg')] peer-checked:bg-primary-900 peer-checked:border-none cursor-pointer"

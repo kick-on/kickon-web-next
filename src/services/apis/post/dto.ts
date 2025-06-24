@@ -7,5 +7,5 @@ export interface PostContentsRequest {
 	category?: string;
 	hasImage?: boolean;
 	usedImageKeys?: string[];
-	pinned?: boolean;
+	isPinned?: boolean;
 }

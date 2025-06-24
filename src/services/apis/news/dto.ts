@@ -55,6 +55,7 @@ export interface RecommendedNewsDto {
 	views: number;
 	likes: number;
 	replies: number;
+	isPinned?: boolean;
 }
 
 export interface HotNewsDto {

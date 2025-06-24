@@ -67,7 +67,10 @@ export default async function CategoryTab({
 				<EmptyState isNews={isNews} />
 			) : (
 				<div className="flex flex-col w-full">
-					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
+					{renderItems(
+						isNews ? response.data : [...response.data].sort((a, b) => Number(b.isPinned) - Number(a.isPinned)),
+						isNews ? (item) => <NewsItem {...item} /> : (item) => <CommunityItem {...item} />,
+					)}
 					<MoreList {...moreListProps} />
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />
 				</div>

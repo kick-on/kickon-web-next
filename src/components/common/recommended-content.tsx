@@ -59,7 +59,18 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 		if (!response) {
 			setData(null);
 		} else {
-			setData(response.data);
+			// 커뮤니티 아이템인 경우에만 isPinned 기준으로 정렬
+			if (!isNews && Array.isArray(response.data)) {
+				const sortedData = [...(response.data as RecommendedBoardDto[])].sort((a, b) => {
+					// isPinned가 true인 항목을 상단으로 배치
+					if (a.isPinned && !b.isPinned) return -1;
+					if (!a.isPinned && b.isPinned) return 1;
+					return 0; // 같은 경우 원래 순서 유지
+				});
+				setData(sortedData);
+			} else {
+				setData(response.data);
+			}
 			console.log(response.data);
 		}
 	}, [isNews, teamName]);
