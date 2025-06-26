@@ -105,15 +105,17 @@ export default function Profile() {
 											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
 											<div className="body3-regular text-black-800">님</div>
 										</div>
-										{currentUserInfo?.favoriteTeam && (
-											<Image
-												className="w-4 h-4 object-contain my-auto"
-												width={16}
-												height={16}
-												src={currentUserInfo.favoriteTeam.logoUrl}
-												alt={`${currentUserInfo.favoriteTeam.nameKr || currentUserInfo.favoriteTeam.nameEn} 로고`}
-											/>
-										)}
+										<Image
+											className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
+											src={
+												currentUserInfo?.favoriteTeams.length > 0
+													? currentUserInfo?.favoriteTeams[0].logoUrl
+													: '/ban.svg'
+											}
+											alt="팀 로고 이미지"
+											width={16}
+											height={16}
+										/>
 									</div>
 									<Link
 										onClick={handleProfileSettingButtonClick}
@@ -135,9 +137,7 @@ export default function Profile() {
 						<div className="grid grid-cols-2">
 							<div className="flex border-r border-black-200">
 								<div className="mx-auto my-[0.5625rem] text-center items-center">
-									<div className="caption2-regular h-4">
-										이번 시즌 {currentUserInfo?.favoriteTeam ? '우리 팀 내' : '전체'} 순위
-									</div>
+									<div className="caption2-regular h-4">이번 시즌 전체 순위</div>
 									<div className="body4-semibold">{extraUserInfo?.ranking || '-'}위</div>
 								</div>
 							</div>

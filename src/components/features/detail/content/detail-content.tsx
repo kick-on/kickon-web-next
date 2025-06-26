@@ -8,6 +8,7 @@ import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import parse, { Element } from 'html-react-parser';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -42,11 +43,29 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
 		const sanitized = DOMPurify.sanitize(data.content, {
-			ADD_TAGS: ['iframe'],
+			ADD_TAGS: ['iframe', 'br', 'p'],
 			ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target'],
 		});
 		setSanitizedContent(sanitized);
 	}, [data.content]);
+
+	const parsedContent = parse(sanitizedContent, {
+		replace: (domNode) => {
+			if ('name' in domNode && domNode.name === 'img') {
+				const { src, alt, width, height } = (domNode as Element).attribs;
+				return (
+					<Image
+						src={src}
+						alt={alt || '본문 이미지'}
+						width={width ? parseInt(width) : 640}
+						height={height ? parseInt(height) : 480}
+						sizes="100vw"
+						style={{ width: '100%', height: 'auto' }}
+					/>
+				);
+			}
+		},
+	});
 
 	const handleLikeButtonClick = async () => {
 		// 비회원인 경우 클릭 차단 & 알림 표시
@@ -147,10 +166,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 
 			{/* 본문 */}
 			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div
-				className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap"
-				dangerouslySetInnerHTML={{ __html: sanitizedContent }}
-			/>
+			<div className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap">{parsedContent}</div>
 
 			{/* 좋아요 버튼 */}
 			<button

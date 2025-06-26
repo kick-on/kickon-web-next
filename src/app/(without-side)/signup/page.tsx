@@ -1,20 +1,16 @@
 'use client';
 
 import Checkbox from '@/components/features/signup/checkbox';
-import AccountSelectbox from '@/components/common/account-selectbox';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Nickname from '@/components/features/signup/nickname';
 import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/auth/dto';
 import { updatePrivacy, updateUserInfo } from '@/services/auth';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
-import { LeagueDto } from '@/services/apis/league/dto';
-import { TeamDto } from '@/services/apis/team/dto';
-import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
-
+import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 export default function Page() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -26,8 +22,7 @@ export default function Page() {
 
 	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [nickname, setNickname] = useState<string | null>(null);
-	const [league, setLeague] = useState<LeagueDto | null>(null);
-	const [team, setTeam] = useState<TeamDto | null>(null);
+	const [teams, setTeams] = useState<number[] | null>(null);
 	const [agreements, setAgreements] = useState({
 		all: false,
 		age: false,
@@ -38,23 +33,13 @@ export default function Page() {
 
 	const isValidNickname = nickname && !isDuplicated;
 	const isAllRequiredChecked = agreements.age && agreements.term && agreements.privacy;
-	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && league && (league.pk === -1 || team));
+	const isButtonDisabled = !(isValidNickname && isAllRequiredChecked && teams);
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
 		if (isDuplicated) {
 			setIsDuplicated(false);
 		}
-	};
-
-	const handleLeagueChange = (selectedLeague) => {
-		if (selectedLeague === league) return;
-		setLeague(selectedLeague);
-	};
-
-	const handleTeamChange = (selectedTeam) => {
-		if (selectedTeam === team) return;
-		setTeam(selectedTeam);
 	};
 
 	const handleCheckboxChange = (key) => {
@@ -79,7 +64,7 @@ export default function Page() {
 		// 회원가입(정보 수정)
 		const updateUserInfoRequest: UpdateUserInfoRequest = {
 			nickname: nickname,
-			team: !team || team.pk === -1 ? undefined : team.pk,
+			teams: !teams || teams[0] === -1 ? undefined : teams,
 		};
 		const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
@@ -136,12 +121,9 @@ export default function Page() {
 				<div className="body3-regular @mobile:text-14">계정으로 가입을 진행하고 있어요.</div>
 			</div>
 
-			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] @mobile:mb-6 w-full flex flex-col gap-6">
+			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] w-full flex flex-col gap-[3.125rem] @mobile:gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<AccountSelectbox category="리그" content={league} onChange={handleLeagueChange} />
-				{league && league.pk !== NO_CHEERING_TEAM_PK && (
-					<AccountSelectbox category="응원팀" league={league.pk} content={team} onChange={handleTeamChange} />
-				)}
+				<FavoriteTeamSection setTeams={setTeams} />
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">

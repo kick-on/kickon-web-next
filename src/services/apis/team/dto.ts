@@ -7,4 +7,5 @@ export interface TeamDto {
 	nameEn: string;
 	pk: number;
 	logoUrl: string;
+	priorityNum?: number;
 }

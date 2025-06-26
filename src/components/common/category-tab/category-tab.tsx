@@ -16,7 +16,7 @@ export const renderItems = (items, ItemComponent) => (
 			<div key={item.pk}>
 				<ItemComponent {...item} />
 				{index !== items.length - 1 && (
-					<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': ItemComponent === CommunityItem })} />
+					<hr className={clsx('border-black-200', { 'mx-4': ItemComponent === NewsItem })} />
 				)}
 			</div>
 		))}
@@ -58,16 +58,19 @@ export default async function CategoryTab({
 		: null;
 
 	return (
-		<div className="flex flex-col w-full @mobile:w-[calc(100vw-34px)]">
-			<TabBar mode={mode} q={q} type={type} />
+		<div className="flex flex-col overflow-hidden">
+			<TabBar mode={mode} q={q} type={type} id={id} />
 			{!isNews && <CommunityDivisionBar />}
 			{!response ? (
 				<FetchingFailedCard height="770px" marginTop="9.5rem" />
 			) : !response.data.length ? (
 				<EmptyState isNews={isNews} />
 			) : (
-				<div className="flex flex-col w-full pb-10 @mobile:pb-0">
-					{renderItems(response.data, isNews ? NewsItem : CommunityItem)}
+				<div className="flex flex-col w-full">
+					{renderItems(
+						isNews ? response.data : [...response.data].sort((a, b) => Number(b.isPinned) - Number(a.isPinned)),
+						isNews ? (item) => <NewsItem {...item} /> : (item) => <CommunityItem {...item} />,
+					)}
 					<MoreList {...moreListProps} />
 					<PaginationBar totalPages={response.meta.totalPages} baseUrl={`/${mode}`} />
 				</div>

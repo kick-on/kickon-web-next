@@ -19,7 +19,7 @@ export default function Nickname({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="subtitle1-medium @mobile:text-13">닉네임</div>
+			<div className="subtitle1-semibold">닉네임</div>
 			<div className="relative bg-black-000">
 				<input
 					type="text"

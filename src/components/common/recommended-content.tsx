@@ -14,41 +14,25 @@ import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
 import NewsItem from './category-tab/news-item';
-import useIsMobile from '@/lib/hooks/useIsMobile';
 
 const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 	const pathname = usePathname();
 	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
-	const isMobile = useIsMobile();
-
 	const isMyTeam = Boolean(teamName);
 	const isNews = mode === 'news';
 	const isHome = pathname === '/';
 	const Component = isNews ? NewsItem : CommunityItem;
 
 	const displayTitle =
-		pathname === '/' && !isNews ? (
+		(pathname === '/' && isNews) || isNews ? (
+			<div className="flex">
+				함께 볼 만한
+				{isMyTeam && <span className="text-primary-900 flex mx-1.5 items-center">MY 팀</span>} 뉴스
+			</div>
+		) : pathname === '/' ? (
 			'클럽 커뮤니티'
 		) : (
-			<>
-				{!isMobile ? (
-					<div>
-						함께 볼 만한 {isMyTeam && <span className="text-primary-900">{teamName} </span>}
-						{isNews ? ' 뉴스' : ' 게시글'}
-					</div>
-				) : (
-					<div className="flex">
-						함께 볼 만한
-						{isMyTeam && (
-							<span className="text-primary-900 flex mx-1 items-center">
-								MY 팀
-								<Image width={16} height={16} src={teamLogo} alt="팀 로고" className="w-4 h-4 ml-1" />
-							</span>
-						)}
-						{isNews ? '뉴스' : '게시글'}
-					</div>
-				)}
-			</>
+			'함께 볼 만한 게시글'
 		);
 
 	const getDatas = useCallback(async () => {
@@ -59,7 +43,18 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 		if (!response) {
 			setData(null);
 		} else {
-			setData(response.data);
+			// 커뮤니티 아이템인 경우에만 isPinned 기준으로 정렬
+			if (!isNews && Array.isArray(response.data)) {
+				const sortedData = [...(response.data as RecommendedBoardDto[])].sort((a, b) => {
+					// isPinned가 true인 항목을 상단으로 배치
+					if (a.isPinned && !b.isPinned) return -1;
+					if (!a.isPinned && b.isPinned) return 1;
+					return 0; // 같은 경우 원래 순서 유지
+				});
+				setData(sortedData);
+			} else {
+				setData(response.data);
+			}
 			console.log(response.data);
 		}
 	}, [isNews, teamName]);
@@ -71,9 +66,12 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 	return (
 		<ComponentFrame isMain={true}>
 			<header
-				className={clsx('flex mx-4 justify-between pb-1.5', isNews ? '@mobile:pt-6 pt-7.5' : 'pt-7.5', '@mobile:mx-0', {
-					'border-b border-black-300 pb-7.5': !isNews,
-				})}
+				className={clsx(
+					'flex px-4 justify-between pb-1.5',
+					isNews ? '@mobile:pt-6 pt-7.5' : 'pt-7.5',
+					!isNews && 'border-b pb-7.5',
+					!isNews && (pathname === '/' ? 'border-black-900' : 'border-black-300'),
+				)}
 			>
 				<h3 className={clsx('@mobile:ml-4', 'title4-semibold', isNews ? '@mobile:text-16' : '@mobile:text-18')}>
 					{displayTitle}
@@ -108,9 +106,7 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 					data.map((item, index) => (
 						<div key={item.pk}>
 							<Component {...item} isMyTeam={isMyTeam} />
-							{index !== data.length - 1 && (
-								<hr className={clsx('border-black-300 mx-4', { '@mobile:mx-0': Component === CommunityItem })} />
-							)}
+							{index !== data.length - 1 && <hr className={clsx('border-black-200', { 'mx-4': isNews })} />}
 						</div>
 					))
 				)}
