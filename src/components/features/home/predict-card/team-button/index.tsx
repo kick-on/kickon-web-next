@@ -149,10 +149,10 @@ export default function TeamButton({
 	};
 
 	const logoSize = (() => {
-		if (isMobile) return 'w-4 h-4 min-w-4 min-h-4';
 		if (isTablet)
 			return isClicked ? 'w-6 h-6 min-w-6 min-h-6' : 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
 		if (isDesktop) return 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
+		return 'w-4 h-4 min-w-4 min-h-4';
 	})();
 
 	return (
