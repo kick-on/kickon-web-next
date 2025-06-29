@@ -93,7 +93,7 @@ export default function Selectbox({
 			<button
 				onClick={handleSelectBoxClick}
 				className={clsx(
-					`flex items-center justify-center gap-2 h-full min-w-[5.625rem] @mobile:w-full
+					`flex items-center justify-center gap-2 h-full min-w-25 @mobile:w-full
 					pl-4 @mobile:pl-3 pr-1.5 rounded-t-[0.625rem]`,
 					isClickedOtherTab
 						? 'hover:text-black-900 text-black-700'
