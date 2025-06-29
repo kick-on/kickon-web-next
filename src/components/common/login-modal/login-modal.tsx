@@ -45,7 +45,7 @@ export default function LoginModal({ onClose }) {
 					@mobile:w-full @mobile:h-full @mobile:rounded-none @mobile:bg-black-100
 					@mobile:text-20 @mobile:font-semibold @mobile:leading-8"
 			>
-				<button onClick={handleXButtonClick} className="ml-auto mb-[4.6875rem] @mobile:mt-2 @mobile:-mb-8">
+				<button onClick={handleXButtonClick} className="ml-auto mb-[4.6875rem] @mobile:mt-2 @mobile:mb-0">
 					<Image width={24} height={24} src="/x.svg" alt="닫기" />
 				</button>
 
