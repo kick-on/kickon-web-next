@@ -15,7 +15,7 @@ export default async function Page({
 	const page = params.page;
 
 	return (
-		<ComponentFrame className="@mobile:mb-[80px]" isMain={true}>
+		<ComponentFrame className="mb-5" isMain={true}>
 			<Suspense fallback={<EmptyState isNews={true} />}>
 				<CategoryTab mode="news" q={q} type={type} id={id} page={page} />
 			</Suspense>
