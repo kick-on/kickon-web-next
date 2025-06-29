@@ -158,7 +158,7 @@ export default function TeamButton({
 	return (
 		<div
 			className={clsx(
-				`relative w-full h-full min-h-[4.625rem] @mobile:min-h-[4.8125rem] grid grid-cols-3 items-center
+				`relative grid grid-cols-3 items-center
 				border transition-colors`,
 				isClicked || isFinished ? clickedFont('team') : defaultFont,
 				!isDesktop ? 'rounded-md' : 'rounded-lg',
@@ -170,10 +170,14 @@ export default function TeamButton({
 			)}
 		>
 			{sidesArr.map((side) => (
-				<div key={side} id={side} className={clsx('relative', isClicked && !isDesktop ? 'h-29' : 'h-full')}>
+				<div
+					key={side}
+					id={side}
+					className={clsx('relative', isClicked && !isDesktop ? 'h-29' : isMobile ? 'h-[4.815rem]' : 'h-[4.625rem]')}
+				>
 					<div
 						onClick={onClick}
-						className={clsx('relative h-full flex gap-2 items-center @mobile:min-h-[4.8125rem]', {
+						className={clsx('relative h-full flex gap-2 items-center', {
 							// 데스크톱 태블릿 모바일 공통 스타일
 							'text-left': side === 'home',
 							'flex-row-reverse text-right': side === 'away',
