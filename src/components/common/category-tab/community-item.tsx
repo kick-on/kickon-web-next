@@ -12,6 +12,7 @@ export default function CommunityItem({
 	title,
 	replies,
 	user,
+	team,
 	createdAt,
 	hasImage,
 	views,
@@ -27,6 +28,15 @@ export default function CommunityItem({
 			)}
 		>
 			<div className="flex gap-1 items-center pr-2">
+				{team && (
+					<Image
+						width={16}
+						height={16}
+						src={team.logoUrl}
+						alt={team.nameKr || team.nameEn}
+						className="object-contain"
+					/>
+				)}{' '}
 				<h2
 					className={clsx(
 						'subtitle1-medium max-w-3xs truncate group-hover:underline',

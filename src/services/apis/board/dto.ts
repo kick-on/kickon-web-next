@@ -35,6 +35,7 @@ export interface BoardItemDto {
 	pk: number;
 	title: string;
 	user: UserDto;
+	team: TeamDto;
 	createdAt: string;
 	hasImage?: boolean;
 	views: number;
