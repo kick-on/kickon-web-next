@@ -21,7 +21,7 @@ const FloatingWritingButton = () => {
 		}
 	};
 
-	if (pathname === '/') return null;
+	if (!(pathname.split('/').includes('news') || pathname.split('/').includes('board'))) return null;
 
 	return (
 		<div
