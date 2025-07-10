@@ -47,7 +47,7 @@ export default function CommunityItem({
 					{title}
 				</h2>
 				{hasImage && <Image width={14} height={14} src="/image.svg" alt="사진" />}
-				<div className="body5-regular">{!!replies && `(${replies})`}</div>
+				<div className="body5-regular text-primary-900">{!!replies && `(${replies})`}</div>
 			</div>
 
 			<div
