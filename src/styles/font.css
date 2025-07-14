@@ -114,10 +114,18 @@
 		line-height: var(--lh-24);
 	}
 
+	.body4-medium,
 	.body4-semibold {
 		font-size: var(--text-15);
-		font-weight: var(--font-weight-semibold);
 		line-height: var(--lh-16);
+	}
+
+	.body4-medium {
+		font-weight: var(--font-weight-medium);
+	}
+
+	.body4-semibold {
+		font-weight: var(--font-weight-semibold);
 	}
 
 	.body5-medium,

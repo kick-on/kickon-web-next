@@ -20,7 +20,7 @@ export default function TabBar({
 				before:content-[''] before:absolute before:-top-1 before:-left-1 before:bottom-0 before:-right-1
 				before:inset-shadow-[0px_-2px_4px_0px_rgba(0,0,0,0.10)]
 				after:content-[''] after:absolute after:-bottom-4 after:left-0 after:right-0
-				after:bg-black-000"
+				after:bg-black-000 after:h-4"
 			>
 				{tabs.map((tab) => (
 					<button

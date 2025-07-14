@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import TabBar from './tab-bar';
+import Stat from '../stat';
 
 export default function CategoryTab() {
 	const [selectedTab, setSelectedTab] = useState('매치ON');
@@ -9,6 +10,14 @@ export default function CategoryTab() {
 	return (
 		<div className="flex flex-col overflow-hidden">
 			<TabBar selectedTab={selectedTab} onClickButton={(tab: string) => setSelectedTab(tab)} />
+
+			{selectedTab === '매치ON' ? (
+				<div></div>
+			) : (
+				<div className="mt-4 mx-4 mb-13">
+					<Stat />
+				</div>
+			)}
 		</div>
 	);
 }
