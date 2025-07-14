@@ -7,7 +7,7 @@ import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
 import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import useIsMobile from '@/lib/hooks/useIsMobile';
+import useIsDesktop from '@/lib/hooks/useIsDesktop';
 
 export interface NavButton {
 	href: string;
@@ -20,25 +20,27 @@ export default function Navbar() {
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 
-	const isMobile = useIsMobile();
+	const isDesktop = useIsDesktop();
 	const isTabletWidth = useIsTabletWidth();
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
 	const navButtons: NavButton[] = [
-		isMobile ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
+		!isDesktop ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
 		{ href: '/gamble', content: '승부예측', isActive: pathname.split('/').includes('gamble') },
 		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
 		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
-		!isLeftSideBarVisible || isMobile ? { href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' } : null,
+		!isLeftSideBarVisible || !isDesktop
+			? { href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' }
+			: null,
 	];
 
 	const handleLogoClick = () => {
 		router.push('/');
 	};
 
-	if (isMobile === null) return null;
+	if (!isDesktop === null) return null;
 
-	return isMobile ? (
+	return !isDesktop ? (
 		<MobileNavbar navButtons={navButtons} />
 	) : (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-30 transition-colors ease-out`}>

@@ -6,6 +6,7 @@ import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/navbar/login-portal';
+import MarginWrapper from '@/components/layouts/root/margin-wrapper';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -30,12 +31,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<div className="@container">
 					<Navbar />
 					<LoginPortal />
-					<div className="@mobile:mt-16">
+					<MarginWrapper>
 						<Banner />
 						<div className="pb-[9.375rem]">{children}</div>
 						<Footer />
 						<MinWidth />
-					</div>
+					</MarginWrapper>
 				</div>
 			</body>
 		</html>
