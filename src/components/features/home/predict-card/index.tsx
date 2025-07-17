@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { GameDto, PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
+import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
 import { formatGameStartDate } from '@/lib/utils/formatGameStartDate';
 import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipations';
 import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
@@ -13,6 +13,7 @@ import { useState } from 'react';
 import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { GameDto } from '@/services/apis/game/dto';
 
 export default function PredictCard({
 	game,
