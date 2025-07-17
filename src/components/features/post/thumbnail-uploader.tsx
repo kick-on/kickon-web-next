@@ -20,7 +20,12 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 		if (!file) return;
 
 		try {
+			console.log(`압축 전 파일 크기: ${(file.size / 1024).toFixed(2)} KB`);
+
 			const compressedFile = await compressImage(file);
+
+			// 압축 후 파일 크기 출력
+			console.log(`압축 후 파일 크기: ${(compressedFile.size / 1024).toFixed(2)} KB`);
 
 			const img = document.createElement('img');
 			img.src = URL.createObjectURL(compressedFile);
