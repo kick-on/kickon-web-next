@@ -235,21 +235,6 @@
 	line-height: 16px;
 }
 
-.today-only-tile {
-	border: 2px solid #c00c0b0d !important;
-
-	border-radius: 8px;
-	padding: 12px 8px 28px 8px;
-	width: 43px;
-	height: 56px;
-	aspect-ratio: 43 / 56;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-size: 13px;
-	font-weight: 500;
-}
-
 .custom-calendar-mobile .focused-today-tile {
 	border: 2px solid #c00c0b !important;
 	background-color: #c00c0b0d;

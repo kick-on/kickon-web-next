@@ -9,6 +9,7 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getNextMatchDate } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
 
 interface MatchPredictionCalendarProps {
 	onSelectDate: (date: Date) => void; // 선택한 날짜 상위로 올림
@@ -194,26 +195,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	// 	setHasDisabledAfterDates(hasDisabled);
 	// }, [activeDate, predictionRange]);
 
-	const stripTime = (date: Date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 	const today = stripTime(new Date());
-	const isSameDate = (a: Date, b: Date) => {
-		const d1 = stripTime(a).getTime();
-		const d2 = stripTime(b).getTime();
-		return d1 === d2;
-	};
-
-	const getStartOfWeek = (date: Date) => {
-		const day = date.getDay();
-		const newDate = new Date(date);
-		newDate.setDate(date.getDate() - day);
-		return stripTime(newDate);
-	};
-
-	const getEndOfWeek = (startDate: Date) => {
-		const newDate = new Date(startDate);
-		newDate.setDate(startDate.getDate() + 6);
-		return stripTime(newDate);
-	};
 
 	const baseDate = focusedDate ?? today;
 	const startOfWeek = getStartOfWeek(baseDate);
