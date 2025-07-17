@@ -22,11 +22,10 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 
 	const calendarRef = useRef<HTMLDivElement>(null);
 
-	const [isMounted, setIsMounted] = useState(false);
 	const [isCollapsed, setIsCollapsed] = useState(false); // 접혀 있는 상태인가
 	const [markedCountMap, setMarkedCountMap] = useState<Record<string, number>>({});
 
-	const [focusedDate, setFocusedDate] = useState<Date | null>(); // 오늘 기준 가장 최근 경기 날에 포커싱
+	const [focusedDate, setFocusedDate] = useState<Date>(new Date()); // 오늘 기준 가장 최근 경기 날에 포커싱
 
 	// const [predictionRange, setPredictionRange] = useState<{
 	// 	start: Date;
@@ -34,7 +33,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	// } | null>(null);
 
 	// URL 파라미터에서 년월 정보 가져오기
-	const getActiveDate = () => {
+	const getDateForActiceMonth = () => {
 		const year = searchParams.get('year');
 		const month = searchParams.get('month');
 
@@ -47,7 +46,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 		return new Date(today.getFullYear(), today.getMonth(), 1);
 	};
 
-	const [activeDate, setActiveDate] = useState(getActiveDate);
+	const [dateForActiceMonth, setDateForActiceMonth] = useState(getDateForActiceMonth);
 
 	// URL 파라미터 업데이트
 	const updateUrlParams = (date: Date) => {
@@ -60,8 +59,8 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	};
 
 	const handleMonthChange = (direction: 'prev' | 'next') => {
-		const currentYear = activeDate.getFullYear();
-		const currentMonth = activeDate.getMonth();
+		const currentYear = dateForActiceMonth.getFullYear();
+		const currentMonth = dateForActiceMonth.getMonth();
 
 		let newYear = currentYear;
 		let newMonth = currentMonth + (direction === 'next' ? 1 : -1);
@@ -77,20 +76,16 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 		// 범위 체크
 		const newDate = new Date(newYear, newMonth, 1);
 		if (newDate >= minDate && newDate < maxDate) {
-			setActiveDate(newDate);
+			setDateForActiceMonth(newDate);
 			updateUrlParams(newDate); // URL 파라미터 업데이트
 		}
 	};
 
 	// URL 파라미터가 변경될 때 activeDate 업데이트
 	useEffect(() => {
-		const newActiveDate = getActiveDate();
-		setActiveDate(newActiveDate);
+		const newActiveDate = getDateForActiceMonth();
+		setDateForActiceMonth(newActiveDate);
 	}, [searchParams]);
-
-	useEffect(() => {
-		setIsMounted(true);
-	}, []);
 
 	// // 승부 예측 가능 기간 조회
 	// useEffect(() => {
@@ -117,9 +112,9 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	useEffect(() => {
 		async function fetchMarkedDates() {
 			try {
-				const year = activeDate.getFullYear();
-				const month = String(activeDate.getMonth() + 1).padStart(2, '0');
-				const day = String(activeDate.getDate()).padStart(2, '0');
+				const year = dateForActiceMonth.getFullYear();
+				const month = String(dateForActiceMonth.getMonth() + 1).padStart(2, '0');
+				const day = String(dateForActiceMonth.getDate()).padStart(2, '0');
 				const formattedDate = `${year}-${month}-${day}`;
 
 				console.log(formattedDate);
@@ -143,10 +138,8 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 			}
 		}
 
-		if (isMounted) {
-			fetchMarkedDates();
-		}
-	}, [activeDate, isMounted]);
+		fetchMarkedDates();
+	}, [dateForActiceMonth]);
 
 	useEffect(() => {
 		async function fetchNextMatchDate() {
@@ -197,8 +190,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 
 	const today = stripTime(new Date());
 
-	const baseDate = focusedDate ?? today;
-	const startOfWeek = getStartOfWeek(baseDate);
+	const startOfWeek = getStartOfWeek(focusedDate);
 	const endOfWeek = getEndOfWeek(startOfWeek);
 
 	// 오늘 날짜 기준으로 고정
@@ -210,20 +202,18 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	const maxDate = new Date(todayYear, todayMonth + 2, 1); // 다음 달의 다음 달 1일
 
 	// 화살표 표시 여부
-	const canGoPrev = activeDate.getTime() > minDate.getTime();
-	const canGoNext = activeDate.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
-
-	if (!isMounted || focusedDate === undefined) return null;
+	const canGoPrev = dateForActiceMonth.getTime() > minDate.getTime();
+	const canGoNext = dateForActiceMonth.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
 
 	return (
 		<div className="calendar-wrapper">
 			<div className={`calendar-container ${isCollapsed ? 'collapsed' : ''}`}>
 				<div ref={calendarRef} className="calendar-anim-wrapper">
 					<Calendar
-						key={activeDate.toISOString()}
+						key={dateForActiceMonth.toISOString()}
 						view="month"
 						formatDay={(locale, date) => `${date.getDate()}`}
-						activeStartDate={activeDate}
+						activeStartDate={dateForActiceMonth}
 						calendarType="gregory"
 						locale="ko-KR"
 						className={`custom-calendar ${isMobile && 'custom-calendar-mobile'}`}
@@ -303,7 +293,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 						formatShortWeekday={(locale, date) => ['일', '월', '화', '수', '목', '금', '토'][date.getDay()]}
 						tileClassName={({ date }) => {
 							const d = stripTime(date);
-							const isCurrentMonth = date.getMonth() === activeDate.getMonth();
+							const isCurrentMonth = date.getMonth() === dateForActiceMonth.getMonth();
 							if (!isCurrentMonth) return 'hidden-other-month-tile';
 							if (isCollapsed && (d < startOfWeek || d > endOfWeek)) return 'hidden-tile';
 
@@ -341,7 +331,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 							if (isFocused && isToday) baseClass = 'focused-today-tile';
 							else if (isFocused) baseClass = 'focused-tile';
 							else if (isToday) baseClass = 'not-focused-today-tile';
-							else if (d < today) baseClass = 'past-tile';
+							else if (d < today) baseClass = 'past-tile pointer-events-none';
 							else baseClass = 'future-tile';
 
 							return `${baseClass} ${hasDot ? 'has-dot' : ''}`.trim();
