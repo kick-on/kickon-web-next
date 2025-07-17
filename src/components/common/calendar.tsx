@@ -12,10 +12,11 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
 
 interface MatchPredictionCalendarProps {
-	onSelectDate: (date: Date) => void; // 선택한 날짜 상위로 올림
+	selectedDate: Date;
+	setSelectedDate: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
-export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictionCalendarProps) {
+export default function MatchPredictionCalendar({ selectedDate, setSelectedDate }: MatchPredictionCalendarProps) {
 	const isMobile = useIsMobile();
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -25,15 +26,13 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	const [isCollapsed, setIsCollapsed] = useState(false); // 접혀 있는 상태인가
 	const [markedCountMap, setMarkedCountMap] = useState<Record<string, number>>({});
 
-	const [focusedDate, setFocusedDate] = useState<Date>(new Date()); // 오늘 기준 가장 최근 경기 날에 포커싱
-
 	// const [predictionRange, setPredictionRange] = useState<{
 	// 	start: Date;
 	// 	end: Date;
 	// } | null>(null);
 
 	// URL 파라미터에서 년월 정보 가져오기
-	const getDateForActiceMonth = () => {
+	const getDateForActiveMonth = () => {
 		const year = searchParams.get('year');
 		const month = searchParams.get('month');
 
@@ -46,7 +45,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 		return new Date(today.getFullYear(), today.getMonth(), 1);
 	};
 
-	const [dateForActiceMonth, setDateForActiceMonth] = useState(getDateForActiceMonth);
+	const [dateForActiveMonth, setDateForActiveMonth] = useState(getDateForActiveMonth);
 
 	// URL 파라미터 업데이트
 	const updateUrlParams = (date: Date) => {
@@ -59,8 +58,8 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	};
 
 	const handleMonthChange = (direction: 'prev' | 'next') => {
-		const currentYear = dateForActiceMonth.getFullYear();
-		const currentMonth = dateForActiceMonth.getMonth();
+		const currentYear = dateForActiveMonth.getFullYear();
+		const currentMonth = dateForActiveMonth.getMonth();
 
 		let newYear = currentYear;
 		let newMonth = currentMonth + (direction === 'next' ? 1 : -1);
@@ -76,15 +75,15 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 		// 범위 체크
 		const newDate = new Date(newYear, newMonth, 1);
 		if (newDate >= minDate && newDate < maxDate) {
-			setDateForActiceMonth(newDate);
+			setDateForActiveMonth(newDate);
 			updateUrlParams(newDate); // URL 파라미터 업데이트
 		}
 	};
 
 	// URL 파라미터가 변경될 때 activeDate 업데이트
 	useEffect(() => {
-		const newActiveDate = getDateForActiceMonth();
-		setDateForActiceMonth(newActiveDate);
+		const newActiveDate = getDateForActiveMonth();
+		setDateForActiveMonth(newActiveDate);
 	}, [searchParams]);
 
 	// // 승부 예측 가능 기간 조회
@@ -112,9 +111,9 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	useEffect(() => {
 		async function fetchMarkedDates() {
 			try {
-				const year = dateForActiceMonth.getFullYear();
-				const month = String(dateForActiceMonth.getMonth() + 1).padStart(2, '0');
-				const day = String(dateForActiceMonth.getDate()).padStart(2, '0');
+				const year = dateForActiveMonth.getFullYear();
+				const month = String(dateForActiveMonth.getMonth() + 1).padStart(2, '0');
+				const day = String(dateForActiveMonth.getDate()).padStart(2, '0');
 				const formattedDate = `${year}-${month}-${day}`;
 
 				console.log(formattedDate);
@@ -139,7 +138,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 		}
 
 		fetchMarkedDates();
-	}, [dateForActiceMonth]);
+	}, [dateForActiveMonth]);
 
 	useEffect(() => {
 		async function fetchNextMatchDate() {
@@ -152,7 +151,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 				if (response?.data.nextDate) {
 					const [year, month, day] = response.data.nextDate.split('-').map(Number);
 					const date = new Date(year, month - 1, day);
-					setFocusedDate(date); // API로 받은 날짜로 포커스 설정
+					setSelectedDate(date); // API로 받은 날짜로 포커스 설정
 				}
 			} catch (e) {
 				console.error('가장 가까운 예정 경기 날짜 가져오기 실패:', e);
@@ -190,7 +189,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 
 	const today = stripTime(new Date());
 
-	const startOfWeek = getStartOfWeek(focusedDate);
+	const startOfWeek = getStartOfWeek(selectedDate);
 	const endOfWeek = getEndOfWeek(startOfWeek);
 
 	// 오늘 날짜 기준으로 고정
@@ -202,29 +201,29 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 	const maxDate = new Date(todayYear, todayMonth + 2, 1); // 다음 달의 다음 달 1일
 
 	// 화살표 표시 여부
-	const canGoPrev = dateForActiceMonth.getTime() > minDate.getTime();
-	const canGoNext = dateForActiceMonth.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
+	const canGoPrev = dateForActiveMonth.getTime() > minDate.getTime();
+	const canGoNext = dateForActiveMonth.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
 
 	return (
 		<div className="calendar-wrapper">
 			<div className={`calendar-container ${isCollapsed ? 'collapsed' : ''}`}>
 				<div ref={calendarRef} className="calendar-anim-wrapper">
 					<Calendar
-						key={dateForActiceMonth.toISOString()}
+						key={dateForActiveMonth.toISOString()}
 						view="month"
 						formatDay={(locale, date) => `${date.getDate()}`}
-						activeStartDate={dateForActiceMonth}
+						activeStartDate={dateForActiveMonth}
 						calendarType="gregory"
 						locale="ko-KR"
 						className={`custom-calendar ${isMobile && 'custom-calendar-mobile'}`}
-						onClickDay={(value) => onSelectDate(stripTime(value))}
+						onClickDay={(value) => setSelectedDate(stripTime(value))}
 						navigationLabel={({ date }) => {
 							const year = date.getFullYear();
 							const month = date.toLocaleString('ko-KR', { month: 'long' });
 
 							return (
 								<div className="flex w-full flex-1 items-center justify-center">
-									<div className="absolute left-0 ml-5 year">{year}년</div>
+									<div className="absolute left-0 @mobile:ml-5 ml-9 year">{year}년</div>
 
 									<div className="relative w-full flex-1 flex items-center justify-center">
 										{/* 왼쪽 화살표 */}
@@ -293,7 +292,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 						formatShortWeekday={(locale, date) => ['일', '월', '화', '수', '목', '금', '토'][date.getDay()]}
 						tileClassName={({ date }) => {
 							const d = stripTime(date);
-							const isCurrentMonth = date.getMonth() === dateForActiceMonth.getMonth();
+							const isCurrentMonth = date.getMonth() === dateForActiveMonth.getMonth();
 							if (!isCurrentMonth) return 'hidden-other-month-tile';
 							if (isCollapsed && (d < startOfWeek || d > endOfWeek)) return 'hidden-tile';
 
@@ -324,7 +323,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 							// }
 
 							// 기존 타일 클래스 조건들 유지
-							const isFocused = focusedDate && isSameDate(d, focusedDate);
+							const isFocused = selectedDate && isSameDate(d, selectedDate);
 							const isToday = isSameDate(d, today);
 
 							let baseClass = '';
@@ -343,7 +342,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 							const month = String(d.getMonth() + 1).padStart(2, '0');
 							const day = String(d.getDate()).padStart(2, '0');
 							const dStr = `${year}-${month}-${day}`;
-							const isFocused = focusedDate && isSameDate(d, focusedDate);
+							const isFocused = selectedDate && isSameDate(d, selectedDate);
 
 							// if (predictionRange && d > predictionRange.end) {
 							// 	return null;
@@ -367,7 +366,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 						}}
 					/>
 				</div>
-				<div className="calendar-toggle" onClick={() => setIsCollapsed((prev) => !prev)}>
+				<button className="calendar-toggle w-full flex justify-center" onClick={() => setIsCollapsed((prev) => !prev)}>
 					<Image
 						src="/chevron/calendar-up.svg"
 						alt="toggle"
@@ -378,7 +377,7 @@ export default function MatchPredictionCalendar({ onSelectDate }: MatchPredictio
 							transition: 'transform 0.3s ease',
 						}}
 					/>
-				</div>
+				</button>
 			</div>
 		</div>
 	);

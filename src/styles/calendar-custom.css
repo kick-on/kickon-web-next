@@ -195,7 +195,8 @@
 
 .custom-calendar .focused-tile {
 	border: 2px solid #c00c0b !important;
-	background-color: #c00c0b0d;
+	background-color: #c00c0b0d !important;
+	color: #c00c0b !important;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
 	width: 57px;

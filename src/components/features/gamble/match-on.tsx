@@ -6,9 +6,10 @@ import { GameDto, GetGamesRequest } from '@/services/apis/game/dto';
 import { getGames } from '@/services/apis/game';
 import { formatFromTo } from '@/lib/utils/formatFromTo';
 import NoGameCard from '../home/no-game-card';
+import MatchPredictionCalendar from '@/components/common/calendar';
 
 export default function MatchOn() {
-	const [selectedDate, setSelectedDate] = useState(new Date('2025-07-19'));
+	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [games, setGames] = useState<GameDto[]>([]);
 
 	useEffect(() => {
@@ -19,12 +20,15 @@ export default function MatchOn() {
 				from: formatFromTo(selectedDate),
 				to: formatFromTo(selectedDate),
 			};
+			console.log(request);
 
 			try {
 				const response = await getGames(request);
 
 				if (response) {
 					setGames(response.data.games);
+				} else {
+					alert('실패');
 				}
 			} catch (error) {
 				console.error(error);
@@ -36,18 +40,22 @@ export default function MatchOn() {
 
 	return (
 		<div className="pt-6 space-y-9">
-			<div>캘린더</div>
+			<div>
+				<MatchPredictionCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+			</div>
 
-			{games.length === 0 ? (
-				<NoGameCard />
-			) : (
-				games.map((game, i) => (
-					<div key={game.pk}>
-						<PredictCard game={game} type="proceeding" />
-						{i !== games.length - 1 && <hr className="mx-[1.125rem] border-black-200 my-2" />}
-					</div>
-				))
-			)}
+			<div>
+				{games.length === 0 ? (
+					<NoGameCard />
+				) : (
+					games.map((game, i) => (
+						<div key={game.pk}>
+							<PredictCard game={game} type="proceeding" />
+							{i !== games.length - 1 && <hr className="mx-[1.125rem] border-black-200 my-2" />}
+						</div>
+					))
+				)}
+			</div>
 		</div>
 	);
 }
