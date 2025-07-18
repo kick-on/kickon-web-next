@@ -26,7 +26,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 	const calendarRef = useRef<HTMLDivElement>(null);
 
-	const [isCollapsed, setIsCollapsed] = useState(false); // 접혀 있는 상태인가
+	const [isCollapsed, setIsCollapsed] = useState(isMatch ? false : true); // 접혀 있는 상태인가
 	const [markedCountMap, setMarkedCountMap] = useState<Record<string, number>>({});
 
 	// const [predictionRange, setPredictionRange] = useState<{
