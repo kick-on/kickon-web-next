@@ -333,7 +333,8 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							const isToday = isSameDate(d, today);
 
 							let baseClass = '';
-							if (isFocused && isToday) baseClass = 'focused-today-tile';
+							if (isFocused && isToday)
+								baseClass = isMatch ? 'focused-today-tile' : 'not-focused-today-tile pointer-events-none';
 							else if (isFocused) baseClass = 'focused-tile';
 							else if (isToday) baseClass = 'not-focused-today-tile';
 							else if (d < today) baseClass = isMatch ? 'past-tile pointer-events-none' : 'future-tile';
@@ -359,7 +360,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 							return (
 								<div className="flex flex-col items-center gap-1 mt-1">
-									{isToday && <span className={isFocused ? 'today-text' : 'text-primary-300'}>오늘</span>}
+									{isToday && <span className={isFocused && isMatch ? 'today-text' : 'text-primary-300'}>오늘</span>}
 
 									{count > 0 && (
 										<div className="flex flex-row items-center gap-2">
