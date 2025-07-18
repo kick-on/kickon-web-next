@@ -144,6 +144,9 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	}, [dateForActiveMonth, isMatch]);
 
 	useEffect(() => {
+		// 매치ON에서만 가까운 예정일 구함
+		if (!isMatch) return;
+
 		async function fetchNextMatchDate() {
 			try {
 				const today = new Date();
@@ -161,7 +164,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 			}
 		}
 		fetchNextMatchDate();
-	}, []);
+	}, [isMatch]);
 
 	// const [hasDisabledAfterDates, setHasDisabledAfterDates] = useState(false);
 
