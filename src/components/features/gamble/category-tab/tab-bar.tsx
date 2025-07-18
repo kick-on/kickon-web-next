@@ -1,5 +1,6 @@
 'use client';
 
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import clsx from 'clsx';
 
 export default function TabBar({
@@ -9,7 +10,9 @@ export default function TabBar({
 	selectedTab: string;
 	onClickButton: (tab: string) => void;
 }) {
-	const tabs = ['매치ON', '예측 결과'];
+	const { currentUserInfo } = useCurrentUserInfoStore();
+
+	const tabs = currentUserInfo ? ['매치ON', '예측 결과'] : ['매치ON'];
 
 	return (
 		<div>
