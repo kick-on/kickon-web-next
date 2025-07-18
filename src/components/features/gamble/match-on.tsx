@@ -41,7 +41,7 @@ export default function MatchOn() {
 	return (
 		<div className="pt-6 space-y-9">
 			<div>
-				<MatchPredictionCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+				<MatchPredictionCalendar type="match" selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 			</div>
 
 			<div>

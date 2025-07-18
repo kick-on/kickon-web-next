@@ -7,19 +7,22 @@ import Image from 'next/image';
 
 import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
-import { getMonthlyMatchList, getNextMatchDate } from '@/services/apis/calendar';
+import { getMonthlyMatchList, getMyCalendar, getNextMatchDate } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
 
 interface MatchPredictionCalendarProps {
+	type: 'match' | 'predict';
 	selectedDate: Date;
 	setSelectedDate: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
-export default function MatchPredictionCalendar({ selectedDate, setSelectedDate }: MatchPredictionCalendarProps) {
+export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
 	const isMobile = useIsMobile();
 	const router = useRouter();
 	const searchParams = useSearchParams();
+
+	const isMatch = type === 'match';
 
 	const calendarRef = useRef<HTMLDivElement>(null);
 
@@ -117,7 +120,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate 
 				const formattedDate = `${year}-${month}-${day}`;
 
 				console.log(formattedDate);
-				const response = await getMonthlyMatchList(formattedDate);
+				const response = isMatch ? await getMonthlyMatchList(formattedDate) : await getMyCalendar();
 				console.log(response);
 				if (response?.data?.dates) {
 					const parsedDates = response.data.dates.map((d) => {
@@ -138,7 +141,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate 
 		}
 
 		fetchMarkedDates();
-	}, [dateForActiveMonth]);
+	}, [dateForActiveMonth, isMatch]);
 
 	useEffect(() => {
 		async function fetchNextMatchDate() {
@@ -330,8 +333,8 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate 
 							if (isFocused && isToday) baseClass = 'focused-today-tile';
 							else if (isFocused) baseClass = 'focused-tile';
 							else if (isToday) baseClass = 'not-focused-today-tile';
-							else if (d < today) baseClass = 'past-tile pointer-events-none';
-							else baseClass = 'future-tile';
+							else if (d < today) baseClass = isMatch ? 'past-tile pointer-events-none' : 'future-tile';
+							else baseClass = isMatch ? 'future-tile' : 'past-tile pointer-events-none';
 
 							return `${baseClass} ${hasDot ? 'has-dot' : ''}`.trim();
 						}}

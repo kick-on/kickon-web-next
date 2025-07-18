@@ -7,9 +7,10 @@ import { getGames } from '@/services/apis/game';
 import { formatFromTo } from '@/lib/utils/formatFromTo';
 import NoGameCard from '../home/no-game-card';
 import Stat from './stat';
+import MatchPredictionCalendar from '@/components/common/calendar';
 
 export default function PredictResult() {
-	const [selectedDate, setSelectedDate] = useState(new Date('2025-07-19'));
+	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [games, setGames] = useState<GameDto[]>([]);
 
 	useEffect(() => {
@@ -41,7 +42,9 @@ export default function PredictResult() {
 				<Stat />
 			</div>
 
-			<div>캘린더</div>
+			<div>
+				<MatchPredictionCalendar type="predict" selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+			</div>
 
 			{games.length === 0 ? (
 				<NoGameCard />
