@@ -42,7 +42,7 @@ export default function PredictResult() {
 				<Stat />
 			</div>
 
-			<div>
+			<div className="px-4">
 				<MatchPredictionCalendar type="predict" selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 			</div>
 

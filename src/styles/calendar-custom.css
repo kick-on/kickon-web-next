@@ -1,5 +1,5 @@
 .react-calendar {
-	width: 636px;
+	width: 100%;
 	border: 1px solid #f0f0f0;
 	border-radius: 10px;
 	box-shadow: 0px 4px 6px 0px rgba(0, 0, 0, 0.16);
@@ -17,8 +17,7 @@
 }
 
 .calendar-wrapper {
-	width: fit-content;
-	margin: 0 auto;
+	width: 100%;
 }
 
 .calendar-container {
@@ -151,8 +150,8 @@
 	background-color: #c00c0b0d;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
-	width: 57px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 57 / 56;
 	display: flex;
 	flex-direction: column;
@@ -167,8 +166,8 @@
 	background-color: #fff;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
-	width: 57px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 57 / 56;
 	display: flex;
 	flex-direction: column;
@@ -182,8 +181,8 @@
 	background-color: #fff;
 	border-radius: 8px;
 	padding: 12px 8px 28px 8px;
-	width: 43px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 43 / 56;
 	display: flex;
 	flex-direction: column;
@@ -199,8 +198,8 @@
 	color: #c00c0b !important;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
-	width: 57px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 57 / 56;
 	display: flex;
 	flex-direction: column;
@@ -215,8 +214,8 @@
 	background-color: #c00c0b0d;
 	border-radius: 8px;
 	padding: 12px 10px 28px 10px;
-	width: 43px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 43 / 56;
 	display: flex;
 	flex-direction: column;
@@ -241,8 +240,8 @@
 	background-color: #c00c0b0d;
 	border-radius: 8px;
 	padding: 12px 8px 28px 8px;
-	width: 43px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 43 / 56;
 	display: flex;
 	align-items: center;
@@ -263,8 +262,8 @@
 .custom-calendar .past-tile {
 	color: #cccccc;
 	border-radius: 8px;
-	width: 57px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 57 / 56;
 	padding: 10px 10px 30px 10px;
 	display: flex;
@@ -281,8 +280,8 @@
 	color: #cccccc;
 	border-radius: 8px;
 	padding: 12px 10px 28px 10px;
-	width: 43px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 43 / 56;
 	display: flex;
 	flex-direction: column;
@@ -297,8 +296,8 @@
 .custom-calendar .future-tile {
 	color: #000000;
 	border-radius: 8px;
-	width: 57px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 57 / 56;
 	padding: 10px 10px 30px 10px;
 	display: flex;
@@ -314,8 +313,8 @@
 	color: #000000;
 	border-radius: 8px;
 	padding: 12px 10px 28px 10px;
-	width: 43px;
-	height: 56px;
+	width: 100%;
+	height: auto;
 	aspect-ratio: 43 / 56;
 	display: flex;
 	flex-direction: column;
