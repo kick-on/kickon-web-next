@@ -28,12 +28,14 @@ export type GetMyStatsResponse = SuccessResponse<MyStatsDto>;
 export interface MyStatsDto {
 	totalSuccessRate: number;
 	totalParticipationCount: number;
-	participationRate: number;
+	totalParticipationRate: number;
 	thisMonthSuccessRate: number;
 	thisMonthHitSummary: string;
 	thisMonthPoints: number;
 	totalPoints: number;
 	mostHitTeamName: string;
+	mostHitTeamColor: string;
+	mostHitTeamLogoUrl: string;
 }
 
 // 내부 dto

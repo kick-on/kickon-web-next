@@ -13,7 +13,7 @@ export default function Stat() {
 			label: '참여한 예측',
 			value: statData?.totalParticipationCount,
 			unit: '개',
-			caption: `참여율 ${roundToOneDecimal(statData?.participationRate * 100)}%`,
+			caption: `참여율 ${roundToOneDecimal(statData?.totalParticipationRate * 100)}%`,
 		},
 		{
 			label: '이번달 성공률',
