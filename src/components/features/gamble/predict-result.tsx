@@ -9,13 +9,18 @@ import NoGameCard from './no-game-card';
 import Stat from './stat';
 import MatchPredictionCalendar from '@/components/common/calendar';
 import { useRouter } from 'next/navigation';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function PredictResult() {
+	const { currentUserInfo } = useCurrentUserInfoStore();
+
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [games, setGames] = useState<GameDto[]>([]);
 	const router = useRouter();
 
 	useEffect(() => {
+		if (!currentUserInfo) return;
+
 		const apiCaller = async () => {
 			const request: GetMyPredictionsRequest = {
 				from: formatFromTo(selectedDate),
@@ -35,6 +40,11 @@ export default function PredictResult() {
 
 		apiCaller();
 	}, [selectedDate]);
+
+	if (!currentUserInfo) {
+		router.replace('/gamble?type=match');
+		return null;
+	}
 
 	return (
 		<div className="space-y-9">
