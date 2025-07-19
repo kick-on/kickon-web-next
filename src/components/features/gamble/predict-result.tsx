@@ -5,7 +5,7 @@ import PredictCard from '../home/predict-card';
 import { GameDto, GetMyPredictionsRequest } from '@/services/apis/game/dto';
 import { getMyPredictions } from '@/services/apis/game';
 import { formatFromTo } from '@/lib/utils/formatFromTo';
-import NoGameCard from '../home/no-game-card';
+import NoGameCard from './no-game-card';
 import Stat from './stat';
 import MatchPredictionCalendar from '@/components/common/calendar';
 
@@ -45,7 +45,7 @@ export default function PredictResult() {
 			</div>
 
 			{games.length === 0 ? (
-				<NoGameCard />
+				<NoGameCard type="predict" />
 			) : (
 				games.map((game, i) => (
 					<div key={game.pk}>

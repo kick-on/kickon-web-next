@@ -1,18 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import TabBar from './tab-bar';
 import MatchOn from '../match-on';
 import PredictResult from '../predict-result';
+import { useSearchParams } from 'next/navigation';
 
 export default function CategoryTab() {
-	const [selectedTab, setSelectedTab] = useState('매치ON');
+	const searchParams = useSearchParams();
+	const type = searchParams.get('type') ?? 'match';
 
 	return (
 		<div className="flex flex-col overflow-hidden">
-			<TabBar selectedTab={selectedTab} onClickButton={(tab: string) => setSelectedTab(tab)} />
+			<TabBar type={type} />
 
-			{selectedTab === '매치ON' ? <MatchOn /> : <PredictResult />}
+			{type === 'match' ? <MatchOn /> : <PredictResult />}
 		</div>
 	);
 }

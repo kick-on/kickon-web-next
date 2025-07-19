@@ -5,7 +5,7 @@ import PredictCard from '../home/predict-card';
 import { GameDto, GetGamesRequest } from '@/services/apis/game/dto';
 import { getGames } from '@/services/apis/game';
 import { formatFromTo } from '@/lib/utils/formatFromTo';
-import NoGameCard from '../home/no-game-card';
+import NoGameCard from './no-game-card';
 import MatchPredictionCalendar from '@/components/common/calendar';
 
 export default function MatchOn() {
@@ -20,7 +20,6 @@ export default function MatchOn() {
 				from: formatFromTo(selectedDate),
 				to: formatFromTo(selectedDate),
 			};
-			console.log(request);
 
 			try {
 				const response = await getGames(request);
@@ -46,7 +45,7 @@ export default function MatchOn() {
 
 			<div>
 				{games.length === 0 ? (
-					<NoGameCard />
+					<NoGameCard type="match" />
 				) : (
 					games.map((game, i) => (
 						<div key={game.pk}>

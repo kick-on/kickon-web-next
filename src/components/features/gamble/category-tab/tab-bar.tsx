@@ -2,17 +2,17 @@
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import clsx from 'clsx';
+import { useRouter } from 'next/navigation';
 
-export default function TabBar({
-	selectedTab,
-	onClickButton,
-}: {
-	selectedTab: string;
-	onClickButton: (tab: string) => void;
-}) {
+export default function TabBar({ type }: { type: string }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const router = useRouter();
 
-	const tabs = currentUserInfo ? ['매치ON', '예측 결과'] : ['매치ON'];
+	const tabs = currentUserInfo ? { match: '매치ON', predict: '예측 결과' } : { match: '매치ON' };
+
+	const handleButtonClick = (type: string) => {
+		router.replace(`/gamble?type=${type}`);
+	};
 
 	return (
 		<div>
@@ -25,18 +25,18 @@ export default function TabBar({
 				after:content-[''] after:absolute after:-bottom-4 after:left-0 after:right-0
 				after:bg-black-000 after:h-4"
 			>
-				{tabs.map((tab) => (
+				{Object.keys(tabs).map((key) => (
 					<button
-						onClick={() => onClickButton(tab)}
-						key={tab}
+						onClick={() => handleButtonClick(key)}
+						key={key}
 						className={clsx(
 							`relative flex pt-[1.0625rem] pb-[0.9375rem] rounded-t-[0.625rem] w-full justify-center
 							before:content-[''] before:absolute before:top-0 before:left-0 before:bottom-0 before:right-0
 							before:bg-black-000 before:shadow-[0px_4px_6px_0px_rgba(0,0,0,0.25)] before:rounded-t-[0.625rem]`,
-							selectedTab === tab ? 'before:block header-semibold text-primary-900' : 'before:hidden text-black-700',
+							type === key ? 'before:block header-semibold text-primary-900' : 'before:hidden text-black-700',
 						)}
 					>
-						<div className="relative z-20">{tab}</div>
+						<div className="relative z-20">{tabs[key]}</div>
 					</button>
 				))}
 			</div>
