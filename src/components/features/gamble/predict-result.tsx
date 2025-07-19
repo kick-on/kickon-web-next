@@ -8,10 +8,12 @@ import { formatFromTo } from '@/lib/utils/formatFromTo';
 import NoGameCard from './no-game-card';
 import Stat from './stat';
 import MatchPredictionCalendar from '@/components/common/calendar';
+import { useRouter } from 'next/navigation';
 
 export default function PredictResult() {
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [games, setGames] = useState<GameDto[]>([]);
+	const router = useRouter();
 
 	useEffect(() => {
 		const apiCaller = async () => {
@@ -45,7 +47,7 @@ export default function PredictResult() {
 			</div>
 
 			{games.length === 0 ? (
-				<NoGameCard type="predict" />
+				<NoGameCard type="predict" onClick={() => router.replace('/gamble?type=match')} />
 			) : (
 				games.map((game, i) => (
 					<div key={game.pk}>

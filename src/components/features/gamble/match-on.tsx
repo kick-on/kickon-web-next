@@ -12,6 +12,7 @@ import { getNextMatchDate } from '@/services/apis/calendar';
 export default function MatchOn() {
 	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [games, setGames] = useState<GameDto[]>([]);
+	const [trigger, setTrigger] = useState(0);
 
 	// 가장 가까운 예정 경기일 조회
 	useEffect(() => {
@@ -32,7 +33,7 @@ export default function MatchOn() {
 			}
 		}
 		fetchNextMatchDate();
-	}, []);
+	}, [trigger]);
 
 	// 날짜별 경기 리스트 조회
 	useEffect(() => {
@@ -68,7 +69,7 @@ export default function MatchOn() {
 
 			<div>
 				{games.length === 0 ? (
-					<NoGameCard type="match" />
+					<NoGameCard type="match" onClick={() => setTrigger(trigger + 1)} />
 				) : (
 					games.map((game, i) => (
 						<div key={game.pk}>

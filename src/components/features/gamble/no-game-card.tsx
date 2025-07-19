@@ -1,9 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
 
-export default function NoGameCard({ type }: { type: 'match' | 'predict' }) {
+export default function NoGameCard({ type, onClick }: { type: 'match' | 'predict'; onClick: () => void }) {
 	const isMatch = type === 'match';
 
 	return (
@@ -20,8 +19,8 @@ export default function NoGameCard({ type }: { type: 'match' | 'predict' }) {
 			</span>
 			<span className="title4-medium @mobile:text-14 mb-8">참여 가능한 다른 경기를 확인해 보세요.</span>
 
-			<Link
-				href="/gamble?type=match"
+			<button
+				onClick={onClick}
 				className="flex gap-1.5 text-black-000 py-2.5 px-5 bg-black-900 rounded-full button4-medium"
 			>
 				가능한 경기 보기
@@ -32,7 +31,7 @@ export default function NoGameCard({ type }: { type: 'match' | 'predict' }) {
 					width={16}
 					height={16}
 				/>
-			</Link>
+			</button>
 		</div>
 	);
 }
