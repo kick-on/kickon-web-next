@@ -39,7 +39,7 @@ export default function CommunityItem({
 				)}{' '}
 				<h2
 					className={clsx(
-						'subtitle1-medium max-w-3xs truncate group-hover:underline',
+						'body5-medium max-w-3xs truncate group-hover:underline',
 						'@mobile:max-w-max @mobile:w-fit @mobile:text-15 @mobile:leading-4',
 						isPinned && 'text-primary-900 font-semibold @mobile:font-semibold',
 					)}
