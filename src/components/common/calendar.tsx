@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
-import { getMonthlyMatchList, getMyCalendar, getNextMatchDate } from '@/services/apis/calendar';
+import { getMonthlyMatchList, getMyCalendar } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
 
@@ -142,29 +142,6 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 		fetchMarkedDates();
 	}, [dateForActiveMonth, isMatch]);
-
-	useEffect(() => {
-		// 매치ON에서만 가까운 예정일 구함
-		if (!isMatch) return;
-
-		async function fetchNextMatchDate() {
-			try {
-				const today = new Date();
-				const todayStr = today.toISOString().split('T')[0];
-
-				const response = await getNextMatchDate(todayStr);
-				console.log(response);
-				if (response?.data.nextDate) {
-					const [year, month, day] = response.data.nextDate.split('-').map(Number);
-					const date = new Date(year, month - 1, day);
-					setSelectedDate(date); // API로 받은 날짜로 포커스 설정
-				}
-			} catch (e) {
-				console.error('가장 가까운 예정 경기 날짜 가져오기 실패:', e);
-			}
-		}
-		fetchNextMatchDate();
-	}, [isMatch]);
 
 	// const [hasDisabledAfterDates, setHasDisabledAfterDates] = useState(false);
 
