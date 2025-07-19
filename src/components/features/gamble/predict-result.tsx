@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import PredictCard from '../home/predict-card';
-import { GameDto, GetGamesRequest } from '@/services/apis/game/dto';
-import { getGames } from '@/services/apis/game';
+import { GameDto, GetMyPredictionsRequest } from '@/services/apis/game/dto';
+import { getMyPredictions } from '@/services/apis/game';
 import { formatFromTo } from '@/lib/utils/formatFromTo';
 import NoGameCard from '../home/no-game-card';
 import Stat from './stat';
@@ -15,15 +15,13 @@ export default function PredictResult() {
 
 	useEffect(() => {
 		const apiCaller = async () => {
-			const request: GetGamesRequest = {
-				league: 1,
-				status: 'finished',
+			const request: GetMyPredictionsRequest = {
 				from: formatFromTo(selectedDate),
 				to: formatFromTo(selectedDate),
 			};
 
 			try {
-				const response = await getGames(request);
+				const response = await getMyPredictions(request);
 
 				if (response) {
 					setGames(response.data.games);
