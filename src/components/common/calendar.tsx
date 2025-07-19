@@ -349,7 +349,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							const month = String(d.getMonth() + 1).padStart(2, '0');
 							const day = String(d.getDate()).padStart(2, '0');
 							const dStr = `${year}-${month}-${day}`;
-							const isFocused = selectedDate && isSameDate(d, selectedDate);
+							// const isFocused = selectedDate && isSameDate(d, selectedDate);
 
 							// if (predictionRange && d > predictionRange.end) {
 							// 	return null;
