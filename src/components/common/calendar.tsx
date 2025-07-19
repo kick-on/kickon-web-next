@@ -333,8 +333,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							const isToday = isSameDate(d, today);
 
 							let baseClass = '';
-							if (isFocused && isToday)
-								baseClass = isMatch ? 'focused-today-tile' : 'not-focused-today-tile pointer-events-none';
+							if (isFocused && isToday) baseClass = 'focused-today-tile';
 							else if (isFocused) baseClass = 'focused-tile';
 							else if (isToday) baseClass = 'not-focused-today-tile';
 							else if (d < today) baseClass = isMatch ? 'past-tile pointer-events-none' : 'future-tile';
