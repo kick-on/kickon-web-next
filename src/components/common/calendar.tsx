@@ -360,7 +360,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 							return (
 								<div className="flex flex-col items-center gap-1 mt-1">
-									{isToday && <span className={isFocused && isMatch ? 'today-text' : 'text-primary-300'}>오늘</span>}
+									{isToday && <span className="text-primary-900">오늘</span>}
 
 									{count > 0 && (
 										<div className="flex flex-row items-center gap-2">

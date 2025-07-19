@@ -162,7 +162,7 @@
 }
 
 .custom-calendar .not-focused-today-tile {
-	border: 2px solid rgba(192, 12, 11, 0.3) !important;
+	border: 2px solid #c00c0b !important;
 	background-color: #fff;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
