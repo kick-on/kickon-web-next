@@ -72,7 +72,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
 						</div>
 						<Image
-							className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
+							className="w-4 h-4 object-contain"
 							src={currentUserInfo.favoriteTeams.length > 0 ? currentUserInfo.favoriteTeams[0].logoUrl : '/ban.svg'}
 							alt="팀 로고 이미지"
 							width={16}
