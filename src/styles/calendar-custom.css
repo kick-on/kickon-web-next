@@ -16,29 +16,6 @@
 	cursor: default;
 }
 
-.calendar-container {
-	position: relative;
-	max-height: 1000px;
-	opacity: 1;
-}
-
-.calendar-container.collapsed {
-	max-height: 250px;
-	opacity: 1;
-}
-
-.calendar-anim-wrapper {
-	transition:
-		max-height 0.4s ease,
-		opacity 0.4s ease;
-	max-height: 500px;
-	opacity: 1;
-}
-
-.collapsed .calendar-anim-wrapper {
-	max-height: 250px;
-}
-
 .custom-calendar {
 	position: relative;
 	overflow: hidden;

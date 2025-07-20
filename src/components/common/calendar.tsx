@@ -188,9 +188,14 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	const canGoNext = dateForActiveMonth.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
 
 	return (
-		<div className="calendar-wrapper">
-			<div className={`calendar-container ${isCollapsed ? 'collapsed' : ''}`}>
-				<div ref={calendarRef} className="relative">
+		<div className="w-full">
+			<div className={`relative opacity-100 ${isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'}`}>
+				<div
+					ref={calendarRef}
+					className={`relative transition-all duration-[400ms] ease opacity-100 ${
+						isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'
+					}`}
+				>
 					<Calendar
 						key={dateForActiveMonth.toISOString()}
 						view="month"
