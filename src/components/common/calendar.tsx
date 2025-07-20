@@ -190,7 +190,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	return (
 		<div className="calendar-wrapper">
 			<div className={`calendar-container ${isCollapsed ? 'collapsed' : ''}`}>
-				<div ref={calendarRef} className="calendar-anim-wrapper">
+				<div ref={calendarRef} className="relative">
 					<Calendar
 						key={dateForActiveMonth.toISOString()}
 						view="month"
@@ -349,7 +349,10 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						}}
 					/>
 				</div>
-				<button className="calendar-toggle w-full flex justify-center" onClick={() => setIsCollapsed((prev) => !prev)}>
+				<button
+					onClick={() => setIsCollapsed((prev) => !prev)}
+					className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
+				>
 					<Image
 						src="/chevron/calendar-up.svg"
 						alt="toggle"

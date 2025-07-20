@@ -16,10 +16,6 @@
 	cursor: default;
 }
 
-.calendar-wrapper {
-	width: 100%;
-}
-
 .calendar-container {
 	position: relative;
 	max-height: 1000px;
@@ -60,17 +56,7 @@
 	transition:
 		max-height 1.5s ease,
 		opacity 1.5s ease;
-	padding: 26px 5px 30px 5px;
-}
-
-/* 토글 버튼을 달력 하단에 고정 */
-.calendar-toggle {
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	transform: translateX(-50%);
-	cursor: pointer;
-	z-index: 10;
+	padding: 26px 5px 48px 5px;
 }
 
 /* 오늘 날짜는 abbr 숨기기 */
