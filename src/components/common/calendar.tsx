@@ -188,9 +188,14 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	const canGoNext = dateForActiveMonth.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
 
 	return (
-		<div className="calendar-wrapper">
-			<div className={`calendar-container ${isCollapsed ? 'collapsed' : ''}`}>
-				<div ref={calendarRef} className="calendar-anim-wrapper">
+		<div className="w-full">
+			<div className={`relative opacity-100 ${isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'}`}>
+				<div
+					ref={calendarRef}
+					className={`relative transition-all duration-[400ms] ease opacity-100 ${
+						isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'
+					}`}
+				>
 					<Calendar
 						key={dateForActiveMonth.toISOString()}
 						view="month"
@@ -349,7 +354,10 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						}}
 					/>
 				</div>
-				<button className="calendar-toggle w-full flex justify-center" onClick={() => setIsCollapsed((prev) => !prev)}>
+				<button
+					onClick={() => setIsCollapsed((prev) => !prev)}
+					className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
+				>
 					<Image
 						src="/chevron/calendar-up.svg"
 						alt="toggle"

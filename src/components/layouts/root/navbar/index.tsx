@@ -8,6 +8,7 @@ import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
+import { Suspense } from 'react';
 
 export interface NavButton {
 	href: string;
@@ -56,7 +57,11 @@ export default function Navbar() {
 					/>
 					{navButtons.map((props) => props && <NavButton key={props.content} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTabletWidth) && <LoginButton />}
+				{(pathname === '/signup' || isTabletWidth) && (
+					<Suspense>
+						<LoginButton />
+					</Suspense>
+				)}
 			</div>
 		</header>
 	);
