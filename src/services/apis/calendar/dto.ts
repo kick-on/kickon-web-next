@@ -33,7 +33,7 @@ export type GetNextMatchDateResponse = SuccessResponse<NextGameDate>;
 
 // 내가 참여한 승부 예측 경기 날짜 조회 응답
 export interface PredictionDatesDto {
-	dates: string[];
+	dates: MatchDate[];
 }
 
 // 뉴스 상세 조회 응답 타입

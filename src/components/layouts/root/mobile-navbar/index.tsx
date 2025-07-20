@@ -10,8 +10,9 @@ import Sidebar from './sidebar';
 import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { NavButton } from '../navbar';
 
-export default function MobileNavbar() {
+export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isMenuBgVisible, setIsMenuBgVisible] = useState(false);
@@ -58,7 +59,7 @@ export default function MobileNavbar() {
 			</header>
 
 			<Sidebar side={'left'} isMenuOpen={isMenuOpen} isBgVisible={isMenuBgVisible} handleToggleMenu={handleToggleMenu}>
-				<SideNavbar onClickButton={handleToggleMenu} />
+				<SideNavbar onClickButton={handleToggleMenu} navButtons={navButtons} />
 			</Sidebar>
 
 			{currentUserInfo && (

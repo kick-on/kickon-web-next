@@ -1,28 +1,6 @@
 import { fetcher } from '@/lib/server/fetcher';
-import { GetGamesRequest, GetGamesResponse, PatchGameGambleRequest, PostGameGambleRequest } from './dto';
+import { PatchGameGambleRequest, PostGameGambleRequest } from './dto';
 import { EmptySuccessResponse, FailResponse } from '@/services/config/dto';
-
-// 매치 리스트 조회
-export const getGames = async ({ league, status, team }: GetGamesRequest): Promise<GetGamesResponse | null> => {
-	const params = new URLSearchParams();
-
-	params.append('league', String(league));
-	params.append('status', String(status));
-	if (team !== undefined) {
-		params.append('team', String(team));
-	}
-
-	const response = await fetcher<GetGamesResponse | FailResponse>({
-		method: 'GET',
-		url: `/api/game?${params.toString()}`,
-	});
-
-	if (!response.code.split('_').includes('SUCCESS')) {
-		console.error('게임 리스트 조회 실패:', response);
-		return null;
-	}
-	return response;
-};
 
 // 승부예측 생성
 export const postGameGamble = async (body: PostGameGambleRequest) => {
