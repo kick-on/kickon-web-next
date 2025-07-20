@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Score from './score';
 import { Dispatch, SetStateAction } from 'react';
-import { GameDto } from '@/services/apis/user-game-gamble/dto';
 import MobileUpdownButton from './mobile-updown-button';
+import { GameDto } from '@/services/apis/game/dto';
 
 interface TeamButtonInfoDto {
 	teamName: string;
@@ -149,16 +149,16 @@ export default function TeamButton({
 	};
 
 	const logoSize = (() => {
-		if (isMobile) return 'w-4 h-4 min-w-4 min-h-4';
 		if (isTablet)
 			return isClicked ? 'w-6 h-6 min-w-6 min-h-6' : 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
 		if (isDesktop) return 'w-[1.375rem] h-[1.375rem] min-w-[1.375rem] min-h-[1.375rem]';
+		return 'w-4 h-4 min-w-4 min-h-4';
 	})();
 
 	return (
 		<div
 			className={clsx(
-				`relative w-full h-full min-h-[4.625rem] @mobile:min-h-[4.8125rem] grid grid-cols-3 items-center
+				`relative grid grid-cols-3 items-center
 				border transition-colors`,
 				isClicked || isFinished ? clickedFont('team') : defaultFont,
 				!isDesktop ? 'rounded-md' : 'rounded-lg',
@@ -170,10 +170,14 @@ export default function TeamButton({
 			)}
 		>
 			{sidesArr.map((side) => (
-				<div key={side} id={side} className={clsx('relative', isClicked && !isDesktop ? 'h-29' : 'h-full')}>
+				<div
+					key={side}
+					id={side}
+					className={clsx('relative', isClicked && !isDesktop ? 'h-29' : isMobile ? 'h-[4.815rem]' : 'h-[4.625rem]')}
+				>
 					<div
 						onClick={onClick}
-						className={clsx('relative h-full flex gap-2 items-center @mobile:min-h-[4.8125rem]', {
+						className={clsx('relative h-full flex gap-2 items-center', {
 							// 데스크톱 태블릿 모바일 공통 스타일
 							'text-left': side === 'home',
 							'flex-row-reverse text-right': side === 'away',

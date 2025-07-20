@@ -37,7 +37,10 @@ export default function LoginModal({ onClose }) {
 	}, [onClose]);
 
 	return (
-		<div className="fixed z-50 @mobile:z-60 flex justify-center items-center top-0 left-0 w-full h-full bg-black/40">
+		<div
+			className="fixed z-50 @mobile:z-60 flex justify-center items-center top-0 left-0
+				w-full h-full bg-black/40 @mobile:w-dvw @mobile:h-dvh"
+		>
 			<div
 				ref={modalRef}
 				className="flex flex-col items-center p-6 shadow-predict-button
@@ -45,7 +48,7 @@ export default function LoginModal({ onClose }) {
 					@mobile:w-full @mobile:h-full @mobile:rounded-none @mobile:bg-black-100
 					@mobile:text-20 @mobile:font-semibold @mobile:leading-8"
 			>
-				<button onClick={handleXButtonClick} className="ml-auto mb-[4.6875rem] @mobile:mt-2 @mobile:-mb-8">
+				<button onClick={handleXButtonClick} className="ml-auto mb-[4.6875rem] @mobile:mt-2 @mobile:mb-0">
 					<Image width={24} height={24} src="/x.svg" alt="닫기" />
 				</button>
 

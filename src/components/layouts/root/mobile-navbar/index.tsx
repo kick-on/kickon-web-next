@@ -5,13 +5,14 @@ import { usePathname } from 'next/navigation';
 import LoginButton from '../navbar/login-button';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { useCallback, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
 import Sidebar from './sidebar';
 import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { NavButton } from '../navbar';
 
-export default function MobileNavbar() {
+export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 	const [isMenuBgVisible, setIsMenuBgVisible] = useState(false);
@@ -53,12 +54,14 @@ export default function MobileNavbar() {
 					<Link href="/" className="w-auto h-full flex justify-center">
 						<Image src={'/logo/icon-red.svg'} alt="킥온 로고 이미지" width={45} height={36} />
 					</Link>
-					<LoginButton onClickProfile={handleToggleProfile} />
+					<Suspense>
+						<LoginButton onClickProfile={handleToggleProfile} />
+					</Suspense>
 				</div>
 			</header>
 
 			<Sidebar side={'left'} isMenuOpen={isMenuOpen} isBgVisible={isMenuBgVisible} handleToggleMenu={handleToggleMenu}>
-				<SideNavbar onClickButton={handleToggleMenu} />
+				<SideNavbar onClickButton={handleToggleMenu} navButtons={navButtons} />
 			</Sidebar>
 
 			{currentUserInfo && (

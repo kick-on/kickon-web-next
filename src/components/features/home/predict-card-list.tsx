@@ -4,8 +4,8 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import NoGameCard from '@/components/features/home/no-game-card';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getGames } from '@/services/apis/user-game-gamble';
-import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/user-game-gamble/dto';
+import { getGames } from '@/services/apis/game';
+import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/game/dto';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function PredictCardList({ teamPk }: { teamPk: undefined | number }) {

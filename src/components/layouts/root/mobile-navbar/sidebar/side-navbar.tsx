@@ -2,7 +2,6 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import Divider from './divider';
 import { HotNewsDto, NewsItemDto } from '@/services/apis/news/dto';
 import { useEffect, useState } from 'react';
@@ -10,22 +9,20 @@ import MostReadNewsItem from '@/components/layouts/with-side/most-read-news-list
 import { getHotNews } from '@/services/apis/news/getHotNews';
 import Image from 'next/image';
 import { getNewsList } from '@/services/apis/news/getNewsList';
+import { NavButton } from '../../navbar';
 
-export default function SideNavbar({ onClickButton }: { onClickButton: () => void }) {
-	const pathname = usePathname();
-
+export default function SideNavbar({
+	onClickButton,
+	navButtons,
+}: {
+	onClickButton: () => void;
+	navButtons: NavButton[];
+}) {
 	const [countToRender, setCountToRender] = useState<number | null>(null);
 	const [hotNews, setHotNews] = useState<HotNewsDto[] | null>(null);
 	const [recentNews, setRecentNews] = useState<NewsItemDto[] | null>(null);
 
 	const isHotNewsEmpty = hotNews && hotNews.length === 0;
-
-	const navButtons = [
-		{ href: '/', content: '홈', isActive: pathname === '/' },
-		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
-		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
-		{ href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' },
-	];
 
 	useEffect(() => {
 		if (countToRender === null) return;

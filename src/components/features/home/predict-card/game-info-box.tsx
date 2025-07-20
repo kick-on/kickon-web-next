@@ -27,13 +27,10 @@ export default function GameInfoBox({
 
 	return (
 		<div
-			className={clsx(
-				'relative z-20 w-14 h-full flex flex-col justify-center items-center border rounded-[0.625rem] mb-auto',
-				{
-					'border-black-200 bg-black-000': isGambleInProgress || isGameInProgress,
-					'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
-				},
-			)}
+			className={clsx('relative z-20 w-14 h-full flex flex-col justify-center items-center border rounded-lg mb-auto', {
+				'border-black-200 bg-black-000': isGambleInProgress || isGameInProgress,
+				'bg-black-200 border-black-100': !isGambleInProgress && !isGameInProgress,
+			})}
 		>
 			<div className="body7-medium">{gameStatusContent}</div>
 			<div className={clsx('button6-regular', { 'line-through': isGameCanceled })}>{startDate}</div>

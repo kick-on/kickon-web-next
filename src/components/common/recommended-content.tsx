@@ -70,17 +70,15 @@ const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
 					'flex px-4 justify-between pb-1.5',
 					isNews ? '@mobile:pt-6 pt-7.5' : 'pt-7.5',
 					!isNews && 'border-b pb-7.5',
-					!isNews && (pathname === '/' ? 'border-black-900' : 'border-black-300'),
+					!isNews && 'border-black-700 @mobile:border-black-200',
 				)}
 			>
-				<h3 className={clsx('@mobile:ml-4', 'title4-semibold', isNews ? '@mobile:text-16' : '@mobile:text-18')}>
-					{displayTitle}
-				</h3>
+				<h3 className={clsx('title4-semibold', isNews ? '@mobile:text-16' : '@mobile:text-18')}>{displayTitle}</h3>
 
 				<Link
 					href={!isNews ? '/board?q=전체' : isMyTeam ? `/news?q=${teamName}` : `/news?q=전체`}
 					aria-label="더 보기"
-					className="@mobile:mr-4 @mobile:text-[12px] flex gap-2 items-center text-black-700 body5-regular"
+					className="@mobile:text-[12px] flex gap-2 items-center text-black-700 body5-regular"
 				>
 					<span>더 보기</span>
 					<Image

@@ -18,12 +18,15 @@ export default function TabBar({ mode, q, type, id }: { mode: 'news' | 'board'; 
 		<div>
 			{/* 탭 바 */}
 			<div
-				className="relative w-full flex rounded-t-[0.625rem] bg-black-200 header-medium
+				className={clsx(
+					`relative w-full flex rounded-t-[0.625rem] bg-black-200 header-medium
 				@mobile:grid @mobile:grid-cols-[1fr_1fr_1fr_clamp(100px,30vw,150px)]
 				before:content-[''] before:absolute before:-top-1 before:-left-1 before:bottom-0 before:-right-1
 				before:inset-shadow-[0px_-2px_4px_0px_rgba(0,0,0,0.10)]
 				after:content-[''] after:absolute after:-bottom-4 after:left-0 after:right-0
-				after:bg-black-000"
+				after:bg-black-000`,
+					isNews && 'after:h-4',
+				)}
 			>
 				{tabs.map((tab, i) =>
 					!tab ? null : (

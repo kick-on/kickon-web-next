@@ -12,6 +12,7 @@ export default function CommunityItem({
 	title,
 	replies,
 	user,
+	team,
 	createdAt,
 	hasImage,
 	views,
@@ -27,9 +28,18 @@ export default function CommunityItem({
 			)}
 		>
 			<div className="flex gap-1 items-center pr-2">
+				{team && (
+					<Image
+						width={16}
+						height={16}
+						src={team.logoUrl}
+						alt={team.nameKr || team.nameEn}
+						className="object-contain"
+					/>
+				)}{' '}
 				<h2
 					className={clsx(
-						'subtitle1-medium max-w-3xs truncate group-hover:underline',
+						'body5-medium max-w-3xs truncate group-hover:underline',
 						'@mobile:max-w-max @mobile:w-fit @mobile:text-15 @mobile:leading-4',
 						isPinned && 'text-primary-900 font-semibold @mobile:font-semibold',
 					)}
@@ -37,7 +47,7 @@ export default function CommunityItem({
 					{title}
 				</h2>
 				{hasImage && <Image width={14} height={14} src="/image.svg" alt="사진" />}
-				<div className="body5-regular">{!!replies && `(${replies})`}</div>
+				<div className="body5-regular text-primary-900">{!!replies && `(${replies})`}</div>
 			</div>
 
 			<div

@@ -8,31 +8,44 @@ import PredictCardList from './predict-card-list';
 
 export default function PredictLeagueTab() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const [selectedTeamPk, setSelectedTeamPk] = useState<undefined | number>(
-		currentUserInfo?.favoriteTeams?.length > 0 ? undefined : 1,
-	);
+	const [selectedTeamPk, setSelectedTeamPk] = useState<undefined | number>(undefined);
 
 	const teams = currentUserInfo?.favoriteTeams ?? [];
+	const favoriteTeamLength = currentUserInfo?.favoriteTeams.length;
 
-	// 응원팀이 하나 이상 있는 경우 전체 탭
+	// 응원팀이 하나만 있는 경우 별도의 firstTab 없음
+	// 응원팀이 둘 이상 있는 경우 전체 탭
 	// 응원팀이 없거나 비회원인 경우 프리미어리그 탭
 	const firstTab =
-		currentUserInfo?.favoriteTeams.length > 0
-			? { content: '전체', isActive: selectedTeamPk === undefined }
-			: {
-					pk: 1,
-					nameKr: '프리미어리그',
-					nameEn: 'Premier League',
-					logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
-					type: 'League',
-				};
-	const tabs = [firstTab, ...teams];
+		favoriteTeamLength === 1
+			? null
+			: favoriteTeamLength > 1
+				? { content: '전체', isActive: selectedTeamPk === undefined }
+				: {
+						pk: 1,
+						nameKr: '프리미어리그',
+						nameEn: 'Premier League',
+						logoUrl: 'https://media.api-sports.io/football/leagues/39.png',
+						type: 'League',
+					};
+	const tabs = firstTab ? [firstTab, ...teams] : [...teams];
 
 	useEffect(() => {
 		// currentUserInfo 변경될 때마다 (로그인 상태가 변경될 때마다)
 		// default 활성탭 업데이트
-		setSelectedTeamPk(currentUserInfo?.favoriteTeams?.length > 0 ? undefined : 1);
-	}, [currentUserInfo]);
+
+		let defaultTeamPk: number | undefined;
+
+		if (favoriteTeamLength === 1) {
+			defaultTeamPk = currentUserInfo.favoriteTeams[0].pk;
+		} else if (favoriteTeamLength > 1) {
+			defaultTeamPk = undefined;
+		} else {
+			defaultTeamPk = 1;
+		}
+
+		setSelectedTeamPk(defaultTeamPk);
+	}, [currentUserInfo, favoriteTeamLength]);
 
 	return (
 		<div>

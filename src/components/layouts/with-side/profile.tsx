@@ -106,7 +106,7 @@ export default function Profile() {
 											<div className="body3-regular text-black-800">님</div>
 										</div>
 										<Image
-											className="@mobile:w-4 @mobile:h-4 w-[1.125rem] h-[1.125rem] object-contain"
+											className="w-4 h-4 object-contain"
 											src={
 												currentUserInfo?.favoriteTeams.length > 0
 													? currentUserInfo?.favoriteTeams[0].logoUrl
