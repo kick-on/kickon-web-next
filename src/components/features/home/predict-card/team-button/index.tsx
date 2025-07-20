@@ -4,8 +4,8 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Score from './score';
 import { Dispatch, SetStateAction } from 'react';
-import { GameDto } from '@/services/apis/user-game-gamble/dto';
 import MobileUpdownButton from './mobile-updown-button';
+import { GameDto } from '@/services/apis/game/dto';
 
 interface TeamButtonInfoDto {
 	teamName: string;
