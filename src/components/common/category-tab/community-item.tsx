@@ -34,7 +34,7 @@ export default function CommunityItem({
 						height={16}
 						src={team.logoUrl}
 						alt={team.nameKr || team.nameEn}
-						className="object-contain"
+						className="object-contain w-4 h-4"
 					/>
 				)}{' '}
 				<h2
