@@ -7,6 +7,7 @@ import { MyStatsDto } from '@/services/apis/game/dto';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import Chart from './chart';
+import MostHitTeam from './most-hit-team';
 
 export default function Stat() {
 	const isMobile = useIsMobile();
@@ -79,36 +80,22 @@ export default function Stat() {
 					</div>
 
 					{!isMobile && (
-						<div
-							className="relative overflow-hidden h-15 body7-medium
-					border border-primary-900 rounded-lg bg-black-100
-						before:content-[''] before:absolute before:top-1/2 
-						before:-right-5 before:h-[13px] before:w-20 before:rotate-311 before:bg-primary-900
-						after:content-[''] after:absolute after:top-1/2 after:-translate-y-1/2
-						after:-right-3 after:h-[13px] after:w-30 after:rotate-311 after:bg-primary-900"
-						>
-							<div className="absolute z-10 top-1/2 left-1/2 -translate-y-1/2 -translate-x-5/11 w-[60%] text-center">
-								<span className="font-semibold break-keep">{statData.mostHitTeamName}</span>의 승부예측을 가장 많이
-								적중했어요.
-							</div>
-						</div>
+						<MostHitTeam
+							teamName={statData.mostHitTeamName}
+							teamLogo={statData.mostHitTeamLogoUrl}
+							teamColor={statData.mostHitTeamColor ?? 'var(--color-primary-900)'}
+						/>
 					)}
 				</div>
 			</div>
 
 			{isMobile && (
-				<div
-					className="mt-6 relative overflow-hidden h-15 body7-medium
-						border border-primary-900 rounded-lg bg-black-100
-						before:content-[''] before:absolute before:top-1/2 
-						before:-right-5 before:h-[13px] before:w-20 before:rotate-311 before:bg-primary-900
-						after:content-[''] after:absolute after:top-1/2 after:-translate-y-1/2
-						after:-right-3 after:h-[13px] after:w-30 after:rotate-311 after:bg-primary-900"
-				>
-					<div className="absolute z-10 top-1/2 left-1/2 -translate-y-1/2 -translate-x-5/11 w-[60%] text-center">
-						<span className="font-semibold break-keep">{statData.mostHitTeamName}</span>의 승부예측을 가장 많이
-						적중했어요.
-					</div>
+				<div className="mt-6">
+					<MostHitTeam
+						teamName={statData.mostHitTeamName}
+						teamLogo={statData.mostHitTeamLogoUrl}
+						teamColor={statData.mostHitTeamColor ?? 'var(--color-primary-900)'}
+					/>
 				</div>
 			)}
 		</div>
