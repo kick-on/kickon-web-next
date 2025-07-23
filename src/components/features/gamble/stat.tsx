@@ -6,6 +6,7 @@ import { getMyStats } from '@/services/apis/game';
 import { MyStatsDto } from '@/services/apis/game/dto';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
+import Chart from './chart';
 
 export default function Stat() {
 	const isMobile = useIsMobile();
@@ -55,13 +56,9 @@ export default function Stat() {
 						<div className="body7-regular text-black-500 mb-4">지금까지 누적된 예측 성공률 기준</div>
 					</div>
 
-					<div
-						className="relative w-31 @mobile:w-34 aspect-square rounded-full m-auto
-					bg-conic-[var(--color-primary-900)_50deg,_var(--color-black-200)_50deg]
-					before:absolute before:top-1/2 before:left-1/2 before:-translate-1/2
-					before:w-[74%] before:aspect-square before:rounded-full before:bg-black-000"
-					>
-						<div className="relative z-10 w-full h-full flex justify-center items-center body2-semibold text-primary-900">
+					<div className="relative w-31 @mobile:w-34 aspect-square m-auto">
+						<Chart totalSuccessRate={statData.totalSuccessRate} />
+						<div className="absolute top-1/2 left-1/2 -translate-1/2 w-full h-full flex justify-center items-center body2-semibold @mobile:text-18 text-primary-900">
 							{roundToOneDecimal(statData.totalSuccessRate * 100)}%
 						</div>
 					</div>
