@@ -15,7 +15,7 @@ export default function Chart({ totalSuccessRate }: { totalSuccessRate: number }
 				strokeWidth={strokeWidth}
 				stroke-linecap="round"
 				strokeDasharray={`${CIRCUMFERENCE * totalSuccessRate} ${CIRCUMFERENCE * (1 - totalSuccessRate)}`}
-				strokeDashoffset={CIRCUMFERENCE * 0.23}
+				strokeDashoffset={CIRCUMFERENCE * 0.25}
 			/>
 		</svg>
 	);
