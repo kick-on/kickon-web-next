@@ -14,3 +14,11 @@ export const getEndOfWeek = (startDate: Date): Date => {
 	newDate.setDate(startDate.getDate() + 6);
 	return stripTime(newDate);
 };
+
+export const getWeekOfMonth = (date: Date) => {
+	const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+	const firstDayOfWeek = firstDay.getDay(); // 일:0~토:6
+	const offset = date.getDate() + firstDayOfWeek - 1;
+
+	return Math.floor(offset / 7) + 1;
+};

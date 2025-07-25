@@ -9,7 +9,7 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyCalendar } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
+import { getEndOfWeek, getStartOfWeek, getWeekOfMonth, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
@@ -213,13 +213,13 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 								<div className="flex w-full flex-1 items-center justify-center">
 									<div className="absolute left-0 @mobile:ml-5 ml-9 year">{year}년</div>
 
-									<div className="relative w-full flex-1 flex items-center justify-center">
+									<div className="flex w-full flex-1 flex items-center justify-center">
 										{/* 왼쪽 화살표 */}
 										{canGoPrev && (
 											<div
 												role="button"
 												tabIndex={0}
-												className="absolute mr-25 cursor-pointer"
+												className="flex cursor-pointer"
 												onClick={() => handleMonthChange('prev')}
 												onKeyDown={(e) => {
 													if (e.key === 'Enter' || e.key === ' ') {
@@ -240,9 +240,17 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 										{/* 월 중앙 */}
 										{month && (
-											<span className="flex justify-center items-center">
-												<span className="month-number">{month.slice(0, -1)}</span>
-												<span className="month-text">{month.slice(-1)}</span>
+											<span className="flex mx-[10px] gap-[10px]">
+												<span className="flex justify-center items-center">
+													<span className="calendar-unit-number">{month.slice(0, -1)}</span>
+													<span className="calendar-unit-text">{month.slice(-1)}</span>
+												</span>
+												{isCollapsed && (
+													<span className="flex justify-center items-center">
+														<span className="calendar-unit-number">{getWeekOfMonth(selectedDate)}</span>
+														<span className="calendar-unit-text">주</span>
+													</span>
+												)}
 											</span>
 										)}
 
@@ -251,7 +259,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 											<div
 												role="button"
 												tabIndex={0}
-												className="absolute ml-25 cursor-pointer"
+												className="flex cursor-pointer"
 												onClick={() => handleMonthChange('next')}
 												onKeyDown={(e) => {
 													if (e.key === 'Enter' || e.key === ' ') {
