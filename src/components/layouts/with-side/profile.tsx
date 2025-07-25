@@ -55,7 +55,7 @@ export default function Profile() {
 
 				if (typeof response === 'string') {
 					console.log(response);
-				} else {
+				} else if (response.data.privacyAgreedAt) {
 					setCurrentUserInfo(response.data);
 				}
 			};

@@ -98,7 +98,7 @@ export default function Page() {
 		const getCurrentUserInfo = async () => {
 			const response = await getUserInfo();
 
-			if (typeof response !== 'string') {
+			if (typeof response !== 'string' && response.data.privacyAgreedAt) {
 				setCurrentUserInfo(response.data);
 
 				setProfileImageUrl(response.data.profileImageUrl);
