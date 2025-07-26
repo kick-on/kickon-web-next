@@ -11,10 +11,12 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 import { getDetailContent } from '@/services/apis/detail';
 
-import { GetDetailResponse } from '@/services/apis/detail/dto';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { PostContentView } from '@/services/apis/detail/view';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
+import { getNewsDetail } from '@/services/apis/news/news.api';
+import { getBoardDetail } from '@/services/apis/board/board.api';
+import { CommonPostDetailDto } from '@/services/apis/common/types';
 
 const POST_VIEW_EXPIRY = 60 * 60 * 24 * 1000;
 
@@ -23,7 +25,7 @@ const DetailPage = () => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
-	const [contents, setContents] = useState<GetDetailResponse | null>(null);
+	const [contents, setContents] = useState<CommonPostDetailDto | null>(null);
 	const [, setIsLoading] = useState(true);
 	const [totalReplies, setTotalReplies] = useState(0);
 
@@ -34,8 +36,8 @@ const DetailPage = () => {
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
-	const isTeamNull = contents?.data?.team == null;
-	const isOurTeam = Boolean(currentUserInfo?.favoriteTeams.find((team) => team?.pk === contents?.data?.team?.pk));
+	const isTeamNull = contents?.team == null;
+	const isOurTeam = Boolean(currentUserInfo?.favoriteTeams.find((team) => team?.pk === contents?.team?.pk));
 	const isCommentAllowed = isTeamNull || isOurTeam;
 
 	const [shouldCallApi, setShouldCallApi] = useState(false);
@@ -71,7 +73,7 @@ const DetailPage = () => {
 		}
 		const getDetailContentData = async () => {
 			try {
-				const contentData = await getDetailContent(type, id);
+				const contentData = type === 'news' ? await getNewsDetail(id) : await getBoardDetail(id);
 
 				// 내 조회가 반영되기 전 서버 조회수
 				const serverViewCount = contentData.data.views;
@@ -87,7 +89,7 @@ const DetailPage = () => {
 					},
 				};
 
-				setContents(finalContents);
+				setContents(finalContents.data);
 				setTotalReplies(contentData.data.replies);
 
 				// 세션 스토리지에 저장 (같은 키로 항상 덮어쓰기)
@@ -119,8 +121,8 @@ const DetailPage = () => {
 	return (
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
 			<ComponentFrame isMain={true}>
-				{contents?.data ? (
-					<DetailContent data={contents.data} type={type} isCommentAllowed={isCommentAllowed} />
+				{contents ? (
+					<DetailContent data={contents} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
 					<FetchingFailedCard
 						height="800px"
@@ -134,7 +136,7 @@ const DetailPage = () => {
 				<CommentSection
 					isCommentAllowed={isCommentAllowed}
 					type={type}
-					contentsId={contents?.data?.pk || 0}
+					contentsId={contents?.pk || 0}
 					totalreplies={totalReplies}
 					setTotalReplies={setTotalReplies}
 				/>
@@ -143,7 +145,7 @@ const DetailPage = () => {
 			<RecommendedContent
 				mode={type}
 				teamLogo={currentUserInfo?.favoriteTeams[0]?.logoUrl}
-				teamName={isOurTeam ? contents?.data.team?.nameKr : ''}
+				teamName={isOurTeam ? contents?.team?.nameKr : ''}
 			/>
 		</div>
 	);
