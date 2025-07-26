@@ -6,8 +6,6 @@ import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { PostContentsRequest } from '@/services/apis/post/dto';
-import { postNewContents } from '@/services/apis/post';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -16,7 +14,8 @@ import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { categories } from '@/lib/constants/options';
-import { patchDetailContent } from '@/services/apis/detail/actions';
+import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
+import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
 
 export default function Page() {
 	const router = useRouter();
@@ -119,7 +118,7 @@ export default function Page() {
 		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
 
 		// 공통 요청 데이터
-		const requestBody: PostContentsRequest = {
+		const requestBody: CreateNewsRequest = {
 			team: selectedTeam?.id || null,
 			title: title.trim(),
 			contents: body.trim(),
@@ -133,16 +132,16 @@ export default function Page() {
 				const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
 				const contentPk = parsedData.data.pk;
 
-				const patchBody: Partial<PostContentsRequest> = {
+				const patchBody: PatchNewsDetailRequest = {
 					...requestBody,
 				};
 
 				console.log('수정 바디', patchBody);
-				const response = await patchDetailContent(contentPk, true, patchBody);
+				const response = await patchNewsDetail(contentPk, patchBody);
 				console.log('수정 성공', response);
 				router.replace(`/news/${contentPk}`);
 			} else {
-				const response = await postNewContents(requestBody, true);
+				const response = await createNews(requestBody);
 				console.log('작성 성공', response);
 				router.replace(`/news/${response.data.pk}`);
 			}
