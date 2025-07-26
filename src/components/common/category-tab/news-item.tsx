@@ -1,5 +1,5 @@
 import { getTimeAgo } from '@/lib/utils/getTimeAgo';
-import { NewsItemDto } from '@/services/apis/news/dto';
+import { NewsListDto } from '@/services/apis/news/news.type';
 import Image from 'next/image';
 import Link from 'next/link';
 import SanitizedContent from '../sanitized-content';
@@ -18,7 +18,7 @@ export default function NewsItem({
 	replies,
 	team,
 	isMyTeam = false,
-}: NewsItemDto & { isMyTeam?: boolean }) {
+}: NewsListDto & { isMyTeam?: boolean }) {
 	return (
 		<Link href={`/news/${pk}`} className="group">
 			<article className="flex flex-col my-2 py-4 px-4 cursor-pointer">
