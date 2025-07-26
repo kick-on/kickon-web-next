@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
-import { compressImage } from '@/lib/utils/compressImage';
 
 interface ThumbnailUploaderProps {
 	selectedImage: string | null;
@@ -15,42 +14,38 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 	const [isPortrait, setIsPortrait] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
+	const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
 	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
 
+		const localUrl = URL.createObjectURL(file);
+		setPreviewUrl(localUrl); // 빠르게 UI에 반영
+		const img = document.createElement('img');
+		img.src = localUrl;
+		img.onload = () => {
+			setIsPortrait(img.height > img.width);
+			URL.revokeObjectURL(img.src); // 메모리 해제
+		};
+
 		try {
-			console.log(`압축 전 파일 크기: ${(file.size / 1024).toFixed(2)} KB`);
-
-			const compressedFile = await compressImage(file);
-
-			// 압축 후 파일 크기 출력
-			console.log(`압축 후 파일 크기: ${(compressedFile.size / 1024).toFixed(2)} KB`);
-
-			const img = document.createElement('img');
-			img.src = URL.createObjectURL(compressedFile);
-			img.onload = () => {
-				setIsPortrait(img.height > img.width);
-				URL.revokeObjectURL(img.src);
-			};
-
 			const presignedResponse = await getPresignedUrl({
 				type: 'news-files',
-				fileName: compressedFile.name || file.name,
+				fileName: file.name,
 			});
-
 			const { presignedUrl, s3Url } = presignedResponse.data;
-
-			await uploadToS3(presignedUrl, compressedFile);
+			await uploadToS3(presignedUrl, file);
 
 			onChange(s3Url);
 		} catch (error) {
-			console.error('파일 업로드 실패:', error);
+			console.error('업로드 실패:', error);
 		}
 	};
 
 	const handleRemoveImage = () => {
 		onChange(null);
+		setPreviewUrl(null);
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
 		}
@@ -62,10 +57,10 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 
 	return (
 		<>
-			{selectedImage ? (
+			{previewUrl || selectedImage ? (
 				<div className="relative w-full h-80.5 @mobile:h-47.5 mb-4 bg-black-200 rounded-[10px] overflow-hidden flex items-center justify-center">
 					<Image
-						src={selectedImage}
+						src={previewUrl ?? selectedImage!}
 						alt="업로드된 대표 이미지"
 						layout="fill"
 						objectFit={isPortrait ? 'contain' : 'cover'}

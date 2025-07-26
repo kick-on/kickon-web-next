@@ -59,8 +59,9 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 						alt={alt || '본문 이미지'}
 						width={width ? parseInt(width) : 640}
 						height={height ? parseInt(height) : 480}
+						quality={90}
 						sizes="100vw"
-						style={{ width: '100%', height: 'auto' }}
+						className="w-full h-full"
 					/>
 				);
 			}
@@ -104,12 +105,12 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 					<Image
 						src={data.thumbnailUrl}
 						alt="대표 이미지"
-						width={636}
+						width={1272}
 						height={322}
+						quality={90}
 						className={`
 						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
 					`}
-						priority={true}
 					/>
 				</div>
 			)}
