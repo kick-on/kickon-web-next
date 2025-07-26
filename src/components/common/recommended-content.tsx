@@ -7,17 +7,17 @@ import ComponentFrame from './component-frame';
 import clsx from 'clsx';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useState } from 'react';
-import { RecommendedNewsDto } from '@/services/apis/news/dto';
-import { RecommendedBoardDto } from '@/services/apis/board/dto';
-import { getRecommendedNews } from '@/services/apis/news/getRecommendedNews';
-import { getRecommendedBoards } from '@/services/apis/board/getRecommendedBoards';
+import { NewsListDto } from '@/services/apis/news/news.type';
+import { BoardListDto } from '@/services/apis/board/board.type';
+import { getRecommendedNews } from '@/services/apis/news/news.api';
+import { getRecommendedBoard } from '@/services/apis/board/board.api';
 import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
 import NewsItem from './category-tab/news-item';
 
 const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();
-	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
+	const [data, setData] = useState<NewsListDto[] | BoardListDto[] | null>(null);
 	const isMyTeam = Boolean(teamName);
 	const isNews = mode === 'news';
 	const isHome = pathname === '/';
@@ -38,14 +38,14 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 	const getDatas = useCallback(async () => {
 		const response = isNews
 			? await getRecommendedNews({ type: teamName ? undefined : 'all' })
-			: await getRecommendedBoards();
+			: await getRecommendedBoard();
 
 		if (!response) {
 			setData(null);
 		} else {
 			// 커뮤니티 아이템인 경우에만 isPinned 기준으로 정렬
 			if (!isNews && Array.isArray(response.data)) {
-				const sortedData = [...(response.data as RecommendedBoardDto[])].sort((a, b) => {
+				const sortedData = [...(response.data as BoardListDto[])].sort((a, b) => {
 					// isPinned가 true인 항목을 상단으로 배치
 					if (a.isPinned && !b.isPinned) return -1;
 					if (!a.isPinned && b.isPinned) return 1;

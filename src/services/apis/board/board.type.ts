@@ -2,6 +2,10 @@ import { SuccessResponse } from '@/services/config/dto';
 import { CommonCreatePostRequest, CommonPostDetailDto, CommonPostListDto } from '../common/types';
 
 // Common
+export interface BoardListDto extends CommonPostListDto {
+	hasImage: boolean;
+	isPinned: boolean;
+}
 export interface BoardDetailDto extends CommonPostDetailDto {
 	hasImage: boolean;
 	isPinned: boolean;
@@ -19,11 +23,7 @@ export interface GetBoardListRequest {
 	lastBoard?: number;
 	lastViewCount?: number;
 }
-export interface GetBoardListDto extends CommonPostListDto {
-	hasImage: boolean;
-	isPinned: boolean;
-}
-export type GetBoardListResponse = SuccessResponse<GetBoardListDto[]>;
+export type GetBoardListResponse = SuccessResponse<BoardListDto[]>;
 
 // 게시글 상세 조회
 export interface GetBoardDetailDto extends BoardDetailDto {
@@ -45,7 +45,4 @@ export interface PatchBoardDetailRequest {
 }
 
 // 함께 볼 만한 게시글 조회
-export interface GetRecommendedBoardRequest {
-	type?: 'all';
-}
-export type GetRecommendedBoardResponse = SuccessResponse<BoardDetailDto[]>;
+export type GetRecommendedBoardResponse = SuccessResponse<BoardListDto[]>;

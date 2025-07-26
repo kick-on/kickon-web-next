@@ -6,6 +6,11 @@ import { categories } from '@/lib/constants/options';
 export type Category = (typeof categories)[number]['value'];
 
 // Common
+export interface NewsListDto extends CommonPostListDto {
+	content: string;
+	thumbnailUrl: string;
+	category: Category;
+}
 export interface NewsDetailDto extends CommonPostDetailDto {
 	thumbnailUrl: string;
 	category: Category;
@@ -23,12 +28,7 @@ export interface GetNewsListRequest {
 	lastNews?: number;
 	lastViewCount?: number;
 }
-export interface GetNewsListDto extends CommonPostListDto {
-	content: string;
-	thumbnailUrl: string;
-	category: Category;
-}
-export type GetNewsListResponse = SuccessResponse<NewsDetailDto[]>;
+export type GetNewsListResponse = SuccessResponse<NewsListDto[]>;
 
 // 뉴스 상세 조회
 export type GetNewsDetailResponse = SuccessResponse<NewsDetailDto>;
@@ -50,7 +50,7 @@ export interface PatchNewsDetailRequest {
 export interface GetRecommendedNewsRequest {
 	type?: 'all';
 }
-export type GetRecommendedNewsResponse = SuccessResponse<NewsDetailDto[]>;
+export type GetRecommendedNewsResponse = SuccessResponse<NewsListDto[]>;
 
 // top5 뉴스 조회
 export interface HotNewsDetailDto {

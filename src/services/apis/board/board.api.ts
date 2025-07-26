@@ -3,7 +3,6 @@ import {
 	GetBoardDetailResponse,
 	GetBoardListRequest,
 	GetBoardListResponse,
-	GetRecommendedBoardRequest,
 	GetRecommendedBoardResponse,
 	PatchBoardDetailRequest,
 	CreateBoardRequest,
@@ -112,14 +111,10 @@ export const deleteBoardDetail = async (boardPk: number): Promise<EmptySuccessRe
 };
 
 // 함께 볼 만한 게시글 조회
-export const getRecommendedBoard = async ({ type }: GetRecommendedBoardRequest) => {
-	const params = new URLSearchParams();
-
-	if (type !== undefined) params.append('type', type);
-
+export const getRecommendedBoard = async () => {
 	const response = await fetcher<GetRecommendedBoardResponse | null>({
 		method: 'GET',
-		url: `/api/board/home?${params.toString()}`,
+		url: '/api/board/home',
 	});
 
 	if (!response.code.split('_').includes('SUCCESS')) {
