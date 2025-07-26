@@ -40,13 +40,18 @@ export interface CommonCommentDto {
 }
 
 // 댓글 생성 요청
-export interface CommonCreateNewReply {
+export interface CommonCreateNewReplyDto {
 	parentReply?: number;
 	contents: string;
 }
 
 // 댓글 수정 요청
-export interface CommonPatchReply {
+export interface CommonPatchReplyDto {
 	contents: string;
 	usedImageKeys?: string[];
+}
+
+// 댓글 킥 요청
+export interface CommonCommentKickDto {
+	reply: number;
 }

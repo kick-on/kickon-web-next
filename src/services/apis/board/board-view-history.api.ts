@@ -1,13 +1,13 @@
 import { fetcher } from '@/lib/server/fetcher';
 import { EmptySuccessResponse } from '@/services/config/dto';
 
-// 뉴스 조회 수 요청 api
-export const createBoardView = async (newsId: number): Promise<EmptySuccessResponse> => {
+// 게시글 조회 수 요청 api
+export const createBoardView = async (boardId: number): Promise<EmptySuccessResponse> => {
 	try {
 		const response = await fetcher<EmptySuccessResponse>({
 			method: 'POST',
-			url: '/api/news-view-history',
-			body: { news: newsId },
+			url: '/api/board-view-history',
+			body: { board: boardId },
 		});
 
 		return response;
