@@ -19,11 +19,11 @@ export interface GetBoardListRequest {
 	lastBoard?: number;
 	lastViewCount?: number;
 }
-export interface GetBoardListDeto extends CommonPostListDto {
+export interface GetBoardListDto extends CommonPostListDto {
 	hasImage: boolean;
 	isPinned: boolean;
 }
-export type GetBoardListResponse = SuccessResponse<BoardDetailDto[]>;
+export type GetBoardListResponse = SuccessResponse<GetBoardListDto[]>;
 
 // 게시글 상세 조회
 export interface GetBoardDetailDto extends BoardDetailDto {
