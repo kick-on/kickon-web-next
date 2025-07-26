@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { getNewsList } from '@/services/apis/news/news.api';
-import { getBoardList } from '@/services/apis/board/getBoardList';
+import { getBoardList } from '@/services/apis/board/board.api';
 import NewsItem from './news-item';
 import CommunityItem from './community-item';
 import { renderItems } from './category-tab';
