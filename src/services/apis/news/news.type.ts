@@ -50,7 +50,7 @@ export interface GetRecommendedNewsRequest {
 export type GetRecommendedNewsResponse = SuccessResponse<NewsListDto[]>;
 
 // top5 뉴스 조회
-export interface HotNewsDetailDto {
+export interface HotNewsDto {
 	pk: number;
 	title: string;
 	leagueNameKr: string;
@@ -62,4 +62,4 @@ export interface HotNewsDetailDto {
 	category: Category;
 	views: number;
 }
-export type GetHotNewsResponse = SuccessResponse<HotNewsDetailDto[]>;
+export type GetHotNewsResponse = SuccessResponse<HotNewsDto[]>;

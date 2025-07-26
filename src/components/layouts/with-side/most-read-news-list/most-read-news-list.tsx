@@ -1,8 +1,7 @@
 import ComponentFrame from '@/components/common/component-frame';
 import MostReadNewsItem from './most-read-news-item';
-import { getHotNews } from '@/services/apis/news/getHotNews';
+import { getHotNews, getNewsList } from '@/services/apis/news/news.api';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import { getNewsList } from '@/services/apis/news/getNewsList';
 
 export default async function MostReadNewsList() {
 	const hotNews = await getHotNews();
