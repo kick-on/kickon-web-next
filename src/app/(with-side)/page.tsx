@@ -27,7 +27,6 @@ export default function Home() {
 			<Suspense>
 				<RecommendedContent
 					mode={'news'}
-					teamLogo={currentUserInfo?.favoriteTeams[0]?.logoUrl}
 					teamName={currentUserInfo?.favoriteTeams[0]?.nameKr || currentUserInfo?.favoriteTeams[0]?.nameEn || undefined}
 				/>
 				<RecommendedContent mode={'board'} />

@@ -15,7 +15,7 @@ import FetchingFailedCard from './fetching-failed-card';
 import Link from 'next/link';
 import NewsItem from './category-tab/news-item';
 
-const RecommendedContent = ({ mode, teamLogo = '', teamName = '' }) => {
+const RecommendedContent = ({ mode, teamName = '' }) => {
 	const pathname = usePathname();
 	const [data, setData] = useState<RecommendedNewsDto[] | RecommendedBoardDto[] | null>(null);
 	const isMyTeam = Boolean(teamName);

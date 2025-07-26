@@ -142,11 +142,7 @@ const DetailPage = () => {
 				/>
 			</ComponentFrame>
 
-			<RecommendedContent
-				mode={type}
-				teamLogo={currentUserInfo?.favoriteTeams[0]?.logoUrl}
-				teamName={isOurTeam ? contents?.team?.nameKr : ''}
-			/>
+			<RecommendedContent mode={type} teamName={isOurTeam ? contents?.team?.nameKr : ''} />
 		</div>
 	);
 };
