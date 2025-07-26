@@ -12,11 +12,12 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { getDetailContent } from '@/services/apis/detail';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { PostContentView } from '@/services/apis/detail/view';
 import { getCookie, setCookie } from '@/lib/utils/cookie';
 import { getNewsDetail } from '@/services/apis/news/news.api';
 import { getBoardDetail } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';
+import { createNewsView } from '@/services/apis/news/news-view-history.api';
+import { createBoardView } from '@/services/apis/board/board-view-history.api';
 
 const POST_VIEW_EXPIRY = 60 * 60 * 24 * 1000;
 
@@ -110,13 +111,14 @@ const DetailPage = () => {
 	useEffect(() => {
 		if (!contents || viewSent.current || !shouldCallApi) return; // 중복 호출 방지
 
-		PostContentView({
-			requestBody: { [type === 'news' ? 'news' : 'board']: id },
-			isNews: type === 'news',
-		}).then(console.log);
+		if (isNews) {
+			createNewsView(id);
+		} else {
+			createBoardView(id);
+		}
 
 		viewSent.current = true;
-	}, [contents, type, id, shouldCallApi]);
+	}, [contents, id, shouldCallApi, isNews]);
 
 	return (
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">

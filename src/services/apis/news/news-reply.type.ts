@@ -6,5 +6,5 @@ export type GetNewsCommentsResponse = SuccessResponse<CommonCommentDto[]>;
 
 // 새로운 댓글 생성 요청
 export interface createNewsReplyRequest extends CommonCreateNewReplyDto {
-	news: string;
+	news: number;
 }
