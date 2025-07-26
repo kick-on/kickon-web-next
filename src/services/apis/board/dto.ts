@@ -1,6 +1,6 @@
 import { SuccessResponse } from '@/services/config/dto';
 import { TeamDto } from '../team/dto';
-import { UserDto } from '@/services/auth/dto';
+import { UserDto } from '@/services/apis/user/dto';
 
 // 게시글 리스트 조회
 export interface GetBoardListRequest {

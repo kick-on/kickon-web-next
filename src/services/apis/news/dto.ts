@@ -1,4 +1,4 @@
-import { UserDto } from '@/services/auth/dto';
+import { UserDto } from '@/services/apis/user/dto';
 import { SuccessResponse } from '../../config/dto';
 import { TeamDto } from '../team/dto';
 

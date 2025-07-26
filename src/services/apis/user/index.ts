@@ -1,5 +1,5 @@
 import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
-import type { EmptySuccessResponse, FailResponse } from '../config/dto';
+import type { EmptySuccessResponse, FailResponse } from '../../config/dto';
 import { fetcher } from '@/lib/server/fetcher';
 
 // 개인정보 동의 업데이트

@@ -2,7 +2,7 @@
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getCookie } from '@/lib/utils/cookie';
-import { deleteUserMe } from '@/services/auth';
+import { deleteUserMe } from '@/services/apis/user';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';

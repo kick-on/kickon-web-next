@@ -8,7 +8,7 @@ import { PostContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/auth';
+import { getUserInfo } from '@/services/apis/user';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';

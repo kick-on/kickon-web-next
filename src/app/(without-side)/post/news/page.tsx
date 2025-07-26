@@ -9,7 +9,7 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { PostContentsRequest } from '@/services/apis/post/dto';
 import { postNewContents } from '@/services/apis/post';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/auth';
+import { getUserInfo } from '@/services/apis/user';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
