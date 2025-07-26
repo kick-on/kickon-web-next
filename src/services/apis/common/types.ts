@@ -55,3 +55,8 @@ export interface CommonPatchReplyDto {
 export interface CommonCommentKickDto {
 	reply: number;
 }
+
+// 상세페이지 신고하기 요청
+export interface CommonReportDetailDto {
+	reason: string;
+}
