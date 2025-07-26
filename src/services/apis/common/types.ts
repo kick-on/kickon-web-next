@@ -1,20 +1,22 @@
 import { TeamDto } from '../team/dto';
 import { UserDto } from '../user/dto';
 
-// 뉴스 게시글 상세
-export interface CommonDetailDto {
+// 뉴스 게시글 목록
+export interface CommonPostListDto {
 	pk: number;
 	title: string;
-	content: string;
 	user: UserDto;
 	team: TeamDto;
 	createdAt: string;
 	views: number;
 	likes: number;
 	replies: number;
+}
+
+// 뉴스 게시글 상세
+export interface CommonPostDetailDto extends CommonPostListDto {
+	content: string;
 	isKicked: boolean;
-	thumbnailUrl: string;
-	category: string;
 	usedImageKeys: string[];
 }
 
