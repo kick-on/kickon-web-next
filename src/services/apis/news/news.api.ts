@@ -153,3 +153,16 @@ export const getHotNews = async (): Promise<GetHotNewsResponse | null> => {
 		return null;
 	}
 };
+
+// 뉴스 상세페이지 킥
+export const createNewsKick = async (id: number): Promise<EmptySuccessResponse> => {
+	try {
+		const body = { news: id };
+		const response = await fetcher<EmptySuccessResponse>({ method: 'POST', url: '/api/news-kick', body });
+
+		return response;
+	} catch (error) {
+		console.error('뉴스 상세페이지 킥 생성 실패:', error);
+		throw error;
+	}
+};

@@ -2,13 +2,14 @@
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
 import { Suspense, useEffect, useState } from 'react';
-import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import parse, { Element } from 'html-react-parser';
+import { createNewsKick } from '@/services/apis/news/news.api';
+import { createBoardKick } from '@/services/apis/board/board.api';
 
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -75,7 +76,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 		}
 
 		try {
-			const success = await postContentLike(data.pk, isNews);
+			const success = isNews ? await createNewsKick(data.pk) : await createBoardKick(data.pk);
 			if (success) {
 				// API 응답이 성공하면 UI 업데이트
 				setIsLiked((prev) => !prev);

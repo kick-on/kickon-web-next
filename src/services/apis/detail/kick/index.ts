@@ -16,3 +16,6 @@ export const postContentLike = async (id: number, isNews: boolean = false): Prom
 		throw error;
 	}
 };
+
+// 이건 뉴스랑 게시글에 들어가고
+// 신고하기는 폴더를 따로 만들기
