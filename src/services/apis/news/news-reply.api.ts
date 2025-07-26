@@ -1,12 +1,8 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
-import {
-	createNewsReplyRequest,
-	GetNewsCommentsResponse,
-	patchNewsReplyRequest,
-	PostNewsCommentKickRequest,
-} from './news-reply.type';
+import { createNewsReplyRequest, GetNewsCommentsResponse, PostNewsCommentKickRequest } from './news-reply.type';
+import { CommonPatchReply } from '../common/types';
 
 // 뉴스 댓글 목록 조회
 export const getNewsCommentList = async (
@@ -74,10 +70,7 @@ export const deleteNewsReply = async (commentPk: number): Promise<EmptySuccessRe
 };
 
 // 뉴스 댓글 수정
-export const patchReply = async (
-	commentPk: number,
-	requestBody: patchNewsReplyRequest,
-): Promise<EmptySuccessResponse> => {
+export const patchReply = async (commentPk: number, requestBody: CommonPatchReply): Promise<EmptySuccessResponse> => {
 	try {
 		const response = await fetcher<EmptySuccessResponse>({
 			method: 'PATCH',
