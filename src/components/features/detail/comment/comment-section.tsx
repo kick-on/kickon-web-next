@@ -28,17 +28,20 @@ function CommentSection({
 	const isNews = type === 'news';
 	const baseUrl = `/${type}/${contentsId}`;
 
-	const [comments, setComments] = useState([]);
-	const [likedComments, setLikedComments] = useState({});
-	const [replyingTo, setReplyingTo] = useState([]);
-	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null);
-	const [hasError, setHasError] = useState(false);
-	const [totalPages, setTotalPages] = useState(1);
-	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false);
-	const [loadedPages, setLoadedPages] = useState([1]);
+	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false); // 모바일에서 더보기 버튼 나올지 말지
+
+	// TODO: 4. 다른 TODO 처리 후 재귀 컴포넌트로 각 comment item이 답글을 관리하도록 수정
+	const [replyingTo, setReplyingTo] = useState([]); // 열어둔 답글 리스트
+	const [replyVisibilities, setReplyVisibilities] = useState({}); // 댓글의 답글을 열지 말지
+
+	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정!
+	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id (수정하다가 다른 거 수정하기 누르는 경우??)
+	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
+
+	const [likedComments, setLikedComments] = useState({}); // 제거 예정
+	const [loadedPages, setLoadedPages] = useState([1]); // infinite lastReply + 스프레드 -> 제거 예정
 
 	// 현재 페이지 추출
 	const pageParam = searchParams.get('page');
@@ -46,8 +49,12 @@ function CommentSection({
 
 	const commentsPerPage = 10;
 
-	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+	// 댓글 리스트 조회
+	const [comments, setComments] = useState([]);
+	const [hasError, setHasError] = useState(false);
+	const [totalPages, setTotalPages] = useState(1);
 
+	// TODO: 2. 모바일에서 infinite와 lastReply 추가 + 스프레드
 	const fetchComments = useCallback(
 		async (page: number, append = false) => {
 			if (!contentsId || contentsId < 1) return;
@@ -185,6 +192,7 @@ function CommentSection({
 		const result = isNews ? await createNewsCommentKick(commentId) : await createBoardCommentKick(commentId);
 		if (!result) return;
 
+		// TODO: 1. 좋아요 api 응답에서 좋아요 개수 반환하도록 요청
 		// 로컬스토리지 및 상태 업데이트
 		setLikedComments((prev) => {
 			const updated = { ...prev, [commentId]: !prev[commentId] };

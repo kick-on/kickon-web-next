@@ -24,7 +24,6 @@ const DetailPage = () => {
 	const router = useRouter();
 
 	const [contents, setContents] = useState<CommonPostDetailDto | null>(null);
-	const [, setIsLoading] = useState(true);
 	const [totalReplies, setTotalReplies] = useState(0);
 
 	const type = params?.type as 'news' | 'board';
@@ -43,10 +42,7 @@ const DetailPage = () => {
 		try {
 			const contentData = isNews ? await getNewsDetail(id) : await getBoardDetail(id);
 
-			// 내 조회가 반영되기 전 서버 조회수
 			const serverViewCount = contentData.data.views;
-
-			// shouldCallApi -> true: 글을 처음 본 상태, 조회수 +1, false: 이미 본 적 있음
 			const clientViewCount = shouldCallApi ? serverViewCount + 1 : serverViewCount;
 
 			const finalContents = {
@@ -65,11 +61,10 @@ const DetailPage = () => {
 			console.log('상세조회', contentData);
 		} catch (error) {
 			console.error('데이터 불러오기 실패:', error);
-		} finally {
-			setIsLoading(false);
 		}
 	};
 
+	// TODO: 훅으로 분리
 	useEffect(() => {
 		// (24시간 이내 열람한 게시글 id):(열람 시각) 쌍의 객체
 		const cookieValue = getCookie('viewedPosts');
@@ -103,6 +98,7 @@ const DetailPage = () => {
 		getDetailContentData();
 	}, [type, id]);
 
+	// TODO: 로직 점검 변수명 명확하게 수정!
 	const viewSent = useRef(false);
 
 	useEffect(() => {
