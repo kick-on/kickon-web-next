@@ -39,10 +39,7 @@ export interface CreateBoardRequest extends CommonCreatePostRequest {
 export type CreateBoardResponse = SuccessResponse<BoardDetailDto>;
 
 // 게시글 수정
-export interface PatchBoardDetailRequest {
-	board: number;
-	reason: string;
-}
+export type PatchBoardDetailRequest = Partial<CreateBoardRequest>;
 
 // 함께 볼 만한 게시글 조회
 export type GetRecommendedBoardResponse = SuccessResponse<BoardListDto[]>;

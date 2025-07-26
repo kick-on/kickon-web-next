@@ -41,10 +41,7 @@ export interface CreateNewsRequest extends CommonCreatePostRequest {
 export type CreateNewsResponse = SuccessResponse<NewsDetailDto>;
 
 // 뉴스 수정
-export interface PatchNewsDetailRequest {
-	news: number;
-	reason: string;
-}
+export type PatchNewsDetailRequest = Partial<CreateNewsRequest>;
 
 // 함께 볼 만한 뉴스 조회
 export interface GetRecommendedNewsRequest {
