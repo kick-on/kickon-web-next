@@ -1,10 +1,10 @@
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
-import { BoardItemDto } from '@/services/apis/board/dto';
+import { BoardListDto } from '@/services/apis/board/board.type';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-type CommunityItemProps = BoardItemDto & {
+type CommunityItemProps = BoardListDto & {
 	isPinned?: boolean;
 };
 export default function CommunityItem({

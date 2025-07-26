@@ -3,12 +3,11 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import Divider from './divider';
-import { HotNewsDto, NewsItemDto } from '@/services/apis/news/dto';
+import { HotNewsDto, NewsListDto } from '@/services/apis/news/news.type';
 import { useEffect, useState } from 'react';
 import MostReadNewsItem from '@/components/layouts/with-side/most-read-news-list/most-read-news-item';
-import { getHotNews } from '@/services/apis/news/getHotNews';
+import { getHotNews, getNewsList } from '@/services/apis/news/news.api';
 import Image from 'next/image';
-import { getNewsList } from '@/services/apis/news/getNewsList';
 import { NavButton } from '../../navbar';
 
 export default function SideNavbar({
@@ -20,7 +19,7 @@ export default function SideNavbar({
 }) {
 	const [countToRender, setCountToRender] = useState<number | null>(null);
 	const [hotNews, setHotNews] = useState<HotNewsDto[] | null>(null);
-	const [recentNews, setRecentNews] = useState<NewsItemDto[] | null>(null);
+	const [recentNews, setRecentNews] = useState<NewsListDto[] | null>(null);
 
 	const isHotNewsEmpty = hotNews && hotNews.length === 0;
 

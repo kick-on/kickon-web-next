@@ -9,8 +9,8 @@ import PaginationBar from '../pagination-bar';
 import clsx from 'clsx';
 import EmptyState from './empty-state';
 import MoreList, { MoreListProps } from './more-list';
-import { GetNewsListDto } from '@/services/apis/news/news.type';
-import { GetBoardListDto } from '@/services/apis/board/board.type';
+import { NewsListDto } from '@/services/apis/news/news.type';
+import { BoardListDto } from '@/services/apis/board/board.type';
 
 export const renderItems = (items, ItemComponent) => (
 	<div>
@@ -25,8 +25,8 @@ export const renderItems = (items, ItemComponent) => (
 	</div>
 );
 
-const isBoardResponse = (data: GetNewsListDto[] | GetBoardListDto[]): data is GetBoardListDto[] => {
-	return (data as GetBoardListDto[])?.[0]?.isPinned !== undefined;
+const isBoardResponse = (data: NewsListDto[] | BoardListDto[]): data is BoardListDto[] => {
+	return (data as BoardListDto[])?.[0]?.isPinned !== undefined;
 };
 
 export default async function CategoryTab({
