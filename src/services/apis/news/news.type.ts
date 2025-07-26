@@ -1,5 +1,5 @@
 import { SuccessResponse } from '@/services/config/dto';
-import { CommonDetailDto } from '../common/types';
+import { CommonCreatePostRequest, CommonDetailDto } from '../common/types';
 import { categories } from '@/lib/constants/options';
 
 // Enum
@@ -10,9 +10,6 @@ export interface NewsDto extends CommonDetailDto {
 	thumbnailUrl: string;
 	category: Category;
 }
-
-// 뉴스 상세 조회
-export type GetDetailResponse = SuccessResponse<NewsDto>;
 
 // 뉴스 리스트 조회
 export interface GetNewsListRequest {
@@ -27,6 +24,22 @@ export interface GetNewsListRequest {
 	lastViewCount?: number;
 }
 export type GetNewsListResponse = SuccessResponse<NewsDto[]>;
+
+// 뉴스 상세 조회
+export type GetNewsDetailResponse = SuccessResponse<NewsDto>;
+
+// 뉴스 생성
+export interface CreateNewsRequest extends CommonCreatePostRequest {
+	thumbnailUrl: string;
+	category: Category;
+}
+export type CreateNewsResponse = SuccessResponse<NewsDto>;
+
+// 뉴스 수정
+export interface PatchNewsDetailRequest {
+	news: number;
+	reason: string;
+}
 
 // 함께 볼 만한 뉴스 조회
 export interface GetRecommendedNewsRequest {

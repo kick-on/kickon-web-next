@@ -1,31 +1,17 @@
 import { fetcher } from '@/lib/server/fetcher';
 import {
-	GetDetailResponse,
+	GetNewsDetailResponse,
 	GetHotNewsResponse,
 	GetNewsListRequest,
 	GetNewsListResponse,
 	GetRecommendedNewsRequest,
 	GetRecommendedNewsResponse,
+	PatchNewsDetailRequest,
+	CreateNewsRequest,
+	CreateNewsResponse,
 } from './news.type';
 import { SERVER_URL } from '@/services/config/constants';
-import { FailResponse } from '@/services/config/dto';
-
-// 뉴스 상세 조회
-export const getNewsDetailContent = async (id: number): Promise<GetDetailResponse | null> => {
-	try {
-		const response = await fetcher<GetDetailResponse>({ method: 'GET', url: `/api/news/${id}` });
-
-		if (!response) {
-			console.error('상세페이지 조회 실패 - 응답 없음');
-			throw new Error('상세페이지 조회 실패');
-		}
-
-		return response;
-	} catch (error) {
-		console.error('상세페이지 조회 실패:', error);
-		throw error;
-	}
-};
+import { EmptySuccessResponse, FailResponse } from '@/services/config/dto';
 
 // 뉴스 리스트 조회
 export const getNewsList = async ({
@@ -65,6 +51,66 @@ export const getNewsList = async ({
 		return response;
 	} catch (error) {
 		console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, error);
+	}
+};
+
+// 뉴스 상세 조회
+export const getNewsDetail = async (id: number): Promise<GetNewsDetailResponse | null> => {
+	try {
+		const response = await fetcher<GetNewsDetailResponse>({ method: 'GET', url: `/api/news/${id}` });
+
+		if (!response) {
+			console.error('뉴스 상세 조회 실패 - 응답 없음');
+			throw new Error('뉴스 상세 조회 실패');
+		}
+
+		return response;
+	} catch (error) {
+		console.error('뉴스 상세 조회 실패:', error);
+		throw error;
+	}
+};
+
+// 뉴스 생성
+export async function createNews(data: CreateNewsRequest): Promise<CreateNewsResponse> {
+	try {
+		const response = await fetcher<CreateNewsResponse>({ method: 'POST', url: '/api/news', body: data });
+
+		return response;
+	} catch (error) {
+		console.error('API 요청 실패:', error);
+		throw error;
+	}
+}
+
+// 뉴스 수정
+export const patchNewsDetail = async (
+	newsPk: number,
+	requestBody: PatchNewsDetailRequest,
+): Promise<EmptySuccessResponse> => {
+	try {
+		const response = await fetcher<EmptySuccessResponse>({
+			method: 'PATCH',
+			url: `/api/news/${newsPk}`,
+			body: requestBody,
+		});
+
+		return response;
+	} catch (error) {
+		console.error('뉴스 수정 실패:', error);
+		throw error;
+	}
+};
+
+// 뉴스 삭제
+export const deleteNewsDetail = async (newsPk: number): Promise<EmptySuccessResponse> => {
+	try {
+		const response = await fetcher<EmptySuccessResponse>({ method: 'DELETE', url: `/api/news/${newsPk}` });
+
+		return response;
+	} catch (error) {
+		console.error('뉴스 삭제 실패:', error);
+		throw error;
 	}
 };
 

@@ -17,3 +17,11 @@ export interface CommonDetailDto {
 	category: string;
 	usedImageKeys: string[];
 }
+
+// 뉴스 게시글 생성
+export interface CommonCreatePostRequest {
+	team: number;
+	title: string;
+	contents: string;
+	usedImageKeys?: string[];
+}
