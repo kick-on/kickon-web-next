@@ -13,7 +13,7 @@ export default function Chart({ totalSuccessRate }: { totalSuccessRate: number }
 				fill="none"
 				stroke="var(--color-primary-900)"
 				strokeWidth={strokeWidth}
-				stroke-linecap="round"
+				strokeLinecap="round"
 				strokeDasharray={`${CIRCUMFERENCE * totalSuccessRate} ${CIRCUMFERENCE * (1 - totalSuccessRate)}`}
 				strokeDashoffset={CIRCUMFERENCE * 0.25}
 			/>
