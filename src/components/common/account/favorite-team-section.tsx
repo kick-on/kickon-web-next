@@ -95,8 +95,15 @@ export default function FavoriteTeamSection({
 		// optional인 setTeams가 undefined이면 return
 		if (!setTeams) return;
 
-		const teams = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
-		setTeams(teams);
+		// 응원팀까지 선택 완료한 경우만 필터링
+		const favoriteTeams = favoriteTeamLeagueMap.filter((favorite) => favorite?.team);
+
+		if (favoriteTeams.length === 0) {
+			setTeams(null);
+		} else {
+			const teams = favoriteTeams.map((favorite) => favorite.team.pk);
+			setTeams(teams);
+		}
 	}, [favoriteTeamLeagueMap, setTeams]);
 
 	useEffect(() => {

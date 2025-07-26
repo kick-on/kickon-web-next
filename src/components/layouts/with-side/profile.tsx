@@ -55,7 +55,7 @@ export default function Profile() {
 
 				if (typeof response === 'string') {
 					console.log(response);
-				} else {
+				} else if (response.data.privacyAgreedAt) {
 					setCurrentUserInfo(response.data);
 				}
 			};
@@ -100,7 +100,7 @@ export default function Profile() {
 									/>
 								</div>
 								<div className="flex flex-col gap-[0.3125rem] mt-[0.4688rem]">
-									<div className="flex gap-2">
+									<div className="flex gap-2 items-center">
 										<div className="flex gap-1 h-fit items-center">
 											<div className="title5-semibold">{currentUserInfo?.nickname}</div>
 											<div className="body3-regular text-black-800">님</div>

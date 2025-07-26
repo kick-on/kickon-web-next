@@ -9,6 +9,8 @@ import Divider from '../mobile-navbar/sidebar/divider';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
+import Instagram from '@/assets/sns/instagram.svg';
+import X from '@/assets/sns/x.svg';
 
 export default function Profile({ onClickButton }: { onClickButton: () => void }) {
 	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
@@ -137,10 +139,15 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 						onClick={() => window.open('https://www.instagram.com/kickonfc/', '_blank')}
 						className="relative w-6 h-6"
 					>
-						<Image className="w-auto h-auto object-contain" fill src={'/sns/instagram.svg'} alt="인스타그램 아이콘" />
+						<Instagram
+							className="w-auto h-auto object-contain"
+							fill
+							src={'/sns/instagram.svg'}
+							alt="인스타그램 아이콘"
+						/>
 					</button>
 					<button onClick={() => window.open('https://x.com/kickonfc', '_blank')} className="relative w-6 h-6">
-						<Image className="w-auto h-auto object-contain" fill src={'/sns/x.svg'} alt="트위터 아이콘" />
+						<X className="w-auto h-auto object-contain" fill src={'/sns/x.svg'} alt="트위터 아이콘" />
 					</button>
 				</div>
 			</div>
