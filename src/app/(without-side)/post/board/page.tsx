@@ -4,16 +4,15 @@ import { useState, useRef, useEffect, useMemo } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { PostContentsRequest } from '@/services/apis/post/dto';
-import { postNewContents } from '@/services/apis/post';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/auth';
+import { getUserInfo } from '@/services/apis/user';
 import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
-import { patchDetailContent } from '@/services/apis/detail/actions';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
+import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
+import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
 
 export default function Page() {
 	const router = useRouter();
@@ -134,7 +133,7 @@ export default function Page() {
 
 			const finalTeam = isNaN(teamValue) ? null : teamValue;
 
-			const patchBody: Partial<PostContentsRequest> = {
+			const patchBody: PatchBoardDetailRequest = {
 				title: title.trim(),
 				contents: body.trim(),
 				hasImage,
@@ -143,11 +142,11 @@ export default function Page() {
 				isPinned: isPinned,
 			};
 			console.log(patchBody);
-			const response = await patchDetailContent(contentPk, false, patchBody);
+			const response = await patchBoardDetail(contentPk, patchBody);
 			console.log('수정 성공', response);
 			router.replace(`/board/${contentPk}`);
 		} else {
-			const postBody: PostContentsRequest = {
+			const postBody: CreateBoardRequest = {
 				title: title.trim(),
 				contents: body.trim(),
 				hasImage,
@@ -157,7 +156,7 @@ export default function Page() {
 			};
 
 			console.log(postBody);
-			const response = await postNewContents(postBody);
+			const response = await createBoard(postBody);
 			router.push(`/board/${response.data.pk}`);
 		}
 	};

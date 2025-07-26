@@ -1,4 +1,4 @@
-import { UserInfoDto } from '@/services/auth/dto';
+import { UserInfoDto } from '@/services/apis/user/dto';
 import { create } from 'zustand';
 
 interface CurrentUserInfoStoreDto {

@@ -1,6 +1,6 @@
-import { LeagueDto } from '../apis/league/dto';
-import { TeamDto } from '../apis/team/dto';
-import { SuccessResponse } from '../config/dto';
+import { LeagueDto } from '../league/dto';
+import { TeamDto } from '../team/dto';
+import { SuccessResponse } from '../../config/dto';
 
 // 개인정보 동의
 export interface UpdatePrivacyRequest {

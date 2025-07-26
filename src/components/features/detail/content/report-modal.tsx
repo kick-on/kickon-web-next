@@ -2,8 +2,8 @@
 import LoginModal from '@/components/common/login-modal/login-modal';
 import { reportOptions } from '@/lib/constants/options';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { postReportDetail } from '@/services/apis/detail/actions';
-import { PostReportDetailRequest } from '@/services/apis/detail/actions/dto';
+import { postReportBoard } from '@/services/apis/report/report-board.api';
+import { postReportNews } from '@/services/apis/report/report-news.api';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -34,13 +34,15 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 
 		const isNews = type === 'news';
 
-		const reportData: PostReportDetailRequest = {
-			reason: selectedReason === '기타' ? otherReason.trim() : selectedReason!,
-			...(type === 'news' ? { news: pk } : { board: pk }),
-		};
-		console.log(reportData); // 디버깅
-
-		const result = await postReportDetail(reportData, isNews);
+		const result = isNews
+			? await postReportNews({
+					reason: selectedReason === '기타' ? otherReason.trim() : selectedReason!,
+					news: pk,
+				})
+			: await postReportBoard({
+					reason: selectedReason === '기타' ? otherReason.trim() : selectedReason!,
+					board: pk,
+				});
 
 		if (result) {
 			alert('신고가 접수되었습니다.');

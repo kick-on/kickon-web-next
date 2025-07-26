@@ -1,11 +1,12 @@
 'use client';
 import LoginModal from '@/components/common/login-modal/login-modal';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { patchReply, postCreateReply } from '@/services/apis/detail/comment';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { createNewsReply, patchNewsReply } from '@/services/apis/news/news-reply.api';
+import { createBoardReply, patchBoardReply } from '@/services/apis/board/board-reply.api';
 
 const CommentInput = ({
 	type = 'comment',
@@ -174,13 +175,6 @@ const CommentInput = ({
 			sanitizedContent = sanitizedContent.replace(mentionPattern, '');
 		}
 
-		const requestBody = {
-			contents: sanitizedContent,
-			...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
-			...(contentType === 'news' ? { news: contentsId } : {}),
-			...(contentType === 'board' ? { board: contentsId } : {}),
-		};
-
 		const editedRequestBody = {
 			contents: sanitizedContent,
 		};
@@ -189,13 +183,27 @@ const CommentInput = ({
 			let response;
 
 			if (type === 'edit') {
-				response = await patchReply(contentType, editingCommentId, editedRequestBody);
+				response =
+					contentType === 'news'
+						? await patchNewsReply(editingCommentId, editedRequestBody)
+						: await patchBoardReply(editingCommentId, editedRequestBody);
 				console.log('댓글 수정 완료:', response);
 			} else {
-				response = await postCreateReply(contentType, requestBody);
+				if (contentType === 'news') {
+					await createNewsReply({
+						contents: sanitizedContent,
+						...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
+						news: contentsId,
+					});
+				} else {
+					await createBoardReply({
+						contents: sanitizedContent,
+						...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
+						board: contentsId,
+					});
+				}
 			}
 
-			console.log('댓글 응답', requestBody, response);
 			setContent('');
 			if (inputRef.current) inputRef.current.innerHTML = '';
 			setHasNewLine(false);

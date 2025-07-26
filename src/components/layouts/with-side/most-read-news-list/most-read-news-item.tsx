@@ -1,7 +1,7 @@
 'use client';
 
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import { HotNewsDto } from '@/services/apis/news/dto';
+import { HotNewsDto } from '@/services/apis/news/news.type';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
