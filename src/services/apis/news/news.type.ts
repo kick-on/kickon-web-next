@@ -1,18 +1,15 @@
 import { SuccessResponse } from '@/services/config/dto';
-import { CommonDetailDto } from '../common/types';
+import { CommonCreatePostRequest, CommonPostDetailDto, CommonPostListDto } from '../common/types';
 import { categories } from '@/lib/constants/options';
 
 // Enum
 export type Category = (typeof categories)[number]['value'];
 
 // Common
-export interface NewsDto extends CommonDetailDto {
+export interface NewsDetailDto extends CommonPostDetailDto {
 	thumbnailUrl: string;
 	category: Category;
 }
-
-// 뉴스 상세 조회
-export type GetDetailResponse = SuccessResponse<NewsDto>;
 
 // 뉴스 리스트 조회
 export interface GetNewsListRequest {
@@ -26,16 +23,37 @@ export interface GetNewsListRequest {
 	lastNews?: number;
 	lastViewCount?: number;
 }
-export type GetNewsListResponse = SuccessResponse<NewsDto[]>;
+export interface GetNewsListDto extends CommonPostListDto {
+	content: string;
+	thumbnailUrl: string;
+	category: Category;
+}
+export type GetNewsListResponse = SuccessResponse<NewsDetailDto[]>;
+
+// 뉴스 상세 조회
+export type GetNewsDetailResponse = SuccessResponse<NewsDetailDto>;
+
+// 뉴스 생성
+export interface CreateNewsRequest extends CommonCreatePostRequest {
+	thumbnailUrl: string;
+	category: Category;
+}
+export type CreateNewsResponse = SuccessResponse<NewsDetailDto>;
+
+// 뉴스 수정
+export interface PatchNewsDetailRequest {
+	news: number;
+	reason: string;
+}
 
 // 함께 볼 만한 뉴스 조회
 export interface GetRecommendedNewsRequest {
 	type?: 'all';
 }
-export type GetRecommendedNewsResponse = SuccessResponse<NewsDto[]>;
+export type GetRecommendedNewsResponse = SuccessResponse<NewsDetailDto[]>;
 
 // top5 뉴스 조회
-export interface HotNewsDto {
+export interface HotNewsDetailDto {
 	pk: number;
 	title: string;
 	leagueNameKr: string;
@@ -47,4 +65,4 @@ export interface HotNewsDto {
 	category: Category;
 	views: number;
 }
-export type GetHotNewsResponse = SuccessResponse<HotNewsDto[]>;
+export type GetHotNewsResponse = SuccessResponse<HotNewsDetailDto[]>;
