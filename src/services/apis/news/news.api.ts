@@ -1,5 +1,12 @@
 import { fetcher } from '@/lib/server/fetcher';
-import { GetDetailResponse, GetHotNewsResponse, GetNewsListRequest, GetNewsListResponse } from './news.type';
+import {
+	GetDetailResponse,
+	GetHotNewsResponse,
+	GetNewsListRequest,
+	GetNewsListResponse,
+	GetRecommendedNewsRequest,
+	GetRecommendedNewsResponse,
+} from './news.type';
 import { SERVER_URL } from '@/services/config/constants';
 import { FailResponse } from '@/services/config/dto';
 
@@ -59,6 +66,24 @@ export const getNewsList = async ({
 	} catch (error) {
 		console.error('뉴스 리스트 조회 실패: ', `${SERVER_URL}/api/news?${params.toString()}`, error);
 	}
+};
+
+// 함께 볼 만한 뉴스 조회
+export const getRecommendedNews = async ({ type }: GetRecommendedNewsRequest) => {
+	const params = new URLSearchParams();
+
+	if (type !== undefined) params.append('type', type);
+
+	const response = await fetcher<GetRecommendedNewsResponse | null>({
+		method: 'GET',
+		url: `/api/news/home?${params.toString()}`,
+	});
+
+	if (!response.code.split('_').includes('SUCCESS')) {
+		console.error(response);
+		return null;
+	}
+	return response;
 };
 
 // top5 뉴스 조회
