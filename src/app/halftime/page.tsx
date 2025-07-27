@@ -1,4 +1,11 @@
 import ComponentFrame from '@/components/common/component-frame';
+import Image from 'next/image';
+
+const data = {
+	title: '기성용 이적에 역대급 폭발한 FC 서울 팬들 어쩌구저쩌구',
+	views: 2,
+	kick: 1.2,
+};
 
 export default function Page() {
 	return (
@@ -12,7 +19,17 @@ export default function Page() {
 			>
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77].map((i) => (
 					<div key={i} className="bg-black-100 w-full h-auto aspect-[13/25]">
-						<div className="w-full h-auto aspect-[13/20] bg-black-300"></div>
+						<div className="w-full h-auto aspect-[13/20] bg-black-300 rounded-lg"></div>
+						<h3 className="button2-medium my-2 @mobile:mb-1.5">
+							{data.title.length > 27 ? data.title.slice(0, 27) + '...' : data.title}
+						</h3>
+						<div className="body5-regular text-black-600 flex gap-2 @mobile:text-16 items-center">
+							<span>조회수 {data.views}만 회</span>
+							<div className="h-3 w-px bg-black-600" />
+							<span className="flex gap-1.5 items-center">
+								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {data.kick}천
+							</span>
+						</div>
 					</div>
 				))}
 			</div>
