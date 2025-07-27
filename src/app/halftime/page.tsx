@@ -20,7 +20,7 @@ export default function Page() {
 			>
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77].map((i) => (
 					<div key={i} className="w-full h-auto aspect-[13/25]">
-						<div className="w-full h-auto aspect-[13/20] bg-black-300 rounded-lg flex items-center justify-center overflow-hidden">
+						<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
 							{i % 2 === 1 ? <Video src="/video/test1.mp4" /> : <Video src="/video/test2.mp4" />}
 						</div>
 
