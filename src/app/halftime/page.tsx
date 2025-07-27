@@ -24,10 +24,10 @@ export default function Page() {
 							{i % 2 === 1 ? <Video src="/video/test1.mp4" /> : <Video src="/video/test2.mp4" />}
 						</div>
 
-						<h3 className="button2-medium my-2 @mobile:mb-1.5">
+						<h3 className="button2-medium my-2 @mobile:mb-1.5 @mobile:text-14">
 							{data.title.length > 27 ? data.title.slice(0, 27) + '...' : data.title}
 						</h3>
-						<div className="body5-regular text-black-600 flex gap-2 @mobile:text-16 items-center">
+						<div className="body5-regular text-black-600 flex gap-2 @mobile:text-12 items-center">
 							<span>조회수 {data.views}만 회</span>
 							<div className="h-3 w-px bg-black-600" />
 							<span className="flex gap-1.5 items-center">
