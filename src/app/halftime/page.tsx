@@ -1,4 +1,5 @@
 import ComponentFrame from '@/components/common/component-frame';
+import Video from '@/components/features/halftime/video';
 import Image from 'next/image';
 
 const data = {
@@ -18,8 +19,11 @@ export default function Page() {
 					px-[7.125rem] grid-cols-5 gap-6"
 			>
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77].map((i) => (
-					<div key={i} className="bg-black-100 w-full h-auto aspect-[13/25]">
-						<div className="w-full h-auto aspect-[13/20] bg-black-300 rounded-lg"></div>
+					<div key={i} className="w-full h-auto aspect-[13/25]">
+						<div className="w-full h-auto aspect-[13/20] bg-black-300 rounded-lg flex items-center justify-center overflow-hidden">
+							{i % 2 === 1 ? <Video src="/video/test1.mp4" /> : <Video src="/video/test2.mp4" />}
+						</div>
+
 						<h3 className="button2-medium my-2 @mobile:mb-1.5">
 							{data.title.length > 27 ? data.title.slice(0, 27) + '...' : data.title}
 						</h3>
