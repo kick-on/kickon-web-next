@@ -1,5 +1,190 @@
 @import 'tailwindcss';
 
+/* 테마 변수 방식 */
+
+@theme {
+	/* Font Family */
+	--font-pretendard: 'Pretendard';
+
+	/* Headers */
+	--text-header-semibold: 15px;
+	--text-header-semibold--line-height: 16px;
+	--text-header-semibold--font-weight: 600;
+
+	--text-header-medium: 15px;
+	--text-header-medium--line-height: 16px;
+	--text-header-medium--font-weight: 500;
+
+	--text-header-regular: 15px;
+	--text-header-regular--line-height: 16px;
+	--text-header-regular--font-weight: 400;
+
+	/* Display */
+	--text-display-semibold: 24px;
+	--text-display-semibold--line-height: 36px;
+	--text-display-semibold--font-weight: 600;
+
+	/* Titles */
+	--text-title1-bold: 28px;
+	--text-title1-bold--line-height: 36px;
+	--text-title1-bold--font-weight: 700;
+
+	--text-title2-semibold: 24px;
+	--text-title2-semibold--line-height: 26px;
+	--text-title2-semibold--font-weight: 600;
+
+	--text-title3-semibold: 20px;
+	--text-title3-semibold--line-height: var(--lh-normal);
+	--text-title3-semibold--font-weight: 600;
+
+	--text-title4-semibold: 18px;
+	--text-title4-semibold--line-height: 20px;
+	--text-title4-semibold--font-weight: 600;
+
+	--text-title5-semibold: 16px;
+	--text-title5-semibold--line-height: 16px;
+	--text-title5-semibold--font-weight: 600;
+
+	/* Subtitles */
+	--text-subtitle1-semibold: 14px;
+	--text-subtitle1-semibold--line-height: 16px;
+	--text-subtitle1-semibold--font-weight: 600;
+
+	--text-subtitle1-medium: 14px;
+	--text-subtitle1-medium--line-height: 16px;
+	--text-subtitle1-medium--font-weight: 500;
+
+	--text-subtitle2-medium: 13px;
+	--text-subtitle2-medium--line-height: 18px;
+	--text-subtitle2-medium--font-weight: 500;
+
+	--text-subtitle2-regular: 13px;
+	--text-subtitle2-regular--line-height: 24px;
+	--text-subtitle2-regular--font-weight: 400;
+
+	/* Bodies */
+	--text-body1-bold: 24px;
+	--text-body1-bold--line-height: 24px;
+	--text-body1-bold--font-weight: 700;
+
+	--text-body2-semibold: 20px;
+	--text-body2-semibold--line-height: 24px;
+	--text-body2-semibold--font-weight: 600;
+
+	--text-body2-regular: 20px;
+	--text-body2-regular--line-height: 24px;
+	--text-body2-regular--font-weight: 400;
+
+	--text-body3-regular: 16px;
+	--text-body3-regular--line-height: 24px;
+	--text-body3-regular--font-weight: 400;
+
+	--text-body4-medium: 15px;
+	--text-body4-medium--line-height: 16px;
+	--text-body4-medium--font-weight: 500;
+
+	--text-body4-semibold: 15px;
+	--text-body4-semibold--line-height: 16px;
+	--text-body4-semibold--font-weight: 600;
+
+	--text-body5-medium: 14px;
+	--text-body5-medium--line-height: 16px;
+	--text-body5-medium--font-weight: 500;
+
+	--text-body5-regular: 14px;
+	--text-body5-regular--line-height: 16px;
+	--text-body5-regular--font-weight: 400;
+
+	--text-body6-medium: 13px;
+	--text-body6-medium--line-height: 18px;
+	--text-body6-medium--font-weight: 500;
+
+	--text-body6-regular: 13px;
+	--text-body6-regular--line-height: 16px;
+	--text-body6-regular--font-weight: 400;
+
+	--text-body7-medium: 12px;
+	--text-body7-medium--line-height: 16px;
+	--text-body7-medium--font-weight: 500;
+
+	--text-body7-regular: 12px;
+	--text-body7-regular--line-height: 20px;
+	--text-body7-regular--font-weight: 400;
+
+	--text-body8-regular: 10px;
+	--text-body8-regular--line-height: 16px;
+	--text-body8-regular--font-weight: 400;
+
+	/* Buttons */
+	--text-button1-medium: 18px;
+	--text-button1-medium--line-height: 24px;
+	--text-button1-medium--font-weight: 500;
+
+	--text-button2-semibold: 16px;
+	--text-button2-semibold--line-height: 28px;
+	--text-button2-semibold--font-weight: 600;
+
+	--text-button2-medium: 16px;
+	--text-button2-medium--line-height: 24px;
+	--text-button2-medium--font-weight: 500;
+
+	--text-button3-semibold: 15px;
+	--text-button3-semibold--line-height: 16px;
+	--text-button3-semibold--font-weight: 600;
+
+	--text-button3-regular: 15px;
+	--text-button3-regular--line-height: 16px;
+	--text-button3-regular--font-weight: 400;
+
+	--text-button4-medium: 14px;
+	--text-button4-medium--line-height: 16px;
+	--text-button4-medium--font-weight: 500;
+
+	--text-button4-semibold: 14px;
+	--text-button4-semibold--line-height: 16px;
+	--text-button4-semibold--font-weight: 600;
+
+	--text-button5-medium: 12px;
+	--text-button5-medium--line-height: 16px;
+	--text-button5-medium--font-weight: 500;
+
+	--text-button5-semibold: 12px;
+	--text-button5-semibold--line-height: 16px;
+	--text-button5-semibold--font-weight: 600;
+
+	--text-button5-regular: 12px;
+	--text-button5-regular--line-height: 16px;
+	--text-button5-regular--font-weight: 400;
+
+	--text-button6-regular: 10px;
+	--text-button6-regular--line-height: 16px;
+	--text-button6-regular--font-weight: 400;
+
+	/* Captions */
+	--text-caption1-medium: 12px;
+	--text-caption1-medium--line-height: var(--lh-normal);
+	--text-caption1-medium--font-weight: 500;
+
+	--text-caption1-regular: 12px;
+	--text-caption1-regular--line-height: 16px;
+	--text-caption1-regular--font-weight: 400;
+
+	--text-caption2-medium: 10px;
+	--text-caption2-medium--line-height: 16px;
+	--text-caption2-medium--font-weight: 500;
+
+	--text-caption2-regular: 10px;
+	--text-caption2-regular--line-height: var(--lh-normal);
+	--text-caption2-regular--font-weight: 400;
+
+	/* Navigation */
+	--text-nav1-medium: 18px;
+	--text-nav1-medium--line-height: 24px;
+	--text-nav1-medium--font-weight: 500;
+}
+
+/* 기존 개별 클래스 */
+
 @layer components {
 	/* Base Typography */
 	[class*='-'] {
