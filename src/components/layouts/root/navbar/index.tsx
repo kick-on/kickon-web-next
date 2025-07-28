@@ -9,6 +9,7 @@ import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
 import { Suspense } from 'react';
+import NoticeButton from './notice-button';
 
 export interface NavButton {
 	href: string;
@@ -57,11 +58,14 @@ export default function Navbar() {
 					/>
 					{navButtons.map((props) => props && <NavButton key={props.content} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTabletWidth) && (
-					<Suspense>
-						<LoginButton />
-					</Suspense>
-				)}
+				<div className="flex items-center justify-center gap-6">
+					<NoticeButton />
+					{(pathname === '/signup' || isTabletWidth) && (
+						<Suspense>
+							<LoginButton />
+						</Suspense>
+					)}
+				</div>
 			</div>
 		</header>
 	);

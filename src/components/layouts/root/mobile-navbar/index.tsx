@@ -11,6 +11,7 @@ import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
+import NoticeButton from '../navbar/notice-button';
 
 export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -54,9 +55,12 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 					<Link href="/" className="w-auto h-full flex justify-center">
 						<Image src={'/logo/icon-red.svg'} alt="킥온 로고 이미지" width={45} height={36} />
 					</Link>
-					<Suspense>
-						<LoginButton onClickProfile={handleToggleProfile} />
-					</Suspense>
+					<div className="flex items-center justify-center gap-[18px] ml-auto">
+						<NoticeButton />
+						<Suspense>
+							<LoginButton onClickProfile={handleToggleProfile} />
+						</Suspense>
+					</div>
 				</div>
 			</header>
 
