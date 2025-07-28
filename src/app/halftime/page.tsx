@@ -21,7 +21,13 @@ export default function Page() {
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77].map((i) => (
 					<div key={i} className="w-full h-auto aspect-[13/25]">
 						<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
-							{i % 2 === 1 ? <Video src="/video/test1.mp4" /> : <Video src="/video/test2.mp4" />}
+							{i % 3 === 0 ? (
+								<Video src="/video/test1.mp4" />
+							) : i % 3 === 1 ? (
+								<Video src="/video/test2.mp4" />
+							) : (
+								<Video src="https://youtu.be/3-G0Z_sjRiQ?si=JN6gcWPQ5Sp3ffw6" />
+							)}
 						</div>
 
 						<h3 className="button2-medium my-2 @mobile:mb-1.5 @mobile:text-14">

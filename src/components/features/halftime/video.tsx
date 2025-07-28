@@ -2,6 +2,7 @@
 
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
+import ReactPlayer from 'react-player';
 
 export default function Video({ src }: { src: string }) {
 	const videoRef = useRef<HTMLVideoElement>(null);
@@ -15,6 +16,33 @@ export default function Video({ src }: { src: string }) {
 		const canvasElement = canvasRef.current;
 
 		if (!videoElement || !canvasElement) {
+			return;
+		}
+
+		if (src.includes('youtube')) {
+			const url = new URL(src);
+			const videoId = url.searchParams.get('v');
+
+			if (videoId) {
+				const youtubeThumbnail = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+				setThumbnailUrl(youtubeThumbnail);
+				setIsLoading(false);
+			}
+
+			return;
+		}
+
+		if (src.includes('youtu.be')) {
+			const url = new URL(src);
+			const videoId = url.pathname.slice(1);
+			console.log(videoId);
+
+			if (videoId) {
+				const youtubeThumbnail = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+				setThumbnailUrl(youtubeThumbnail);
+				setIsLoading(false);
+			}
+
 			return;
 		}
 
@@ -94,11 +122,26 @@ export default function Video({ src }: { src: string }) {
 			onMouseLeave={handleMouseLeave}
 			className="relative w-full h-full flex items-center justify-center"
 		>
-			<video ref={videoRef} muted className="relative z-10 w-full">
+			<ReactPlayer
+				src={src}
+				// ref={videoRef}
+				className="react-player relative z-10 w-full! h-auto!"
+				muted
+				config={{
+					youtube: {
+						end: 10,
+						rel: 0,
+						fs: 0,
+						iv_load_policy: 3,
+					},
+				}}
+			/>
+			<video ref={videoRef} muted className="relative z-10 w-full hidden">
 				<source src={src} type="video/mp4" />
 				Your browser does not support the video tag.
 			</video>
-			<canvas ref={canvasRef} style={{ display: 'none' }} /> {/* 캔버스도 숨김 */}
+			<canvas ref={canvasRef} style={{ display: 'none' }} />
+
 			<div
 				className="absolute z-5 w-[120%] h-[120%] top-1/2 left-1/2 -translate-1/2 bg-no-repeat bg-cover bg-center opacity-70"
 				style={{ backgroundImage: `url(${thumbnailUrl})`, filter: 'blur(20px)' }}
