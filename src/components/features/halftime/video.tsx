@@ -5,17 +5,42 @@ import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export default function Video({ src }: { src: string }) {
-	const videoRef = useRef<HTMLVideoElement>(null);
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [thumbnailUrl, setThumbnailUrl] = useState('');
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState(null);
 
-	useEffect(() => {
-		const videoElement = videoRef.current;
-		const canvasElement = canvasRef.current;
+	const playerRef = useRef(null);
 
-		if (!videoElement || !canvasElement) {
+	const setPlayerRef = (player) => {
+		if (!player) return;
+		console.log(typeof player);
+		// player.currentTime = 0;
+		if (player instanceof HTMLVideoElement) {
+			player.currentTime = 0;
+			playerRef.current = player;
+		} else if (src.includes('youtube') || src.includes('youtu.be')) {
+			setYoutubeThumbnail();
+		}
+	};
+
+	// -------
+
+	function setYoutubeThumbnail() {
+		console.log('thumbnail', thumbnailUrl);
+		if (thumbnailUrl) return;
+
+		if (src.includes('youtube.com/shorts')) {
+			const url = new URL(src);
+			const videoId = url.pathname.split('/').at(-1);
+			console.log(videoId);
+
+			if (videoId) {
+				const youtubeThumbnail = `https://img.youtube.com/vi/${videoId}/sddefault.jpg`;
+				setThumbnailUrl(youtubeThumbnail);
+				setIsLoading(false);
+			}
+
 			return;
 		}
 
@@ -45,75 +70,54 @@ export default function Video({ src }: { src: string }) {
 
 			return;
 		}
+	}
 
-		const captureThumbnail = () => {
-			// 비디오의 현재 시간을 0으로 설정 (첫 프레임)
-			videoElement.currentTime = 0;
+	useEffect(() => {
+		if (playerRef.current) {
+			console.log(playerRef.current.currentTime);
+			playerRef.current.currentTime = 1; // 0초로 이동
+		}
+	}, [playerRef]);
 
-			// seeked 이벤트는 currentTime이 성공적으로 이동했을 때 발생합니다.
-			const handleSeeked = () => {
-				try {
-					const context = canvasElement.getContext('2d');
+	const handleSeeked = () => {
+		if (thumbnailUrl) return;
 
-					// 캔버스 크기를 비디오의 원래 크기와 동일하게 설정
-					canvasElement.width = videoElement.videoWidth;
-					canvasElement.height = videoElement.videoHeight;
+		const videoElement = playerRef.current;
+		const canvasElement = canvasRef.current;
+		if (!videoElement || !canvasElement) return;
 
-					// 비디오의 현재 프레임을 캔버스에 그립니다.
-					context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+		try {
+			const context = canvasElement.getContext('2d');
 
-					// 캔버스 내용을 이미지 URL로 변환 (JPEG 형식, 품질 0.8)
-					const dataUrl = canvasElement.toDataURL('image/jpeg', 0.8);
-					setThumbnailUrl(dataUrl);
-					setIsLoading(false);
-					setError(null);
+			// 캔버스 크기를 비디오의 원래 크기와 동일하게 설정
+			canvasElement.width = videoElement.videoWidth;
+			canvasElement.height = videoElement.videoHeight;
 
-					// 더 이상 필요 없으므로 이벤트 리스너 제거
-					videoElement.removeEventListener('seeked', handleSeeked);
-				} catch (err) {
-					console.error('Failed to capture thumbnail:', err);
-					setError('썸네일 캡처에 실패했습니다.');
-					setIsLoading(false);
-				}
-			};
+			// 비디오의 현재 프레임을 캔버스에 그립니다.
+			context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
 
-			// 비디오 메타데이터가 로드되면 썸네일 캡처 시도
-			const handleLoadedMetadata = () => {
-				videoElement.addEventListener('seeked', handleSeeked);
-				// currentTime을 0으로 설정하여 seeked 이벤트 트리거
-				videoElement.currentTime = 0;
-			};
+			// 캔버스 내용을 이미지 URL로 변환 (JPEG 형식, 품질 0.8)
+			const dataUrl = canvasElement.toDataURL('image/jpeg', 0.8);
+			setThumbnailUrl(dataUrl);
+			setIsLoading(false);
+			setError(null);
+		} catch (err) {
+			console.error('Failed to capture thumbnail:', err);
+			setError('썸네일 캡처에 실패했습니다.');
+			setIsLoading(false);
+		}
+	};
 
-			// 비디오가 충분히 로드되어 재생 가능할 때 (메타데이터 포함)
-			videoElement.addEventListener('loadedmetadata', handleLoadedMetadata);
-
-			// 비디오 로드 오류 처리
-			const handleError = () => {
-				setError('비디오를 로드할 수 없습니다.');
-				setIsLoading(false);
-			};
-			videoElement.addEventListener('error', handleError);
-
-			// 클린업 함수
-			return () => {
-				videoElement.removeEventListener('loadedmetadata', handleLoadedMetadata);
-				videoElement.removeEventListener('seeked', handleSeeked);
-				videoElement.removeEventListener('error', handleError);
-			};
-		};
-
-		// 비디오 로드 시작
-		videoElement.load();
-		captureThumbnail();
-	}, [src]);
-
+	// 임베드된 영상은 적용 안 됨 (ref 설정 안 되는 문제)
 	const handleMouseOver = () => {
-		videoRef.current.play();
+		if (!playerRef.current) return;
+		playerRef.current.play();
 	};
 
 	const handleMouseLeave = () => {
-		videoRef.current.pause();
-		videoRef.current.currentTime = 0;
+		if (!playerRef.current) return;
+		playerRef.current.pause();
+		playerRef.current.currentTime = 0;
 	};
 
 	return (
@@ -124,9 +128,10 @@ export default function Video({ src }: { src: string }) {
 		>
 			<ReactPlayer
 				src={src}
-				// ref={videoRef}
-				className="react-player relative z-10 w-full! h-auto!"
+				ref={setPlayerRef}
 				muted
+				className="react-player relative z-10 w-auto! h-full! aspect-[13/20]! object-cover"
+				onTimeUpdate={handleSeeked}
 				config={{
 					youtube: {
 						end: 10,
@@ -136,23 +141,23 @@ export default function Video({ src }: { src: string }) {
 					},
 				}}
 			/>
-			<video ref={videoRef} muted className="relative z-10 w-full hidden">
+			{/* 과거 로직, 추후 삭제 */}
+			{/* <video ref={playerRef} muted className="relative z-10 w-full hidden">
 				<source src={src} type="video/mp4" />
 				Your browser does not support the video tag.
-			</video>
+			</video> */}
 			<canvas ref={canvasRef} style={{ display: 'none' }} />
 
-			<div
+			{/* 상하 여백이 남을 때 백그라운드에 렌더링하는 블러 처리된 썸네일 */}
+			{/* <div
 				className="absolute z-5 w-[120%] h-[120%] top-1/2 left-1/2 -translate-1/2 bg-no-repeat bg-cover bg-center opacity-70"
 				style={{ backgroundImage: `url(${thumbnailUrl})`, filter: 'blur(20px)' }}
-			/>
+			/> */}
 			<div
-				className={clsx(
-					'absolute w-full h-full',
-					isLoading
-						? "bg-black-300 z-15 before:content-[''] before:absolute before:z-15 before:top-0 before:right-0 before:bottom-0 before:left-0 before:bg-black-200 before:animate-pulse"
-						: 'bg-black-700',
-				)}
+				className={clsx('absolute w-full h-full bg-black-300', {
+					"z-15 before:content-[''] before:absolute before:z-15 before:top-0 before:right-0 before:bottom-0 before:left-0 before:bg-black-150 before:animate-pulse":
+						isLoading,
+				})}
 			/>
 		</div>
 	);

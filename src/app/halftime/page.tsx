@@ -24,7 +24,7 @@ export default function Page() {
 							{i % 3 === 0 ? (
 								<Video src="/video/test1.mp4" />
 							) : i % 3 === 1 ? (
-								<Video src="/video/test2.mp4" />
+								<Video src="https://www.youtube.com/shorts/R39fXsyQN_o" />
 							) : (
 								<Video src="https://youtu.be/3-G0Z_sjRiQ?si=JN6gcWPQ5Sp3ffw6" />
 							)}
