@@ -1,5 +1,5 @@
 import ComponentFrame from '@/components/common/component-frame';
-import Video from '@/components/features/halftime/video';
+import Preview from '@/components/features/halftime/preview';
 import Image from 'next/image';
 
 const data = {
@@ -22,11 +22,11 @@ export default function Page() {
 					<div key={i} className="w-full h-auto aspect-[13/25]">
 						<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
 							{i % 3 === 0 ? (
-								<Video src="/video/test1.mp4" />
+								<Preview src="/video/test1.mp4" />
 							) : i % 3 === 1 ? (
-								<Video src="https://www.youtube.com/shorts/R39fXsyQN_o" />
+								<Preview src="https://www.youtube.com/shorts/R39fXsyQN_o" />
 							) : (
-								<Video src="https://youtu.be/3-G0Z_sjRiQ?si=JN6gcWPQ5Sp3ffw6" />
+								<Preview src="https://youtu.be/3-G0Z_sjRiQ?si=JN6gcWPQ5Sp3ffw6" />
 							)}
 						</div>
 
