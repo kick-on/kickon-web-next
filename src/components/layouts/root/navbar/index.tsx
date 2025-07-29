@@ -9,7 +9,6 @@ import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
 import { Suspense } from 'react';
-import { isFullScreen } from '@/lib/utils/isFullScreen';
 
 export interface NavButton {
 	href: string;
@@ -41,10 +40,6 @@ export default function Navbar() {
 	};
 
 	if (!isDesktop === null) return null;
-
-	if (isFullScreen(pathname)) {
-		return null;
-	}
 
 	return !isDesktop ? (
 		<MobileNavbar navButtons={navButtons} />

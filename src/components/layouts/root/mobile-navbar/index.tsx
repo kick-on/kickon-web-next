@@ -11,6 +11,7 @@ import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
+import { isFullScreen } from '@/lib/utils/isFullScreen';
 
 export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,6 +44,10 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 			setTimeout(() => setIsProfileOpen(true), 10);
 		}
 	}, [isProfileOpen]);
+
+	if (isFullScreen(pathname)) {
+		return null;
+	}
 
 	return (
 		<>
