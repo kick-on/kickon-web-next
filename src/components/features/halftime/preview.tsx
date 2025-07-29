@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
-export default function Video({ src }: { src: string }) {
+export default function Preview({ src }: { src: string }) {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const [thumbnailUrl, setThumbnailUrl] = useState('');
 	const [isLoading, setIsLoading] = useState(true);
