@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 interface NoticeHeaderProps {
 	isModal?: boolean;
-	onClose?: () => void; // 모달일 때 닫기용 함수
+	onClose?: () => void;
 }
 
 export default function NoticeHeader({ isModal = false, onClose }: NoticeHeaderProps) {

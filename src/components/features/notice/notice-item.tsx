@@ -29,7 +29,7 @@ export default function NoticeItem({ type, date, content, teamLogo }: NoticeItem
 	const formattedDate = getTimeAgo(date);
 
 	return (
-		<div className="relative flex gap-4 p-4">
+		<div className="relative flex gap-4 p-4 cursor-pointer hover:bg-black-100">
 			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200">
 				<Image src={getIconSrc()} alt="알림 출처" width={18} height={18} />
 			</div>
@@ -41,7 +41,7 @@ export default function NoticeItem({ type, date, content, teamLogo }: NoticeItem
 				</div>
 				<span className="body6-regular">{content}</span>
 			</div>
-			<div className="absolute right-4 flex items-center">
+			<div className="absolute top-1/2 -translate-y-1/2 right-4">
 				<Image src="/notice-unread.svg" alt="안 읽음 표시" width={6} height={6} />
 			</div>
 		</div>
