@@ -4,7 +4,7 @@ import { getTimeAgo } from '@/lib/utils/getTimeAgo';
 import Image from 'next/image';
 
 // 나중에는 notice:(notice 응답 타입)으로 한 번에 전달하고 파싱해서 사용하기
-// 안 읽음 표시 이상함 다시
+
 export interface NoticeItemProps {
 	type: string;
 	date: string;
