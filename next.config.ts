@@ -25,6 +25,10 @@ const nextConfig: NextConfig = {
 			},
 			{
 				protocol: 'https',
+				hostname: 'kau-kickon-files-bucket.s3.ap-northeast-2.amazonaws.com',
+			},
+			{
+				protocol: 'https',
 				hostname: 'media.api-sports.io',
 			},
 			{
