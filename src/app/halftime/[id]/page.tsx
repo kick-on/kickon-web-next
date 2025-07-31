@@ -6,7 +6,7 @@ import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
 	return (
-		<div className="w-full h-[calc(100dvh-72px)] @mobile:h-dvh overflow-scroll no-scrollbar">
+		<div className="w-full h-[calc(100dvh-72px)] min-h-150 @mobile:h-dvh overflow-scroll no-scrollbar">
 			<Swiper
 				loop
 				className="w-fit @mobile:w-full h-full"
@@ -28,21 +28,20 @@ export default function Page() {
 				}}
 			>
 				{[1, 2, 3, 4].map((i) => (
-					<SwiperSlide
-						key={i}
-						className="bg-black-300 w-auto h-full aspect-[2/3] @mobile:h-auto @mobile:w-full rounded-lg overflow-hidden"
-					>
-						{({ isActive }) =>
-							i === 1 ? (
-								<Player index={i} autoplay={isActive} src="/video/test1.mp4" />
-							) : i === 2 ? (
-								<Player index={i} autoplay={isActive} src="/video/test2.mp4" />
-							) : i === 3 ? (
-								<Player index={i} autoplay={isActive} src="https://www.youtube.com/watch?v=-NMmHBIijKg" />
-							) : (
-								<Player index={i} autoplay={isActive} src="https://www.youtube.com/shorts/KrMk5Ew-Vus" />
-							)
-						}
+					<SwiperSlide key={i} className="px-22">
+						{({ isActive }) => (
+							<div className="w-auto h-full aspect-[2/3] @mobile:h-auto @mobile:w-full rounded-lg bg-black-300">
+								{i === 1 ? (
+									<Player index={i} autoplay={isActive} src="/video/test1.mp4" />
+								) : i === 2 ? (
+									<Player index={i} autoplay={isActive} src="/video/test2.mp4" />
+								) : i === 3 ? (
+									<Player index={i} autoplay={isActive} src="https://www.youtube.com/watch?v=-NMmHBIijKg" />
+								) : (
+									<Player index={i} autoplay={isActive} src="https://www.youtube.com/shorts/KrMk5Ew-Vus" />
+								)}
+							</div>
+						)}
 					</SwiperSlide>
 				))}
 			</Swiper>
