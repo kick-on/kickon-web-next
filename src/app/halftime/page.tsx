@@ -1,6 +1,7 @@
 import ComponentFrame from '@/components/common/component-frame';
 import Preview from '@/components/features/halftime/preview';
 import Image from 'next/image';
+import Link from 'next/link';
 
 const data = {
 	title: '기성용 이적에 역대급 폭발한 FC 서울 팬들 어쩌구저쩌구',
@@ -19,7 +20,7 @@ export default function Page() {
 					px-[7.125rem] grid-cols-5 gap-6"
 			>
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77].map((i) => (
-					<div key={i} className="w-full h-auto aspect-[13/25]">
+					<Link key={i} href={'/halftime/1'} className="w-full h-auto aspect-[13/25]">
 						<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
 							{i % 3 === 0 ? (
 								<Preview src="/video/test1.mp4" />
@@ -40,7 +41,7 @@ export default function Page() {
 								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {data.kick}천
 							</span>
 						</div>
-					</div>
+					</Link>
 				))}
 			</div>
 		</ComponentFrame>

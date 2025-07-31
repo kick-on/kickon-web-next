@@ -128,7 +128,7 @@ export default function Preview({ src }: { src: string }) {
 				src={src}
 				ref={setPlayerRef}
 				muted
-				className="react-player relative z-10 w-auto! h-full! aspect-[13/20]! object-cover"
+				className="react-player relative z-10 w-auto! h-full! aspect-[13/20]! object-cover pointer-events-none"
 				onTimeUpdate={handleSeeked}
 				config={{
 					youtube: {
