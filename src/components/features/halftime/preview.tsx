@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 export default function Preview({ src }: { src: string }) {
@@ -14,18 +14,18 @@ export default function Preview({ src }: { src: string }) {
 
 	const setPlayerRef = (player) => {
 		if (!player) return;
-		console.log(typeof player);
-		// player.currentTime = 0;
+
 		if (player instanceof HTMLVideoElement) {
+			// src가 s3에 업로드 된 파일인 경우
 			player.currentTime = 0;
 			playerRef.current = player;
 		} else if (src.includes('youtube') || src.includes('youtu.be')) {
+			// src가 유튜브 경로인 경우 (playerRef 설정 안 됨)
 			setYoutubeThumbnail();
 		}
 	};
 
-	// -------
-
+	// 유튜브 썸네일을 추출하는 로직
 	function setYoutubeThumbnail() {
 		console.log('thumbnail', thumbnailUrl);
 		if (thumbnailUrl) return;
@@ -72,13 +72,9 @@ export default function Preview({ src }: { src: string }) {
 		}
 	}
 
-	useEffect(() => {
-		if (playerRef.current) {
-			console.log(playerRef.current.currentTime);
-			playerRef.current.currentTime = 1; // 0초로 이동
-		}
-	}, [playerRef]);
-
+	// seek = 비디오 탐색(어디를 재생할지)
+	// seeked = 어디를 재생할지 선택 완료
+	// -> player.currentTime이 변경되면 onSeeked 실행
 	const handleSeeked = () => {
 		if (thumbnailUrl) return;
 
@@ -86,6 +82,7 @@ export default function Preview({ src }: { src: string }) {
 		const canvasElement = canvasRef.current;
 		if (!videoElement || !canvasElement) return;
 
+		// s3에 업로드 된 영상의 썹네일을 추출
 		try {
 			const context = canvasElement.getContext('2d');
 
@@ -108,6 +105,7 @@ export default function Preview({ src }: { src: string }) {
 		}
 	};
 
+	// 호버 시 재생
 	// 임베드된 영상은 적용 안 됨 (ref 설정 안 되는 문제)
 	const handleMouseOver = () => {
 		if (!playerRef.current) return;
