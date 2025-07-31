@@ -11,7 +11,7 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 		<div
 			className="absolute top-[2.7rem] -right-[1.05rem] w-[20.25rem] h-[39.375rem] 
                             bg-black-000 border border-black-100 rounded-[0.625rem]
-                            flex flex-col shadow-profile-modal"
+                            flex flex-col shadow-navbar-modal"
 		>
 			<Image
 				className="absolute -top-2.5 right-[1.125rem]"
@@ -20,7 +20,7 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 				}}
 				width={20}
 				height={10}
-				src={'/profile-modal-arrow.svg'}
+				src={'/navbar-modal-arrow.svg'}
 				alt="화살표"
 			/>
 			<NoticeHeader isModal={true} onClose={onCloseModal} />
