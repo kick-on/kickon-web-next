@@ -47,14 +47,16 @@ export default function Page() {
 	const hasAlerted = useRef(false); // strict mode로 alert 두 번 뜨는 것 방지
 
 	useEffect(() => {
+		if (isMobile === null) return; // 모바일인지 정확히 판단 후 실행
+
 		if (!isMobile && !hasAlerted.current) {
 			alert('모바일에서만 접근 가능합니다.');
 			hasAlerted.current = true;
-			router.replace('/'); // 모바일이 아닐 경우 리디렉트
+			router.replace('/');
 		}
 	}, [isMobile, router]);
 
-	if (!isMobile) return null; // 모바일 외에서는 접근 불가, 모바일이 아닐 때 아무것도 렌더링하지 않음
+	if (!isMobile) return null;
 
 	return (
 		<div>
