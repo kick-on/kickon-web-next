@@ -20,7 +20,7 @@ export default function NoticeButton() {
 		}
 	};
 
-	const iconSrc = pathname === '/' ? '/notice-black.svg' : '/notice-white.svg';
+	const iconSrc = pathname === '/' ? '/notice/black.svg' : '/notice/white.svg';
 
 	// 알림이 있다고 가정
 	const unreadCount = 99;

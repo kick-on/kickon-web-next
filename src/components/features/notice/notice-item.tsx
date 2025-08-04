@@ -42,7 +42,7 @@ export default function NoticeItem({ type, date, content, teamLogo }: NoticeItem
 				<span className="body6-regular">{content}</span>
 			</div>
 			<div className="absolute top-1/2 -translate-y-1/2 right-4">
-				<Image src="/notice-unread.svg" alt="안 읽음 표시" width={6} height={6} />
+				<div className="w-[6px] h-[6px] rounded-full bg-negative" />
 			</div>
 		</div>
 	);
