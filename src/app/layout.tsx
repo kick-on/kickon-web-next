@@ -6,7 +6,7 @@ import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 import MarginWrapper from '@/components/layouts/root/margin-wrapper';
-import NavbarWrapper from '@/components/layouts/root/navbar-wrapper';
+import Navbar from '@/components/layouts/root/navbar';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -29,7 +29,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
 				<div className="@container">
-					<NavbarWrapper />
+					<Navbar />
 					<LoginPortal />
 					<MarginWrapper>
 						<Banner />
