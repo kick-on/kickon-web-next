@@ -42,10 +42,16 @@ export default function Player({
 	const [playerState, setPlayerState] = useState<{ playing: boolean }>({
 		playing: isCurrentPlayer,
 	});
+	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const router = useRouter();
 
 	const togglePlay = () => {
+		if (isFirstLoad) {
+			// 영상 초기 렌더링 시에 매번 정지 버튼이 나타나지 않도록
+			// 초기 렌더링 여부에 따라 정지 버튼 조건부 렌더링
+			setIsFirstLoad(false);
+		}
 		setPlayerState({ ...playerState, playing: !playerState.playing });
 	};
 
@@ -89,6 +95,16 @@ export default function Player({
 				))}
 			</div>
 
+			{!isFirstLoad && (
+				<div
+					className={`w-18 h-18 flex items-center justify-center
+					absolute z-15 top-1/2 left-1/2 -translate-1/2 rounded-full bg-black-900/30
+					${playing ? 'animate-pulse-scale-out' : 'animate-pulse-scale-in'}`}
+				>
+					<Image src={'/play.svg'} alt="재생" width={36} height={36} />
+				</div>
+			)}
+
 			<div role="button" onClick={togglePlay} className="w-full h-full rounded-lg overflow-hidden">
 				<ReactPlayer
 					src={src}
@@ -103,6 +119,11 @@ export default function Player({
 							iv_load_policy: 3,
 						},
 					}}
+				/>
+				<div
+					className="relative w-full h-full bg-black-300 rounded-lg
+						before:absolute before:z-15 before:top-0 before:right-0 before:bottom-0 before:left-0
+						before:content-[''] before:bg-black-150 before:rounded-lg before:animate-pulse"
 				/>
 			</div>
 		</div>
