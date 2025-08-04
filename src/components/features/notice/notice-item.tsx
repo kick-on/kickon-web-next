@@ -15,7 +15,7 @@ export interface NoticeItemProps {
 export default function NoticeItem({ type, date, content, teamLogo }: NoticeItemProps) {
 	const iconMap: Record<string, string> = {
 		match: '/kick/black.svg',
-		reply: '/notice-comment.svg',
+		reply: '/comment.svg',
 		prediction: teamLogo ?? '/kick/default.svg',
 	};
 
