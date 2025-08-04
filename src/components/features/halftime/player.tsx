@@ -38,7 +38,7 @@ export default function Player({
 	isCurrentPlayer: boolean;
 	globalMuted: boolean;
 	toggleGlobalMuted: () => void;
-} & Partial<HTMLMediaElement>) {
+}) {
 	const [playerState, setPlayerState] = useState<{ playing: boolean }>({
 		playing: isCurrentPlayer,
 	});
@@ -95,7 +95,7 @@ export default function Player({
 					loop
 					muted={globalMuted}
 					playing={playing}
-					className="react-player relative z-10 w-full! h-full! aspect-[13/20]! object-cover pointer-events-none"
+					className="react-player relative z-10 w-full! h-full! object-cover pointer-events-none"
 					config={{
 						youtube: {
 							rel: 0,
