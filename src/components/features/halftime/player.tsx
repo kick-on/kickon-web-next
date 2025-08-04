@@ -1,8 +1,8 @@
 'use client';
 
-import clsx from 'clsx';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import ReactPlayer from 'react-player';
 
 const actionButtons = [
@@ -28,22 +28,46 @@ const actionButtons = [
 	},
 ];
 
-export default function Player({ src, index, autoplay }: { src: string; index: number } & Partial<HTMLMediaElement>) {
-	const [isPlaying, setIsPlaying] = useState(true);
-	const [isMuted, setIsMuted] = useState(true);
+export default function Player({
+	src,
+	isCurrentPlayer,
+	globalMuted,
+	toggleGlobalMuted,
+}: {
+	src: string;
+	isCurrentPlayer: boolean;
+	globalMuted: boolean;
+	toggleGlobalMuted: () => void;
+} & Partial<HTMLMediaElement>) {
+	const [playerState, setPlayerState] = useState<{ playing: boolean }>({
+		playing: isCurrentPlayer,
+	});
+
+	const router = useRouter();
+
+	const togglePlay = () => {
+		setPlayerState({ ...playerState, playing: !playerState.playing });
+	};
+
+	useEffect(() => {
+		setPlayerState((prev) => ({ ...prev, playing: isCurrentPlayer }));
+	}, [isCurrentPlayer]);
+
+	const { playing } = playerState;
 
 	return (
-		<div
-			role="button"
-			className="relative w-full h-full flex items-center justify-center"
-			onClick={() => setIsPlaying(!isPlaying)}
-		>
+		<div className="relative w-full h-full flex items-center justify-center">
 			<div className="absolute z-15 top-4 left-4 right-4 flex justify-between items-center">
-				<button className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full">
+				<button onClick={() => router.back()} className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full">
 					<Image src={'/chevron/right-white.svg'} alt="뒤로가기" width={24} height={24} className="rotate-180" />
 				</button>
-				<button className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full" onClick={() => setIsMuted(!isMuted)}>
-					<Image src={isMuted ? '/mute.svg' : '/volume.svg'} alt={isMuted ? '소리' : '음소거'} width={24} height={24} />
+				<button onClick={toggleGlobalMuted} className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full">
+					<Image
+						src={globalMuted ? '/mute.svg' : '/volume.svg'}
+						alt={globalMuted ? '소리' : '음소거'}
+						width={24}
+						height={24}
+					/>
 				</button>
 			</div>
 
@@ -65,12 +89,12 @@ export default function Player({ src, index, autoplay }: { src: string; index: n
 				))}
 			</div>
 
-			<div className="w-full h-full rounded-lg overflow-hidden">
+			<div role="button" onClick={togglePlay} className="w-full h-full rounded-lg overflow-hidden">
 				<ReactPlayer
 					src={src}
 					loop
-					muted={index === 1}
-					playing={autoplay && isPlaying}
+					muted={globalMuted}
+					playing={playing}
 					className="react-player relative z-10 w-full! h-full! aspect-[13/20]! object-cover pointer-events-none"
 					config={{
 						youtube: {
@@ -81,12 +105,6 @@ export default function Player({ src, index, autoplay }: { src: string; index: n
 					}}
 				/>
 			</div>
-			<div
-				className={clsx('absolute w-full h-full bg-black-300 rounded-lg', {
-					"z-15 before:content-[''] before:absolute before:z-15 before:top-0 before:right-0 before:bottom-0 before:left-0 before:bg-black-150 before:rounded-lg before:animate-pulse":
-						false,
-				})}
-			/>
 		</div>
 	);
 }

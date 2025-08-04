@@ -1,10 +1,17 @@
 'use client';
 
 import Player from '@/components/features/halftime/player';
+import { useState } from 'react';
 import { Keyboard, Mousewheel } from 'swiper/modules';
 import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
+	const [gobalMute, setGlobalMute] = useState(true);
+
+	const toggleGlobalMute = () => {
+		setGlobalMute((prev) => !prev);
+	};
+
 	return (
 		<div className="w-full h-[calc(100dvh-72px)] min-h-150 @mobile:h-dvh overflow-scroll no-scrollbar">
 			<Swiper
@@ -31,15 +38,20 @@ export default function Page() {
 					<SwiperSlide key={i} className="px-22">
 						{({ isActive }) => (
 							<div className="w-auto h-full aspect-[2/3] @mobile:h-auto @mobile:w-full rounded-lg bg-black-300">
-								{i === 1 ? (
-									<Player index={i} autoplay={isActive} src="/video/test1.mp4" />
-								) : i === 2 ? (
-									<Player index={i} autoplay={isActive} src="/video/test2.mp4" />
-								) : i === 3 ? (
-									<Player index={i} autoplay={isActive} src="https://www.youtube.com/watch?v=-NMmHBIijKg" />
-								) : (
-									<Player index={i} autoplay={isActive} src="https://www.youtube.com/shorts/KrMk5Ew-Vus" />
-								)}
+								<Player
+									isCurrentPlayer={isActive}
+									src={
+										i === 1
+											? '/video/test1.mp4'
+											: i === 2
+												? '/video/test2.mp4'
+												: i === 3
+													? 'https://www.youtube.com/watch?v=-NMmHBIijKg'
+													: 'https://www.youtube.com/shorts/KrMk5Ew-Vus'
+									}
+									globalMuted={gobalMute}
+									toggleGlobalMuted={toggleGlobalMute}
+								/>
 							</div>
 						)}
 					</SwiperSlide>
