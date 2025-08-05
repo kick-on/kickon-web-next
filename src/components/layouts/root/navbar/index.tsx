@@ -7,7 +7,7 @@ import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import RightButtons from './right-button';
+import RightButtons from './right-buttons';
 
 export interface NavButton {
 	href: string;

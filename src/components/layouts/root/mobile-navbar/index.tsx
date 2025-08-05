@@ -11,7 +11,7 @@ import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
 import { isFullScreen } from '@/lib/utils/isFullScreen';
-import RightButtons from '../navbar/right-button';
+import RightButtons from '../navbar/right-buttons';
 
 export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -12,7 +12,7 @@ interface RightButtonsProps {
 	onClickProfile?: () => void;
 }
 
-export default function RightButtons({ isMobile = false, isTabletWidth = false, onClickProfile }: RightButtonsProps) {
+export default function RightButton({ isMobile = false, isTabletWidth = false, onClickProfile }: RightButtonsProps) {
 	const pathname = usePathname();
 
 	return (
