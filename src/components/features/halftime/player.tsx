@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -43,11 +44,12 @@ export default function Player({
 
 	const playerRef = useRef(null);
 	const isS3Video = playerRef.current instanceof HTMLVideoElement;
+	const [isLoading, setIsLoading] = useState(true);
 
 	const setPlayerRef = useCallback((player: HTMLVideoElement) => {
 		if (!player) return;
 		playerRef.current = player;
-		console.log(player);
+		setIsLoading(false);
 	}, []);
 
 	const [playerState, setPlayerState] = useState({
@@ -216,7 +218,14 @@ export default function Player({
 			)}
 
 			{/* 플레이어 */}
-			<div role="button" onClick={togglePlay} className="w-full h-full rounded-lg overflow-hidden">
+			<div
+				role="button"
+				onClick={togglePlay}
+				className={clsx(
+					"relative w-full h-full flex items-center justify-center rounded-lg bg-black-300 overflow-hidden before:absolute before:z-10 before:top-0 before:right-0 before:bottom-0 before:left-0 before:content-[''] before:bg-black-150 before:rounded-lg",
+					isLoading ? 'before:animate-pulse' : '',
+				)}
+			>
 				<ReactPlayer
 					src={src}
 					ref={setPlayerRef}
@@ -237,11 +246,13 @@ export default function Player({
 				/>
 
 				{/* 백그라운드(스켈레톤) */}
-				<div
-					className="relative w-full h-full bg-black-300 rounded-lg
+				{!playerRef.current && (
+					<div
+						className="absolute top-0 left-0 w-full h-full bg-black-300 rounded-lg
 						before:absolute before:z-15 before:top-0 before:right-0 before:bottom-0 before:left-0
 						before:content-[''] before:bg-black-150 before:rounded-lg before:animate-pulse"
-				/>
+					/>
+				)}
 			</div>
 		</div>
 	);
