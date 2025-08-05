@@ -84,7 +84,7 @@ export default function FavoriteTeamItem({
 							isActive ? 'top-[3px] right-[3px]' : 'top-1 right-1',
 						)}
 					>
-						<Image className="m-auto" src="/small-x.svg" alt="삭제" width={12} height={12} />
+						<Image className="m-auto" src="/x/small.svg" alt="삭제" width={12} height={12} />
 					</button>
 				)}
 

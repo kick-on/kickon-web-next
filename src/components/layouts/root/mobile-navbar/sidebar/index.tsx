@@ -54,7 +54,7 @@ export default function Sidebar({
 				)}
 			>
 				<button onClick={handleToggleMenu} className="ml-auto mb-8 w-fit brightness-0">
-					<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
+					<Image src={'/x/white.svg'} alt="닫기" width={24} height={24} />
 				</button>
 				{children}
 			</div>

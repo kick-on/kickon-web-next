@@ -63,7 +63,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 				<div className="flex justify-between items-center mb-10.5">
 					<h2 className="title3-semibold text-black-900 text-center flex-grow">게시글 신고</h2>
 					<button onClick={onClose} className="ml-auto">
-						<Image src="/x.svg" alt="닫기 버튼" width={24} height={24} />
+						<Image src="/x/white.svg" alt="닫기 버튼" width={24} height={24} />
 					</button>
 				</div>
 				<div className="flex flex-col gap-4">
