@@ -1,12 +1,12 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
-import Navbar from '@/components/layouts/root/navbar';
 import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 import MarginWrapper from '@/components/layouts/root/margin-wrapper';
+import Navbar from '@/components/layouts/root/navbar';
 
 export const metadata: Metadata = {
 	title: '킥온',

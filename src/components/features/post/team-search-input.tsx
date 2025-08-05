@@ -115,7 +115,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 					<Image
 						width={16}
 						height={16}
-						src="/x.svg"
+						src="/x/white.svg"
 						alt="초기화"
 						onClick={handleClearSearch}
 						className="cursor-pointer"

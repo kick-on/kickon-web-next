@@ -4,11 +4,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import NavButton from './nav-button';
 import Image from 'next/image';
 import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
-import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import { Suspense } from 'react';
+import RightButtons from './right-buttons';
 
 export interface NavButton {
 	href: string;
@@ -57,11 +56,7 @@ export default function Navbar() {
 					/>
 					{navButtons.map((props) => props && <NavButton key={props.content} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTabletWidth) && (
-					<Suspense>
-						<LoginButton />
-					</Suspense>
-				)}
+				<RightButtons isTabletWidth={isTabletWidth} />
 			</div>
 		</header>
 	);
