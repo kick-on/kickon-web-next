@@ -23,16 +23,16 @@ export default function Page() {
 		>
 			<Swiper
 				cssMode
-				className="w-fit @mobile:w-full h-full"
+				className="w-full h-full"
 				direction="vertical"
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
 			>
 				{[1, 2, 3, 4].map((i) => (
-					<SwiperSlide key={i} className="desktop:px-22">
+					<SwiperSlide key={i} className="desktop:px-22 w-full">
 						{({ isActive }) => (
-							<div className="w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
+							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
 								<Player
 									isCurrentPlayer={isActive}
 									src={
