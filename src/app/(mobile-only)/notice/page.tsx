@@ -2,9 +2,6 @@
 
 import NoticeHeader from '@/components/features/notice/notice-header';
 import NoticeItem from '@/components/features/notice/notice-item';
-import useIsMobile from '@/lib/hooks/useIsMobile';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
 
 export const dummyNotices = [
 	{
@@ -42,22 +39,6 @@ export const dummyNotices = [
 ];
 
 export default function Page() {
-	const isMobile = useIsMobile();
-	const router = useRouter();
-	const hasAlerted = useRef(false); // strict mode로 alert 두 번 뜨는 것 방지
-
-	useEffect(() => {
-		if (isMobile === null) return; // 모바일인지 정확히 판단 후 실행
-
-		if (!isMobile && !hasAlerted.current) {
-			alert('모바일에서만 접근 가능합니다.');
-			hasAlerted.current = true;
-			router.replace('/');
-		}
-	}, [isMobile, router]);
-
-	if (!isMobile) return null;
-
 	return (
 		<div>
 			<NoticeHeader />
