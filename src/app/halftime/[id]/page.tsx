@@ -37,7 +37,7 @@ export default function Page() {
 				{[1, 2, 3, 4].map((i) => (
 					<SwiperSlide key={i} className="desktop:px-22">
 						{({ isActive }) => (
-							<div className="w-auto h-full aspect-[14/25] @mobile:h-auto @mobile:w-full rounded-lg bg-black-300">
+							<div className="w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
 								<Player
 									isCurrentPlayer={isActive}
 									src={
