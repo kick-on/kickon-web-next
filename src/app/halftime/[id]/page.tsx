@@ -2,7 +2,6 @@
 
 import Player from '@/components/features/halftime/player';
 import { useState } from 'react';
-import { Keyboard, Mousewheel } from 'swiper/modules';
 import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
@@ -15,24 +14,12 @@ export default function Page() {
 	return (
 		<div className="w-full h-dvh min-h-150 overflow-scroll no-scrollbar">
 			<Swiper
-				loop
+				cssMode
 				className="w-fit @mobile:w-full h-full"
 				direction="vertical"
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
-				modules={[Mousewheel, Keyboard]}
-				mousewheel={{
-					enabled: true,
-					releaseOnEdges: true,
-					forceToAxis: true,
-					thresholdDelta: 15,
-					sensitivity: 1,
-				}}
-				keyboard={{
-					enabled: true,
-					onlyInViewport: true,
-				}}
 			>
 				{[1, 2, 3, 4].map((i) => (
 					<SwiperSlide key={i} className="desktop:px-22">
