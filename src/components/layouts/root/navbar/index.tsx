@@ -4,12 +4,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import NavButton from './nav-button';
 import Image from 'next/image';
 import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
-import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import { Suspense } from 'react';
-import NoticeButton from './notice-button';
+import RightButtons from './right-button';
 
 export interface NavButton {
 	href: string;
@@ -58,14 +56,7 @@ export default function Navbar() {
 					/>
 					{navButtons.map((props) => props && <NavButton key={props.content} {...props} />)}
 				</nav>
-				<div className="flex items-center justify-center gap-6">
-					<NoticeButton />
-					{(pathname === '/signup' || isTabletWidth) && (
-						<Suspense>
-							<LoginButton />
-						</Suspense>
-					)}
-				</div>
+				<RightButtons isTabletWidth={isTabletWidth} />
 			</div>
 		</header>
 	);
