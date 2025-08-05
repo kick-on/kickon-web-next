@@ -40,7 +40,14 @@ export default function ProfileModal({ onClickButton }: { onClickButton: () => v
 				alt="화살표"
 			/>
 			<button className="ml-auto w-6 h-6">
-				<Image onClick={onClickButton} className="brightness-0" src={'/x.svg'} alt="닫기" width={24} height={24} />
+				<Image
+					onClick={onClickButton}
+					className="brightness-0"
+					src={'/x/white.svg'}
+					alt="닫기"
+					width={24}
+					height={24}
+				/>
 			</button>
 			<Suspense>
 				<Profile onClickButton={onClickButton} />

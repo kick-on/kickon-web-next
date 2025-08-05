@@ -26,7 +26,7 @@ export default function FetchingFailedCard({
 	return (
 		<div className="flex flex-col items-center" style={{ height }}>
 			{isCardVisible && (
-				<Image style={{ marginTop }} width={100} height={100} src={'/x-card.svg'} alt="정보 불러오기 실패" />
+				<Image style={{ marginTop }} width={100} height={100} src={'/x/card.svg'} alt="정보 불러오기 실패" />
 			)}
 			<div className="mt-7 mb-6 @mobile:mt-8 @mobile:mb-3 title4-semibold @mobile:text-14">
 				데이터를 불러오지 못했어요.
