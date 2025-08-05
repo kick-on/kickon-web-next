@@ -25,7 +25,7 @@ export default function NoticeButton() {
 	// 알림이 있다고 가정
 	const unreadCount = 99;
 	return (
-		<div className="relative w-fit flex">
+		<div className="relative w-fit h-full items-center flex">
 			<button onClick={handleNoticeIconClick} className="relative w-6 h-6 @mobile:w-5 @mobile:h-5">
 				<Image src={iconSrc} alt="알림 아이콘" width={24} height={24} />
 

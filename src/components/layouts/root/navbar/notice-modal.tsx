@@ -9,7 +9,7 @@ import Image from 'next/image';
 export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void }) {
 	return (
 		<div
-			className="absolute top-[2.7rem] -right-[1.05rem] w-[20.25rem] h-[39.375rem] 
+			className="absolute top-[3.375rem] -right-[1.05rem] w-[20.25rem] h-[39.375rem] 
                             bg-black-000 border border-black-100 rounded-[0.625rem]
                             flex flex-col shadow-navbar-modal"
 		>

@@ -16,7 +16,12 @@ export default function RightButton({ isMobile = false, isTabletWidth = false, o
 	const pathname = usePathname();
 
 	return (
-		<div className={clsx('flex items-center justify-center', isMobile ? ' gap-[18px] ml-auto' : 'gap-6')}>
+		<div
+			className={clsx(
+				'grid grid-cols-[auto_auto] items-center justify-center',
+				isMobile ? ' gap-[18px] ml-auto' : 'gap-6',
+			)}
+		>
 			<NoticeButton />
 			<Suspense>
 				{isMobile ? (
