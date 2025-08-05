@@ -13,7 +13,7 @@ export default function Page() {
 	};
 
 	return (
-		<div className="w-full h-[calc(100dvh-72px)] min-h-150 @mobile:h-dvh overflow-scroll no-scrollbar">
+		<div className="w-full h-dvh min-h-150 overflow-scroll no-scrollbar">
 			<Swiper
 				loop
 				className="w-fit @mobile:w-full h-full"

@@ -12,6 +12,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
 import { isFullScreen } from '@/lib/utils/isFullScreen';
 import RightButtons from '../navbar/right-buttons';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +46,8 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 		}
 	}, [isProfileOpen]);
 
-	if (isFullScreen(pathname)) {
+	const isMobile = useIsMobile();
+	if (isMobile && isFullScreen(pathname)) {
 		return null;
 	}
 
