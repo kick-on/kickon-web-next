@@ -7,6 +7,11 @@ import { usePathname } from 'next/navigation';
 export default function MarginWrapper({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	const isMobileNavbar = !useIsLeftSideVisible();
+	const hasMargin = () => {
+		if (isMobileNavbar && !isFullScreen(pathname)) return true;
+		if (isMobileNavbar && isFullScreen(pathname)) return false;
+		if (!isMobileNavbar) return false;
+	};
 
-	return <div className={isMobileNavbar && !isFullScreen(pathname) ? 'mt-16' : ''}>{children}</div>;
+	return <div className={hasMargin() ? 'mt-16' : ''}>{children}</div>;
 }

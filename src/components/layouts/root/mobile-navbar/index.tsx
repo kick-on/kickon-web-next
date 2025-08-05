@@ -46,6 +46,7 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 		}
 	}, [isProfileOpen]);
 
+	// 모바일 화면에서만 내비게이션바 감춤
 	const isMobile = useIsMobile();
 	if (isMobile && isFullScreen(pathname)) {
 		return null;

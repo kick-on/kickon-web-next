@@ -1,18 +1,26 @@
 'use client';
 
 import Player from '@/components/features/halftime/player';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import clsx from 'clsx';
 import { useState } from 'react';
 import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
 	const [gobalMute, setGlobalMute] = useState(true);
+	const isMobileNavbar = !useIsLeftSideVisible();
 
 	const toggleGlobalMute = () => {
 		setGlobalMute((prev) => !prev);
 	};
 
 	return (
-		<div className="w-full h-dvh min-h-150 overflow-scroll no-scrollbar">
+		<div
+			className={clsx(
+				'w-full min-h-150 overflow-scroll no-scrollbar',
+				isMobileNavbar ? 'h-dvh' : 'h-[calc(100dvh-72px)]',
+			)}
+		>
 			<Swiper
 				cssMode
 				className="w-fit @mobile:w-full h-full"
