@@ -87,7 +87,7 @@ export default function Player({
 	const handleSeekMouseUp = (e: React.SyntheticEvent<HTMLInputElement>) => {
 		const inputTarget = e.target as HTMLInputElement;
 		setPlayerState((prev) => ({ ...prev, seeking: false }));
-		console.log('mouse up');
+
 		if (playerRef.current) {
 			playerRef.current.currentTime = Number.parseFloat(inputTarget.value) * playerRef.current.duration;
 		}
@@ -97,8 +97,6 @@ export default function Player({
 		const player = playerRef.current;
 		// 재생바 조작 중에는 실행되지 않도록 함
 		if (!player || playerState.seeking || !player.buffered?.length) return;
-
-		console.log('onProgress');
 
 		setPlayerState((prev) => ({
 			...prev,
