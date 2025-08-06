@@ -101,12 +101,16 @@ export default function Player({
 
 	return (
 		<div className="relative w-full h-full flex items-center justify-center">
-			<TopButtons globalMuted={globalMuted} toggleGlobalMuted={toggleGlobalMuted} />
-			<FloatingActionButtons />
-			{!isFirstLoad && <PlayButton playing={playing} />}
+			{isCurrentPlayer && (
+				<>
+					<TopButtons globalMuted={globalMuted} toggleGlobalMuted={toggleGlobalMuted} />
+					<FloatingActionButtons />
+					{!isFirstLoad && <PlayButton playing={playing} />}
 
-			{typeof window !== 'undefined' && isCurrentPlayer && (
-				<ControlBar playerRef={playerRef} setPlayerState={setPlayerState} played={played} />
+					{typeof window !== 'undefined' && isCurrentPlayer && (
+						<ControlBar playerRef={playerRef} setPlayerState={setPlayerState} played={played} />
+					)}
+				</>
 			)}
 
 			<div
