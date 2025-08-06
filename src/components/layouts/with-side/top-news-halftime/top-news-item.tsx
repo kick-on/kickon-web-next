@@ -6,9 +6,9 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export type MostReadNewsItemProps = Pick<HotNewsDto, 'pk' | 'title' | 'leagueNameKr' | 'thumbnailUrl'>;
+export type TopNewsItemProps = Pick<HotNewsDto, 'pk' | 'title' | 'leagueNameKr' | 'thumbnailUrl'>;
 
-export default function MostReadNewsItem({ pk, title, leagueNameKr, thumbnailUrl }: MostReadNewsItemProps) {
+export default function TopNewsItem({ pk, title, leagueNameKr, thumbnailUrl }: TopNewsItemProps) {
 	const isDesktop = useIsDesktop();
 
 	return (

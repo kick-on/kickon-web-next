@@ -1,12 +1,12 @@
 'use client';
 
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
-import MostReadNewsItem, { MostReadNewsItemProps } from '../most-read-news-list/most-read-news-item';
+import TopNewsItem, { TopNewsItemProps } from './top-news-item';
 import { useEffect, useState } from 'react';
 import { getHotNews, getNewsList } from '@/services/apis/news/news.api';
 
 export default function TopNews() {
-	const [news, setNews] = useState<MostReadNewsItemProps[] | null>(null);
+	const [news, setNews] = useState<TopNewsItemProps[] | null>(null);
 
 	useEffect(() => {
 		const getNews = async () => {
@@ -37,7 +37,7 @@ export default function TopNews() {
 			{!news ? (
 				<FetchingFailedCard height="28.875rem" marginTop="5.625rem" />
 			) : (
-				news.map((data) => <MostReadNewsItem key={data.pk} {...data} />)
+				news.map((data) => <TopNewsItem key={data.pk} {...data} />)
 			)}
 		</div>
 	);
