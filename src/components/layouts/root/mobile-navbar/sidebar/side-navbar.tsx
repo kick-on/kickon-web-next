@@ -81,7 +81,7 @@ export default function SideNavbar({
 							? recentNews !== null
 								? recentNews.map((news) => (
 										<div key={news?.pk} onClick={onClickButton}>
-											<TopNewsItem {...news} leagueNameKr={news?.team?.leagueNameKr} />
+											<TopNewsItem {...news} leagueNameKr={news?.team?.leagueNameKr || news.category} />
 										</div>
 									))
 								: null
