@@ -4,6 +4,7 @@ import ComponentFrame from '@/components/common/component-frame';
 import TabBar from './tab-bar';
 import { useState } from 'react';
 import TopHalftime from './top-halftime';
+import TopNews from './top-news';
 
 export interface Tab {
 	label: string;
@@ -18,10 +19,10 @@ export default function TopNewsHalftime() {
 	];
 
 	return (
-		<ComponentFrame className="p-4 pb-6">
+		<ComponentFrame className={`p-4 space-y-2.5 ${selectedIndex === 0 ? 'pb-6' : 'pb-0'}`}>
 			<TabBar tabs={tabs} onClick={(i: number) => setSelectedIndex(i)} />
 
-			{selectedIndex === 0 ? <TopHalftime /> : null}
+			{selectedIndex === 0 ? <TopHalftime /> : <TopNews />}
 		</ComponentFrame>
 	);
 }

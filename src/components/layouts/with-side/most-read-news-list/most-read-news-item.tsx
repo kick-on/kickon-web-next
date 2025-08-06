@@ -14,7 +14,10 @@ export default function MostReadNewsItem({ pk, title, leagueNameKr, thumbnailUrl
 	return (
 		<Link
 			href={`/news/${pk}`}
-			className={clsx('grid grid-cols-[auto_1fr] gap-2 border-black-200', isDesktop ? 'border-t p-4' : 'border-0 p-0')}
+			className={clsx(
+				'grid grid-cols-[auto_1fr] gap-2 border-black-200',
+				isDesktop ? 'not-first:border-t py-4' : 'border-0 p-0',
+			)}
 		>
 			<Image
 				width={80}

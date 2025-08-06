@@ -2,7 +2,7 @@ import Preview from '@/components/features/halftime/preview';
 
 export default function TopHalftime() {
 	return (
-		<div className="grid grid-cols-2 grid-rows-2 gap-2.5 mt-2.5">
+		<div className="grid grid-cols-2 grid-rows-2 gap-2.5">
 			{[1, 2, 3, 4].map((i) => (
 				<div key={i} className="relative rounded-lg overflow-hidden">
 					<div
