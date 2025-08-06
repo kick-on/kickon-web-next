@@ -396,6 +396,12 @@
 		font-weight: var(--font-weight-regular);
 	}
 
+	.button6-semibold {
+		font-size: var(--text-10);
+		font-weight: var(--font-weight-semibold);
+		line-height: 10px;
+	}
+
 	.button6-regular {
 		font-size: var(--text-10);
 		font-weight: var(--font-weight-regular);

@@ -69,7 +69,7 @@ const MobileToolBar = ({
 
 	return (
 		<>
-			<div className="min-w-[311px] bg-black-100 border border-b-0 border-black-300 p-1.5 h-11.5 rounded-tl-lg rounded-tr-lg">
+			<div className="w-full bg-black-100 border border-b-0 border-black-300 p-1.5 h-11.5 rounded-tl-lg rounded-tr-lg">
 				<div className="flex items-center">
 					<HeadingDropdown
 						selectedOption={selectedOption}

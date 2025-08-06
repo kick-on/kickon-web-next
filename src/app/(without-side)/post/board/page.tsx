@@ -7,8 +7,6 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
-import { trimTextWithoutSpaces } from '@/lib/utils/trimTextWithoutSpaces';
-import useIsMobile from '@/lib/hooks/useIsMobile';
 import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
@@ -16,7 +14,6 @@ import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
 
 export default function Page() {
 	const router = useRouter();
-	const isMobile = useIsMobile();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
@@ -181,8 +178,14 @@ export default function Page() {
 								height={16}
 							/>
 						)}
-						<div className={`${selectedOption.label === '탭 선택하기' ? 'text-black-600' : 'text-black-900'}`}>
-							{isMobile ? trimTextWithoutSpaces(selectedOption.label) : selectedOption.label}
+						<div
+							className={clsx(
+								'truncate block',
+								`${selectedOption.label === '탭 선택하기' ? 'text-black-600' : 'text-black-900'}`,
+							)}
+							title={selectedOption.label}
+						>
+							{selectedOption.label}
 						</div>
 					</div>
 					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
@@ -208,7 +211,9 @@ export default function Page() {
 											height={16}
 										/>
 									)}
-									<span>{isMobile ? trimTextWithoutSpaces(option.label) : option.label}</span>
+									<span className="truncate block" title={option.label}>
+										{option.label}
+									</span>
 								</div>
 							</div>
 						))}

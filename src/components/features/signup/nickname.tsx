@@ -37,7 +37,7 @@ export default function Nickname({
 				/>
 				{nickname && (
 					<button className="absolute top-1/2 -translate-y-1/2 right-4" onClick={handleXbuttonClick}>
-						<Image width={18} height={18} src={'/x.svg'} alt="닉네임 전체 삭제" />
+						<Image width={18} height={18} src={'/x/white.svg'} alt="닉네임 전체 삭제" />
 					</button>
 				)}
 			</div>

@@ -2,15 +2,16 @@
 
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import LoginButton from '../navbar/login-button';
 import Link from 'next/link';
 import clsx from 'clsx';
-import { Suspense, useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Sidebar from './sidebar';
 import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
+import { isFullScreen } from '@/lib/utils/isFullScreen';
+import RightButtons from '../navbar/right-buttons';
 
 export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -44,6 +45,10 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 		}
 	}, [isProfileOpen]);
 
+	if (isFullScreen(pathname)) {
+		return null;
+	}
+
 	return (
 		<>
 			<header className="fixed w-full top-0 z-40 transition-colors ease-out">
@@ -54,9 +59,7 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 					<Link href="/" className="w-auto h-full flex justify-center">
 						<Image src={'/logo/icon-red.svg'} alt="킥온 로고 이미지" width={45} height={36} />
 					</Link>
-					<Suspense>
-						<LoginButton onClickProfile={handleToggleProfile} />
-					</Suspense>
+					<RightButtons isMobile={true} onClickProfile={handleToggleProfile} />
 				</div>
 			</header>
 
