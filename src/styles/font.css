@@ -54,7 +54,7 @@
 	--text-subtitle-02--line-height: 18px;
 	--text-subtitle-02--font-weight: 500;
 
-	/* Body (regular -> body-06-regular??)*/
+	/* Body (regular) */
 	--text-body-01: 24px;
 	--text-body-01--line-height: 24px;
 	--text-body-01--font-weight: 400;
@@ -71,30 +71,16 @@
 	--text-body-04--line-height: 16px;
 	--text-body-04--font-weight: 400;
 
-	--text-body-05-medium: 14px;
-	--text-body-05-medium--line-height: 16px;
-	--text-body-05-medium--font-weight: 500;
+	/* body5,6 24로 lh 통일 (regular가 더 많이 쓰임) */
+	--text-body-05: 14px;
+	--text-body-05--line-height: 24px;
+	--text-body-05--font-weight: 400;
 
-	--text-body-05-regular: 14px;
-	--text-body-05-regular--line-height: 24px;
-	--text-body-05-regular--font-weight: 400;
+	--text-body-06: 13px;
+	--text-body-06--line-height: 24px;
+	--text-body-06--font-weight: 400;
 
-	--text-body-06-medium: 13px;
-	--text-body-06-medium--line-height: 18px;
-	--text-body-06-medium--font-weight: 500;
-
-	--text-body-06-regular: 13px;
-	--text-body-06-regular--line-height: 24px;
-	--text-body-06-regular--font-weight: 400;
-
-	--text-body-06-regular: 13px;
-	--text-body-06-regular--line-height: 20px;
-	--text-body-06-regular--font-weight: 400;
-
-	--text-body-07-medium: 12px;
-	--text-body-07-medium--line-height: 16px;
-	--text-body-07-medium--font-weight: 500;
-
+	/* body7 -> lh 20로 통일! 더 많이 쓰임 */
 	--text-body-07-regular: 12px;
 	--text-body-07-regular--line-height: 20px;
 	--text-body-07-regular--font-weight: 400;
@@ -103,17 +89,19 @@
 	--text-body-08--line-height: 16px;
 	--text-body-08--font-weight: 400;
 
+	/* body6-regular 분리 -> body9 추가 */
+	--text-body-09: 13px;
+	--text-body-09--line-height: 20px;
+	--text-body-09--font-weight: 400;
+
 	/* Button (medium)*/
 	--text-button-01: 18px;
 	--text-button-01--line-height: 24px;
 	--text-button-01--font-weight: 500;
 
-	--text-button-02-lh28: 16px;
-	--text-button-02-lh28--line-height: 28px;
-	--text-button-02-lh28--font-weight: 500;
-
+	/* button2 lh 28로 통일, semibold가 더 많이 쓰임 */
 	--text-button-02: 16px;
-	--text-button-02--line-height: 24px;
+	--text-button-02--line-height: 28px;
 	--text-button-02--font-weight: 500;
 
 	--text-button-03: 15px;
@@ -132,22 +120,14 @@
 	--text-button-06--line-height: 16px;
 	--text-button-06--font-weight: 500;
 
-	/* Captions */
-	--text-caption-01-medium: 12px;
-	--text-caption-01-medium--line-height: var(--lh-normal);
-	--text-caption-01-medium--font-weight: 500;
+	/* Captions (regular) */
+	--text-caption-01: 12px;
+	--text-caption-01--line-height: 16px;
+	--text-caption-01--font-weight: 400;
 
-	--text-caption-01-regular: 12px;
-	--text-caption-01-regular--line-height: 16px;
-	--text-caption-01-regular--font-weight: 400;
-
-	--text-caption-02-medium: 10px;
-	--text-caption-02-medium--line-height: 12px;
-	--text-caption-02-medium--font-weight: 500;
-
-	--text-caption-02-regular: 10px;
-	--text-caption-02-regular--line-height: var(--lh-normal);
-	--text-caption-02-regular--font-weight: 400;
+	--text-caption-02: 10px;
+	--text-caption-02--line-height: var(--lh-normal);
+	--text-caption-02--font-weight: 400;
 
 	/* Navigation (medium)*/
 	--text-nav-01: 18px;
