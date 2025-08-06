@@ -1,33 +1,22 @@
 'use client';
 
 import clsx from 'clsx';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import ReactPlayer from 'react-player';
+import TopButtons from './player-action/top-buttons';
+import FloatingActionButtons from './player-action/floating-action-buttons';
+import PlayButton from './player-action/play-button';
+import ControlBar from './player-action/control-bar';
 
-const actionButtons = [
-	{
-		label: '킥',
-		value: '',
-		src: '/kick/fill-none.svg',
-	},
-	// {
-	// 	label: '댓글',
-	//	value:'',
-	// 	src: '/comment.svg',
-	// },
-	{
-		label: '공유',
-		value: '공유',
-		src: '/share.svg',
-	},
-	{
-		label: '본문',
-		value: '본문',
-		src: '/paper.svg',
-	},
-];
+export interface PlayerAttribute {
+	playing: boolean;
+	seeking: boolean;
+	loaded: number;
+	played: number;
+	loadedSeconds: number;
+	playedSeconds: number;
+	duration: number;
+}
 
 export default function Player({
 	src,
@@ -40,10 +29,7 @@ export default function Player({
 	globalMuted: boolean;
 	toggleGlobalMuted: () => void;
 }) {
-	const router = useRouter();
-
 	const playerRef = useRef(null);
-	const isS3Video = playerRef.current instanceof HTMLVideoElement;
 	const [isLoading, setIsLoading] = useState(true);
 
 	const setPlayerRef = useCallback((player: HTMLVideoElement) => {
@@ -52,7 +38,7 @@ export default function Player({
 		setIsLoading(false);
 	}, []);
 
-	const [playerState, setPlayerState] = useState({
+	const [playerState, setPlayerState] = useState<PlayerAttribute>({
 		playing: isCurrentPlayer,
 		seeking: false,
 		loaded: 0,
@@ -62,35 +48,19 @@ export default function Player({
 		duration: 0,
 	});
 
-	// 재생 및 정지
+	// 슬라이드 변경에 따라 playing 초기값 조작
+	useEffect(() => {
+		setPlayerState((prev) => ({ ...prev, playing: isCurrentPlayer }));
+	}, [isCurrentPlayer]);
+
+	// 초기 렌더링 여부에 따라 재생 버튼 조건부 렌더링
 	const [isFirstLoad, setIsFirstLoad] = useState(true);
 
 	const togglePlay = () => {
 		if (isFirstLoad) {
-			// 영상 초기 렌더링 시에 매번 정지 버튼이 나타나지 않도록
-			// 초기 렌더링 여부에 따라 정지 버튼 조건부 렌더링
 			setIsFirstLoad(false);
 		}
 		setPlayerState((prev) => ({ ...prev, playing: !prev.playing }));
-	};
-
-	// handleSeek* - 재생바 조작 관련 이벤트 핸들러
-	const handleSeekMouseDown = () => {
-		setPlayerState((prev) => ({ ...prev, seeking: true }));
-	};
-
-	const handleSeekChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
-		const inputTarget = e.target as HTMLInputElement;
-		setPlayerState((prev) => ({ ...prev, played: Number.parseFloat(inputTarget.value) }));
-	};
-
-	const handleSeekMouseUp = (e: React.SyntheticEvent<HTMLInputElement>) => {
-		const inputTarget = e.target as HTMLInputElement;
-		setPlayerState((prev) => ({ ...prev, seeking: false }));
-
-		if (playerRef.current) {
-			playerRef.current.currentTime = Number.parseFloat(inputTarget.value) * playerRef.current.duration;
-		}
 	};
 
 	const handleProgress = () => {
@@ -127,95 +97,18 @@ export default function Player({
 		setPlayerState((prev) => ({ ...prev, duration: player.duration }));
 	};
 
-	// 슬라이드 변경에 따라 playing 초기값 조작
-	useEffect(() => {
-		setPlayerState((prev) => ({ ...prev, playing: isCurrentPlayer }));
-	}, [isCurrentPlayer]);
-
-	// 재생된 영역(primary-900) 커스텀 로직
-	const sliderRef = useRef<HTMLInputElement | null>(null);
-
-	useEffect(() => {
-		if (sliderRef.current) {
-			sliderRef.current.style.setProperty('--track-width', `${playerState.played * 100}%`);
-		}
-	}, [playerState.played]);
-
 	const { playing, played } = playerState;
 
 	return (
 		<div className="relative w-full h-full flex items-center justify-center">
-			{/* 상단 액션 버튼 */}
-			<div className="absolute z-15 top-4 left-4 right-4 flex justify-between items-center">
-				<button onClick={() => router.back()} className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full">
-					<Image src={'/chevron/right-white.svg'} alt="뒤로가기" width={24} height={24} className="rotate-180" />
-				</button>
-				<button onClick={toggleGlobalMuted} className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full">
-					<Image
-						src={globalMuted ? '/mute.svg' : '/volume.svg'}
-						alt={globalMuted ? '소리' : '음소거'}
-						width={24}
-						height={24}
-					/>
-				</button>
-			</div>
+			<TopButtons globalMuted={globalMuted} toggleGlobalMuted={toggleGlobalMuted} />
+			<FloatingActionButtons />
+			{!isFirstLoad && <PlayButton playing={playing} />}
 
-			{/* 하단 액션 버튼 */}
-			<div
-				className="absolute z-15 py-6 px-3 flex flex-col gap-8 rounded-lg shadow-calendar
-					desktop:border desktop:border-black-200
-					desktop:bg-black-000/20 desktop:bottom-24 desktop:-right-20
-					bg-black-900/10 bottom-8 tablet:right-4 @mobile:right-3"
-			>
-				{actionButtons.map((button) => (
-					<button
-						key={button.src}
-						className="px-2 flex flex-col gap-1.5 items-center body7-medium text-black-600
-							tablet:brightness-0 tablet:invert @mobile:brightness-0 @mobile:invert"
-					>
-						<Image src={button.src} alt={button.label} width={24} height={24} />
-						<span>{button.value || '1.2천'}</span>
-					</button>
-				))}
-			</div>
-
-			{/* 재생 버튼 */}
-			{!isFirstLoad && (
-				<div
-					className={`w-18 h-18 flex items-center justify-center pointer-events-none
-					absolute z-15 top-1/2 left-1/2 -translate-1/2 rounded-full bg-black-900/30
-					${playing ? 'animate-pulse-scale-out' : 'animate-pulse-scale-in'}`}
-				>
-					<Image src={'/play.svg'} alt="재생" width={36} height={36} />
-				</div>
+			{typeof window !== 'undefined' && isCurrentPlayer && (
+				<ControlBar playerRef={playerRef} setPlayerState={setPlayerState} played={played} />
 			)}
 
-			{/* 재생바 */}
-			{typeof window !== 'undefined' && isS3Video && isCurrentPlayer && (
-				<input
-					ref={sliderRef}
-					type="range"
-					min={0}
-					max={0.999999}
-					step="any"
-					value={played}
-					onMouseDown={handleSeekMouseDown}
-					onChange={handleSeekChange}
-					onMouseUp={handleSeekMouseUp}
-					onTouchStart={handleSeekMouseDown}
-					onTouchEnd={handleSeekMouseUp}
-					className="appearance-none absolute z-15 bottom-2 left-0 w-full
-						cursor-pointer [&::-webkit-slider-thumb]:appearance-none
-						[&::-webkit-slider-thumb]:h-1 [&::-webkit-slider-thumb]:w-2 
-						[&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-900
-						[&::-webkit-slider-runnable-track]:h-1
-						[&::-webkit-slider-runnable-track]:bg-black-400/40
-						before:content-[''] before:absolute before:top-0 before:left-0 before:h-1
-						before:w-[var(--track-width)] before:bg-primary-900 before:rounded-r-full"
-				/>
-			)}
-
-			{/* 플레이어 */}
 			<div
 				role="button"
 				onClick={togglePlay}
@@ -242,15 +135,6 @@ export default function Player({
 						},
 					}}
 				/>
-
-				{/* 백그라운드(스켈레톤) */}
-				{!playerRef.current && (
-					<div
-						className="absolute top-0 left-0 w-full h-full bg-black-300 rounded-lg
-						before:absolute before:z-15 before:top-0 before:right-0 before:bottom-0 before:left-0
-						before:content-[''] before:bg-black-150 before:rounded-lg before:animate-pulse"
-					/>
-				)}
 			</div>
 		</div>
 	);
