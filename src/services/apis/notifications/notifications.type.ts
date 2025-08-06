@@ -6,7 +6,7 @@ export interface UnreadNotificationsDto {
 // 안 읽음 알림 개수 조회 응답
 export type GetUnreadNotificationsResponse = SuccessResponse<UnreadNotificationsDto>;
 
-export interface NotificationListItem {
+export interface NotificationItem {
 	pk: number;
 	type: string;
 	content: string;
@@ -16,4 +16,4 @@ export interface NotificationListItem {
 	absoluteTime: string;
 }
 // 알림 목록 조회 응답
-export type GetNotificationListResponse = SuccessResponse<NotificationListItem[]>;
+export type GetNotificationListResponse = SuccessResponse<NotificationItem[]>;
