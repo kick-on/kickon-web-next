@@ -3,12 +3,17 @@
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
 	const [globalMute, setGlobalMute] = useState(true);
-	const isMobileNavbar = !useIsLeftSideVisible();
+	const [isMobileNavbar, setIsMobileNavber] = useState(false);
+	const isLeftSideVisible = !useIsLeftSideVisible();
+
+	useEffect(() => {
+		setIsMobileNavber(isLeftSideVisible);
+	}, [isLeftSideVisible]);
 
 	const toggleGlobalMute = () => {
 		setGlobalMute((prev) => !prev);
