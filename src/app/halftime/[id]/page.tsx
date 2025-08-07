@@ -7,7 +7,7 @@ import { useState } from 'react';
 import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
-	const [gobalMute, setGlobalMute] = useState(true);
+	const [globalMute, setGlobalMute] = useState(true);
 	const isMobileNavbar = !useIsLeftSideVisible();
 
 	const toggleGlobalMute = () => {
@@ -44,7 +44,7 @@ export default function Page() {
 													? 'https://www.youtube.com/watch?v=-NMmHBIijKg'
 													: 'https://www.youtube.com/shorts/KrMk5Ew-Vus'
 									}
-									globalMuted={gobalMute}
+									globalMuted={globalMute}
 									toggleGlobalMuted={toggleGlobalMute}
 								/>
 							</div>
