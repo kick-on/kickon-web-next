@@ -3,15 +3,16 @@
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { isFullScreen } from '@/lib/utils/isFullScreen';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function MarginWrapper({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
 	const isMobileNavbar = !useIsLeftSideVisible();
-	const hasMargin = () => {
-		if (isMobileNavbar && !isFullScreen(pathname)) return true;
-		if (isMobileNavbar && isFullScreen(pathname)) return false;
-		if (!isMobileNavbar) return false;
-	};
+	const [hasMargin, setHasMargin] = useState(false);
 
-	return <div className={hasMargin() ? 'mt-16' : ''}>{children}</div>;
+	useEffect(() => {
+		setHasMargin(isMobileNavbar && !isFullScreen(pathname));
+	}, [pathname, isMobileNavbar]);
+
+	return <div className={hasMargin ? 'mt-16' : ''}>{children}</div>;
 }
