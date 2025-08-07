@@ -1,5 +1,6 @@
 import ComponentFrame from '@/components/common/component-frame';
 import Preview from '@/components/features/halftime/preview';
+import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -35,10 +36,10 @@ export default function Page() {
 							{data.title.length > 27 ? data.title.slice(0, 27) + '...' : data.title}
 						</h3>
 						<div className="body5-regular text-black-600 flex gap-2 @mobile:text-12 items-center">
-							<span>조회수 {data.views}만 회</span>
+							<span>조회수 {formatNumberByUnit(data.views)}회</span>
 							<div className="h-3 w-px bg-black-600" />
 							<span className="flex gap-1.5 items-center">
-								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {data.kick}천
+								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {formatNumberByUnit(data.kick)}
 							</span>
 						</div>
 					</Link>

@@ -1,6 +1,7 @@
 'use client';
 
 import Preview from '@/components/features/halftime/preview';
+import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
 import { getTodaysHalftime } from '@/services/apis/shorts/shorts.api';
 import { GetTodaysHalftimeDto } from '@/services/apis/shorts/shorts.type';
 import Link from 'next/link';
@@ -34,7 +35,7 @@ export default function TopHalftime() {
 							background: `linear-gradient(180deg, rgba(255, 255, 255, 0.00) 0%, rgba(128, 128, 128, 0.15) 45.22%, rgba(0, 0, 0, 0.30) 100%)`,
 						}}
 					>
-						조회수 {viewCount}회
+						조회수 {formatNumberByUnit(viewCount)}회
 					</div>
 					<Preview src={s3Key} />
 				</Link>

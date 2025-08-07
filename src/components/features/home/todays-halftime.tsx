@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { getTodaysHalftime } from '@/services/apis/shorts/shorts.api';
 import { useEffect, useState } from 'react';
 import { GetTodaysHalftimeDto } from '@/services/apis/shorts/shorts.type';
+import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
 
 export default function TodaysHalftime() {
 	const [videos, setVideos] = useState<GetTodaysHalftimeDto[]>([]);
@@ -58,10 +59,10 @@ export default function TodaysHalftime() {
 							{title.length > 27 ? title.slice(0, 27) + '...' : title}
 						</h3>
 						<div className="body5-regular text-black-600 flex gap-2 @mobile:text-12 items-center">
-							<span>조회수 {viewCount}회</span>
+							<span>조회수 {formatNumberByUnit(viewCount)}회</span>
 							<div className="h-3 w-px bg-black-600" />
 							<span className="flex gap-1.5 items-center">
-								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {kickCount}
+								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {formatNumberByUnit(kickCount)}
 							</span>
 						</div>
 					</Link>
