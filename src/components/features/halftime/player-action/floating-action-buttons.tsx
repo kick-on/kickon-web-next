@@ -30,7 +30,7 @@ export default function FloatingActionButtons() {
 		<div
 			className="absolute z-15 py-6 px-3 flex flex-col gap-8 rounded-lg shadow-calendar
     desktop:border desktop:border-black-200
-    desktop:bg-black-000/20 desktop:bottom-24 desktop:-right-20
+    desktop:bg-black-000/20 desktop:bottom-0 desktop:-right-20
     bg-black-900/10 bottom-8 tablet:right-4 @mobile:right-3"
 		>
 			{actionButtons.map((button) => (
