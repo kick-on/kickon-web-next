@@ -1,8 +1,8 @@
 'use client';
 
-import { dummyNotices } from '@/app/(mobile-only)/notice/page';
 import NoticeHeader from '@/components/features/notice/notice-header';
 import NoticeItem from '@/components/features/notice/notice-item';
+import { dummyNotices } from '@/lib/constants/dummyNotices';
 import Image from 'next/image';
 
 // TODO: 알림을 확인한 후 bg 컬러 변경
