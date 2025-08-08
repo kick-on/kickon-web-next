@@ -1,8 +1,8 @@
 'use client';
 
-import { dummyNotices } from '@/app/(mobile-only)/notice/page';
 import NoticeHeader from '@/components/features/notice/notice-header';
 import NoticeItem from '@/components/features/notice/notice-item';
+import { dummyNotices } from '@/lib/constants/dummyNotices';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
