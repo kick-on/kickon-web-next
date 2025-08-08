@@ -71,16 +71,14 @@
 	--text-body-04--line-height: 16px;
 	--text-body-04--font-weight: 400;
 
-	/* body5,6 24로 lh 통일 (regular가 더 많이 쓰임) */
 	--text-body-05: 14px;
-	--text-body-05--line-height: 24px;
+	--text-body-05--line-height: 16px;
 	--text-body-05--font-weight: 400;
 
 	--text-body-06: 13px;
-	--text-body-06--line-height: 24px;
+	--text-body-06--line-height: 20px;
 	--text-body-06--font-weight: 400;
 
-	/* body7 -> lh 20로 통일! 더 많이 쓰임 */
 	--text-body-07-regular: 12px;
 	--text-body-07-regular--line-height: 20px;
 	--text-body-07-regular--font-weight: 400;
@@ -89,17 +87,11 @@
 	--text-body-08--line-height: 16px;
 	--text-body-08--font-weight: 400;
 
-	/* body6-regular 분리 -> body9 추가 */
-	--text-body-09: 13px;
-	--text-body-09--line-height: 20px;
-	--text-body-09--font-weight: 400;
-
 	/* Button (medium)*/
 	--text-button-01: 18px;
 	--text-button-01--line-height: 24px;
 	--text-button-01--font-weight: 500;
 
-	/* button2 lh 28로 통일, semibold가 더 많이 쓰임 */
 	--text-button-02: 16px;
 	--text-button-02--line-height: 28px;
 	--text-button-02--font-weight: 500;
