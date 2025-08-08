@@ -7,7 +7,7 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
-import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
@@ -118,9 +118,9 @@ export default function Page() {
 		}
 		if (!isFormValid) return;
 
-		const usedImageKeys = extractImageFilenamesFromContent(body.trim());
-
-		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
+		const usedImageKeys = extractMediaFilenamesFromContent(body.trim(), 'img');
+		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
+		const embeddedLink = extractEmbeddedLinks(body.trim());
 
 		if (isEditMode) {
 			const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
@@ -135,6 +135,8 @@ export default function Page() {
 				contents: body.trim(),
 				hasImage,
 				usedImageKeys,
+				usedVideoKeys,
+				embeddedLink,
 				team: finalTeam,
 				isPinned: isPinned,
 			};
@@ -147,7 +149,9 @@ export default function Page() {
 				title: title.trim(),
 				contents: body.trim(),
 				hasImage,
-				usedImageKeys,
+				...(usedImageKeys.length > 0 && { usedImageKeys }),
+				...(usedVideoKeys.length > 0 && { usedVideoKeys }),
+				...(embeddedLink.length > 0 && { embeddedLink }),
 				team: selectedOption.value ? Number(selectedOption.value) : null,
 				isPinned: isPinned,
 			};
