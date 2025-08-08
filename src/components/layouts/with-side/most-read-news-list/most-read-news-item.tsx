@@ -1,6 +1,6 @@
 'use client';
 
-import useIsDesktop from '@/lib/hooks/useIsDesktop';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { HotNewsDto } from '@/services/apis/news/news.type';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -9,12 +9,15 @@ import Link from 'next/link';
 export type MostReadNewsItemProps = Pick<HotNewsDto, 'pk' | 'title' | 'leagueNameKr' | 'thumbnailUrl'>;
 
 export default function MostReadNewsItem({ pk, title, leagueNameKr, thumbnailUrl }: MostReadNewsItemProps) {
-	const isDesktop = useIsDesktop();
+	const isLeftSideVisible = useIsLeftSideVisible();
 
 	return (
 		<Link
 			href={`/news/${pk}`}
-			className={clsx('grid grid-cols-[auto_1fr] gap-2 border-black-200', isDesktop ? 'border-t p-4' : 'border-0 p-0')}
+			className={clsx(
+				'grid grid-cols-[auto_1fr] gap-2 border-black-200',
+				isLeftSideVisible ? 'border-t p-4' : 'border-0 p-0',
+			)}
 		>
 			<Image
 				width={80}
