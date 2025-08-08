@@ -55,18 +55,21 @@ export default function SideNavbar({
 	return (
 		<div className="flex flex-col justify-between h-full">
 			<nav className="flex flex-col gap-2">
-				{navButtons.map((button) => (
-					<Link
-						onClick={() => setTimeout(onClickButton, 200)}
-						key={button.content}
-						href={button.href}
-						className={clsx('w-[calc(100%+32px)] -ml-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
-							'text-primary-900 button2-semibold': button.isActive,
-						})}
-					>
-						{button.content}
-					</Link>
-				))}
+				{navButtons.map(
+					(button) =>
+						button && (
+							<Link
+								onClick={() => setTimeout(onClickButton, 200)}
+								key={button.content}
+								href={button.href}
+								className={clsx('w-[calc(100%+32px)] -ml-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
+									'text-primary-900 button2-semibold': button.isActive,
+								})}
+							>
+								{button.content}
+							</Link>
+						),
+				)}
 			</nav>
 
 			{hotNews !== null && (

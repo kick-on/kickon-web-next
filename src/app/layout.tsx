@@ -7,6 +7,7 @@ import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 import MarginWrapper from '@/components/layouts/root/margin-wrapper';
 import Navbar from '@/components/layouts/root/navbar';
+import PaddingWrapper from '@/components/layouts/root/padding-wrapper';
 import NotificationInitializer from '@/components/layouts/root/navbar/notification-initializer';
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<LoginPortal />
 					<MarginWrapper>
 						<Banner />
-						<div className="pb-[9.375rem]">{children}</div>
+						<PaddingWrapper>{children}</PaddingWrapper>
 						<Footer />
 						<MinWidth />
 					</MarginWrapper>

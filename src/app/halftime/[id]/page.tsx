@@ -1,48 +1,59 @@
 'use client';
 
 import Player from '@/components/features/halftime/player';
-import { Keyboard, Mousewheel } from 'swiper/modules';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import clsx from 'clsx';
+import { useEffect, useState } from 'react';
 import { SwiperSlide, Swiper } from 'swiper/react';
 
 export default function Page() {
+	const [globalMute, setGlobalMute] = useState(true);
+	const [isMobileNavbar, setIsMobileNavber] = useState(false);
+	const isLeftSideVisible = !useIsLeftSideVisible();
+
+	useEffect(() => {
+		setIsMobileNavber(isLeftSideVisible);
+	}, [isLeftSideVisible]);
+
+	const toggleGlobalMute = () => {
+		setGlobalMute((prev) => !prev);
+	};
+
 	return (
-		<div className="w-full h-[calc(100dvh-72px)] @mobile:h-dvh overflow-scroll no-scrollbar">
+		<div
+			className={clsx(
+				'w-full min-h-150 overflow-scroll no-scrollbar',
+				isMobileNavbar ? 'h-dvh' : 'h-[calc(100dvh-72px)]',
+			)}
+		>
 			<Swiper
-				loop
-				className="w-fit @mobile:w-full h-full"
+				cssMode
+				className="w-full h-full"
 				direction="vertical"
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
-				modules={[Mousewheel, Keyboard]}
-				mousewheel={{
-					enabled: true,
-					releaseOnEdges: true,
-					forceToAxis: true,
-					thresholdDelta: 15,
-					sensitivity: 1,
-				}}
-				keyboard={{
-					enabled: true,
-					onlyInViewport: true,
-				}}
 			>
 				{[1, 2, 3, 4].map((i) => (
-					<SwiperSlide
-						key={i}
-						className="bg-black-300 w-auto h-full aspect-[2/3] @mobile:h-auto @mobile:w-full rounded-lg overflow-hidden"
-					>
-						{({ isActive }) =>
-							i === 1 ? (
-								<Player index={i} autoplay={isActive} src="/video/test1.mp4" />
-							) : i === 2 ? (
-								<Player index={i} autoplay={isActive} src="/video/test2.mp4" />
-							) : i === 3 ? (
-								<Player index={i} autoplay={isActive} src="https://www.youtube.com/watch?v=-NMmHBIijKg" />
-							) : (
-								<Player index={i} autoplay={isActive} src="https://www.youtube.com/shorts/KrMk5Ew-Vus" />
-							)
-						}
+					<SwiperSlide key={i} className="desktop:px-22 w-full">
+						{({ isActive }) => (
+							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
+								<Player
+									isCurrentPlayer={isActive}
+									src={
+										i === 1
+											? '/video/test1.mp4'
+											: i === 2
+												? '/video/test2.mp4'
+												: i === 3
+													? 'https://www.youtube.com/watch?v=-NMmHBIijKg'
+													: 'https://www.youtube.com/shorts/KrMk5Ew-Vus'
+									}
+									globalMuted={globalMute}
+									toggleGlobalMuted={toggleGlobalMute}
+								/>
+							</div>
+						)}
 					</SwiperSlide>
 				))}
 			</Swiper>

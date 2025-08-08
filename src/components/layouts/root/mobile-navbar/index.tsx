@@ -12,6 +12,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
 import { isFullScreen } from '@/lib/utils/isFullScreen';
 import RightButtons from '../navbar/right-buttons';
+import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }) {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -45,7 +46,9 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 		}
 	}, [isProfileOpen]);
 
-	if (isFullScreen(pathname)) {
+	// 모바일 화면에서만 내비게이션바 감춤
+	const isMobile = useIsMobile();
+	if (isMobile && isFullScreen(pathname)) {
 		return null;
 	}
 
