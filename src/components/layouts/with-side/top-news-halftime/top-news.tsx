@@ -5,7 +5,7 @@ import TopNewsItem, { TopNewsItemProps } from './top-news-item';
 
 export default function TopNews({ news }: { news: TopNewsItemProps[] }) {
 	return (
-		<div>
+		<div className="-mx-4">
 			{!news ? (
 				<FetchingFailedCard height="28.875rem" marginTop="5.625rem" />
 			) : (
