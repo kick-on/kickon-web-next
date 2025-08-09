@@ -1,5 +1,7 @@
 import ComponentFrame from '@/components/common/component-frame';
 import PreviewWithTitle from '@/components/features/halftime/preview-with-title';
+import Sorter from '@/components/features/halftime/sorter';
+import { Suspense } from 'react';
 
 const data = {
 	title: '기성용 이적에 역대급 폭발한 FC 서울 팬들 어쩌구저쩌구',
@@ -9,13 +11,20 @@ const data = {
 
 export default function Page() {
 	return (
-		<ComponentFrame className="@mobile:w-full! max-[1440px]:w-[80%]! w-[90%]! max-w-[1360px] mx-auto mt-4 @mobile:mt-0 @mobile:bg-transparent @mobile:border-0">
+		<ComponentFrame
+			className="@mobile:w-full! max-[1440px]:w-[80%]! w-[90%]! max-w-[1360px]
+				mx-auto mt-4 @mobile:mt-0 @mobile:bg-transparent @mobile:border-0
+				px-[7.125rem] max-[1440px]:px-4 space-y-6 py-6"
+		>
+			<Suspense>
+				<Sorter />
+			</Suspense>
+
 			<div
-				className="grid py-6
-					max-[1440px]:px-4 max-[1440px]:grid-cols-4 max-[1440px]:gap-x-3
-					max-[1094px]:px-4 max-[1094px]:grid-cols-3 max-[1094px]:gap-x-3
-					@mobile:px-4 @mobile:grid-cols-2 @mobile:gap-4
-					px-[7.125rem] grid-cols-5 gap-6"
+				className="grid grid-cols-5 gap-6
+						max-[1440px]:grid-cols-4 max-[1440px]:gap-x-3
+						max-[1094px]:grid-cols-3 max-[1094px]:gap-x-3
+						@mobile:grid-cols-2 @mobile:gap-4"
 			>
 				{[1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 11, 22, 33, 44, 55, 66, 77].map((i) => (
 					<PreviewWithTitle
