@@ -127,7 +127,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 			)}
 
-			<h1 className={`title1-bold @mobile:text-2xl ${titleMargin}`}>{data.title}</h1>
+			<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
 			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
