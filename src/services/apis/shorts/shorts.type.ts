@@ -1,7 +1,7 @@
 import { SuccessResponse } from '@/services/config/dto';
 
-// 오늘의 하프타임 조회
-export interface GetTodaysHalftimeDto {
+// common
+export interface BaseHalftimeDto {
 	pk: number;
 	videoUrl: string;
 	usedIn: 'BOARD' | 'NEWS';
@@ -11,4 +11,6 @@ export interface GetTodaysHalftimeDto {
 	kickCount: number;
 	createdAt: string;
 }
-export type GetTodaysHalftimeResponse = SuccessResponse<GetTodaysHalftimeDto[]>;
+
+// 오늘의 하프타임 조회
+export type GetTodaysHalftimeResponse = SuccessResponse<BaseHalftimeDto[]>;

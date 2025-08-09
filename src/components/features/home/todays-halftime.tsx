@@ -1,16 +1,15 @@
 'use client';
 
 import Image from 'next/image';
-import Preview from '../halftime/preview';
 import ComponentFrame from '../../common/component-frame';
 import Link from 'next/link';
 import { getTodaysHalftime } from '@/services/apis/shorts/shorts.api';
 import { useEffect, useState } from 'react';
-import { GetTodaysHalftimeDto } from '@/services/apis/shorts/shorts.type';
-import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
+import { BaseHalftimeDto } from '@/services/apis/shorts/shorts.type';
+import PreviewWithTitle from '../halftime/preview-with-title';
 
 export default function TodaysHalftime() {
-	const [videos, setVideos] = useState<GetTodaysHalftimeDto[]>([]);
+	const [videos, setVideos] = useState<BaseHalftimeDto[]>([]);
 
 	useEffect(() => {
 		const getVideos = async () => {
@@ -43,25 +42,9 @@ export default function TodaysHalftime() {
 				</Link>
 			</header>
 
-			{/* TODO: Link 전체를 Preview로 컴포넌트화 */}
 			<div className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-4">
-				{videos.map(({ pk, videoUrl, title, viewCount, kickCount }) => (
-					<Link key={pk} href={`/halftime/${pk}`} className="w-full h-auto aspect-[13/25]">
-						<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
-							<Preview src={videoUrl} />
-						</div>
-
-						<h3 className="button2-medium my-2 @mobile:mb-1.5 @mobile:text-14">
-							{title.length > 27 ? title.slice(0, 27) + '...' : title}
-						</h3>
-						<div className="body5-regular text-black-600 flex gap-2 @mobile:text-12 items-center">
-							<span>조회수 {formatNumberByUnit(viewCount)}회</span>
-							<div className="h-3 w-px bg-black-600" />
-							<span className="flex gap-1.5 items-center">
-								<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {formatNumberByUnit(kickCount)}
-							</span>
-						</div>
-					</Link>
+				{videos.map((video) => (
+					<PreviewWithTitle key={video.pk} {...video} />
 				))}
 			</div>
 		</ComponentFrame>
