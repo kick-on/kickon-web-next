@@ -81,6 +81,7 @@ export default function Stat() {
 
 					{!isMobile && (
 						<MostHitTeam
+							totalParticipationCount={statData.totalParticipationCount}
 							teamName={statData.mostHitTeamName}
 							teamLogo={statData.mostHitTeamLogoUrl}
 							teamColor={statData.mostHitTeamColor ?? 'var(--color-primary-900)'}
@@ -92,6 +93,7 @@ export default function Stat() {
 			{isMobile && (
 				<div className="mt-6">
 					<MostHitTeam
+						totalParticipationCount={statData.totalParticipationCount}
 						teamName={statData.mostHitTeamName}
 						teamLogo={statData.mostHitTeamLogoUrl}
 						teamColor={statData.mostHitTeamColor ?? 'var(--color-primary-900)'}
