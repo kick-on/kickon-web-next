@@ -1,12 +1,18 @@
 'use client';
 
-import useIsDesktop from '@/lib/hooks/useIsDesktop';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { isFullScreen } from '@/lib/utils/isFullScreen';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 export default function MarginWrapper({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
-	const isDesktop = useIsDesktop();
+	const isMobileNavbar = !useIsLeftSideVisible();
+	const [hasMargin, setHasMargin] = useState(false);
 
-	return <div className={isDesktop || isFullScreen(pathname) ? '' : 'mt-16'}>{children}</div>;
+	useEffect(() => {
+		setHasMargin(isMobileNavbar && !isFullScreen(pathname));
+	}, [pathname, isMobileNavbar]);
+
+	return <div className={hasMargin ? 'mt-16' : ''}>{children}</div>;
 }

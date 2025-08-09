@@ -29,6 +29,7 @@ export default function Navbar() {
 		{ href: '/gamble', content: '승부예측', isActive: pathname.split('/').includes('gamble') },
 		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
 		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
+		{ href: '/halftime', content: '하프타임', isActive: pathname.split('/').includes('halftime') },
 		!isLeftSideBarVisible || !isDesktop
 			? { href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' }
 			: null,
@@ -40,7 +41,8 @@ export default function Navbar() {
 
 	if (!isDesktop === null) return null;
 
-	return !isDesktop ? (
+	// 모바일, 태블릿, 데스크톱에서 width가 충분히 작은 경우 MobileNavbar
+	return !isDesktop || !isLeftSideBarVisible ? (
 		<MobileNavbar navButtons={navButtons} />
 	) : (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-30 transition-colors ease-out`}>
