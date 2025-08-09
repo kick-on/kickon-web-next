@@ -5,7 +5,11 @@ import Link from 'next/link';
 
 export default function PreviewWithoutTitle({ pk, videoUrl, viewCount }: Partial<BaseHalftimeDto>) {
 	return (
-		<Link key={pk} href={`/halftime/${pk}`} className="relative rounded-lg overflow-hidden">
+		<Link
+			key={pk}
+			href={`/halftime/${pk}`}
+			className="relative rounded-lg overflow-hidden w-full h-auto aspect-[13/20] "
+		>
 			<div
 				className="absolute z-15 bottom-0 w-full p-3 pt-5 text-black-000 body5-medium"
 				style={{
