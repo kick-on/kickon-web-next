@@ -14,7 +14,7 @@ export default function PreviewWithTitle({
 	kickCount,
 }: Pick<BaseHalftimeDto, 'pk' | 'videoUrl' | 'title' | 'viewCount' | 'kickCount'>) {
 	return (
-		<Link key={pk} href={`/halftime/${pk}`} className="w-full h-auto aspect-[13/25]">
+		<Link key={pk} href={`/halftime/${pk}`}>
 			<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
 				<Preview src={videoUrl} />
 			</div>
