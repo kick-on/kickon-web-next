@@ -68,10 +68,9 @@ export default function Page() {
 
 	const handleCompleteButtonClick = () => {
 		const body: UpdateUserInfoRequest = {
-			profileImageUrl,
-			nickname,
+			profileImageUrl: profileImageUrl === currentUserInfo?.profileImageUrl ? undefined : profileImageUrl,
+			nickname: nickname === currentUserInfo?.nickname ? undefined : nickname,
 			teams: !teamPks || teamPks.length === 0 ? undefined : teamPks, // 응원하는 팀이 없는 경우 team을 undefined로
-			// league: league.pk, 현재 서버에서 league를 처리하지 않음
 		};
 
 		editUserInfo(body);
@@ -86,10 +85,9 @@ export default function Page() {
 			alert(response);
 			setIsDuplicated(false);
 		} else {
-			setCurrentUserInfo({ ...currentUserInfo, nickname, profileImageUrl });
+			setCurrentUserInfo({ ...currentUserInfo, nickname, profileImageUrl, favoriteTeams: teams });
 
-			const previousPage = sessionStorage.getItem('previousPage');
-			router.push(previousPage);
+			alert('정상적으로 수정되었습니다.');
 		}
 	};
 

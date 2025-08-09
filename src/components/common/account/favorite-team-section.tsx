@@ -41,7 +41,7 @@ export default function FavoriteTeamSection({
 
 	const [favoriteTeamLeagueMap, setFavoriteTeamLeagueMap] = useState<(TeamLeagueMap | null)[]>([null]);
 	const [selectedTeamIndex, setSelectedTeamIndex] = useState(0);
-	const favoriteTeamCount = favoriteTeamLeagueMap.filter(({ team }) => team.pk !== -1).length;
+	const favoriteTeamCount = favoriteTeamLeagueMap.filter((favorite) => favorite?.team?.pk !== -1).length;
 
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
@@ -59,7 +59,7 @@ export default function FavoriteTeamSection({
 
 	const handleLeagueChange = (selectedLeague: LeagueDto) => {
 		if (!canChangeTeam) {
-			alert('응원팀 변경 불가가');
+			alert('응원팀 변경 불가');
 		}
 
 		// 응원팀이 없는 상태 -> 다른 리그를 선택한 경우
