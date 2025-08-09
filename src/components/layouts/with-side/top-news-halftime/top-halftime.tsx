@@ -23,12 +23,8 @@ export default function TopHalftime() {
 
 	return (
 		<div className="grid grid-cols-2 grid-rows-2 gap-2.5">
-			{videos.map(({ s3Key, usedIn, referencePk, viewCount }) => (
-				<Link
-					key={s3Key}
-					href={`/halftime/${usedIn.toLocaleLowerCase()}-${referencePk}`}
-					className="relative rounded-lg overflow-hidden"
-				>
+			{videos.map(({ pk, videoUrl, viewCount }) => (
+				<Link key={pk} href={`/halftime/${pk}`} className="relative rounded-lg overflow-hidden">
 					<div
 						className="absolute z-15 bottom-0 w-full p-3 pt-5 text-black-000 body5-medium"
 						style={{
@@ -37,7 +33,7 @@ export default function TopHalftime() {
 					>
 						조회수 {formatNumberByUnit(viewCount)}회
 					</div>
-					<Preview src={s3Key} />
+					<Preview src={videoUrl} />
 				</Link>
 			))}
 		</div>

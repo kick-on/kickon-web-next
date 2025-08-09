@@ -45,14 +45,10 @@ export default function TodaysHalftime() {
 
 			{/* TODO: Link 전체를 Preview로 컴포넌트화 */}
 			<div className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-4">
-				{videos.map(({ s3Key, usedIn, referencePk, title, viewCount, kickCount }) => (
-					<Link
-						key={s3Key}
-						href={`/halftime/${usedIn.toLocaleLowerCase()}-${referencePk}`}
-						className="w-full h-auto aspect-[13/25]"
-					>
+				{videos.map(({ pk, videoUrl, title, viewCount, kickCount }) => (
+					<Link key={pk} href={`/halftime/${pk}`} className="w-full h-auto aspect-[13/25]">
 						<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
-							<Preview src={s3Key} />
+							<Preview src={videoUrl} />
 						</div>
 
 						<h3 className="button2-medium my-2 @mobile:mb-1.5 @mobile:text-14">
