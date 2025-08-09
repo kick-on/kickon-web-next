@@ -110,7 +110,7 @@
 .custom-calendar .focused-today-tile {
 	color: #c00c0b;
 	border: 2px solid #c00c0b !important;
-	background-color: #c00c0b0d;
+	background-color: #c00c0b0d !important;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
 	width: 100%;
@@ -202,7 +202,7 @@
 .custom-calendar-mobile .focused-today-tile {
 	color: #c00c0b;
 	border: 2px solid #c00c0b !important;
-	background-color: #c00c0b0d;
+	background-color: #c00c0b0d !important;
 	border-radius: 8px;
 	padding: 12px 8px 28px 8px;
 	width: 100%;
