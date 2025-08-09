@@ -1,13 +1,17 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useNotificationStore } from '../store/useNotificationStore';
 
 export default function useNotificationSocket(userId: string | null) {
+	const clientRef = useRef<Client | null>(null);
+
 	useEffect(() => {
 		if (!userId) return;
+		// 이미 연결된 경우 방지
+		if (clientRef.current?.connected) return;
 
 		const socket = new SockJS('https://kick-on.kr/ws');
 		const client = new Client({

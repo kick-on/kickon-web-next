@@ -28,6 +28,21 @@ export default function NotificationInitializer() {
 		};
 
 		fetchInitialData();
+
+		// 폴링 (5분마다 unread count 동기화, 장시간 켜져 있어도 서버와 싱크 유지)
+		const interval = setInterval(
+			async () => {
+				try {
+					const unread = await getUnreadNotifications();
+					if (unread) setUnreadCount(unread.data.count);
+				} catch (error) {
+					console.error('unread count 폴링 실패:', error);
+				}
+			},
+			5 * 60 * 1000,
+		);
+
+		return () => clearInterval(interval);
 	}, [currentUserInfo?.id]);
 
 	return null;
