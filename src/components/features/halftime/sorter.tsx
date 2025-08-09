@@ -12,6 +12,7 @@ const options = [
 
 export default function Sorter() {
 	const [selectedSort, setSelectedSort] = useState(options[0].value);
+	const selectedIndex = options.indexOf(options.find((option) => option.value === selectedSort));
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
@@ -25,15 +26,27 @@ export default function Sorter() {
 		}
 	}, [searchParams]);
 
+	const handleOptionClick = (value) => {
+		if (value === selectedSort) return;
+		router.replace(`/halftime?sort=${value}`);
+	};
+
 	return (
-		<div className="bg-black-200 rounded-lg flex w-fit ml-auto">
+		<div className="relative bg-black-200 rounded-lg flex w-fit ml-auto">
+			<div
+				className="absolute top-0 left-0 h-full rounded-lg bg-primary-900 transition-all duration-200 ease-in-out"
+				style={{
+					width: `calc(100% / ${options.length})`,
+					transform: `translateX(calc(${selectedIndex} * 100%))`,
+				}}
+			></div>
 			{options.map(({ label, value }) => (
 				<button
 					key={value}
-					onClick={() => router.replace(`/halftime?sort=${value}`)}
+					onClick={() => handleOptionClick(value)}
 					className={clsx(
-						'px-4 py-1.5 rounded-lg',
-						selectedSort === value ? 'text-black-000 font-semibold bg-primary-900' : 'text-black-500 bg-transparent',
+						'relative z-5 px-4 py-1.5 rounded-lg text-button-02 transition-colors',
+						selectedSort === value ? 'text-black-000 font-semibold' : 'text-black-500',
 					)}
 				>
 					{label}
