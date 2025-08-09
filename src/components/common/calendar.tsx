@@ -77,10 +77,10 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 		// 범위 체크
 		const newDate = new Date(newYear, newMonth, 1);
-		if (newDate >= minDate && newDate < maxDate) {
-			setDateForActiveMonth(newDate);
-			updateUrlParams(newDate); // URL 파라미터 업데이트
-		}
+		// if (newDate >= minDate && newDate < maxDate) {
+		setDateForActiveMonth(newDate);
+		updateUrlParams(newDate); // URL 파라미터 업데이트
+		// }
 	};
 
 	// URL 파라미터가 변경될 때 activeDate 업데이트
@@ -184,8 +184,9 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	const maxDate = new Date(todayYear, todayMonth + 2, 1); // 다음 달의 다음 달 1일
 
 	// 화살표 표시 여부
-	const canGoPrev = dateForActiveMonth.getTime() > minDate.getTime();
-	const canGoNext = dateForActiveMonth.getTime() < new Date(todayYear, todayMonth + 1, 1).getTime();
+	const canGoPrev = isMatch ? dateForActiveMonth.getTime() > minDate.getTime() : true;
+	const canGoNext =
+		dateForActiveMonth.getTime() < new Date(todayYear, isMatch ? todayMonth + 1 : todayMonth, 1).getTime();
 
 	return (
 		<div className="w-full">
@@ -314,6 +315,8 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							const isFocused = selectedDate && isSameDate(d, selectedDate);
 							const isToday = isSameDate(d, today);
 
+							// TODO: 단순히 과거 미래에 따른 분기보다는 개별 isActive로 관리하는 게 나을 것 같음
+							// -> 예측 결과 페이지에서는 예측 참여한 날짜만 active되어야 함
 							let baseClass = '';
 							if (isFocused && isToday) baseClass = 'focused-today-tile';
 							else if (isFocused) baseClass = 'focused-tile';
