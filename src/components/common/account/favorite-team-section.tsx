@@ -27,21 +27,28 @@ export interface TeamLeagueMap {
 }
 
 export default function FavoriteTeamSection({
-	isEditable = true,
+	type,
+	canChangeTeam,
 	setTeams,
 	initialTeams,
 }: {
-	isEditable?: boolean;
+	type: 'signup' | 'profile-setting';
+	canChangeTeam?: boolean; // 응원팀(값) 변경 가능 여부
 	setTeams?: Dispatch<SetStateAction<number[]>>;
 	initialTeams?: TeamDto[];
 }) {
+	const isSignup = type === 'signup';
+
 	const [favoriteTeamLeagueMap, setFavoriteTeamLeagueMap] = useState<(TeamLeagueMap | null)[]>([null]);
 	const [selectedTeamIndex, setSelectedTeamIndex] = useState(0);
-	const favoriteTeamCount = favoriteTeamLeagueMap.filter((team) => team).length;
+	const favoriteTeamCount = favoriteTeamLeagueMap.filter(({ team }) => team.pk !== -1).length;
 
 	const [league, setLeague] = useState<LeagueDto | null>(null);
 	const [team, setTeam] = useState<TeamDto | null>(null);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+	// 응원팀 순서 변경 가능 여부
+	const [isEditable, setIsEditable] = useState(isSignup);
 
 	// 다른 순위의 팀을 선택했을 때마다 실행 (ex. 1순위 팀 -> 2순위 팀)
 	useEffect(() => {
@@ -51,6 +58,10 @@ export default function FavoriteTeamSection({
 	}, [selectedTeamIndex, favoriteTeamLeagueMap]);
 
 	const handleLeagueChange = (selectedLeague: LeagueDto) => {
+		if (!canChangeTeam) {
+			alert('응원팀 변경 불가가');
+		}
+
 		// 응원팀이 없는 상태 -> 다른 리그를 선택한 경우
 		if (league?.pk === NO_CHEERING_TEAM_PK) {
 			setTeam(null);
@@ -69,6 +80,10 @@ export default function FavoriteTeamSection({
 	};
 
 	const handleTeamChange = (selectedTeam: TeamDto) => {
+		if (!canChangeTeam) {
+			alert('응원팀 변경 불가');
+		}
+
 		// 이미 선택한 팀이면 alert
 		const favoriteTeamPks = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
 		if (favoriteTeamPks.includes(selectedTeam.pk)) {
@@ -109,7 +124,7 @@ export default function FavoriteTeamSection({
 	useEffect(() => {
 		if (initialTeams) {
 			const initialFavoriteTeamLeagueMap: TeamLeagueMap[] = initialTeams.map((team) => ({
-				league: { nameEn: '', nameKr: '', pk: 0, logoUrl: '' },
+				league: { nameEn: team.leagueNameEn, nameKr: team.leagueNameKr, pk: team.leaguePk, logoUrl: '' },
 				team,
 			}));
 			setFavoriteTeamLeagueMap(initialFavoriteTeamLeagueMap);
@@ -118,12 +133,19 @@ export default function FavoriteTeamSection({
 
 	return (
 		<div className="flex flex-col">
-			<div className="subtitle1-semibold mb-2">
-				MY팀 {isEditable && '선택'} (
-				<span className={clsx({ 'text-primary-900': isEditable })}>{favoriteTeamCount}</span>/3)
+			<div className="subtitle1-semibold mb-2 flex items-center justify-between">
+				<div>
+					MY팀 {isSignup && '선택'} (<span className={clsx({ 'text-primary-900': isSignup })}>{favoriteTeamCount}</span>
+					/3)
+				</div>
+				{!isSignup && (
+					<button onClick={() => setIsEditable(true)} className="ml-auto text-button-05 font-medium text-primary-900">
+						편집
+					</button>
+				)}
 			</div>
 			<div className="caption1-regular mb-6">
-				* {isEditable && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
+				* {isSignup && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
 			</div>
 
 			<div>

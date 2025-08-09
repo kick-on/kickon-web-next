@@ -19,11 +19,11 @@ export default function Page() {
 	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [nickname, setNickname] = useState<string | null>(null);
 	const [teams, setTeams] = useState<(TeamDto | null)[] | null>(null);
+	const [teamPks, setTeamPks] = useState<number[] | null>([]);
 
 	const router = useRouter();
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
-	const isEditable = false;
 	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 
 	// 이미지 업로드
@@ -70,7 +70,7 @@ export default function Page() {
 		const body: UpdateUserInfoRequest = {
 			profileImageUrl,
 			nickname,
-			teams: !teams || teams[0].pk === -1 ? undefined : teams.map((team) => team?.pk), // 응원하는 팀이 없는 경우 team을 undefined로
+			teams: !teamPks || teamPks.length === 0 ? undefined : teamPks, // 응원하는 팀이 없는 경우 team을 undefined로
 			// league: league.pk, 현재 서버에서 league를 처리하지 않음
 		};
 
@@ -106,7 +106,17 @@ export default function Page() {
 				setTeams(
 					response.data.favoriteTeams.length > 0
 						? response.data.favoriteTeams
-						: [{ nameEn: 'no cheering team', nameKr: '응원팀이 없어요.', pk: -1, logoUrl: '/ban.svg' }],
+						: [
+								{
+									nameEn: 'no cheering team',
+									nameKr: '응원팀이 없어요.',
+									pk: -1,
+									logoUrl: '/ban.svg',
+									leagueNameEn: 'no cheering team',
+									leagueNameKr: '응원팀이 없어요.',
+									leaguePk: -1,
+								},
+							],
 				);
 			}
 		};
@@ -135,7 +145,12 @@ export default function Page() {
 
 			<div className="w-full flex flex-col gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<FavoriteTeamSection isEditable={isEditable} initialTeams={teams} />
+				<FavoriteTeamSection
+					type="profile-setting"
+					canChangeTeam={currentUserInfo?.canChangeTeam}
+					initialTeams={teams}
+					setTeams={setTeamPks}
+				/>
 			</div>
 
 			<hr className="w-full my-10 h-[1px] border-black-200 @mobile:border-black-300" />
