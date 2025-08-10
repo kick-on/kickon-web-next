@@ -121,7 +121,6 @@ export default function FavoriteTeamList({
 							key={favorite?.team?.pk ?? -1}
 							orderNum={i + 1}
 							team={favorite?.team}
-							isEditable={isEditable}
 							isActive={isEditable && selectedTeamIndex === i}
 							isDisabled={
 								!isEditable ||
