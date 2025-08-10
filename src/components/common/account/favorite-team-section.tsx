@@ -58,10 +58,6 @@ export default function FavoriteTeamSection({
 	}, [selectedTeamIndex, favoriteTeamLeagueMap]);
 
 	const handleLeagueChange = (selectedLeague: LeagueDto) => {
-		if (!canChangeTeam) {
-			alert('응원팀 변경 불가');
-		}
-
 		// 응원팀이 없는 상태 -> 다른 리그를 선택한 경우
 		if (league?.pk === NO_CHEERING_TEAM_PK) {
 			setTeam(null);
@@ -80,10 +76,6 @@ export default function FavoriteTeamSection({
 	};
 
 	const handleTeamChange = (selectedTeam: TeamDto) => {
-		if (!canChangeTeam) {
-			alert('응원팀 변경 불가');
-		}
-
 		// 이미 선택한 팀이면 alert
 		const favoriteTeamPks = favoriteTeamLeagueMap.map((favorite) => favorite?.team?.pk);
 		if (favoriteTeamPks.includes(selectedTeam.pk)) {
@@ -163,6 +155,7 @@ export default function FavoriteTeamSection({
 				<div className="space-y-6 mt-[1.125rem]">
 					<Selectbox
 						category="리그"
+						canChangeTeam={canChangeTeam}
 						favoriteTeamLength={favoriteTeamLeagueMap.length}
 						content={league}
 						onChange={handleLeagueChange}
@@ -170,6 +163,7 @@ export default function FavoriteTeamSection({
 					{league && league.pk !== NO_CHEERING_TEAM_PK && (
 						<Selectbox
 							category="응원팀"
+							canChangeTeam={canChangeTeam}
 							isOpen={isDropdownOpen}
 							content={team}
 							league={league.pk}

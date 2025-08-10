@@ -12,6 +12,7 @@ import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function Selectbox({
 	category,
+	canChangeTeam,
 	favoriteTeamLength,
 	league,
 	content,
@@ -20,6 +21,7 @@ export default function Selectbox({
 	isOpen = false,
 }: {
 	category: '리그' | '응원팀';
+	canChangeTeam: boolean;
 	favoriteTeamLength?: number;
 	league?: number;
 	content: LeagueDto | TeamDto;
@@ -33,6 +35,10 @@ export default function Selectbox({
 	const isLeagueSelectBox = category === '리그';
 
 	const handleSelectBoxClick = () => {
+		if (!canChangeTeam) {
+			alert('응원팀 변경 기간이 아닙니다.');
+			return;
+		}
 		setIsOptionListVisible(!isOptionListVisible);
 	};
 
