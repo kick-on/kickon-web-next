@@ -56,7 +56,10 @@ function CommentItem({
 					{/* 상단: 닉네임 + 날짜 + 더보기 */}
 					<div className="flex justify-between items-center mb-0.5">
 						<div className="flex items-center gap-4">
-							<span className="body5-medium text-black-900">{content.user.nickname}</span>
+							<span className="flex items-center gap-0.5 body5-medium text-black-900">
+								{content.user.nickname}
+								{content.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+							</span>
 							<span className="body6-regular text-black-600">
 								{formatStringToDate(content.createdAt, '2-digit', true)}
 							</span>

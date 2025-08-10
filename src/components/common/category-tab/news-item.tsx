@@ -67,7 +67,10 @@ export default function NewsItem({
 							height={24}
 							className="w-6 h-6 rounded-full object-cover"
 						/>
-						<span className="flex gap-1.5 text-black-900">{user.nickname}</span>
+						<span className="flex items-center gap-0.5 text-black-900">
+							{user.nickname}
+							{user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+						</span>
 						<span className={'@mobileml-0.5 ml-2'}>{getTimeAgo(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>

@@ -43,4 +43,5 @@ export interface UserDto {
 	id: string;
 	nickname: string;
 	profileImageUrl: string;
+	isReporter: boolean;
 }
