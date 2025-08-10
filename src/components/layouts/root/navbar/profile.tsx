@@ -61,17 +61,17 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 		<>
 			<div className="flex flex-col gap-4">
 				<div className="px-1.5 flex flex-col gap-3">
-					<div className="flex gap-2 items-center">
+					<div className="flex items-center">
 						<Image
-							className="@mobile:w-9 @mobile:h-9 @mobile:mr-0 mr-1 w-12 h-12 object-cover rounded-full"
+							className="@mobile:w-9 @mobile:h-9 @mobile:mr-2 mr-3 w-12 h-12 object-cover rounded-full"
 							src={currentUserInfo.profileImageUrl || '/default-profile.svg'}
 							alt="프로필 이미지"
 							width={36}
 							height={36}
 						/>
-						<div className="flex gap-1 items-center body2-semibold @mobile:text-18">
+						<div className="flex gap-0.5 items-center mr-1.5 body2-semibold @mobile:text-18">
 							{currentUserInfo.nickname}
-							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
+							{currentUserInfo.isReporter && <Image width={16} height={16} src="/reporter-mark.svg" alt="구단 기자" />}
 						</div>
 						<Image
 							className="w-4 h-4 object-contain"
