@@ -143,12 +143,7 @@ export default function Page() {
 
 			<div className="w-full flex flex-col gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<FavoriteTeamSection
-					type="profile-setting"
-					canChangeTeam={currentUserInfo?.canChangeTeam}
-					initialTeams={teams}
-					setTeams={setTeamPks}
-				/>
+				<FavoriteTeamSection type="profile-setting" initialTeams={teams} setTeams={setTeamPks} />
 			</div>
 
 			<hr className="w-full my-10 h-[1px] border-black-200 @mobile:border-black-300" />
