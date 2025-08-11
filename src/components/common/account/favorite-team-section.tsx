@@ -1,6 +1,6 @@
 'use client';
 
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { TeamDto } from '@/services/apis/team/dto';
 import dynamic from 'next/dynamic';
 import FavoriteTeamItem from './favorite-team-item';
@@ -37,19 +37,22 @@ export default function FavoriteTeamSection({
 
 	const [favoriteTeams, setFavoriteTeams] = useState<(TeamDto | null)[]>([null]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const filteredTeams = favoriteTeams.filter((team) => team && team.pk !== NO_CHEERING_TEAM_PK);
-
-	// 선택이 완료된 팀 배열이 변경될 때마다 pk 배열을 위로 전달
-	useEffect(() => {
-		const teamPks = filteredTeams.map((team) => team.pk);
-		setTeams(teamPks);
-	}, [filteredTeams]);
+	const filteredTeams = useMemo(
+		() => favoriteTeams.filter((team) => team && team.pk !== NO_CHEERING_TEAM_PK),
+		[favoriteTeams],
+	);
 
 	useEffect(() => {
 		if (initialTeams) {
 			setFavoriteTeams(initialTeams);
 		}
 	}, [initialTeams]);
+
+	// 선택이 완료된 팀 배열이 변경될 때마다 pk 배열을 위로 전달
+	useEffect(() => {
+		const teamPks = filteredTeams.map((team) => team.pk);
+		setTeams(teamPks);
+	}, [filteredTeams]);
 
 	return (
 		<div className="flex flex-col">

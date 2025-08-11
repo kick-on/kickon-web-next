@@ -116,7 +116,7 @@ export default function Page() {
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
 				<FavoriteTeamSection
 					type="profile-setting"
-					initialTeams={currentUserInfo.favoriteTeams}
+					initialTeams={currentUserInfo?.favoriteTeams}
 					setTeams={setTeamPks}
 				/>
 			</div>
