@@ -45,10 +45,10 @@ export default function SelectSection({
 		getTeamOptions();
 	}, [selectedLeaguePk]);
 
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+	// 리그 선택 시 팀 선택 드롭다운 자동 오픈
+	const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
 	useEffect(() => {
-		setIsDropdownOpen(true);
+		setIsTeamDropdownOpen(true);
 	}, [selectedLeaguePk]);
 
 	const handleLeagueChange = (pk: number) => {
@@ -74,7 +74,7 @@ export default function SelectSection({
 			{teamOptions && selectedLeaguePk !== -1 && (
 				<Selectbox
 					category="응원팀"
-					isOpen={isDropdownOpen}
+					isOpen={isTeamDropdownOpen}
 					options={teamOptions}
 					onChange={(team: TeamDto) =>
 						setFavoriteTeams((prev) => prev.map((prevTeam, i) => (i === selectedIndex ? { ...team } : { ...prevTeam })))
