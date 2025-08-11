@@ -26,7 +26,7 @@ export default function FavoriteTeamSection({
 	initialTeams,
 }: {
 	type: 'signup' | 'profile-setting';
-	setTeams: Dispatch<SetStateAction<number[]>>;
+	setTeams: (pks: number[]) => void;
 	initialTeams?: TeamDto[];
 }) {
 	const isSignup = type === 'signup';

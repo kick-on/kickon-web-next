@@ -3,8 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
-import { useEffect, useRef, useState } from 'react';
-import { TeamDto } from '@/services/apis/team/dto';
+import { useRef, useState } from 'react';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { getUserInfo, updateUserInfo } from '@/services/apis/user';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
@@ -17,8 +16,7 @@ export default function Page() {
 
 	const [profileImageUrl, setProfileImageUrl] = useState('');
 	const [isDuplicated, setIsDuplicated] = useState(false);
-	const [nickname, setNickname] = useState<string | null>(null);
-	const [teams, setTeams] = useState<(TeamDto | null)[] | null>(null);
+	const [nickname, setNickname] = useState<string | null>(currentUserInfo?.nickname ?? null);
 	const [teamPks, setTeamPks] = useState<number[] | null>([]);
 
 	const router = useRouter();
@@ -86,41 +84,13 @@ export default function Page() {
 			alert(response);
 			setIsDuplicated(false);
 		} else {
-			setCurrentUserInfo({ ...currentUserInfo, nickname, profileImageUrl, favoriteTeams: teams });
-
-			alert('정상적으로 수정되었습니다.');
+			const userInfo = await getUserInfo();
+			if (typeof userInfo !== 'string') {
+				setCurrentUserInfo(userInfo.data);
+				alert('정상적으로 수정되었습니다.');
+			}
 		}
 	};
-
-	useEffect(() => {
-		// 새로고침해도 유저 정보 유지 -> persist로 대체 가능
-		const getCurrentUserInfo = async () => {
-			const response = await getUserInfo();
-
-			if (typeof response !== 'string' && response.data.privacyAgreedAt) {
-				setCurrentUserInfo(response.data);
-
-				setProfileImageUrl(response.data.profileImageUrl);
-				setNickname(response.data.nickname);
-				setTeams(
-					response.data.favoriteTeams.length > 0
-						? response.data.favoriteTeams
-						: [
-								{
-									nameEn: 'no cheering team',
-									nameKr: '응원팀이 없어요.',
-									pk: -1,
-									logoUrl: '/ban.svg',
-									leagueNameEn: 'no cheering team',
-									leagueNameKr: '응원팀이 없어요.',
-									leaguePk: -1,
-								},
-							],
-				);
-			}
-		};
-		getCurrentUserInfo();
-	}, [setCurrentUserInfo]);
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
@@ -144,7 +114,11 @@ export default function Page() {
 
 			<div className="w-full flex flex-col gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<FavoriteTeamSection type="profile-setting" initialTeams={teams} setTeams={setTeamPks} />
+				<FavoriteTeamSection
+					type="profile-setting"
+					initialTeams={currentUserInfo.favoriteTeams}
+					setTeams={setTeamPks}
+				/>
 			</div>
 
 			<hr className="w-full my-10 h-[1px] border-black-200 @mobile:border-black-300" />
