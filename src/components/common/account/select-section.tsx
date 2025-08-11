@@ -35,6 +35,12 @@ export default function SelectSection({
 	const [leagueOptions, setLeagueOptions] = useState<LeagueDto[]>([]);
 	const [selectedLeaguePk, setSelectedLeaguePk] = useState<number | null>(selectedTeam?.leaguePk ?? null);
 
+	// selected team 변경될 때 selected league pk 업데이트
+	// -> team options 업데이트
+	useEffect(() => {
+		setSelectedLeaguePk(selectedTeam?.leaguePk ?? null);
+	}, [selectedTeam]);
+
 	useEffect(() => {
 		const getLeagueOptions = async () => {
 			const response = await getLeague();
@@ -67,23 +73,27 @@ export default function SelectSection({
 					: { ...team },
 			);
 			setFavoriteTeams(newFavoriteTeams);
+		} else if (pk !== selectedLeaguePk) {
+			setIsTeamDropdownOpen(true);
 		}
 		setSelectedLeaguePk(pk);
 	};
 
+	const handleTeamChange = (team: TeamDto) => {
+		setFavoriteTeams((prev) => prev.map((prevTeam, i) => (i === selectedIndex ? { ...team } : { ...prevTeam })));
+	};
+
 	// 리그 선택 시 팀 선택 드롭다운 자동 오픈
 	const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
-
-	useEffect(() => {
-		if (selectedLeaguePk === selectedTeam.leaguePk) return;
-		setIsTeamDropdownOpen(true);
-	}, [selectedLeaguePk, selectedTeam]);
+	const [isLeagueDropdownOpen, setIsLeagueDropdownOpen] = useState(false);
 
 	return (
 		<div className="space-y-6 mt-[1.125rem]">
 			<Selectbox
 				category="리그"
-				favoriteTeamLength={favoriteTeams.length}
+				favoriteTeams={favoriteTeams}
+				isDropdownOpen={isLeagueDropdownOpen}
+				setIsDropdownOpen={(isOpen: boolean) => setIsLeagueDropdownOpen(isOpen)}
 				options={leagueOptions}
 				content={leagueContent}
 				onChange={handleLeagueChange}
@@ -91,12 +101,12 @@ export default function SelectSection({
 			{teamOptions.length > 0 && selectedLeaguePk !== -1 && (
 				<Selectbox
 					category="응원팀"
-					isOpen={isTeamDropdownOpen}
+					favoriteTeams={favoriteTeams}
+					isDropdownOpen={isTeamDropdownOpen}
+					setIsDropdownOpen={(isOpen: boolean) => setIsTeamDropdownOpen(isOpen)}
 					options={teamOptions}
 					content={selectedTeam}
-					onChange={(team: TeamDto) =>
-						setFavoriteTeams((prev) => prev.map((prevTeam, i) => (i === selectedIndex ? { ...team } : { ...prevTeam })))
-					}
+					onChange={handleTeamChange}
 				/>
 			)}
 		</div>

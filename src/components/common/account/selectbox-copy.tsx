@@ -14,22 +14,23 @@ export default function Selectbox({
 	options,
 	content,
 	onChange,
-	favoriteTeamLength,
+	favoriteTeams,
 	isEditable = true,
-	isOpen = false,
+	isDropdownOpen = false,
+	setIsDropdownOpen,
 }: {
 	category: '리그' | '응원팀';
 	options: LeagueDto[] | TeamDto[];
 	content: Option;
 	onChange: (selectedOption: number | TeamDto) => void;
-	favoriteTeamLength?: number;
+	favoriteTeams: TeamDto[];
 	isEditable?: boolean;
-	isOpen?: boolean;
+	isDropdownOpen?: boolean;
+	setIsDropdownOpen?: (isOpen: boolean) => void;
 }) {
 	// 리그-팀 공통으로 pk, nameKr, logoUrl 사용
 	const [selectedOption, setSelectedOption] = useState<Option | null>(content);
 
-	const [isOptionListVisible, setIsOptionListVisible] = useState(isOpen);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
 
@@ -41,11 +42,11 @@ export default function Selectbox({
 		// 	alert('응원팀 변경 기간이 아닙니다.');
 		// 	return;
 		// }
-		setIsOptionListVisible(!isOptionListVisible);
+		setIsDropdownOpen(!isDropdownOpen);
 	};
 
 	const handleOptionClick = (selectedPk: number) => {
-		let selectedOption = {
+		let selected = {
 			pk: NO_CHEERING_TEAM_PK,
 			nameKr: '응원팀이 없어요.',
 			nameEn: 'no cheering team',
@@ -55,9 +56,14 @@ export default function Selectbox({
 		if (category === '리그') {
 			onChange(selectedPk);
 		} else {
+			if (selectedOption.pk !== selectedPk && favoriteTeams.find((team) => team?.pk === selectedPk)) {
+				alert('이미 선택한 팀입니다.');
+				return;
+			}
+
 			if (selectedPk !== NO_CHEERING_TEAM_PK) {
-				selectedOption = options.find((option) => option.pk === selectedPk) as TeamDto;
-				onChange(selectedOption);
+				selected = options.find((option) => option.pk === selectedPk) as TeamDto;
+				onChange(selected);
 			}
 		}
 
@@ -69,7 +75,7 @@ export default function Selectbox({
 				logoUrl: '/ban.svg',
 			},
 		);
-		setIsOptionListVisible(false);
+		setIsDropdownOpen(false);
 	};
 
 	// props content 값 변경 시마다 selectedOption에 반영
@@ -77,19 +83,19 @@ export default function Selectbox({
 		setSelectedOption(content);
 	}, [content]);
 
-	// props isOpen 값 변경 시마다 isOptionListVisible에 반영
+	// props isDropdownOpen 값 변경 시마다 isDropdownOpen에 반영
 	useEffect(() => {
-		setIsOptionListVisible(isOpen);
-	}, [isOpen]);
+		setIsDropdownOpen(isDropdownOpen);
+	}, [isDropdownOpen]);
 
 	useEffect(() => {
-		// isOptionListVisible가 true일 때만 리스너 등록
-		if (!isOptionListVisible) return;
+		// isDropdownOpen가 true일 때만 리스너 등록
+		if (!isDropdownOpen) return;
 
 		// 드롭박스 외부 클릭 시 닫음
 		const handleOutsideClick = (e: MouseEvent) => {
 			if (!dropboxRef.current.contains(e.target as Node)) {
-				setIsOptionListVisible(false);
+				setIsDropdownOpen(false);
 			}
 		};
 
@@ -97,7 +103,7 @@ export default function Selectbox({
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
 		};
-	}, [isOptionListVisible]);
+	}, [isDropdownOpen]);
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -122,7 +128,7 @@ export default function Selectbox({
 					{isEditable && <Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt="" />}
 				</button>
 
-				{isOptionListVisible && options.length > 0 && (
+				{isDropdownOpen && options.length > 0 && (
 					<div
 						className={clsx(
 							'z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]',
@@ -141,7 +147,7 @@ export default function Selectbox({
 								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
-						{isLeagueSelectBox && favoriteTeamLength === 1 && (
+						{isLeagueSelectBox && favoriteTeams.length === 1 && (
 							<div
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
