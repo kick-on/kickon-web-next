@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import OptionItem from '@/components/common/option-item';
+import OptionItem, { Option } from '@/components/common/option-item';
 import clsx from 'clsx';
 import { TeamDto } from '@/services/apis/team/dto';
 import { LeagueDto } from '@/services/apis/league/dto';
@@ -12,6 +12,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 export default function Selectbox({
 	category,
 	options,
+	content,
 	onChange,
 	favoriteTeamLength,
 	isEditable = true,
@@ -19,12 +20,14 @@ export default function Selectbox({
 }: {
 	category: '리그' | '응원팀';
 	options: LeagueDto[] | TeamDto[];
+	content: Option;
 	onChange: (selectedOption: number | TeamDto) => void;
 	favoriteTeamLength?: number;
 	isEditable?: boolean;
 	isOpen?: boolean;
 }) {
-	const [selectedOption, setSelectedOption] = useState<TeamDto | null>(null);
+	// 리그-팀 공통으로 pk, nameKr, logoUrl 사용
+	const [selectedOption, setSelectedOption] = useState<Option | null>(content);
 
 	const [isOptionListVisible, setIsOptionListVisible] = useState(isOpen);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
@@ -69,8 +72,13 @@ export default function Selectbox({
 		setIsOptionListVisible(false);
 	};
 
+	// props content 값 변경 시마다 selectedOption에 반영
 	useEffect(() => {
-		// props isOpen 값 변경 시마다 isOptionListVisible에 반영
+		setSelectedOption(content);
+	}, [content]);
+
+	// props isOpen 값 변경 시마다 isOptionListVisible에 반영
+	useEffect(() => {
 		setIsOptionListVisible(isOpen);
 	}, [isOpen]);
 
