@@ -4,9 +4,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TeamDto } from '@/services/apis/team/dto';
 import dynamic from 'next/dynamic';
 import FavoriteTeamItem from './favorite-team-item';
-import clsx from 'clsx';
 import SelectSection from './select-section';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import FavoriteTeamHeader from './favorite-team-header';
 
 // dnd-kit 컴포넌트 hydration mismatch 가능성 존재 -> ssr 비활성화
 const FavoriteTeamList = dynamic(() => import('./favorite-team-list'), {
@@ -53,21 +53,11 @@ export default function FavoriteTeamSection({
 
 	return (
 		<div className="flex flex-col">
-			<div className="subtitle1-semibold mb-2 flex items-center justify-between">
-				<div>
-					MY팀 {isSignup && '선택'} (
-					<span className={clsx({ 'text-primary-900': isSignup })}>{filteredTeams.length}</span>
-					/3)
-				</div>
-				{!isSignup && (
-					<button onClick={() => setIsEditable(true)} className="ml-auto text-button-05 font-medium text-primary-900">
-						편집
-					</button>
-				)}
-			</div>
-			<div className="caption1-regular mb-6">
-				* {isSignup && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
-			</div>
+			<FavoriteTeamHeader
+				isSignup={isSignup}
+				teamCount={filteredTeams.length}
+				onClickEditButton={() => setIsEditable(true)}
+			/>
 
 			<FavoriteTeamList
 				isEditable={isEditable}
