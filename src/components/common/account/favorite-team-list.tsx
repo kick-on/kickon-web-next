@@ -122,6 +122,7 @@ export default function FavoriteTeamList({
 								favoriteTeams.length === 1 ||
 								(favoriteTeams.length === 2 && !favoriteTeams.at(-1))
 							}
+							isClickable={isEditable}
 							onClickItem={() => handleItemClick(i)}
 							onClickXButton={(e) => handleXButtonClick(e, i)}
 						/>

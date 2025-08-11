@@ -12,6 +12,7 @@ export default function FavoriteTeamItem({
 	orderNum,
 	isActive, // 현재 선택 중인 값인지
 	isDisabled, // 드래그 가능한지
+	isClickable, // 클릭 가능한지
 	onClickItem,
 	onClickXButton,
 }: {
@@ -19,6 +20,7 @@ export default function FavoriteTeamItem({
 	orderNum: number;
 	isActive: boolean;
 	isDisabled?: boolean;
+	isClickable?: boolean;
 	onClickItem?: () => void;
 	onClickXButton?: (e: React.MouseEvent) => void;
 }) {
@@ -68,7 +70,7 @@ export default function FavoriteTeamItem({
 				className={clsx(
 					`relative w-full h-auto aspect-[5/4] flex flex-col gap-1
 					justify-center items-center rounded-lg bg-black-000`,
-					isDisabled ? 'pointer-events-none' : 'cursor-pointer',
+					isDisabled && !isClickable ? 'pointer-events-none' : 'cursor-pointer',
 					isActive ? 'p-[4px] pb-[2px] border-2 border-primary-900' : 'p-[5px] pb-[3px] border border-black-300',
 				)}
 			>
