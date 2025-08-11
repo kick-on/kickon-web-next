@@ -1,12 +1,12 @@
 'use client';
 
-import { LeagueDto } from '@/services/apis/league/dto';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { TeamDto } from '@/services/apis/team/dto';
 import dynamic from 'next/dynamic';
 import FavoriteTeamItem from './favorite-team-item';
 import clsx from 'clsx';
 import SelectSection from './select-section';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 // dnd-kit 컴포넌트 hydration mismatch 가능성 존재 -> ssr 비활성화
 const FavoriteTeamList = dynamic(() => import('./favorite-team-list'), {
@@ -20,44 +20,32 @@ const FavoriteTeamList = dynamic(() => import('./favorite-team-list'), {
 	),
 });
 
-export interface TeamLeagueMap {
-	team: TeamDto;
-	league: LeagueDto;
-}
-
 export default function FavoriteTeamSection({
 	type,
 	setTeams,
 	initialTeams,
 }: {
 	type: 'signup' | 'profile-setting';
-	setTeams?: Dispatch<SetStateAction<number[]>>;
+	setTeams: Dispatch<SetStateAction<number[]>>;
 	initialTeams?: TeamDto[];
 }) {
 	const isSignup = type === 'signup';
 
+	// 응원팀 순서 변경 가능 여부
+	// 회원가입 페이지이거나, 프로필 설정에서 편집 클릭
+	const [isEditable, setIsEditable] = useState(isSignup);
+
 	const [favoriteTeams, setFavoriteTeams] = useState<(TeamDto | null)[]>([null]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-	const favoriteTeamCount = favoriteTeams.filter((favorite) => favorite?.pk !== -1).length;
 
-	// 응원팀 순서 변경 가능 여부
-	const [isEditable, setIsEditable] = useState(isSignup);
+	// 응원팀이 완전히 선택된 경우만 필터링
+	const filteredTeams = favoriteTeams.filter((team) => team && team.pk !== NO_CHEERING_TEAM_PK);
 
 	// favoriteTeams 변경될 때마다 pk 배열을 위로 전달
 	useEffect(() => {
-		// optional인 setTeams가 undefined이면 return
-		if (!setTeams) return;
-
-		// 응원팀까지 선택 완료한 경우만 필터링
-		const teamPks = favoriteTeams.filter((team) => team?.pk);
-
-		if (teamPks.length === 0) {
-			setTeams(null);
-		} else {
-			const teams = teamPks.map((team) => team.pk);
-			setTeams(teams);
-		}
-	}, [favoriteTeams, setTeams]);
+		const teamPks = filteredTeams.map((team) => team.pk);
+		setTeams(teamPks);
+	}, [filteredTeams]);
 
 	useEffect(() => {
 		if (initialTeams) {
@@ -69,7 +57,8 @@ export default function FavoriteTeamSection({
 		<div className="flex flex-col">
 			<div className="subtitle1-semibold mb-2 flex items-center justify-between">
 				<div>
-					MY팀 {isSignup && '선택'} (<span className={clsx({ 'text-primary-900': isSignup })}>{favoriteTeamCount}</span>
+					MY팀 {isSignup && '선택'} (
+					<span className={clsx({ 'text-primary-900': isSignup })}>{filteredTeams.length}</span>
 					/3)
 				</div>
 				{!isSignup && (
@@ -82,15 +71,13 @@ export default function FavoriteTeamSection({
 				* {isSignup && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
 			</div>
 
-			<div>
-				<FavoriteTeamList
-					isEditable={isEditable}
-					favoriteTeams={favoriteTeams}
-					setFavoriteTeams={setFavoriteTeams}
-					selectedIndex={selectedIndex}
-					setSelectedIndex={setSelectedIndex}
-				/>
-			</div>
+			<FavoriteTeamList
+				isEditable={isEditable}
+				favoriteTeams={favoriteTeams}
+				setFavoriteTeams={setFavoriteTeams}
+				selectedIndex={selectedIndex}
+				setSelectedIndex={setSelectedIndex}
+			/>
 
 			{isEditable && (
 				<SelectSection

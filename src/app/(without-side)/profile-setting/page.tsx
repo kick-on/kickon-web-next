@@ -67,10 +67,11 @@ export default function Page() {
 	};
 
 	const handleCompleteButtonClick = () => {
+		const initialTeamPks = currentUserInfo?.favoriteTeams.map((team) => team?.pk);
 		const body: UpdateUserInfoRequest = {
 			profileImageUrl: profileImageUrl === currentUserInfo?.profileImageUrl ? undefined : profileImageUrl,
 			nickname: nickname === currentUserInfo?.nickname ? undefined : nickname,
-			teams: !teamPks || teamPks.length === 0 ? undefined : teamPks, // 응원하는 팀이 없는 경우 team을 undefined로
+			teams: JSON.stringify(teamPks) === JSON.stringify(initialTeamPks) ? undefined : teamPks,
 		};
 
 		editUserInfo(body);

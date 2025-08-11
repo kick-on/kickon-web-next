@@ -58,7 +58,14 @@ export default function Selectbox({
 			}
 		}
 
-		setSelectedOption(options.find((option) => option.pk === selectedPk));
+		setSelectedOption(
+			options.find((option) => option.pk === selectedPk) ?? {
+				pk: -1,
+				nameKr: '응원팀이 없어요',
+				nameEn: 'no cheering team',
+				logoUrl: '/ban.svg',
+			},
+		);
 		setIsOptionListVisible(false);
 	};
 

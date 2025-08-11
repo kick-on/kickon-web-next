@@ -6,6 +6,7 @@ import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { getLeague } from '@/services/apis/league';
 import { getTeam } from '@/services/apis/team';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 
 export default function SelectSection({
 	selectedIndex,
@@ -50,15 +51,27 @@ export default function SelectSection({
 		setIsDropdownOpen(true);
 	}, [selectedLeaguePk]);
 
+	const handleLeagueChange = (pk: number) => {
+		if (pk === NO_CHEERING_TEAM_PK) {
+			const newFavoriteTeams = favoriteTeams.map((team, i) =>
+				i === selectedIndex
+					? { pk: -1, nameKr: '응원팀이 없어요', nameEn: 'no cheering team', logoUrl: '/ban.svg' }
+					: { ...team },
+			);
+			setFavoriteTeams(newFavoriteTeams);
+		}
+		setSelectedLeaguePk(pk);
+	};
+
 	return (
 		<div className="space-y-6 mt-[1.125rem]">
 			<Selectbox
 				category="리그"
 				favoriteTeamLength={favoriteTeams.length}
 				options={leagueOptions}
-				onChange={(pk: number) => setSelectedLeaguePk(pk)}
+				onChange={handleLeagueChange}
 			/>
-			{teamOptions && (
+			{teamOptions && selectedLeaguePk !== -1 && (
 				<Selectbox
 					category="응원팀"
 					isOpen={isDropdownOpen}

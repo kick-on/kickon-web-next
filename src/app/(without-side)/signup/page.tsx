@@ -64,7 +64,7 @@ export default function Page() {
 		// 회원가입(정보 수정)
 		const updateUserInfoRequest: UpdateUserInfoRequest = {
 			nickname: nickname,
-			teams: !teams || teams[0] === -1 ? undefined : teams,
+			teams: teams,
 		};
 		const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
