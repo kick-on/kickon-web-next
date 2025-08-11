@@ -75,8 +75,8 @@ export default function FavoriteTeamItem({
 				)}
 			>
 				{/* 팀 선택 취소 x 버튼 */}
-				{/* 1순위 팀 선택 전에는 x 버튼 표시 안 함 */}
-				{!isDisabled && !(orderNum === 1 && !team) && team?.pk !== NO_CHEERING_TEAM_PK && (
+				{/* 1순위 팀 선택 전 또는 응원팀이 없는 경우 x 버튼 표시 안 함 */}
+				{isClickable && !(orderNum === 1 && (!team || team.pk === NO_CHEERING_TEAM_PK)) && (
 					<button
 						onClick={onClickXButton}
 						className={clsx(
