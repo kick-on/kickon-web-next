@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
 import { useEffect, useState } from 'react';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
-import { getUserInfo, updateUserInfo } from '@/services/apis/user';
+import { updateUserInfo } from '@/services/apis/user';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { setCookie } from '@/lib/utils/cookie';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
@@ -14,7 +14,7 @@ import ProfileImageSection from '@/components/common/account/profile-image-secti
 export default function Page() {
 	const router = useRouter();
 
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, fetchUserInfo } = useCurrentUserInfoStore();
 	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 
 	const [profileImageUrl, setProfileImageUrl] = useState('');
@@ -62,11 +62,9 @@ export default function Page() {
 			alert(response);
 			setIsDuplicated(false);
 		} else {
-			const userInfo = await getUserInfo();
-			if (typeof userInfo !== 'string') {
-				setCurrentUserInfo(userInfo.data);
-				alert('정상적으로 수정되었습니다.');
-			}
+			// 회원 정보 수정 성공
+			// -> 새로 유저 정보 fetch해서 current user info 업데이트
+			await fetchUserInfo();
 		}
 	};
 
