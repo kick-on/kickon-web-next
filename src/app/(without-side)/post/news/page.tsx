@@ -12,7 +12,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
-import { extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
@@ -101,8 +101,6 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
-	const [originalEmbeddedLinks, setOriginalEmbeddedLinks] = useState<string[]>([]); // 임베디드 된 원본 url을 담을 배열
-
 	const postNewsContents = async () => {
 		if (!currentUserInfo) {
 			return;
@@ -110,7 +108,7 @@ export default function Page() {
 
 		const usedImageKeysFromBody = extractMediaFilenamesFromContent(body.trim(), 'img');
 		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
-		const embeddedLink = originalEmbeddedLinks;
+		const embeddedLink = extractEmbeddedLinks(body.trim());
 
 		let thumbnailFilename = '';
 		if (selectedImage) {
@@ -178,14 +176,7 @@ export default function Page() {
 				</button>
 			</div>
 
-			<PostEditor
-				setTitle={setTitle}
-				setBody={setBody}
-				isNews={true}
-				editedTitle={title}
-				editedBody={body}
-				setOriginalEmbeddedLinks={setOriginalEmbeddedLinks}
-			/>
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} editedTitle={title} editedBody={body} />
 
 			<div className="flex w-full justify-center gap-4 mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]">
 				<button

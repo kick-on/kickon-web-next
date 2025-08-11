@@ -7,7 +7,7 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
-import { extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
@@ -112,14 +112,12 @@ export default function Page() {
 
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
-	const [originalEmbeddedLinks, setOriginalEmbeddedLinks] = useState<string[]>([]); // 임베디드 된 원본 url을 담을 배열
-
 	const postCommunityContents = async () => {
 		if (!currentUserInfo || !isFormValid) return;
 
 		const usedImageKeys = extractMediaFilenamesFromContent(body.trim(), 'img');
 		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
-		const embeddedLink = originalEmbeddedLinks;
+		const embeddedLink = extractEmbeddedLinks(body.trim());
 
 		console.log('usedImageKeys:', usedImageKeys);
 		console.log('usedVideoKeys:', usedVideoKeys);
@@ -229,14 +227,7 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor
-				setTitle={setTitle}
-				setBody={setBody}
-				isNews={false}
-				editedTitle={title}
-				editedBody={body}
-				setOriginalEmbeddedLinks={setOriginalEmbeddedLinks}
-			/>
+			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
 			{currentUserInfo.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 
