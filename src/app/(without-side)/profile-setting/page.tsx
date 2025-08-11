@@ -3,21 +3,23 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { getUserInfo, updateUserInfo } from '@/services/apis/user';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { setCookie } from '@/lib/utils/cookie';
-import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
+import ProfileImageSection from '@/components/common/account/profile-image-section';
 
 export default function Page() {
 	const router = useRouter();
+
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 
 	const [profileImageUrl, setProfileImageUrl] = useState('');
-	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [nickname, setNickname] = useState<string | null>(null);
+	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [teamPks, setTeamPks] = useState<number[] | null>([]);
 
 	useEffect(() => {
@@ -27,37 +29,6 @@ export default function Page() {
 			setNickname(currentUserInfo.nickname);
 		}
 	}, [currentUserInfo]);
-
-	const fileInputRef = useRef<HTMLInputElement | null>(null);
-	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
-
-	// 이미지 업로드
-	const handleCameraButtonClick = async () => {
-		if (fileInputRef && fileInputRef.current) {
-			fileInputRef.current.click();
-		}
-	};
-
-	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-		const file = event.target.files?.[0];
-		if (!file) return;
-
-		if (!file.type.startsWith('image/')) {
-			alert('파일 형식이 올바르지 않습니다.');
-			return;
-		}
-
-		const presignedResponse = await getPresignedUrl({
-			type: 'profile-images',
-			fileName: file.name,
-		});
-
-		if (presignedResponse) {
-			const { presignedUrl, s3Url } = presignedResponse.data;
-			await uploadToS3(presignedUrl, file);
-			setProfileImageUrl(s3Url);
-		}
-	};
 
 	const handleNicknameChange = (e) => {
 		setNickname(e.target.value);
@@ -101,23 +72,7 @@ export default function Page() {
 
 	return (
 		<div className="m-auto w-[21.5rem] flex flex-col">
-			<div className="relative mb-7 w-[68px] h-[68px]">
-				<Image
-					className="w-full h-full rounded-full object-cover"
-					width={68}
-					height={68}
-					src={profileImageUrl || '/default-profile.svg'}
-					alt="프로필 이미지"
-				/>
-				<button
-					onClick={handleCameraButtonClick}
-					className="absolute z-10 left-11 top-11
-            bg-black-000 border border-black-200 rounded-full p-[0.3125rem]"
-				>
-					<Image width={18} height={18} src="/camera.svg" alt="프로필 사진 변경" />
-				</button>
-				<input ref={fileInputRef} type="file" onChange={handleFileChange} className="hidden" />
-			</div>
+			<ProfileImageSection profileImageUrl={profileImageUrl} setProfileImageUrl={setProfileImageUrl} />
 
 			<div className="w-full flex flex-col gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
