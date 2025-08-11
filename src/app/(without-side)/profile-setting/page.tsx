@@ -65,6 +65,7 @@ export default function Page() {
 			// 회원 정보 수정 성공
 			// -> 새로 유저 정보 fetch해서 current user info 업데이트
 			await fetchUserInfo();
+			alert('정상적으로 수정되었습니다.');
 		}
 	};
 
