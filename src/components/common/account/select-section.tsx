@@ -69,7 +69,16 @@ export default function SelectSection({
 		if (pk === NO_CHEERING_TEAM_PK) {
 			const newFavoriteTeams = favoriteTeams.map((team, i) =>
 				i === selectedIndex
-					? { pk: -1, nameKr: '응원팀이 없어요', nameEn: 'no cheering team', logoUrl: '/ban.svg' }
+					? {
+							pk: -1,
+							nameKr: '응원팀이 없어요',
+							nameEn: 'no cheering team',
+							logoUrl: '/ban.svg',
+							leaguePk: -1,
+							leagueNameKr: '응원팀이 없어요',
+							leagueNameEn: 'no cheering team',
+							leagueLogoUrl: '/ban.svg',
+						}
 					: { ...team },
 			);
 			setFavoriteTeams(newFavoriteTeams);
@@ -105,7 +114,7 @@ export default function SelectSection({
 					isDropdownOpen={isTeamDropdownOpen}
 					setIsDropdownOpen={(isOpen: boolean) => setIsTeamDropdownOpen(isOpen)}
 					options={teamOptions}
-					content={selectedTeam}
+					content={selectedTeam?.pk === -1 ? null : selectedTeam}
 					onChange={handleTeamChange}
 				/>
 			)}

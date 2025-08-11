@@ -20,7 +20,7 @@ export default function Page() {
 	const [profileImageUrl, setProfileImageUrl] = useState('');
 	const [nickname, setNickname] = useState<string | null>(null);
 	const [isDuplicated, setIsDuplicated] = useState(false);
-	const [teamPks, setTeamPks] = useState<number[] | null>([]);
+	const [teamPks, setTeamPks] = useState<number[] | null>(null);
 
 	useEffect(() => {
 		if (currentUserInfo) {
@@ -113,7 +113,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					disabled={!nickname || isDuplicated}
+					disabled={!nickname || isDuplicated || !teamPks}
 					onClick={handleCompleteButtonClick}
 					className="w-full h-11 flex justify-center items-center @mobile:text-15
             rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"

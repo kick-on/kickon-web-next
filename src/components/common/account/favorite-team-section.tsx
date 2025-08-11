@@ -51,8 +51,13 @@ export default function FavoriteTeamSection({
 	// 선택이 완료된 팀 배열이 변경될 때마다 pk 배열을 위로 전달
 	useEffect(() => {
 		const teamPks = filteredTeams.map((team) => team.pk);
-		setTeams(teamPks);
-	}, [filteredTeams]);
+		if (teamPks.length === 0 && favoriteTeams[0]?.pk !== -1) {
+			// 응원팀이 없어요도 선택하지 않은 경우
+			setTeams(null);
+		} else {
+			setTeams(teamPks);
+		}
+	}, [filteredTeams, favoriteTeams]);
 
 	return (
 		<div className="flex flex-col">
