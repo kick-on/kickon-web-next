@@ -37,11 +37,9 @@ export default function FavoriteTeamSection({
 
 	const [favoriteTeams, setFavoriteTeams] = useState<(TeamDto | null)[]>([null]);
 	const [selectedIndex, setSelectedIndex] = useState(0);
-
-	// 응원팀이 완전히 선택된 경우만 필터링
 	const filteredTeams = favoriteTeams.filter((team) => team && team.pk !== NO_CHEERING_TEAM_PK);
 
-	// favoriteTeams 변경될 때마다 pk 배열을 위로 전달
+	// 선택이 완료된 팀 배열이 변경될 때마다 pk 배열을 위로 전달
 	useEffect(() => {
 		const teamPks = filteredTeams.map((team) => team.pk);
 		setTeams(teamPks);
