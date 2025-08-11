@@ -109,19 +109,18 @@ export default function FavoriteTeamList({
 			onDragEnd={handleDragEnd}
 		>
 			<div className="grid grid-cols-3 gap-2.5 items-end">
-				<SortableContext items={favoriteTeams.map((item) => item?.pk ?? -1)} strategy={verticalListSortingStrategy}>
-					{favoriteTeams.map((favorite, i) => (
+				<SortableContext items={favoriteTeams.map((team) => team?.pk ?? -1)} strategy={verticalListSortingStrategy}>
+					{favoriteTeams.map((team, i) => (
 						<FavoriteTeamItem
-							key={favorite?.pk ?? -1}
+							key={team?.pk ?? -1}
 							orderNum={i + 1}
-							team={favorite ?? null}
+							team={team ?? null}
 							isActive={isEditable && selectedIndex === i}
 							isDisabled={
 								!isEditable ||
-								!favorite ||
+								!team ||
 								favoriteTeams.length === 1 ||
-								(favoriteTeams.length === 2 && !favoriteTeams.at(-1)) ||
-								favorite?.pk === NO_CHEERING_TEAM_PK
+								(favoriteTeams.length === 2 && !favoriteTeams.at(-1))
 							}
 							onClickItem={() => handleItemClick(i)}
 							onClickXButton={(e) => handleXButtonClick(e, i)}
