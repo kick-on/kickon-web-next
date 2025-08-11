@@ -21,7 +21,7 @@ export default function Selectbox({
 }: {
 	category: '리그' | '응원팀';
 	options: LeagueDto[] | TeamDto[];
-	content: Option;
+	content: Option | null;
 	onChange: (selectedOption: number | TeamDto) => void;
 	favoriteTeams: TeamDto[];
 	isEditable?: boolean;
@@ -46,9 +46,9 @@ export default function Selectbox({
 	};
 
 	const handleOptionClick = (selectedPk: number) => {
-		let selected = {
-			pk: NO_CHEERING_TEAM_PK,
-			nameKr: '응원팀이 없어요.',
+		const selected = options.find((option) => option.pk === selectedPk) ?? {
+			pk: -1,
+			nameKr: '응원팀이 없어요',
 			nameEn: 'no cheering team',
 			logoUrl: '/ban.svg',
 		};
@@ -56,25 +56,25 @@ export default function Selectbox({
 		if (category === '리그') {
 			onChange(selectedPk);
 		} else {
-			if (selectedOption.pk !== selectedPk && favoriteTeams.find((team) => team?.pk === selectedPk)) {
+			// 기존과 동일한 팀을 선택한 경우
+			if (selectedOption && selectedOption.pk === selectedPk) {
+				setIsDropdownOpen(false);
+				return;
+			}
+
+			// 이미 선택한 팀을 선택한 경우
+			if (favoriteTeams.find((team) => team?.pk === selectedPk)) {
 				alert('이미 선택한 팀입니다.');
 				return;
 			}
 
+			// 유의미한 팀을 선택한 경우
 			if (selectedPk !== NO_CHEERING_TEAM_PK) {
-				selected = options.find((option) => option.pk === selectedPk) as TeamDto;
 				onChange(selected);
 			}
 		}
 
-		setSelectedOption(
-			options.find((option) => option.pk === selectedPk) ?? {
-				pk: -1,
-				nameKr: '응원팀이 없어요',
-				nameEn: 'no cheering team',
-				logoUrl: '/ban.svg',
-			},
-		);
+		setSelectedOption(selected);
 		setIsDropdownOpen(false);
 	};
 
