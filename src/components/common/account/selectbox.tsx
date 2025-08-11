@@ -38,10 +38,10 @@ export default function Selectbox({
 	const { canChangeTeam } = currentUserInfo;
 
 	const handleSelectBoxClick = () => {
-		// if (!canChangeTeam) {
-		// 	alert('응원팀 변경 기간이 아닙니다.');
-		// 	return;
-		// }
+		if (!canChangeTeam) {
+			alert('응원팀 변경 기간이 아닙니다.');
+			return;
+		}
 		setIsDropdownOpen(!isDropdownOpen);
 	};
 
@@ -82,11 +82,6 @@ export default function Selectbox({
 	useEffect(() => {
 		setSelectedOption(content);
 	}, [content]);
-
-	// props isDropdownOpen 값 변경 시마다 isDropdownOpen에 반영
-	useEffect(() => {
-		setIsDropdownOpen(isDropdownOpen);
-	}, [isDropdownOpen]);
 
 	useEffect(() => {
 		// isDropdownOpen가 true일 때만 리스너 등록

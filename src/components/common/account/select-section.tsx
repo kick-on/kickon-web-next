@@ -1,7 +1,7 @@
 'use client';
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
-import Selectbox from './selectbox-copy';
+import Selectbox from './selectbox';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { TeamDto } from '@/services/apis/team/dto';
 import { getLeague } from '@/services/apis/league';
