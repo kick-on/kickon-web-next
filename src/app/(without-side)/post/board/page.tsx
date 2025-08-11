@@ -7,7 +7,7 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
-import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
@@ -112,53 +112,57 @@ export default function Page() {
 
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
+	const [originalEmbeddedLinks, setOriginalEmbeddedLinks] = useState<string[]>([]); // 임베디드 된 원본 url을 담을 배열
+
 	const postCommunityContents = async () => {
-		if (!currentUserInfo) {
-			return;
-		}
-		if (!isFormValid) return;
+		if (!currentUserInfo || !isFormValid) return;
 
 		const usedImageKeys = extractMediaFilenamesFromContent(body.trim(), 'img');
 		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
-		const embeddedLink = extractEmbeddedLinks(body.trim());
+		const embeddedLink = originalEmbeddedLinks;
 
-		if (isEditMode) {
-			const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
-			const contentPk = parsedData.data.pk;
-			const teamValue =
-				selectedOption.value === '' || selectedOption.value === '전체' ? null : Number(selectedOption.value);
+		console.log('usedImageKeys:', usedImageKeys);
+		console.log('usedVideoKeys:', usedVideoKeys);
+		console.log('embeddedLink:', embeddedLink);
 
-			const finalTeam = isNaN(teamValue) ? null : teamValue;
+		// 팀 값 처리
+		const teamValue =
+			selectedOption.value === '' || selectedOption.value === '전체' ? null : Number(selectedOption.value);
+		const finalTeam = isNaN(teamValue) ? null : teamValue;
 
-			const patchBody: PatchBoardDetailRequest = {
-				title: title.trim(),
-				contents: body.trim(),
-				hasImage,
-				usedImageKeys,
-				usedVideoKeys,
-				embeddedLink,
-				team: finalTeam,
-				isPinned: isPinned,
-			};
-			console.log(patchBody);
-			const response = await patchBoardDetail(contentPk, patchBody);
-			console.log('수정 성공', response);
-			router.replace(`/board/${contentPk}`);
-		} else {
-			const postBody: CreateBoardRequest = {
-				title: title.trim(),
-				contents: body.trim(),
-				hasImage,
-				...(usedImageKeys.length > 0 && { usedImageKeys }),
-				...(usedVideoKeys.length > 0 && { usedVideoKeys }),
-				...(embeddedLink.length > 0 && { embeddedLink }),
-				team: selectedOption.value ? Number(selectedOption.value) : null,
-				isPinned: isPinned,
-			};
+		// 공통 요청 데이터
+		const requestBody = {
+			title: title.trim(),
+			contents: body.trim(),
+			hasImage,
+			team: finalTeam,
+			isPinned,
+			...(usedImageKeys.length > 0 && { usedImageKeys }),
+			...(usedVideoKeys.length > 0 && { usedVideoKeys }),
+			...(embeddedLink.length > 0 && { embeddedLink }),
+		};
 
-			console.log(postBody);
-			const response = await createBoard(postBody);
-			router.push(`/board/${response.data.pk}`);
+		try {
+			if (isEditMode) {
+				const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
+				const contentPk = parsedData.data.pk;
+
+				const patchBody: PatchBoardDetailRequest = { ...requestBody };
+				console.log('수정 바디', patchBody);
+
+				const response = await patchBoardDetail(contentPk, patchBody);
+				console.log('수정 성공', response);
+				router.replace(`/board/${contentPk}`);
+			} else {
+				const postBody: CreateBoardRequest = { ...requestBody };
+				console.log('작성 바디', postBody);
+
+				const response = await createBoard(postBody);
+				console.log('작성 성공', response);
+				router.push(`/board/${response.data.pk}`);
+			}
+		} catch (error) {
+			console.error(isEditMode ? '게시글 수정 실패:' : '게시글 작성 실패:', error);
 		}
 	};
 
@@ -225,7 +229,14 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
+			<PostEditor
+				setTitle={setTitle}
+				setBody={setBody}
+				isNews={false}
+				editedTitle={title}
+				editedBody={body}
+				setOriginalEmbeddedLinks={setOriginalEmbeddedLinks}
+			/>
 
 			{currentUserInfo.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 
