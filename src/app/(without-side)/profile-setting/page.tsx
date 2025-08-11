@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Nickname from '@/components/features/signup/nickname';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { getUserInfo, updateUserInfo } from '@/services/apis/user';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
@@ -12,14 +12,21 @@ import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 
 export default function Page() {
+	const router = useRouter();
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
 
 	const [profileImageUrl, setProfileImageUrl] = useState('');
 	const [isDuplicated, setIsDuplicated] = useState(false);
-	const [nickname, setNickname] = useState<string | null>(currentUserInfo?.nickname ?? null);
+	const [nickname, setNickname] = useState<string | null>(null);
 	const [teamPks, setTeamPks] = useState<number[] | null>([]);
 
-	const router = useRouter();
+	useEffect(() => {
+		if (currentUserInfo) {
+			// 초기 렌더링 시 state 초기화
+			setProfileImageUrl(currentUserInfo.profileImageUrl);
+			setNickname(currentUserInfo.nickname);
+		}
+	}, [currentUserInfo]);
 
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const socialLogoUrl = currentUserInfo?.providerType === 'KAKAO' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
