@@ -28,11 +28,15 @@ export default function Selectbox({
 	isDropdownOpen?: boolean;
 	setIsDropdownOpen?: (isOpen: boolean) => void;
 }) {
-	// 리그-팀 공통으로 pk, nameKr, logoUrl 사용
-	const [selectedOption, setSelectedOption] = useState<Option | null>(content);
-
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
+
+	// 리그-팀 공통으로 pk, nameKr, logoUrl 사용
+	const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+
+	useEffect(() => {
+		setSelectedOption(content);
+	}, [content]);
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const { canChangeTeam } = currentUserInfo;
@@ -53,7 +57,7 @@ export default function Selectbox({
 			logoUrl: '/ban.svg',
 		};
 
-		if (category === '리그') {
+		if (isLeagueSelectBox) {
 			onChange(selectedPk);
 		} else {
 			// 기존과 동일한 팀을 선택한 경우
@@ -77,11 +81,6 @@ export default function Selectbox({
 		setSelectedOption(selected);
 		setIsDropdownOpen(false);
 	};
-
-	// props content 값 변경 시마다 selectedOption에 반영
-	useEffect(() => {
-		setSelectedOption(content);
-	}, [content]);
 
 	useEffect(() => {
 		// isDropdownOpen가 true일 때만 리스너 등록
