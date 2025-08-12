@@ -18,6 +18,9 @@ export default function SelectSection({
 	favoriteTeams: TeamDto[];
 	setFavoriteTeams: Dispatch<SetStateAction<TeamDto[]>>;
 }) {
+	const [isLeagueDropdownOpen, setIsLeagueDropdownOpen] = useState(false);
+	const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
+
 	const selectedTeam = useMemo(() => favoriteTeams[selectedIndex], [favoriteTeams, selectedIndex]);
 	const leagueContent: Option | null = useMemo(
 		() =>
@@ -91,10 +94,6 @@ export default function SelectSection({
 	const handleTeamChange = (team: TeamDto) => {
 		setFavoriteTeams((prev) => prev.map((prevTeam, i) => (i === selectedIndex ? { ...team } : { ...prevTeam })));
 	};
-
-	// 리그 선택 시 팀 선택 드롭다운 자동 오픈
-	const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
-	const [isLeagueDropdownOpen, setIsLeagueDropdownOpen] = useState(false);
 
 	return (
 		<div className="space-y-6 mt-[1.125rem]">

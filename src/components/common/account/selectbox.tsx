@@ -39,10 +39,9 @@ export default function Selectbox({
 	}, [content]);
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const { canChangeTeam } = currentUserInfo;
 
 	const handleSelectBoxClick = () => {
-		if (!canChangeTeam) {
+		if (currentUserInfo && !currentUserInfo.canChangeTeam) {
 			alert('응원팀 변경 기간이 아닙니다.');
 			return;
 		}
