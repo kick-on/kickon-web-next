@@ -19,7 +19,10 @@ export default function TeamBar() {
 
 	return (
 		<>
-			<div className="mt-5 mb-3 items-center subtitle1-medium flex @mobile:grid @mobile:grid-cols-[auto_auto_auto] w-full">
+			<div
+				className="w-full mt-5 mb-3 px-4 @mobile:px-0 subtitle1-medium
+					flex items-center @mobile:grid @mobile:grid-cols-[auto_auto_auto]"
+			>
 				{teams.map((team, i) => (
 					<div
 						key={team.pk}
