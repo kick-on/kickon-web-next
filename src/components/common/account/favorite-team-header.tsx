@@ -1,4 +1,7 @@
+'use client';
+
 import clsx from 'clsx';
+import { useState } from 'react';
 
 export default function FavoriteTeamHeader({
 	isSignup,
@@ -9,6 +12,13 @@ export default function FavoriteTeamHeader({
 	teamCount: number;
 	onClickEditButton: () => void;
 }) {
+	const [isEditButtonVisible, setIsEditButtonVisible] = useState(!isSignup);
+
+	const handleClick = () => {
+		setIsEditButtonVisible(!isEditButtonVisible);
+		onClickEditButton();
+	};
+
 	return (
 		<>
 			<div className="subtitle1-semibold mb-2 flex items-center justify-between">
@@ -16,8 +26,8 @@ export default function FavoriteTeamHeader({
 					MY팀 {isSignup && '선택'} (<span className={clsx({ 'text-primary-900': isSignup })}>{teamCount}</span>
 					/3)
 				</div>
-				{!isSignup && (
-					<button onClick={onClickEditButton} className="ml-auto text-button-05 font-medium text-primary-900">
+				{isEditButtonVisible && (
+					<button onClick={handleClick} className="ml-auto text-button-05 font-medium text-primary-900">
 						편집
 					</button>
 				)}
