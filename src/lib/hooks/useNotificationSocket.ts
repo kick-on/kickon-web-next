@@ -13,7 +13,7 @@ export default function useNotificationSocket(userId: string | null) {
 		// 이미 연결된 경우 방지
 		if (clientRef.current?.connected) return;
 
-		const socket = new SockJS('https://kick-on.kr/ws');
+		const socket = new SockJS('https://api-dev.kick-on.kr/ws');
 		const client = new Client({
 			webSocketFactory: () => socket,
 			reconnectDelay: 5000,
