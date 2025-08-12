@@ -11,8 +11,8 @@ export default function MostHitTeam({
 	teamLogo: string;
 	teamColor: string;
 }) {
-	// 참여 내역이나 적중한 팀이 없는 경우
-	const isDisabled = !Boolean(totalParticipationCount && teamName);
+	// 승부 예측 참여, 적중 팀까지 있는 경우
+	const isActive = Boolean(totalParticipationCount && teamName);
 
 	return (
 		<div
@@ -23,11 +23,11 @@ export default function MostHitTeam({
         before:h-[13px] before:w-20 before:rotate-311 before:bg-[var(--team-color)]
         after:content-[''] after:absolute after:top-1/2 after:-translate-y-1/2
         after:-right-3 after:h-[13px] after:w-30 after:rotate-311 after:bg-[var(--team-color)]`,
-				{ 'before:hidden after:hidden': isDisabled },
+				{ 'before:hidden after:hidden': !isActive },
 			)}
-			style={{ '--team-color': isDisabled ? 'var(--color-black-200)' : teamColor } as React.CSSProperties}
+			style={{ '--team-color': isActive ? teamColor : 'var(--color-black-200)' } as React.CSSProperties}
 		>
-			{!isDisabled && (
+			{isActive && (
 				<div
 					className="absolute z-10 top-1/2 left-4 -translate-y-1/2
           bg-no-repeat bg-center bg-contain opacity-20 w-27 h-auto aspect-square"
@@ -37,7 +37,7 @@ export default function MostHitTeam({
 			<div
 				className={clsx(
 					'absolute z-10 top-1/2 left-1/2 -translate-y-1/2 text-center',
-					isDisabled ? '-translate-x-1/2 w-full' : '-translate-x-5/11 w-[60%]',
+					isActive ? '-translate-x-5/11 w-[60%]' : '-translate-x-1/2 w-full',
 				)}
 			>
 				{!totalParticipationCount ? (
