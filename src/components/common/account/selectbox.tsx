@@ -8,6 +8,8 @@ import { TeamDto } from '@/services/apis/team/dto';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import AlertModal from '@/components/features/detail/alert-modal';
+import { formatNextChangeDate } from '@/lib/utils/date/formatNextChangeDate';
 
 export default function Selectbox({
 	category,
@@ -39,10 +41,24 @@ export default function Selectbox({
 	}, [content]);
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const nextChangeDate = formatNextChangeDate(currentUserInfo?.nextAvailableChangeDate);
+	const nextChangeDateElement =
+		typeof nextChangeDate === 'string' ? (
+			<span className="text-primary-900">{nextChangeDate}</span>
+		) : (
+			nextChangeDate.map(({ label, value }) => (
+				<span key={label}>
+					<span className="text-primary-900">{value}</span>
+					{label}
+					{label === '월' && <>&nbsp;</>}
+				</span>
+			))
+		);
 
 	const handleSelectBoxClick = () => {
 		if (currentUserInfo && !currentUserInfo.canChangeTeam) {
-			alert('응원팀 변경 기간이 아닙니다.');
+			setIsModalOpen(true);
 			return;
 		}
 		setIsDropdownOpen(!isDropdownOpen);
@@ -151,6 +167,21 @@ export default function Selectbox({
 					</div>
 				)}
 			</div>
+
+			{isModalOpen && (
+				<AlertModal
+					type="alert"
+					description={
+						<>
+							MY팀 변경은 6개월에 한 번만 가능해요.
+							<br />
+							다음 변경 가능일: {nextChangeDateElement}
+						</>
+					}
+					confirmButtonText="확인"
+					onConfirm={() => setIsModalOpen(false)}
+				/>
+			)}
 		</div>
 	);
 }
