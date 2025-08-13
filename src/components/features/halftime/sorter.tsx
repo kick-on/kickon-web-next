@@ -12,7 +12,7 @@ const options = [
 
 export default function Sorter() {
 	const [selectedSort, setSelectedSort] = useState(options[0].value);
-	const selectedIndex = options.indexOf(options.find((option) => option.value === selectedSort));
+	const selectedIndex = options.findIndex((option) => option.value === selectedSort);
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
