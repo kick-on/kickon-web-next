@@ -11,6 +11,7 @@ import parse, { Element } from 'html-react-parser';
 import { createNewsKick } from '@/services/apis/news/news.api';
 import { createBoardKick } from '@/services/apis/board/board.api';
 
+// TODO: 타입 선언
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isNews = type === 'news';
@@ -141,9 +142,9 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 							className="w-full h-full rounded-full object-cover"
 						/>
 					</div>
-					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-13">
+					<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
 						{data.user.nickname}
-						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
+						{data.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 					</span>
 					<span className="ml-2">{getRelativeTime(data.createdAt)}</span>
 					<span>|</span>

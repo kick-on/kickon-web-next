@@ -31,6 +31,7 @@ export interface UserInfoDto {
 	favoriteTeams: TeamDto[];
 	league?: LeagueDto;
 	isInfluencer?: boolean;
+	isReporter: boolean;
 }
 
 export interface NewTokenDto {
@@ -43,4 +44,5 @@ export interface UserDto {
 	id: string;
 	nickname: string;
 	profileImageUrl: string;
+	isReporter: boolean;
 }

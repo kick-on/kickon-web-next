@@ -16,7 +16,6 @@ const EditorBody = () => {
 		</>
 	);
 };
-
 const PostEditor = ({
 	setTitle,
 	setBody,
@@ -42,5 +41,4 @@ const PostEditor = ({
 		</EditorProvider>
 	);
 };
-
 export default PostEditor;

@@ -19,18 +19,21 @@ export default function TeamBar() {
 
 	return (
 		<>
-			<div className="mt-5 mb-3 flex items-center subtitle1-medium">
+			<div
+				className="w-full mt-5 mb-3 px-4 @mobile:px-0 subtitle1-medium
+					flex items-center @mobile:grid @mobile:grid-cols-[auto_auto_auto]"
+			>
 				{teams.map((team, i) => (
 					<div
 						key={team.pk}
 						className={clsx(
-							'flex items-center',
+							'flex items-center @mobile:w-full',
 							id === String(team.pk) ? 'font-semibold text-primary-900' : 'text-black-400',
 						)}
 					>
 						<Link
 							href={`${pathname}?q=MY 팀&type=team&id=${team.pk}`}
-							className="px-3 py-1.5 flex gap-0.5 items-center"
+							className="px-3 py-1.5 grid grid-cols-[auto_1fr] gap-0.5 items-center w-full"
 						>
 							<Image
 								src={team.logoUrl}
@@ -39,7 +42,7 @@ export default function TeamBar() {
 								height={20}
 								className="w-5 h-5 object-contain"
 							/>
-							{team.nameKr || team.nameEn}
+							<span className="w-full truncate">{team.nameKr || team.nameEn}</span>
 						</Link>
 						{i < teams.length - 1 && <div className="h-3 w-[1px] mx-1.5 rounded-full bg-black-600" />}
 					</div>
