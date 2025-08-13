@@ -10,8 +10,12 @@ export default function useNotificationSocket(userId: string | null) {
 
 	useEffect(() => {
 		if (!userId) return;
-		// 이미 연결된 경우 방지
-		if (clientRef.current?.connected) return;
+		console.log(userId);
+		// userId가 바뀌면 기존 연결 끊기
+		if (clientRef.current) {
+			clientRef.current.deactivate();
+			clientRef.current = null;
+		}
 
 		const socket = new SockJS('https://api-dev.kick-on.kr/ws');
 		const client = new Client({

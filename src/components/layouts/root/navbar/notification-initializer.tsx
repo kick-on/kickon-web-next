@@ -20,6 +20,7 @@ export default function NotificationInitializer() {
 			try {
 				const [unread, list] = await Promise.all([getUnreadNotifications(), getNotificationList()]);
 
+				console.log('알림 초기 목록', unread, list);
 				if (unread) setUnreadCount(unread.data.count);
 				if (list) setNotifications(list.data);
 			} catch (error) {

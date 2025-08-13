@@ -2,20 +2,16 @@
 
 import NoticeHeader from '@/components/features/notice/notice-header';
 import NoticeItem from '@/components/features/notice/notice-item';
-import { dummyNotices } from '@/lib/constants/dummyNotices';
+import { useNotificationStore } from '@/lib/store/useNotificationStore';
 
 export default function Page() {
+	const notifications = useNotificationStore((state) => state.notifications);
+
 	return (
 		<div>
 			<NoticeHeader />
-			{dummyNotices.map((notice) => (
-				<NoticeItem
-					key={notice.id}
-					type={notice.type}
-					date={notice.date}
-					content={notice.content}
-					teamLogo={notice.teamLogo}
-				/>
+			{notifications.map((notice) => (
+				<NoticeItem key={notice.pk} type={notice.type} date={notice.relativeTime} content={notice.content} />
 			))}
 		</div>
 	);
