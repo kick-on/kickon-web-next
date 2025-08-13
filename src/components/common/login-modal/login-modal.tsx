@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import LoginButton from './login-button';
+import SocialButton from './social-button';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
@@ -14,7 +14,7 @@ export default function LoginModal({ onClose }) {
 		onClose();
 	};
 
-	const handleLoginButtonClick = (provider: 'naver' | 'kakao') => {
+	const handleSocialButtonClick = (provider: 'naver' | 'kakao') => {
 		// api route 호출
 		const redirectUrl = `${DOMAIN_URL || 'http://localhost:3000'}/api/auth/${provider}/callback`;
 		router.push(`${SERVER_URL}/oauth2/authorization/${provider}?state=${redirectUrl}`);
@@ -61,8 +61,8 @@ export default function LoginModal({ onClose }) {
 					<div>좋아하는 축구팀 승부예측하러 가요!</div>
 
 					<div className="mt-[6.625rem] flex flex-col gap-5">
-						<LoginButton social="카카오" onClick={() => handleLoginButtonClick('kakao')} />
-						<LoginButton social="네이버" onClick={() => handleLoginButtonClick('naver')} />
+						<SocialButton social="카카오" onClick={() => handleSocialButtonClick('kakao')} />
+						<SocialButton social="네이버" onClick={() => handleSocialButtonClick('naver')} />
 					</div>
 				</div>
 			</div>
