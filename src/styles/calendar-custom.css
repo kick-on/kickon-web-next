@@ -12,7 +12,7 @@
 .react-calendar__tile:hover,
 .focused-today-tile:hover {
 	background-color: #c00c0b0d !important; /* 기존 배경 유지 */
-	color: #c00c0b !important; /* 기존 텍스트 색상 유지 */
+	/* color: #c00c0b !important; 기존 텍스트 색상 유지 */
 	cursor: default;
 }
 
@@ -108,8 +108,9 @@
 
 /* 오늘 날짜 타일 스타일 */
 .custom-calendar .focused-today-tile {
+	color: #c00c0b;
 	border: 2px solid #c00c0b !important;
-	background-color: #c00c0b0d;
+	background-color: #c00c0b0d !important;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
 	width: 100%;
@@ -124,7 +125,8 @@
 }
 
 .custom-calendar .not-focused-today-tile {
-	border: 2px solid #c00c0b !important;
+	color: #c00c0b4d;
+	border: 2px solid #c00c0b4d !important;
 	background-color: #fff;
 	border-radius: 8px;
 	padding: 10px 10px 30px 10px;
@@ -139,7 +141,8 @@
 	font-weight: 500;
 }
 .custom-calendar-mobile .not-focused-today-tile {
-	border: 2px solid #c00c0b !important;
+	color: #c00c0b4d;
+	border: 2px solid #c00c0b4d !important;
 	background-color: #fff;
 	border-radius: 8px;
 	padding: 12px 8px 28px 8px;
@@ -190,7 +193,6 @@
 
 .custom-calendar .today-text {
 	display: flex;
-	color: #c00c0b;
 	text-align: center;
 	font-size: 15px;
 	font-weight: 600;
@@ -198,8 +200,9 @@
 }
 
 .custom-calendar-mobile .focused-today-tile {
+	color: #c00c0b;
 	border: 2px solid #c00c0b !important;
-	background-color: #c00c0b0d;
+	background-color: #c00c0b0d !important;
 	border-radius: 8px;
 	padding: 12px 8px 28px 8px;
 	width: 100%;
@@ -213,7 +216,6 @@
 }
 
 .custom-calendar-mobile .today-text {
-	color: #c00c0b;
 	text-align: center;
 	font-size: 13px;
 	font-weight: 600;
