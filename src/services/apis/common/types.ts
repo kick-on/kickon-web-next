@@ -26,6 +26,8 @@ export interface CommonCreatePostRequest {
 	title: string;
 	contents: string;
 	usedImageKeys?: string[];
+	usedVideoKeys?: string[];
+	embeddedLink?: string[];
 }
 
 // 댓글 상세
