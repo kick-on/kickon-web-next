@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Divider from './divider';
 import { HotNewsDto, NewsListDto } from '@/services/apis/news/news.type';
 import { useEffect, useState } from 'react';
-import MostReadNewsItem from '@/components/layouts/with-side/most-read-news-list/most-read-news-item';
+import TopNewsItem from '@/components/layouts/with-side/top-news-halftime/top-news-item';
 import { getHotNews, getNewsList } from '@/services/apis/news/news.api';
 import Image from 'next/image';
 import { NavButton } from '../../navbar';
@@ -84,14 +84,14 @@ export default function SideNavbar({
 							? recentNews !== null
 								? recentNews.map((news) => (
 										<div key={news?.pk} onClick={onClickButton}>
-											<MostReadNewsItem {...news} leagueNameKr={news?.category} />
+											<TopNewsItem {...news} leagueNameKr={news?.team?.leagueNameKr || news.category} />
 										</div>
 									))
 								: null
 							: hotNews.map((news, i) =>
 									i > countToRender - 1 ? null : (
 										<div key={news.pk} onClick={onClickButton}>
-											<MostReadNewsItem {...news} />
+											<TopNewsItem {...news} />
 										</div>
 									),
 								)}
