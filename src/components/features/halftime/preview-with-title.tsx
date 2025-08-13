@@ -20,9 +20,7 @@ export default function PreviewWithTitle({
 				<Preview src={videoUrl} />
 			</div>
 
-			<h3 className="button2-medium my-2 @mobile:mb-1.5 @mobile:text-14">
-				{title.length > 27 ? title.slice(0, 27) + '...' : title}
-			</h3>
+			<h3 className="button2-medium my-2 @mobile:mb-1.5 @mobile:text-14 line-clamp-2 break-keep">{title}</h3>
 			<div className="body5-regular text-black-600 flex gap-2 @mobile:text-12 items-center">
 				<span>조회수 {formatNumberByUnit(viewCount)}회</span>
 				{hasKick && (

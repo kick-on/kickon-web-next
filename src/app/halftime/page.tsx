@@ -4,7 +4,7 @@ import Sorter from '@/components/features/halftime/sorter';
 import { Suspense } from 'react';
 
 const data = {
-	title: '기성용 이적에 역대급 폭발한 FC 서울 팬들 어쩌구저쩌구',
+	title: '기성용 이적에 역대급 폭발한 FC 서울 팬들 어쩌구저쩌구 WW WWW',
 	viewCount: 2,
 	kickCount: 1.2,
 };
