@@ -16,7 +16,7 @@ import { getBoardDetail } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
-import usePostViewStatus from '@/lib/hooks/useIsView';
+import usePostViewStatus from '@/lib/hooks/usePostViewStatus';
 
 const DetailPage = () => {
 	const params = useParams();
@@ -72,11 +72,11 @@ const DetailPage = () => {
 		getDetailContentData();
 	}, [type, id]);
 
-	// TODO: 로직 점검 변수명 명확하게 수정!
-	const viewSent = useRef(false);
+	// TODO: 로직 점검 -> hasViewApiCalled 안 쓰는 방향으로...
+	const hasViewApiCalled = useRef(false);
 
 	useEffect(() => {
-		if (!contents || viewSent.current || !shouldCallApi) return; // 중복 호출 방지
+		if (!contents || hasViewApiCalled.current || !shouldCallApi) return;
 
 		if (isNews) {
 			createNewsView(id);
@@ -84,7 +84,7 @@ const DetailPage = () => {
 			createBoardView(id);
 		}
 
-		viewSent.current = true;
+		hasViewApiCalled.current = true;
 	}, [contents, id, shouldCallApi, isNews]);
 
 	return (
