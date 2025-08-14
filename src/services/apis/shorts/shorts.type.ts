@@ -29,7 +29,7 @@ export interface GetHalftimeDetailDto extends BaseHalftimeDto {
 	replyCount: number;
 	user: UserDto;
 }
-export type GetHalftimeDetailResponse = SuccessResponse<GetHalftimeDetailDto[]>;
+export type GetHalftimeDetailResponse = SuccessResponse<GetHalftimeDetailDto>;
 
 // common
 export interface BaseHalftimeDto {

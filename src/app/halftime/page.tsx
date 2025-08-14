@@ -29,6 +29,10 @@ export default function Page() {
 
 				setHalftimes(response.data);
 				setPage((prev) => prev + 1);
+
+				// halftime detail 페이지에서 사용할 halftime pk 배열
+				const halftimePks = response.data.map((data) => data.pk);
+				sessionStorage.setItem('KICKON_HALFTIME_PKS', JSON.stringify(halftimePks));
 			} catch {
 				alert('동영상을 불러오는 중 문제가 발생했습니다.');
 			}
