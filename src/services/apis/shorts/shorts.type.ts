@@ -1,6 +1,9 @@
 import { SuccessResponse } from '@/services/config/dto';
 import { UserDto } from '../user/dto';
 
+// enum
+export type HalftimeSortType = 'CREATED_DESC' | 'POPULAR' | 'CREATED_ASC';
+
 // common
 export interface BaseHalftimeDto {
 	pk: number;
@@ -15,7 +18,7 @@ export interface BaseHalftimeDto {
 
 // 하프타임 리스트 조회
 export interface GetHalftimeListRequest {
-	sort?: 'CREATED_DESC' | 'POPULAR' | 'CREATED_ASC';
+	sort?: HalftimeSortType;
 	page: number;
 	size: number;
 }
