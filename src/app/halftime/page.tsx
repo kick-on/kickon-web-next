@@ -20,13 +20,12 @@ export default function Page() {
 	useEffect(() => {
 		const getHalftimes = async () => {
 			try {
-				const body = {
+				const params = {
 					sort: sort as HalftimeSortType,
 					size,
 					page,
 				};
-				console.log(body);
-				const response = await getHalftimeList(body);
+				const response = await getHalftimeList(params);
 
 				setHalftimes(response.data);
 				setPage((prev) => prev + 1);

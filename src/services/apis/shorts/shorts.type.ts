@@ -18,7 +18,7 @@ export interface BaseHalftimeDto {
 
 // 하프타임 리스트 조회
 export interface GetHalftimeListRequest {
-	sort?: HalftimeSortType;
+	sort: HalftimeSortType;
 	page: number;
 	size: number;
 }

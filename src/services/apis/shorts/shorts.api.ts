@@ -7,9 +7,15 @@ import {
 } from './shorts.type';
 
 // 하프타임 리스트 조회
-export const getHalftimeList = async (body: GetHalftimeListRequest) => {
+export const getHalftimeList = async ({ sort, page, size }: GetHalftimeListRequest) => {
 	try {
-		const response = await fetcher<GetHalftimeListResponse>({ method: 'GET', url: `/api/shorts`, body });
+		const params = new URLSearchParams();
+
+		params.append('sort', String(sort));
+		params.append('size', String(size));
+		params.append('page', String(page));
+
+		const response = await fetcher<GetHalftimeListResponse>({ method: 'GET', url: `/api/shorts` });
 
 		if (!response) {
 			console.error('하프타임 리스트 조회 실패 - 응답 없음');
