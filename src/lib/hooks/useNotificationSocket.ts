@@ -24,13 +24,19 @@ export default function useNotificationSocket(userId: string | null) {
 			debug: (str) => console.log('%c[STOMP DEBUG]', 'color: gray', str), // 디버깅 로그
 		});
 
-		client.onConnect = () => {
-			console.log('[STOMP] 연결 성공');
-			client.subscribe(`/topic/notify/${userId}`, (message) => {
-				const newNotification = JSON.parse(message.body);
-				console.log('알림 수신', newNotification);
-				useNotificationStore.getState().addNotification(newNotification);
+		client.onConnect = (frame) => {
+			console.log('[STOMP] 연결 성공', frame);
+			const subscription = client.subscribe(`/topic/notify/${userId}`, (message) => {
+				console.log('[STOMP] 메시지 수신 RAW:', message);
+				try {
+					const newNotification = JSON.parse(message.body);
+					console.log('[STOMP] 파싱된 알림:', newNotification);
+					useNotificationStore.getState().addNotification(newNotification);
+				} catch (e) {
+					console.error('[STOMP] 메시지 파싱 실패', e);
+				}
 			});
+			console.log('[STOMP] 구독 완료:', subscription.id);
 		};
 
 		client.onStompError = (frame) => {
