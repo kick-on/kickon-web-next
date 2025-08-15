@@ -36,9 +36,11 @@ function CommentSection({
 	const [replyingTo, setReplyingTo] = useState([]); // 열어둔 답글 리스트
 	const [replyVisibilities, setReplyVisibilities] = useState({}); // 댓글의 답글을 열지 말지
 
-	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정!
-	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id (수정하다가 다른 거 수정하기 누르는 경우??)
+	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정! -> 네이밍 수정!!
+	// -> 하나의 상태로 통합했으나 ({mode, commentId} 객체 형태로) mode로 관리함으로써 A 댓글을 편집 중이다가 B 댓글의 수정하기 버튼을 누르면 mode가 바뀌면서 state 자체가 바뀌니 편집 중이던 내용이 초기화 됨. (원래는 상태가 독립이었어서 문제 x)
+	// 이를 해결하려면 편집 중이던 내용을 따로 저장 (map으로 댓글마다 저장)해야 했는데 그럼 복잡도가 올라감
 	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
+	const [stagedCommentId, setStagedCommentId] = useState<number | null>(null); // 수정을 시도하는 코멘트 id
 
 	const [loadedPages, setLoadedPages] = useState([1]); // infinite lastReply + 스프레드 -> 제거 예정
 
@@ -229,7 +231,7 @@ function CommentSection({
 	// 수정 모드로 진입
 	const handleEnterEditMode = (commentId: number) => {
 		if (editingCommentId && editingCommentId !== commentId) {
-			setPendingCommentId(commentId);
+			setStagedCommentId(commentId);
 			setIsConfirmModalOpen(true);
 			return;
 		}
@@ -356,14 +358,14 @@ function CommentSection({
 					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
 					onCancel={() => {
 						setIsConfirmModalOpen(false);
-						setPendingCommentId(null);
+						setStagedCommentId(null);
 					}}
 					onConfirm={() => {
-						if (pendingCommentId !== null) {
-							setEditingCommentId(pendingCommentId);
+						if (stagedCommentId !== null) {
+							setEditingCommentId(stagedCommentId);
 						}
 						setIsConfirmModalOpen(false);
-						setPendingCommentId(null);
+						setStagedCommentId(null);
 					}}
 				/>
 			)}

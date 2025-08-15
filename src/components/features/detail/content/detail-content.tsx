@@ -36,7 +36,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
 	const categoryLabel =
-		categories.find((category) => category.value === newsDetailData.category)?.label || newsDetailData.category;
+		categories.find((category) => category.value === newsDetailData?.category)?.label || newsDetailData?.category;
 
 	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {
@@ -53,7 +53,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 		};
 
 		preloadImage();
-	}, [isNews, newsDetailData.thumbnailUrl]);
+	}, [isNews, newsDetailData?.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
