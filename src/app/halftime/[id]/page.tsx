@@ -31,7 +31,12 @@ export default function Page() {
 			}
 		};
 
-		const nextPkIndex = parsedPks.findIndex((parsedPk) => parsedPk === pk) + 1;
+		const currentIndex = Number(parsedPks.findIndex((parsedPk) => parsedPk == pk));
+
+		// 마지막 동영상인 경우 return
+		if (currentIndex === parsedPks.length - 1) return;
+
+		const nextPkIndex = currentIndex + 1;
 		const nextPk = parsedPks[nextPkIndex];
 
 		// 초기 렌더링 시에만 current와 next 모두 조회
@@ -39,7 +44,7 @@ export default function Page() {
 			getHalftime(pk);
 		}
 		getHalftime(nextPk);
-	}, [pk, halftimes]);
+	}, [pk]);
 
 	// 동영상 전체 플로우에서의 mute 설정
 	const [globalMuted, setGlobalMuted] = useState(true);
@@ -77,8 +82,8 @@ export default function Page() {
 						{({ isActive }) => (
 							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
 								<Player
+									{...halftime}
 									isCurrentPlayer={isActive}
-									src={halftime.videoUrl}
 									globalMuted={globalMuted}
 									toggleGlobalMuted={toggleGlobalMuted}
 								/>

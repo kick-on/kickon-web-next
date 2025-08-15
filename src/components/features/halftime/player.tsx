@@ -7,6 +7,7 @@ import TopButtons from './player-action/top-buttons';
 import FloatingActionButtons from './player-action/floating-action-buttons';
 import PlayButton from './player-action/play-button';
 import ControlBar from './player-action/control-bar';
+import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 
 export interface PlayerAttribute {
 	playing: boolean;
@@ -19,12 +20,11 @@ export interface PlayerAttribute {
 }
 
 export default function Player({
-	src,
+	videoUrl,
 	isCurrentPlayer,
 	globalMuted,
 	toggleGlobalMuted,
-}: {
-	src: string;
+}: GetHalftimeDetailDto & {
 	isCurrentPlayer: boolean;
 	globalMuted: boolean;
 	toggleGlobalMuted: () => void;
@@ -122,7 +122,7 @@ export default function Player({
 				)}
 			>
 				<ReactPlayer
-					src={src}
+					src={videoUrl}
 					ref={setPlayerRef}
 					loop
 					muted={globalMuted}
