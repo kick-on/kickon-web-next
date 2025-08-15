@@ -13,7 +13,6 @@ export interface CommentSectionProps {
 export interface CommentItemProps {
 	content: CommonCommentDto;
 	type: 'news' | 'board';
-	likedComments: Record<number, boolean>;
 	handleLikeToggle: (commentId: number) => void;
 	handleReply: (commentId: number) => void;
 	closeReplyInput: (commentId: number) => void;

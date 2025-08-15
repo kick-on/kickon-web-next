@@ -40,7 +40,6 @@ function CommentSection({
 	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id (수정하다가 다른 거 수정하기 누르는 경우??)
 	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
 
-	const [likedComments, setLikedComments] = useState({}); // 제거 예정
 	const [loadedPages, setLoadedPages] = useState([1]); // infinite lastReply + 스프레드 -> 제거 예정
 
 	// 현재 페이지 추출
@@ -120,13 +119,13 @@ function CommentSection({
 		}
 	}, [pageParam, isMobile]);
 
-	// 로컬스토리지에서 좋아요 상태 복원
-	useEffect(() => {
-		const storedLikes = localStorage.getItem('likedComments');
-		if (storedLikes) {
-			setLikedComments(JSON.parse(storedLikes));
-		}
-	}, []);
+	// // 로컬스토리지에서 좋아요 상태 복원
+	// useEffect(() => {
+	// 	const storedLikes = localStorage.getItem('likedComments');
+	// 	if (storedLikes) {
+	// 		setLikedComments(JSON.parse(storedLikes));
+	// 	}
+	// }, []);
 
 	// 모바일에서 '더 보기' 클릭 시 댓글 추가 로드
 	const handleLoadMoreComment = async () => {
@@ -181,9 +180,8 @@ function CommentSection({
 		}
 	};
 
-	// 좋아요 토글
+	// 좋아요 토글 -> kicked가 서버한테 잘 오는지 판단하고 다시!! kickCount 이건 잘 돼!
 	const toggleCommentLike = async (commentId: number) => {
-		// 로그인 안 되어 있으면 모달 열기
 		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
@@ -192,19 +190,16 @@ function CommentSection({
 		const result = isNews ? await createNewsCommentKick(commentId) : await createBoardCommentKick(commentId);
 		if (!result) return;
 
-		// TODO: 1. 좋아요 api 응답에서 좋아요 개수 반환하도록 요청
-		// 로컬스토리지 및 상태 업데이트
-		setLikedComments((prev) => {
-			const updated = { ...prev, [commentId]: !prev[commentId] };
-			localStorage.setItem('likedComments', JSON.stringify(updated));
-			return updated;
-		});
-
-		// 좋아요 수 변경
 		setComments((prev) =>
-			prev.map((c) =>
-				c.pk === commentId ? { ...c, kickCount: c.kickCount + (likedComments[commentId] ? -1 : 1) } : c,
-			),
+			prev.map((c) => {
+				if (c.pk !== commentId) return c;
+				const isCurrentlyLiked = c.kicked; // 현재 상태
+				return {
+					...c,
+					kicked: !isCurrentlyLiked, // 토글
+					kickCount: c.kickCount + (isCurrentlyLiked ? -1 : 1), // 즉시 +1/-1 반영
+				};
+			}),
 		);
 	};
 
@@ -279,7 +274,6 @@ function CommentSection({
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {
 		type,
-		likedComments,
 		handleLikeToggle: toggleCommentLike,
 		handleReply,
 		closeReplyInput,

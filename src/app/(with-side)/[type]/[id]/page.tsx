@@ -72,7 +72,7 @@ const DetailPage = () => {
 		getDetailContentData();
 	}, [type, id]);
 
-	// TODO: 로직 점검 -> hasViewApiCalled 안 쓰는 방향으로...
+	// TODO: 로직 점검 -> hasViewApiCalled 안 쓰는 방향으로...!!
 	const hasViewApiCalled = useRef(false);
 
 	useEffect(() => {
@@ -91,7 +91,7 @@ const DetailPage = () => {
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
 			<ComponentFrame isMain={true}>
 				{contents ? (
-					<DetailContent data={contents} type={type} isCommentAllowed={isCommentAllowed} />
+					<DetailContent commonDetailData={contents} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={getDetailContentData} />
 				)}
