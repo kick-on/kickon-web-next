@@ -1,20 +1,24 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
-import { createNewsReplyRequest, GetNewsCommentsResponse } from './news-reply.type';
+import { createNewsReplyRequest, GetNewsCommentsRequest, GetNewsCommentsResponse } from './news-reply.type';
 import { CommonCommentKickDto, CommonPatchReplyDto } from '../common/types';
 
 // 뉴스 댓글 목록 조회
-export const getNewsCommentList = async (
-	id: number,
-	page: number = 1,
-	size: number = 10,
-): Promise<GetNewsCommentsResponse | null> => {
+export const getNewsCommentList = async ({
+	id,
+	page,
+	size,
+	infinite,
+	lastReply,
+}: GetNewsCommentsRequest): Promise<GetNewsCommentsResponse | null> => {
 	const params = new URLSearchParams({
 		news: String(id),
 		page: String(page),
 		size: String(size),
 	});
+	if (infinite !== undefined) params.append('infinite', String(infinite));
+	if (lastReply !== undefined) params.append('lastReply', String(infinite));
 
 	const response = await fetch(`${SERVER_URL}/api/news-reply?${params.toString()}`);
 

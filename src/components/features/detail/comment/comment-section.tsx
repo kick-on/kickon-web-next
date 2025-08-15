@@ -61,7 +61,11 @@ function CommentSection({
 			if (!contentsId || contentsId < 1) return;
 			try {
 				const response = isNews
-					? await getNewsCommentList(contentsId, page, commentsPerPage)
+					? await getNewsCommentList({
+							id: contentsId,
+							page: currentPage,
+							size: commentsPerPage,
+						})
 					: await getBoardCommentList(contentsId, page, commentsPerPage);
 
 				console.log('댓글 리스트', response);
@@ -93,7 +97,11 @@ function CommentSection({
 			// 모든 로드된 페이지를 순서대로 불러옴
 			for (const page of loadedPages.sort((a, b) => a - b)) {
 				const response = isNews
-					? await getNewsCommentList(contentsId, page, commentsPerPage)
+					? await getNewsCommentList({
+							id: contentsId,
+							page: currentPage,
+							size: commentsPerPage,
+						})
 					: await getBoardCommentList(contentsId, page, commentsPerPage);
 
 				if (response?.data) {
@@ -133,7 +141,11 @@ function CommentSection({
 	const handleLoadMoreComment = async () => {
 		const nextPage = currentPage + 1;
 		const response = isNews
-			? await getNewsCommentList(contentsId, nextPage, commentsPerPage)
+			? await getNewsCommentList({
+					id: contentsId,
+					page: currentPage,
+					size: commentsPerPage,
+				})
 			: await getBoardCommentList(contentsId, nextPage, commentsPerPage);
 
 		const newComments = response?.data || [];
@@ -160,7 +172,11 @@ function CommentSection({
 			// 해당 댓글의 최신 상태를 다시 불러와 갱신
 			try {
 				const response = isNews
-					? await getNewsCommentList(contentsId, currentPage, commentsPerPage)
+					? await getNewsCommentList({
+							id: contentsId,
+							page: currentPage,
+							size: commentsPerPage,
+						})
 					: await getBoardCommentList(contentsId, currentPage, commentsPerPage);
 
 				const updatedComment = response?.data.find((c) => c.pk === parentPk);
