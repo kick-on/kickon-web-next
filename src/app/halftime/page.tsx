@@ -17,29 +17,44 @@ export default function Page() {
 	const sort = searchParams.get('sort') ?? halftimeSortOptions[0].value;
 	const size = useFetchSize();
 
+	// sort가 변경되면 초기화
 	useEffect(() => {
-		const getHalftimes = async () => {
-			try {
-				const params = {
-					sort: sort as HalftimeSortType,
-					size,
-					page,
-				};
-				const response = await getHalftimeList(params);
+		setPage(1);
+		getHalftimes(1, 'init');
+	}, [sort]);
 
+	// 페이지 번호가 바뀔 때 추가 데이터를 불러옵니다.
+	useEffect(() => {
+		if (page > 1) {
+			getHalftimes(page, 'append');
+		}
+	}, [page]);
+
+	const getHalftimes = async (pageNum: number, type: 'init' | 'append') => {
+		try {
+			const params = {
+				sort: sort as HalftimeSortType,
+				size,
+				page: pageNum,
+			};
+			const response = await getHalftimeList(params);
+
+			if (type === 'init') {
 				setHalftimes(response.data);
-				setPage((prev) => prev + 1);
-
-				// halftime detail 페이지에서 사용할 halftime pk 배열
-				const halftimePks = response.data.map((data) => data.pk);
-				sessionStorage.setItem('KICKON_HALFTIME_PKS', JSON.stringify(halftimePks));
-			} catch {
-				alert('동영상을 불러오는 중 문제가 발생했습니다.');
+			} else {
+				setHalftimes((prev) => [...prev, ...response.data]);
 			}
-		};
 
-		getHalftimes();
-	}, [sort, size, page]);
+			// halftime detail 페이지에서 사용할 halftime pk 배열
+			const halftimePks = response.data.map((data) => data.pk);
+			sessionStorage.setItem('KICKON_HALFTIME_PKS', JSON.stringify(halftimePks));
+		} catch {
+			alert('동영상을 불러오는 중 문제가 발생했습니다.');
+		}
+	};
+
+	// TODO: 무한스크롤 로직 추가해야 함.
+	// session에 pk를 저장하는 로직도 get하고 set하는 로직으로 수정
 
 	return (
 		<div className="pt-4 @mobile:pt-0">
