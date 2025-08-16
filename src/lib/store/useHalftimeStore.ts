@@ -4,6 +4,7 @@ import { create } from 'zustand';
 interface HalftimesStore {
 	halftimes: GetHalftimeDetailDto[];
 	pushHalftimes: (halftime: GetHalftimeDetailDto) => void;
+	clearHalftimes: () => void;
 }
 
 export const useHalftimes = create<HalftimesStore>((set) => ({
@@ -12,4 +13,5 @@ export const useHalftimes = create<HalftimesStore>((set) => ({
 		set((state) => ({
 			halftimes: [...(state.halftimes || []), halftime],
 		})),
+	clearHalftimes: () => set(() => ({ halftimes: [] })),
 }));

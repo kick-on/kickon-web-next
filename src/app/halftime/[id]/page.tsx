@@ -4,39 +4,40 @@ import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { useHalftimes } from '@/lib/store/useHalftimeStore';
 import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
+import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
-import { SwiperSlide, Swiper, SwiperRef } from 'swiper/react';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { Swiper as SwiperClass } from 'swiper';
+import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 
 export default function Page() {
-	const { halftimes, pushHalftimes } = useHalftimes();
+	const { halftimes, pushHalftimes, clearHalftimes } = useHalftimes();
 
-	const router = useRouter();
 	const params = useParams();
 	const { id: pk } = params;
 
-	useEffect(() => {
-		const storedPks = sessionStorage.getItem('KICKON_HALFTIME_PKS');
-		if (!storedPks || typeof pk !== 'string') return;
-		const parsedPks = JSON.parse(storedPks);
-
-		const getHalftime = async (pkToFetch: number) => {
-			// 이미 조회한 pk의 halftime은 조회하지 않음
-			if (halftimes.some((h) => h.pk === pkToFetch)) {
+	const getHalftime = useCallback(
+		async (pkToFetch: number) => {
+			if (halftimes.some((h: GetHalftimeDetailDto) => h.pk === pkToFetch)) {
 				return;
 			}
-
 			try {
 				const response = await getHalftimeDetail(pkToFetch);
 				pushHalftimes(response.data);
 			} catch {
 				alert('동영상을 불러오는 중 문제가 발생했습니다.');
 			}
-		};
+		},
+		[halftimes, pushHalftimes],
+	);
 
-		const currentPkNum = Number(pk);
-		getHalftime(currentPkNum);
+	useEffect(() => {
+		const storedPks = sessionStorage.getItem('KICKON_HALFTIME_PKS');
+		if (!storedPks || typeof pk !== 'string') return;
+		const parsedPks = JSON.parse(storedPks);
+
+		getHalftime(Number(pk));
 
 		const currentIndex = parsedPks.findIndex((parsedPk: string) => parsedPk == pk);
 		const isLastVideo = currentIndex === parsedPks.length - 1;
@@ -46,16 +47,39 @@ export default function Page() {
 			const nextPk = parsedPks[nextPkIndex];
 			getHalftime(Number(nextPk));
 		}
-	}, [pk]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
 
-	// 동영상 전체 플로우에서의 mute 설정
+	const handleSlideChange = (swiper: SwiperClass) => {
+		const { activeIndex } = swiper;
+		if (!halftimes[activeIndex]) return;
+
+		window.history.replaceState(null, '', `/halftime/${halftimes[activeIndex].pk}`);
+
+		const storedPks = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
+		const currentPk = halftimes[activeIndex].pk;
+		const currentIndexInFullList = storedPks.findIndex((p: string) => Number(p) == currentPk);
+		const isLastVideo = currentIndexInFullList === storedPks.length - 1;
+
+		if (!isLastVideo) {
+			const nextPkIndex = currentIndexInFullList + 1;
+			const nextPk = storedPks[nextPkIndex];
+			getHalftime(Number(nextPk));
+		}
+	};
+
+	const initialSlideIndex = useMemo(() => {
+		if (typeof pk !== 'string') return 0;
+		const index = halftimes.findIndex((h) => h.pk === Number(pk));
+		return index > -1 ? index : 0;
+	}, [pk, halftimes]);
+
 	const [globalMuted, setGlobalMuted] = useState(true);
 
 	const toggleGlobalMuted = () => {
 		setGlobalMuted((prev) => !prev);
 	};
 
-	// margin top 조정 로직
 	const [isMobileNavbar, setIsMobileNavber] = useState(false);
 	const isLeftSideVisible = !useIsLeftSideVisible();
 
@@ -66,7 +90,15 @@ export default function Page() {
 	// 키보드 인터렉션 가능하도록 포커싱
 	const swiperRef = useRef<SwiperRef | null>(null);
 	useEffect(() => {
-		swiperRef.current.swiper.slidesEl.focus();
+		if (swiperRef.current) {
+			swiperRef.current.swiper.slidesEl.focus();
+		}
+
+		// 페이지 이동 시 기존 halftime 리스트 제거
+		return () => {
+			clearHalftimes();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
@@ -77,14 +109,14 @@ export default function Page() {
 			)}
 		>
 			<Swiper
-				ref={swiperRef}
 				cssMode
 				className="w-full h-full"
 				direction="vertical"
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
-				onSlideChange={({ activeIndex }) => router.replace(`/halftime/${halftimes[activeIndex].pk}`)}
+				initialSlide={initialSlideIndex}
+				onSlideChange={handleSlideChange}
 			>
 				{halftimes.map((halftime) => (
 					<SwiperSlide key={halftime.pk} className="desktop:px-22 w-full">
