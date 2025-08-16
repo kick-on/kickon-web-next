@@ -15,7 +15,7 @@ export const getHalftimeList = async ({ sort, page, size }: GetHalftimeListReque
 		params.append('size', String(size));
 		params.append('page', String(page));
 
-		const response = await fetcher<GetHalftimeListResponse>({ method: 'GET', url: `/api/shorts` });
+		const response = await fetcher<GetHalftimeListResponse>({ method: 'GET', url: `/api/shorts?${params.toString()}` });
 
 		if (!response) {
 			console.error('하프타임 리스트 조회 실패 - 응답 없음');
