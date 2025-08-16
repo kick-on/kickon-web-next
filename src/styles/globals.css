@@ -73,10 +73,6 @@ body.overflow-hidden {
 	overflow: hidden !important;
 }
 
-.swiper-wrapper {
-	@apply focus:outline-0;
-}
-
 .banner-swiper .swiper-pagination {
 	@apply gap-4 bottom-[1.5625rem] desktop:gap-[0.9375rem] desktop:bottom-8;
 	position: absolute;

@@ -7,9 +7,10 @@ import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Swiper as SwiperClass } from 'swiper';
-import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
+import { Keyboard } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function Page() {
 	const { halftimes, pushHalftimes, clearHalftimes } = useHalftimes();
@@ -47,6 +48,10 @@ export default function Page() {
 			const nextPk = parsedPks[nextPkIndex];
 			getHalftime(Number(nextPk));
 		}
+
+		return () => {
+			clearHalftimes();
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -58,7 +63,7 @@ export default function Page() {
 
 		const storedPks = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
 		const currentPk = halftimes[activeIndex].pk;
-		const currentIndexInFullList = storedPks.findIndex((p: string) => Number(p) == currentPk);
+		const currentIndexInFullList = storedPks.findIndex((p: string) => Number(p) === currentPk);
 		const isLastVideo = currentIndexInFullList === storedPks.length - 1;
 
 		if (!isLastVideo) {
@@ -87,20 +92,6 @@ export default function Page() {
 		setIsMobileNavber(isLeftSideVisible);
 	}, [isLeftSideVisible]);
 
-	// 키보드 인터렉션 가능하도록 포커싱
-	const swiperRef = useRef<SwiperRef | null>(null);
-	useEffect(() => {
-		if (swiperRef.current) {
-			swiperRef.current.swiper.slidesEl.focus();
-		}
-
-		// 페이지 이동 시 기존 halftime 리스트 제거
-		return () => {
-			clearHalftimes();
-		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
-
 	return (
 		<div
 			className={clsx(
@@ -117,6 +108,8 @@ export default function Page() {
 				centeredSlides
 				initialSlide={initialSlideIndex}
 				onSlideChange={handleSlideChange}
+				modules={[Keyboard]}
+				keyboard={{ enabled: true }}
 			>
 				{halftimes.map((halftime) => (
 					<SwiperSlide key={halftime.pk} className="desktop:px-22 w-full">
