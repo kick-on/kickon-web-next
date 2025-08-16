@@ -2,7 +2,7 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { useHalftimes } from '@/lib/store/useHalftimeStore';
+import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
 import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
@@ -13,7 +13,8 @@ import { Keyboard } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function Page() {
-	const { halftimes, pushHalftimes, clearHalftimes } = useHalftimes();
+	const { allHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
+	const { viewedHalftimes, appendViewedHalftime, clearViewedHalftimes } = useViewedHalftimesStore();
 
 	const params = useParams();
 	const { id: pk } = params;
@@ -21,7 +22,7 @@ export default function Page() {
 	const getHalftime = async (pkToFetch: number) => {
 		try {
 			const response = await getHalftimeDetail(pkToFetch);
-			pushHalftimes(response.data);
+			appendViewedHalftime(response.data);
 		} catch {
 			alert('동영상을 불러오는 중 문제가 발생했습니다.');
 		}
@@ -32,40 +33,39 @@ export default function Page() {
 		if (!pk) return;
 		getHalftime(Number(pk));
 
-		const storedPks: number[] = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
-		const currentIndex = storedPks.findIndex((p: number) => p === Number(pk));
-		const isLastVideo = currentIndex === storedPks.length - 1;
+		const currentIndex = allHalftimePks.findIndex((p: number) => p === Number(pk));
+		const isLastVideo = currentIndex === allHalftimePks.length - 1;
 
 		if (isLastVideo) return;
 
 		const nextPkIndex = currentIndex + 1;
-		const nextPk = storedPks[nextPkIndex];
+		const nextPk = allHalftimePks[nextPkIndex];
 		getHalftime(nextPk);
 
 		// 언마운트 시 전역 halftimes clear
 		return () => {
-			clearHalftimes();
+			clearAllHalftimePks();
+			clearViewedHalftimes();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleSlideChange = (swiper: SwiperType) => {
 		const { activeIndex } = swiper;
-		if (!halftimes[activeIndex]) return;
+		if (!viewedHalftimes[activeIndex]) return;
 
 		// useRouter 사용에 따른 재렌더링 방지
-		window.history.replaceState(null, '', `/halftime/${halftimes[activeIndex].pk}`);
+		window.history.replaceState(null, '', `/halftime/${viewedHalftimes[activeIndex].pk}`);
 
-		const storedPks: number[] = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
-		const currentPk = halftimes[activeIndex].pk;
-		const currentIndexInFullList = storedPks.findIndex((p) => p === currentPk);
-		const isLastVideo = currentIndexInFullList === storedPks.length - 1;
+		const currentPk = viewedHalftimes[activeIndex].pk;
+		const currentIndexInFullList = allHalftimePks.findIndex((p) => p === currentPk);
+		const isLastVideo = currentIndexInFullList === allHalftimePks.length - 1;
 
 		if (isLastVideo) return;
 
 		const nextPkIndex = currentIndexInFullList + 1;
-		const nextPk = storedPks[nextPkIndex];
-		const isSeen = halftimes.some((h: GetHalftimeDetailDto) => h.pk === nextPk);
+		const nextPk = allHalftimePks[nextPkIndex];
+		const isSeen = viewedHalftimes.some((h: GetHalftimeDetailDto) => h.pk === nextPk);
 
 		if (isSeen) return;
 
@@ -103,7 +103,7 @@ export default function Page() {
 				modules={[Keyboard]}
 				keyboard={{ enabled: true }}
 			>
-				{halftimes.map((halftime) => (
+				{viewedHalftimes.map((halftime) => (
 					<SwiperSlide key={halftime.pk} className="desktop:px-22 w-full">
 						{({ isActive }) => (
 							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
