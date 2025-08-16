@@ -2,14 +2,9 @@
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { memo } from 'react';
 
-export default function TopButtons({
-	globalMuted,
-	toggleGlobalMuted,
-}: {
-	globalMuted: boolean;
-	toggleGlobalMuted: () => void;
-}) {
+function TopButtons({ globalMuted, toggleGlobalMuted }: { globalMuted: boolean; toggleGlobalMuted: () => void }) {
 	const router = useRouter();
 
 	return (
@@ -28,3 +23,5 @@ export default function TopButtons({
 		</div>
 	);
 }
+
+export default memo(TopButtons);
