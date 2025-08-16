@@ -61,6 +61,12 @@ export default function Page() {
 		setIsMobileNavber(isLeftSideVisible);
 	}, [isLeftSideVisible]);
 
+	// 키보드 인터렉션 가능하도록 포커싱
+	const swiperRef = useRef<SwiperRef | null>(null);
+	useEffect(() => {
+		swiperRef.current.swiper.slidesEl.focus();
+	}, []);
+
 	return (
 		<div
 			className={clsx(
@@ -69,6 +75,7 @@ export default function Page() {
 			)}
 		>
 			<Swiper
+				ref={swiperRef}
 				cssMode
 				className="w-full h-full"
 				direction="vertical"
