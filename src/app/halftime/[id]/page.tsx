@@ -7,8 +7,8 @@ import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { Swiper as SwiperClass } from 'swiper';
+import { useEffect, useState } from 'react';
+import type { Swiper as SwiperType } from 'swiper';
 import { Keyboard } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
@@ -18,66 +18,59 @@ export default function Page() {
 	const params = useParams();
 	const { id: pk } = params;
 
-	const getHalftime = useCallback(
-		async (pkToFetch: number) => {
-			if (halftimes.some((h: GetHalftimeDetailDto) => h.pk === pkToFetch)) {
-				return;
-			}
-			try {
-				const response = await getHalftimeDetail(pkToFetch);
-				pushHalftimes(response.data);
-			} catch {
-				alert('동영상을 불러오는 중 문제가 발생했습니다.');
-			}
-		},
-		[halftimes, pushHalftimes],
-	);
+	const getHalftime = async (pkToFetch: number) => {
+		try {
+			const response = await getHalftimeDetail(pkToFetch);
+			pushHalftimes(response.data);
+		} catch {
+			alert('동영상을 불러오는 중 문제가 발생했습니다.');
+		}
+	};
 
+	// 초기 렌더링 시 halftime fetch
 	useEffect(() => {
-		const storedPks = sessionStorage.getItem('KICKON_HALFTIME_PKS');
-		if (!storedPks || typeof pk !== 'string') return;
-		const parsedPks = JSON.parse(storedPks);
-
+		if (!pk) return;
 		getHalftime(Number(pk));
 
-		const currentIndex = parsedPks.findIndex((parsedPk: string) => parsedPk == pk);
-		const isLastVideo = currentIndex === parsedPks.length - 1;
+		const storedPks: number[] = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
+		const currentIndex = storedPks.findIndex((p: number) => p === Number(pk));
+		const isLastVideo = currentIndex === storedPks.length - 1;
 
-		if (!isLastVideo) {
-			const nextPkIndex = currentIndex + 1;
-			const nextPk = parsedPks[nextPkIndex];
-			getHalftime(Number(nextPk));
-		}
+		if (isLastVideo) return;
 
+		const nextPkIndex = currentIndex + 1;
+		const nextPk = storedPks[nextPkIndex];
+		getHalftime(nextPk);
+
+		// 언마운트 시 전역 halftimes clear
 		return () => {
 			clearHalftimes();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	const handleSlideChange = (swiper: SwiperClass) => {
+	const handleSlideChange = (swiper: SwiperType) => {
 		const { activeIndex } = swiper;
 		if (!halftimes[activeIndex]) return;
 
+		// useRouter 사용에 따른 재렌더링 방지
 		window.history.replaceState(null, '', `/halftime/${halftimes[activeIndex].pk}`);
 
-		const storedPks = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
+		const storedPks: number[] = JSON.parse(sessionStorage.getItem('KICKON_HALFTIME_PKS') || '[]');
 		const currentPk = halftimes[activeIndex].pk;
-		const currentIndexInFullList = storedPks.findIndex((p: string) => Number(p) === currentPk);
+		const currentIndexInFullList = storedPks.findIndex((p) => p === currentPk);
 		const isLastVideo = currentIndexInFullList === storedPks.length - 1;
 
-		if (!isLastVideo) {
-			const nextPkIndex = currentIndexInFullList + 1;
-			const nextPk = storedPks[nextPkIndex];
-			getHalftime(Number(nextPk));
-		}
-	};
+		if (isLastVideo) return;
 
-	const initialSlideIndex = useMemo(() => {
-		if (typeof pk !== 'string') return 0;
-		const index = halftimes.findIndex((h) => h.pk === Number(pk));
-		return index > -1 ? index : 0;
-	}, [pk, halftimes]);
+		const nextPkIndex = currentIndexInFullList + 1;
+		const nextPk = storedPks[nextPkIndex];
+		const isSeen = halftimes.some((h: GetHalftimeDetailDto) => h.pk === nextPk);
+
+		if (isSeen) return;
+
+		getHalftime(nextPk);
+	};
 
 	const [globalMuted, setGlobalMuted] = useState(true);
 
@@ -106,7 +99,6 @@ export default function Page() {
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
-				initialSlide={initialSlideIndex}
 				onSlideChange={handleSlideChange}
 				modules={[Keyboard]}
 				keyboard={{ enabled: true }}
