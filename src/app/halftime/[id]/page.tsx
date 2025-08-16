@@ -2,15 +2,15 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import { useHalftimes } from '@/lib/store/useHalftimeStore';
 import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
-import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { SwiperSlide, Swiper } from 'swiper/react';
+import { useEffect, useRef, useState } from 'react';
+import { SwiperSlide, Swiper, SwiperRef } from 'swiper/react';
 
 export default function Page() {
-	const [halftimes, setHalftimes] = useState<GetHalftimeDetailDto[]>([]);
+	const { halftimes, pushHalftimes } = useHalftimes();
 
 	const router = useRouter();
 	const params = useParams();
@@ -21,29 +21,31 @@ export default function Page() {
 		if (!storedPks || typeof pk !== 'string') return;
 		const parsedPks = JSON.parse(storedPks);
 
-		const getHalftime = async (pkStr: string) => {
+		const getHalftime = async (pkToFetch: number) => {
+			// 이미 조회한 pk의 halftime은 조회하지 않음
+			if (halftimes.some((h) => h.pk === pkToFetch)) {
+				return;
+			}
+
 			try {
-				const pk = Number(pkStr);
-				const response = await getHalftimeDetail(pk);
-				setHalftimes((prev) => [...prev, response.data]);
+				const response = await getHalftimeDetail(pkToFetch);
+				pushHalftimes(response.data);
 			} catch {
 				alert('동영상을 불러오는 중 문제가 발생했습니다.');
 			}
 		};
 
-		const currentIndex = Number(parsedPks.findIndex((parsedPk) => parsedPk == pk));
+		const currentPkNum = Number(pk);
+		getHalftime(currentPkNum);
 
-		// 마지막 동영상인 경우 return
-		if (currentIndex === parsedPks.length - 1) return;
+		const currentIndex = parsedPks.findIndex((parsedPk: string) => parsedPk == pk);
+		const isLastVideo = currentIndex === parsedPks.length - 1;
 
-		const nextPkIndex = currentIndex + 1;
-		const nextPk = parsedPks[nextPkIndex];
-
-		// 초기 렌더링 시에만 current와 next 모두 조회
-		if (halftimes.length === 0) {
-			getHalftime(pk);
+		if (!isLastVideo) {
+			const nextPkIndex = currentIndex + 1;
+			const nextPk = parsedPks[nextPkIndex];
+			getHalftime(Number(nextPk));
 		}
-		getHalftime(nextPk);
 	}, [pk]);
 
 	// 동영상 전체 플로우에서의 mute 설정
