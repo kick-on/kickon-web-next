@@ -20,11 +20,11 @@ const actionButtons = [
 	//	value:'',
 	// 	src: '/comment.svg',
 	// },
-	// {
-	// 	label: '공유',
-	// 	value: '공유',
-	// 	src: '/share.svg',
-	// },
+	{
+		label: '공유',
+		value: '공유',
+		src: '/share.svg',
+	},
 	{
 		label: '본문',
 		value: '본문',
@@ -50,9 +50,9 @@ function FloatingActionButtons({
 			case '킥':
 				toggleKick();
 				break;
-			// case '공유':
-			// 	copyUrlToClipboard();
-			// 	break;
+			case '공유':
+				copyUrlToClipboard();
+				break;
 			case '본문':
 				const type = usedIn.toLocaleLowerCase();
 				router.push(`/${type}/${referencePk}`);
@@ -78,7 +78,15 @@ function FloatingActionButtons({
 		}
 	};
 
-	// const copyUrlToClipboard = async () => {};
+	const copyUrlToClipboard = async () => {
+		try {
+			await navigator.clipboard.writeText(window.location.href);
+			alert('URL이 복사되었어요.');
+		} catch (err) {
+			console.error(err);
+			alert('URL 복사에 실패했습니다.');
+		}
+	};
 
 	return (
 		<div
