@@ -2,7 +2,6 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { useObserver } from '@/lib/hooks/useObserver';
 import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
 import { getHalftimeDetail, getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
@@ -31,7 +30,6 @@ export default function Page() {
 
 	const getPkList = async () => {
 		if (!hasNext || !nextParams) return;
-		console.log('get pk list');
 
 		try {
 			const response = await getHalftimeList(nextParams);
@@ -72,9 +70,13 @@ export default function Page() {
 
 		const currentPk = viewedHalftimes[activeIndex].pk;
 		const currentIndexInFullList = allHalftimePks.findIndex((p) => p === currentPk);
-		const isLastVideo = currentIndexInFullList === allHalftimePks.length - 1;
 
+		const isLastVideo = currentIndexInFullList === allHalftimePks.length - 1;
 		if (isLastVideo) return;
+
+		// last video 전에 pk 추가 fetch
+		const shouldFetchPks = currentIndexInFullList === allHalftimePks.length - 2;
+		if (shouldFetchPks) getPkList();
 
 		const nextPkIndex = currentIndexInFullList + 1;
 		const nextPk = allHalftimePks[nextPkIndex];
@@ -98,8 +100,6 @@ export default function Page() {
 		setIsMobileNavber(isLeftSideVisible);
 	}, [isLeftSideVisible]);
 
-	const ref = useObserver(getPkList);
-
 	return (
 		<div
 			className={clsx(
@@ -118,13 +118,10 @@ export default function Page() {
 				modules={[Keyboard]}
 				keyboard={{ enabled: true }}
 			>
-				{viewedHalftimes.map((halftime, i) => (
+				{viewedHalftimes.map((halftime) => (
 					<SwiperSlide key={halftime.pk} className="desktop:px-22 w-full">
 						{({ isActive }) => (
-							<div
-								ref={i === viewedHalftimes.length - 1 ? ref : null}
-								className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300"
-							>
+							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
 								<Player
 									{...halftime}
 									isCurrentPlayer={isActive}
