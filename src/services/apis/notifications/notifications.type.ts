@@ -12,9 +12,10 @@ export interface NotificationItem {
 	content: string;
 	redirectUrl: string;
 	read: boolean;
-	relativeTime: string;
-	absoluteTime: string;
+	relativeTime?: string;
+	absoluteTime?: string;
 }
+
 // 알림 목록 조회 응답
 export type GetNotificationListResponse = SuccessResponse<NotificationItem[]>;
 

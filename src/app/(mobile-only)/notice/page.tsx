@@ -17,7 +17,7 @@ export default function Page() {
 					type={notice.type}
 					read={notice.read}
 					redirectUrl={notice.redirectUrl}
-					date={notice.relativeTime}
+					relativeTime={notice.relativeTime}
 					content={notice.content}
 				/>
 			))}
