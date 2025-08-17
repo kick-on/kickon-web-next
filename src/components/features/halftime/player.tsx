@@ -9,6 +9,7 @@ import PlayButton from './player-action/play-button';
 import ControlBar from './player-action/control-bar';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import Image from 'next/image';
+import VideoFetchFailed from './video-fetch-failed';
 
 export interface PlayerAttribute {
 	playing: boolean;
@@ -102,7 +103,7 @@ export default function Player({
 
 	const { playing, played } = playerState;
 
-	return (
+	return videoUrl ? (
 		<div className="relative w-full h-full flex items-center justify-center">
 			{isCurrentPlayer && (
 				<>
@@ -167,5 +168,7 @@ export default function Player({
 				/>
 			</div>
 		</div>
+	) : (
+		<VideoFetchFailed />
 	);
 }

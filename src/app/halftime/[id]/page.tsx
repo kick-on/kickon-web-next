@@ -47,6 +47,8 @@ export default function Page() {
 		if (!shouldUpdateView(pk)) return;
 
 		const currentHalftime = viewedHalftimes.find((h) => h.pk === pk);
+		if (!currentHalftime) return;
+
 		const isNews = currentHalftime.usedIn === 'NEWS';
 		const refrencePk = currentHalftime.referencePk;
 
@@ -142,8 +144,8 @@ export default function Page() {
 				modules={[Keyboard]}
 				keyboard={{ enabled: true }}
 			>
-				{viewedHalftimes.map((halftime) => (
-					<SwiperSlide key={halftime.pk} className="desktop:px-22 w-full">
+				{viewedHalftimes.map((halftime, i) => (
+					<SwiperSlide key={halftime?.pk ?? `error-${i}`} className="desktop:px-22 w-full">
 						{({ isActive }) => (
 							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
 								<Player
