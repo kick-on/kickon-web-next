@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { useNotificationStore } from '../store/useNotificationStore';
+import { SOCKET_URL } from '@/services/config/constants';
 
 export default function useNotificationSocket(userId: string | null) {
 	const clientRef = useRef<Client | null>(null);
@@ -17,7 +18,7 @@ export default function useNotificationSocket(userId: string | null) {
 			clientRef.current = null;
 		}
 
-		const socket = new SockJS('https://api-dev.kick-on.kr/ws');
+		const socket = new SockJS(SOCKET_URL);
 		const client = new Client({
 			webSocketFactory: () => socket,
 			reconnectDelay: 5000,
