@@ -2,8 +2,9 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import { useObserver } from '@/lib/hooks/useObserver';
 import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
-import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
+import { getHalftimeDetail, getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
@@ -13,7 +14,7 @@ import { Keyboard } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 export default function Page() {
-	const { allHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
+	const { hasNext, nextParams, allHalftimePks, appendAllHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
 	const { viewedHalftimes, appendViewedHalftime, clearViewedHalftimes } = useViewedHalftimesStore();
 
 	const params = useParams();
@@ -25,6 +26,18 @@ export default function Page() {
 			appendViewedHalftime(response.data);
 		} catch {
 			alert('동영상을 불러오는 중 문제가 발생했습니다.');
+		}
+	};
+
+	const getPkList = async () => {
+		if (!hasNext || !nextParams) return;
+		console.log('get pk list');
+
+		try {
+			const response = await getHalftimeList(nextParams);
+			appendAllHalftimePks({ ...nextParams, page: nextParams.page + 1 }, response);
+		} catch {
+			return;
 		}
 	};
 
@@ -85,6 +98,8 @@ export default function Page() {
 		setIsMobileNavber(isLeftSideVisible);
 	}, [isLeftSideVisible]);
 
+	const ref = useObserver(getPkList);
+
 	return (
 		<div
 			className={clsx(
@@ -103,10 +118,13 @@ export default function Page() {
 				modules={[Keyboard]}
 				keyboard={{ enabled: true }}
 			>
-				{viewedHalftimes.map((halftime) => (
+				{viewedHalftimes.map((halftime, i) => (
 					<SwiperSlide key={halftime.pk} className="desktop:px-22 w-full">
 						{({ isActive }) => (
-							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
+							<div
+								ref={i === viewedHalftimes.length - 1 ? ref : null}
+								className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300"
+							>
 								<Player
 									{...halftime}
 									isCurrentPlayer={isActive}

@@ -5,6 +5,7 @@ import PreviewWithTitle from '@/components/features/halftime/preview-with-title'
 import Sorter from '@/components/features/halftime/sorter';
 import { halftimeSortOptions } from '@/lib/constants/options';
 import { useFetchSize } from '@/lib/hooks/useFetchSize';
+import { useObserver } from '@/lib/hooks/useObserver';
 import { useAllHalftimePksStore } from '@/lib/store/useHalftimeStore';
 import { getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import { BaseHalftimeDto, HalftimeSortType } from '@/services/apis/shorts/shorts.type';
@@ -15,7 +16,7 @@ export default function Page() {
 	const searchParams = useSearchParams();
 
 	const [halftimes, setHalftimes] = useState<BaseHalftimeDto[]>([]);
-	const { appendAllHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
+	const { hasNext, appendAllHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
 
 	const [page, setPage] = useState(1);
 	const sort = searchParams.get('sort') ?? halftimeSortOptions[0].value;
@@ -28,15 +29,10 @@ export default function Page() {
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sort]);
 
-	// 페이지 번호가 바뀔 때 추가 데이터를 불러옵니다.
-	useEffect(() => {
-		if (page > 1) {
-			getHalftimes(page, 'append');
-		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [page]);
-
 	const getHalftimes = async (pageNum: number, type: 'init' | 'append') => {
+		const isAppending = type === 'append';
+		if (isAppending && !hasNext) return;
+
 		try {
 			const params = {
 				sort: sort as HalftimeSortType,
@@ -45,18 +41,22 @@ export default function Page() {
 			};
 			const response = await getHalftimeList(params);
 
-			if (type === 'init') {
+			if (isAppending) {
+				setHalftimes((prev) => [...prev, ...response.data]);
+			} else {
 				setHalftimes(response.data);
 				clearAllHalftimePks();
-			} else {
-				setHalftimes((prev) => [...prev, ...response.data]);
 			}
 
-			appendAllHalftimePks(response.data);
+			appendAllHalftimePks({ ...params, page: pageNum + 1 }, response);
+			setPage((prev) => prev + 1);
 		} catch {
 			alert('동영상을 불러오는 중 문제가 발생했습니다.');
 		}
 	};
+
+	// 무한 스크롤 커스텀 훅
+	const ref = useObserver(() => getHalftimes(page, 'append'));
 
 	return (
 		<div className="pt-4 @mobile:pt-0">
@@ -75,8 +75,8 @@ export default function Page() {
 						max-[1094px]:grid-cols-3 max-[1094px]:gap-x-3
 						@mobile:grid-cols-2 @mobile:gap-4"
 				>
-					{halftimes.map((halftime) => (
-						<PreviewWithTitle key={halftime.pk} {...halftime} />
+					{halftimes.map((halftime, i) => (
+						<PreviewWithTitle ref={i === halftimes.length - 1 ? ref : null} key={halftime.pk} {...halftime} />
 					))}
 				</div>
 			</ComponentFrame>
