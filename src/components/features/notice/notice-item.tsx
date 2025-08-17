@@ -18,7 +18,6 @@ const normalizeType = (rawType: string): NormalizedType => {
 };
 
 export interface NoticeItemProps extends NotificationItem {
-	teamLogo?: string; // 추가 되어야 함
 	isModal?: boolean;
 	onCloseModal?: () => void;
 }

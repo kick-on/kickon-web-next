@@ -12,6 +12,7 @@ export interface NotificationItem {
 	content: string;
 	redirectUrl: string;
 	read: boolean;
+	teamLogo?: string;
 	relativeTime?: string;
 	absoluteTime?: string;
 }

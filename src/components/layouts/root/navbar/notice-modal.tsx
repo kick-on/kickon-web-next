@@ -6,7 +6,6 @@ import { useNotificationStore } from '@/lib/store/useNotificationStore';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
-// TODO: 알림을 확인한 후 bg 컬러 변경
 export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void }) {
 	const notifications = useNotificationStore((state) => state.notifications);
 	const modalRef = useRef<HTMLDivElement | null>(null);
@@ -50,6 +49,7 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 					pk={notice.pk}
 					type={notice.type}
 					read={notice.read}
+					teamLogo={notice.teamLogo}
 					redirectUrl={notice.redirectUrl}
 					relativeTime={notice.relativeTime}
 					content={notice.content}
