@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import NoticeModal from './notice-modal';
+import { useNotificationStore } from '@/lib/store/useNotificationStore';
 
 export default function NoticeButton() {
 	const pathname = usePathname();
@@ -22,8 +23,8 @@ export default function NoticeButton() {
 
 	const iconSrc = pathname === '/' ? '/notice/black.svg' : '/notice/white.svg';
 
-	// 알림이 있다고 가정
-	const unreadCount = 99;
+	const unreadCount = useNotificationStore((s) => s.unreadCount);
+
 	return (
 		<div className="relative w-fit h-full items-center flex">
 			<button onClick={handleNoticeIconClick} className="relative w-6 h-6 @mobile:w-5 @mobile:h-5">

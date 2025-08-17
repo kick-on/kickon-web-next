@@ -1,0 +1,26 @@
+import { SuccessResponse } from '@/services/config/dto';
+
+export interface UnreadNotificationsDto {
+	count: number;
+}
+// 안 읽음 알림 개수 조회 응답
+export type GetUnreadNotificationsResponse = SuccessResponse<UnreadNotificationsDto>;
+
+export interface NotificationItem {
+	pk: number;
+	type: string;
+	content: string;
+	redirectUrl: string;
+	read: boolean;
+	teamLogo?: string;
+	relativeTime?: string;
+	absoluteTime?: string;
+}
+
+// 알림 목록 조회 응답
+export type GetNotificationListResponse = SuccessResponse<NotificationItem[]>;
+
+// 알림 읽음 처리 요청
+export interface PatchNotificationReadRequest {
+	notificationPk: number;
+}

@@ -64,7 +64,7 @@ export default function Page() {
 		// 회원가입(정보 수정)
 		const updateUserInfoRequest: UpdateUserInfoRequest = {
 			nickname: nickname,
-			teams: !teams || teams[0] === -1 ? undefined : teams,
+			teams: teams,
 		};
 		const updateUserInfoResponse = await updateUserInfo(updateUserInfoRequest);
 
@@ -123,7 +123,7 @@ export default function Page() {
 
 			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] w-full flex flex-col gap-[3.125rem] @mobile:gap-10">
 				<Nickname nickname={nickname} isDuplicated={isDuplicated} onChange={handleNicknameChange} />
-				<FavoriteTeamSection setTeams={setTeams} />
+				<FavoriteTeamSection type="signup" setTeams={setTeams} />
 			</div>
 
 			<div className="p-2.5 w-full flex flex-col gap-4">
