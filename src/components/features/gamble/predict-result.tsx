@@ -39,7 +39,7 @@ export default function PredictResult() {
 		};
 
 		apiCaller();
-	}, [selectedDate]);
+	}, [selectedDate, currentUserInfo]);
 
 	if (!currentUserInfo) {
 		router.replace('/gamble?type=match');

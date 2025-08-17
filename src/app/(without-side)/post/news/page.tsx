@@ -12,7 +12,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
-import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
@@ -106,8 +106,9 @@ export default function Page() {
 			return;
 		}
 
-		const usedImageKeysFromBody = extractImageFilenamesFromContent(body.trim());
-		console.log(body.trim());
+		const usedImageKeysFromBody = extractMediaFilenamesFromContent(body.trim(), 'img');
+		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
+		const embeddedLink = extractEmbeddedLinks(body.trim());
 
 		let thumbnailFilename = '';
 		if (selectedImage) {
@@ -115,16 +116,20 @@ export default function Page() {
 		}
 		const usedImageKeys = [...usedImageKeysFromBody, ...(thumbnailFilename ? [thumbnailFilename] : [])];
 
-		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
+		console.log('usedImageKeys:', usedImageKeys);
+		console.log('usedVideoKeys:', usedVideoKeys);
+		console.log('embeddedLink:', embeddedLink);
 
 		// 공통 요청 데이터
 		const requestBody: CreateNewsRequest = {
-			team: selectedTeam?.id || null,
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
 			category: selectedOption.value,
-			usedImageKeys,
+			team: selectedTeam?.id || null,
+			...(usedImageKeys.length > 0 && { usedImageKeys }),
+			...(usedVideoKeys.length > 0 && { usedVideoKeys }),
+			...(embeddedLink.length > 0 && { embeddedLink }),
 		};
 
 		try {
@@ -141,6 +146,7 @@ export default function Page() {
 				console.log('수정 성공', response);
 				router.replace(`/news/${contentPk}`);
 			} else {
+				console.log('생성 바디', requestBody);
 				const response = await createNews(requestBody);
 				console.log('작성 성공', response);
 				router.replace(`/news/${response.data.pk}`);

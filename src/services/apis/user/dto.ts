@@ -33,6 +33,7 @@ export interface UserInfoDto {
 	isInfluencer?: boolean;
 	canChangeTeam: boolean;
 	nextAvailableChangeDate: string;
+	isReporter: boolean;
 }
 
 export interface NewTokenDto {
@@ -45,4 +46,5 @@ export interface UserDto {
 	id: string;
 	nickname: string;
 	profileImageUrl: string;
+	isReporter: boolean;
 }
