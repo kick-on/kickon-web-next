@@ -1,7 +1,8 @@
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import Image from 'next/image';
+import { memo } from 'react';
 
-export default function InformationSection({ user, title }: Pick<GetHalftimeDetailDto, 'user' | 'title'>) {
+function InformationSection({ user, title }: Pick<GetHalftimeDetailDto, 'user' | 'title'>) {
 	return (
 		<div
 			className="absolute z-15 bottom-0 flex flex-col gap-2 w-full h-44 px-4 pb-8 justify-end rounded-b-lg"
@@ -27,3 +28,5 @@ export default function InformationSection({ user, title }: Pick<GetHalftimeDeta
 		</div>
 	);
 }
+
+export default memo(InformationSection);
