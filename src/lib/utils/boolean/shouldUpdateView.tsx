@@ -19,7 +19,6 @@ export default function shouldUpdateView(pk: number) {
 
 	const now = Date.now();
 	const lastViewed = viewedHalftimes[pk];
-	console.log(lastViewed);
 
 	// 24시간이 지났거나, 처음 보는 하프타임이면 view 업데이트
 	if (!lastViewed || now - lastViewed > VIEW_EXPIRY) {
