@@ -1,7 +1,6 @@
 'use client';
 
 import Player from '@/components/features/halftime/player';
-import useHalftimeView from '@/lib/utils/boolean/shouldUpdateView';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
