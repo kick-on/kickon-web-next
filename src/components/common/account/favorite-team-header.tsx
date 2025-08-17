@@ -29,19 +29,11 @@ export default function FavoriteTeamHeader({
 	const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
 	const handleHelpCircle = (e: React.MouseEvent) => {
-		switch (e.type) {
-			case 'mouseover':
-				if (!isDesktop) return;
-				setIsTooltipVisible(true);
-				return;
-			case 'mouseleave':
-				if (!isDesktop) return;
-				setIsTooltipVisible(false);
-			case 'click':
-				if (isDesktop) return;
-				setIsTooltipVisible(!isTooltipVisible);
-			default:
-				return;
+		if (isDesktop) {
+			if (e.type === 'mouseover') setIsTooltipVisible(true);
+			if (e.type === 'mouseleave') setIsTooltipVisible(false);
+		} else {
+			if (e.type === 'click') setIsTooltipVisible((prev) => !prev);
 		}
 	};
 
