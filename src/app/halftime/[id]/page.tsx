@@ -79,7 +79,6 @@ export default function Page() {
 
 		// 언마운트 시 전역 halftimes clear
 		return () => {
-			clearAllHalftimePks();
 			clearViewedHalftimes();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
