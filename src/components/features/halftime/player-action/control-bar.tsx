@@ -52,7 +52,7 @@ export default function ControlBar({
 			onChange={handleSeekChange}
 			onMouseUp={handleSeekMouseUp}
 			onTouchEnd={handleSeekMouseUp}
-			className="appearance-none absolute z-15 bottom-2 left-0 w-full
+			className="appearance-none absolute z-20 bottom-2 left-0 w-full
         cursor-pointer [&::-webkit-slider-thumb]:appearance-none
         [&::-webkit-slider-thumb]:h-1 [&::-webkit-slider-thumb]:w-1
         [&::-webkit-slider-thumb]:rounded-r-full [&::-webkit-slider-thumb]:bg-primary-900
