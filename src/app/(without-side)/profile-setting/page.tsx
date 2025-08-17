@@ -22,6 +22,12 @@ export default function Page() {
 	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [teamPks, setTeamPks] = useState<number[] | null>(null);
 
+	const isProfileImageChanged = profileImageUrl !== currentUserInfo?.profileImageUrl;
+	const isNicknameChanged = nickname !== currentUserInfo?.nickname;
+	const isFavoriteTeamsChanged =
+		JSON.stringify(teamPks) !== JSON.stringify(currentUserInfo?.favoriteTeams.map((team) => team?.pk));
+	const isAnythingChanged = isProfileImageChanged || isNicknameChanged || isFavoriteTeamsChanged;
+
 	useEffect(() => {
 		if (currentUserInfo) {
 			// 초기 렌더링 시 state 초기화
@@ -43,11 +49,10 @@ export default function Page() {
 	};
 
 	const handleCompleteButtonClick = () => {
-		const initialTeamPks = currentUserInfo?.favoriteTeams.map((team) => team?.pk);
 		const body: UpdateUserInfoRequest = {
-			profileImageUrl: profileImageUrl === currentUserInfo?.profileImageUrl ? undefined : profileImageUrl,
-			nickname: nickname === currentUserInfo?.nickname ? undefined : nickname,
-			teams: JSON.stringify(teamPks) === JSON.stringify(initialTeamPks) ? undefined : teamPks,
+			profileImageUrl: isProfileImageChanged ? profileImageUrl : undefined,
+			nickname: isNicknameChanged ? nickname : undefined,
+			teams: isFavoriteTeamsChanged ? teamPks : undefined,
 		};
 
 		editUserInfo(body);
@@ -114,7 +119,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					disabled={!nickname || isDuplicated || !teamPks}
+					disabled={!nickname || isDuplicated || !teamPks || !isAnythingChanged}
 					onClick={handleCompleteButtonClick}
 					className="w-full h-11 flex justify-center items-center @mobile:text-15
             rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
