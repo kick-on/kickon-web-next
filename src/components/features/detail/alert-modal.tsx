@@ -6,7 +6,7 @@ import { useEffect, useRef } from 'react';
 
 interface AlertModalProps {
 	type?: 'info' | 'alert' | 'confirm';
-	description: string;
+	description: string | React.ReactNode;
 	confirmButtonText?: string;
 	cancelButtonText?: string;
 	onConfirm?: () => void;
@@ -55,15 +55,16 @@ const AlertModal = ({
 				onClick={(e) => e.stopPropagation()}
 				className={clsx('flex flex-col justify-center bg-black-000 rounded-lg px-7 w-[344px] @mobile:w-77.75', {
 					// type이 'info'일 때
-					'p-[50px] gap-[42px]': type === 'info' && isMobile,
-					'p-[68px] gap-[54px]': type === 'info' && !isMobile,
+					'h-25': type === 'info',
 
 					// type이 'info'가 아닐 때
-					'pt-[50px] pb-8 gap-[42px]': type !== 'info' && isMobile,
-					'pt-[68px] pb-[36px] gap-[54px]': type !== 'info' && !isMobile,
+					'pt-3 pb-8 h-[14.125rem] @mobile:h-48': type !== 'info' && isMobile,
+					'pt-4 pb-8 h-[14.125rem] @mobile:h-48': type !== 'info' && !isMobile,
 				})}
 			>
-				<p className="body2-semibold @mobile:text-18 text-center text-black-900 whitespace-pre-line">{description}</p>
+				<p className="my-auto text-body-03 text-18 @mobile:text-16 font-semibold text-center text-black-900 whitespace-pre-line">
+					{description}
+				</p>
 
 				{type === 'alert' && (
 					<div className="button2-semibold @mobile:text-15 w-full flex justify-center">
