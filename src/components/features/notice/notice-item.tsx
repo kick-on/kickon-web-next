@@ -1,18 +1,24 @@
 'use client';
 
+import { useNotificationStore } from '@/lib/store/useNotificationStore';
 import { getTimeAgo } from '@/lib/utils/getTimeAgo';
 import Image from 'next/image';
-
-// 나중에는 notice:(notice 응답 타입)으로 한 번에 전달하고 파싱해서 사용하기
+import { useRouter } from 'next/navigation';
 
 export interface NoticeItemProps {
+	pk: number;
 	type: string;
 	date: string;
+	read: boolean;
+	redirectUrl: string;
 	content: string;
 	teamLogo?: string;
 }
 
-export default function NoticeItem({ type, date, content, teamLogo }: NoticeItemProps) {
+export default function NoticeItem({ pk, type, date, read, redirectUrl, content, teamLogo }: NoticeItemProps) {
+	const router = useRouter();
+	const markAsRead = useNotificationStore((state) => state.markAsRead);
+
 	const iconMap: Record<string, string> = {
 		match: '/kick/black.svg',
 		reply: '/comment.svg',
@@ -28,8 +34,15 @@ export default function NoticeItem({ type, date, content, teamLogo }: NoticeItem
 	};
 	const formattedDate = getTimeAgo(date);
 
+	const handleClickNotification = () => {
+		if (!read) {
+			markAsRead(pk);
+		}
+		router.push(redirectUrl);
+	};
+
 	return (
-		<div className="relative flex gap-4 p-4 cursor-pointer hover:bg-black-100">
+		<div onClick={handleClickNotification} className="relative flex gap-4 p-4 cursor-pointer hover:bg-black-100">
 			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200">
 				<Image src={getIconSrc()} alt="알림 출처" width={18} height={18} />
 			</div>

@@ -17,3 +17,8 @@ export interface NotificationItem {
 }
 // 알림 목록 조회 응답
 export type GetNotificationListResponse = SuccessResponse<NotificationItem[]>;
+
+// 알림 읽음 처리 요청
+export interface PatchNotificationReadRequest {
+	notificationPk: number;
+}

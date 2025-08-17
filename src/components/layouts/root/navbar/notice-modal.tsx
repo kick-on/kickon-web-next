@@ -2,12 +2,13 @@
 
 import NoticeHeader from '@/components/features/notice/notice-header';
 import NoticeItem from '@/components/features/notice/notice-item';
-import { dummyNotices } from '@/lib/constants/dummyNotices';
+import { useNotificationStore } from '@/lib/store/useNotificationStore';
 import Image from 'next/image';
 import { useEffect, useRef } from 'react';
 
 // TODO: 알림을 확인한 후 bg 컬러 변경
 export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void }) {
+	const notifications = useNotificationStore((state) => state.notifications);
 	const modalRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
@@ -43,13 +44,15 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 				alt="화살표"
 			/>
 			<NoticeHeader isModal={true} onClose={onCloseModal} />
-			{dummyNotices.map((notice) => (
+			{notifications.map((notice) => (
 				<NoticeItem
-					key={notice.id}
+					key={notice.pk}
+					pk={notice.pk}
 					type={notice.type}
-					date={notice.date}
+					read={notice.read}
+					redirectUrl={notice.redirectUrl}
+					date={notice.relativeTime}
 					content={notice.content}
-					teamLogo={notice.teamLogo}
 				/>
 			))}
 		</div>

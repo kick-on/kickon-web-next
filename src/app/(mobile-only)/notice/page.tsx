@@ -11,7 +11,15 @@ export default function Page() {
 		<div>
 			<NoticeHeader />
 			{notifications.map((notice) => (
-				<NoticeItem key={notice.pk} type={notice.type} date={notice.relativeTime} content={notice.content} />
+				<NoticeItem
+					key={notice.pk}
+					pk={notice.pk}
+					type={notice.type}
+					read={notice.read}
+					redirectUrl={notice.redirectUrl}
+					date={notice.relativeTime}
+					content={notice.content}
+				/>
 			))}
 		</div>
 	);
