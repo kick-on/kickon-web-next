@@ -1,8 +1,11 @@
 'use client';
 
 import Player from '@/components/features/halftime/player';
+import useHalftimeView from '@/lib/utils/boolean/shouldUpdateView';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
+import { createBoardView } from '@/services/apis/board/board-view-history.api';
+import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { getHalftimeDetail, getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
@@ -11,6 +14,7 @@ import { useEffect, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Keyboard } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import shouldUpdateView from '@/lib/utils/boolean/shouldUpdateView';
 
 export default function Page() {
 	const { hasNext, nextParams, allHalftimePks, appendAllHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
@@ -39,12 +43,28 @@ export default function Page() {
 		}
 	};
 
+	const createView = (pk: number) => {
+		if (!shouldUpdateView(pk)) return;
+
+		const currentHalftime = viewedHalftimes.find((h) => h.pk === pk);
+		const isNews = currentHalftime.usedIn === 'NEWS';
+		const refrencePk = currentHalftime.referencePk;
+
+		if (isNews) {
+			createNewsView(refrencePk);
+		} else {
+			createBoardView(refrencePk);
+		}
+	};
+
 	// 초기 렌더링 시 halftime fetch
 	useEffect(() => {
 		if (!pk) return;
-		getHalftime(Number(pk));
+		const pkNum = Number(pk);
+		getHalftime(pkNum);
+		createView(pkNum);
 
-		const currentIndex = allHalftimePks.findIndex((p: number) => p === Number(pk));
+		const currentIndex = allHalftimePks.findIndex((p: number) => p === pkNum);
 		const isLastVideo = currentIndex === allHalftimePks.length - 1;
 
 		if (isLastVideo) return;
@@ -70,6 +90,7 @@ export default function Page() {
 
 		const currentPk = viewedHalftimes[activeIndex].pk;
 		const currentIndexInFullList = allHalftimePks.findIndex((p) => p === currentPk);
+		createView(currentPk);
 
 		const isLastVideo = currentIndexInFullList === allHalftimePks.length - 1;
 		if (isLastVideo) return;
