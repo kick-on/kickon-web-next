@@ -1,6 +1,4 @@
-import { getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import {
-	BaseHalftimeDto,
 	GetHalftimeDetailDto,
 	GetHalftimeListRequest,
 	GetHalftimeListResponse,
@@ -39,7 +37,9 @@ export const useAllHalftimePksStore = create(
 
 // 하프타임 상세에서 사용할 halftime 배열
 interface ViewedHalftimesStore {
+	lastViewedHalftimePk: number;
 	viewedHalftimes: GetHalftimeDetailDto[];
+	setLastViewedHalftimePk: (index: number) => void;
 	appendViewedHalftime: (halftime: GetHalftimeDetailDto) => void;
 	clearViewedHalftimes: () => void;
 }
@@ -47,7 +47,9 @@ interface ViewedHalftimesStore {
 export const useViewedHalftimesStore = create(
 	persist<ViewedHalftimesStore>(
 		(set) => ({
+			lastViewedHalftimePk: -1,
 			viewedHalftimes: [],
+			setLastViewedHalftimePk: (index) => set(() => ({ lastViewedHalftimePk: index })),
 			appendViewedHalftime: (halftime) =>
 				set((state) => ({
 					viewedHalftimes: [...(state.viewedHalftimes || []), halftime],

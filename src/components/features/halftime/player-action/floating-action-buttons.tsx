@@ -30,7 +30,7 @@ const actionButtons = [
 
 type ActionButtonLabel = (typeof actionButtons)[number]['label'];
 
-function FloatingActionButtons({ usedIn, referencePk }: Pick<BaseHalftimeDto, 'usedIn' | 'referencePk'>) {
+function FloatingActionButtons({ pk, usedIn, referencePk }: Pick<BaseHalftimeDto, 'pk' | 'usedIn' | 'referencePk'>) {
 	const router = useRouter();
 
 	const handleClick = (label: ActionButtonLabel) => {

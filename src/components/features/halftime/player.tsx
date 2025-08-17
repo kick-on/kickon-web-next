@@ -25,6 +25,7 @@ export default function Player({
 	user,
 	title,
 	videoUrl,
+	pk,
 	usedIn,
 	referencePk,
 	isCurrentPlayer,
@@ -110,7 +111,7 @@ export default function Player({
 			{isCurrentPlayer && (
 				<>
 					<TopButtons globalMuted={globalMuted} toggleGlobalMuted={toggleGlobalMuted} />
-					<FloatingActionButtons usedIn={usedIn} referencePk={referencePk} />
+					<FloatingActionButtons pk={pk} usedIn={usedIn} referencePk={referencePk} />
 					{!isFirstLoad && <PlayButton playing={playing} />}
 
 					{typeof window !== 'undefined' && isCurrentPlayer && (

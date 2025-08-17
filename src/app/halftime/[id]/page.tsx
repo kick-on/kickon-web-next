@@ -8,7 +8,7 @@ import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { getHalftimeDetail, getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import type { Swiper as SwiperType } from 'swiper';
 import { Keyboard } from 'swiper/modules';
@@ -16,9 +16,11 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import shouldUpdateView from '@/lib/utils/boolean/shouldUpdateView';
 
 export default function Page() {
-	const { hasNext, nextParams, allHalftimePks, appendAllHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
-	const { viewedHalftimes, appendViewedHalftime, clearViewedHalftimes } = useViewedHalftimesStore();
+	const { hasNext, nextParams, allHalftimePks, appendAllHalftimePks } = useAllHalftimePksStore();
+	const { lastViewedHalftimePk, setLastViewedHalftimePk, viewedHalftimes, appendViewedHalftime, clearViewedHalftimes } =
+		useViewedHalftimesStore();
 
+	const router = useRouter();
 	const params = useParams();
 	const { id: pk } = params;
 
@@ -60,22 +62,44 @@ export default function Page() {
 
 	// 초기 렌더링 시 halftime fetch
 	useEffect(() => {
-		if (!pk) return;
-		const pkNum = Number(pk);
-		getHalftime(pkNum);
-		createView(pkNum);
+		// halftime에서 처음 탐색을 시작한 경우
+		if (lastViewedHalftimePk === -1) {
+			if (!pk) return;
+			const pkNum = Number(pk);
 
-		const currentIndex = allHalftimePks.findIndex((p: number) => p === pkNum);
-		const isLastVideo = currentIndex === allHalftimePks.length - 1;
-		if (isLastVideo) return;
+			setLastViewedHalftimePk(pkNum);
 
-		// last video 전에 pk 추가 fetch
-		const shouldFetchPks = currentIndex === allHalftimePks.length - 2;
-		if (shouldFetchPks) getPkList();
+			getHalftime(pkNum);
+			createView(pkNum);
 
-		const nextPkIndex = currentIndex + 1;
-		const nextPk = allHalftimePks[nextPkIndex];
-		getHalftime(nextPk);
+			const currentIndex = allHalftimePks.findIndex((p: number) => p === pkNum);
+			const isLastVideo = currentIndex === allHalftimePks.length - 1;
+			if (isLastVideo) return;
+
+			// last video 전에 pk 추가 fetch
+			const shouldFetchPks = currentIndex === allHalftimePks.length - 2;
+			if (shouldFetchPks) getPkList();
+
+			const nextPkIndex = currentIndex + 1;
+			const nextPk = allHalftimePks[nextPkIndex];
+			getHalftime(nextPk);
+		} else {
+			// 뒤로가기 등으로 다시 접근한 경우
+			window.history.replaceState(null, '', `/halftime/${lastViewedHalftimePk}`);
+			getHalftime(lastViewedHalftimePk);
+
+			const currentIndex = allHalftimePks.findIndex((p: number) => p === lastViewedHalftimePk);
+			const isLastVideo = currentIndex === allHalftimePks.length - 1;
+			if (isLastVideo) return;
+
+			// last video 전에 pk 추가 fetch
+			const shouldFetchPks = currentIndex === allHalftimePks.length - 2;
+			if (shouldFetchPks) getPkList();
+
+			const nextPkIndex = currentIndex + 1;
+			const nextPk = allHalftimePks[nextPkIndex];
+			getHalftime(nextPk);
+		}
 
 		// 언마운트 시 전역 halftimes clear
 		return () => {
@@ -94,6 +118,7 @@ export default function Page() {
 		const currentPk = viewedHalftimes[activeIndex].pk;
 		const currentIndexInFullList = allHalftimePks.findIndex((p) => p === currentPk);
 		createView(currentPk);
+		setLastViewedHalftimePk(currentPk);
 
 		const isLastVideo = currentIndexInFullList === allHalftimePks.length - 1;
 		if (isLastVideo) return;
@@ -138,6 +163,7 @@ export default function Page() {
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
+				initialSlide={lastViewedHalftimePk === -1 ? 0 : lastViewedHalftimePk}
 				onSlideChange={handleSlideChange}
 				modules={[Keyboard]}
 				keyboard={{ enabled: true }}
