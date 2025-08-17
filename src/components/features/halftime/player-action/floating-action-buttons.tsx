@@ -1,9 +1,13 @@
 'use client';
 
-import { BaseHalftimeDto } from '@/services/apis/shorts/shorts.type';
+import { useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
+import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
+import { createBoardKick } from '@/services/apis/board/board.api';
+import { createNewsKick } from '@/services/apis/news/news.api';
+import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
 const actionButtons = [
 	{
@@ -16,11 +20,11 @@ const actionButtons = [
 	//	value:'',
 	// 	src: '/comment.svg',
 	// },
-	{
-		label: '공유',
-		value: '공유',
-		src: '/share.svg',
-	},
+	// {
+	// 	label: '공유',
+	// 	value: '공유',
+	// 	src: '/share.svg',
+	// },
 	{
 		label: '본문',
 		value: '본문',
@@ -30,17 +34,25 @@ const actionButtons = [
 
 type ActionButtonLabel = (typeof actionButtons)[number]['label'];
 
-function FloatingActionButtons({ pk, usedIn, referencePk }: Pick<BaseHalftimeDto, 'pk' | 'usedIn' | 'referencePk'>) {
+function FloatingActionButtons({
+	isKicked: isKickedData,
+	kickCount: kickCountData,
+	usedIn,
+	referencePk,
+}: Pick<GetHalftimeDetailDto, 'isKicked' | 'kickCount' | 'usedIn' | 'referencePk'>) {
 	const router = useRouter();
+	const [isKicked, setIsKicked] = useState(isKickedData);
+	const [kickCount, setKickCount] = useState(kickCountData);
+	const { toggleIsKicked } = useViewedHalftimesStore();
 
 	const handleClick = (label: ActionButtonLabel) => {
 		switch (label) {
 			case '킥':
 				toggleKick();
 				break;
-			case '공유':
-				copyUrlToClipboard();
-				break;
+			// case '공유':
+			// 	copyUrlToClipboard();
+			// 	break;
 			case '본문':
 				const type = usedIn.toLocaleLowerCase();
 				router.push(`/${type}/${referencePk}`);
@@ -48,9 +60,25 @@ function FloatingActionButtons({ pk, usedIn, referencePk }: Pick<BaseHalftimeDto
 		}
 	};
 
-	const toggleKick = async () => {};
+	const toggleKick = async () => {
+		const isNews = usedIn === 'NEWS';
 
-	const copyUrlToClipboard = async () => {};
+		try {
+			if (isNews) {
+				await createNewsKick(referencePk);
+			} else {
+				await createBoardKick(referencePk);
+			}
+
+			setKickCount(isKicked ? kickCount - 1 : kickCount + 1);
+			setIsKicked(!isKicked);
+			toggleIsKicked(referencePk);
+		} catch {
+			alert('킥 처리 중 문제가 발생했습니다.');
+		}
+	};
+
+	// const copyUrlToClipboard = async () => {};
 
 	return (
 		<div
@@ -67,7 +95,7 @@ function FloatingActionButtons({ pk, usedIn, referencePk }: Pick<BaseHalftimeDto
 						tablet:brightness-0 tablet:invert @mobile:brightness-0 @mobile:invert"
 				>
 					<Image src={button.src} alt={button.label} width={24} height={24} />
-					<span>{button.value || '1.2천'}</span>
+					<span>{button.value || formatNumberByUnit(kickCount)}</span>
 				</button>
 			))}
 		</div>

@@ -25,7 +25,8 @@ export default function Player({
 	user,
 	title,
 	videoUrl,
-	pk,
+	isKicked,
+	kickCount,
 	usedIn,
 	referencePk,
 	isCurrentPlayer,
@@ -111,7 +112,7 @@ export default function Player({
 			{isCurrentPlayer && (
 				<>
 					<TopButtons globalMuted={globalMuted} toggleGlobalMuted={toggleGlobalMuted} />
-					<FloatingActionButtons pk={pk} usedIn={usedIn} referencePk={referencePk} />
+					<FloatingActionButtons isKicked={isKicked} kickCount={kickCount} usedIn={usedIn} referencePk={referencePk} />
 					{!isFirstLoad && <PlayButton playing={playing} />}
 
 					{typeof window !== 'undefined' && isCurrentPlayer && (

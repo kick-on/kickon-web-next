@@ -41,6 +41,7 @@ interface ViewedHalftimesStore {
 	viewedHalftimes: GetHalftimeDetailDto[];
 	setLastViewedHalftimePk: (index: number) => void;
 	appendViewedHalftime: (halftime: GetHalftimeDetailDto) => void;
+	toggleIsKicked: (pk: number) => void;
 	clearViewedHalftimes: () => void;
 }
 
@@ -53,6 +54,14 @@ export const useViewedHalftimesStore = create(
 			appendViewedHalftime: (halftime) =>
 				set((state) => ({
 					viewedHalftimes: [...(state.viewedHalftimes || []), halftime],
+				})),
+			toggleIsKicked: (referencePk) =>
+				set((state) => ({
+					viewedHalftimes: state.viewedHalftimes.map((h) =>
+						h.referencePk === referencePk
+							? { ...h, isKicked: !h.isKicked, kickCount: h.isKicked ? h.kickCount - 1 : h.kickCount + 1 }
+							: h,
+					),
 				})),
 			clearViewedHalftimes: () => set(() => ({ viewedHalftimes: [] })),
 		}),
