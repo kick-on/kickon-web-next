@@ -66,8 +66,11 @@ export default function Page() {
 
 		const currentIndex = allHalftimePks.findIndex((p: number) => p === pkNum);
 		const isLastVideo = currentIndex === allHalftimePks.length - 1;
-
 		if (isLastVideo) return;
+
+		// last video 전에 pk 추가 fetch
+		const shouldFetchPks = currentIndex === allHalftimePks.length - 2;
+		if (shouldFetchPks) getPkList();
 
 		const nextPkIndex = currentIndex + 1;
 		const nextPk = allHalftimePks[nextPkIndex];
