@@ -5,34 +5,16 @@ import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
 import { createBoardKick } from '@/services/apis/board/board.api';
 import { createNewsKick } from '@/services/apis/news/news.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
-import Image from 'next/image';
+import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
+import { KickIcon, ShareIcon, PaperIcon } from './icon';
 
-const actionButtons = [
-	{
-		label: '킥',
-		value: '',
-		src: '/kick/fill-none.svg',
-	},
-	// {
-	// 	label: '댓글',
-	//	value:'',
-	// 	src: '/comment.svg',
-	// },
-	{
-		label: '공유',
-		value: '공유',
-		src: '/share.svg',
-	},
-	{
-		label: '본문',
-		value: '본문',
-		src: '/paper.svg',
-	},
-] as const;
-
-type ActionButtonLabel = (typeof actionButtons)[number]['label'];
+interface ActionButton {
+	label: '킥' | '공유' | '본문';
+	value: string | number;
+	icon: React.ReactNode;
+}
 
 function FloatingActionButtons({
 	isKicked: isKickedData,
@@ -45,7 +27,30 @@ function FloatingActionButtons({
 	const [kickCount, setKickCount] = useState(kickCountData);
 	const { toggleIsKicked } = useViewedHalftimesStore();
 
-	const handleClick = (label: ActionButtonLabel) => {
+	const actionButtons: ActionButton[] = [
+		{
+			label: '킥',
+			value: formatNumberByUnit(kickCount),
+			icon: <KickIcon isKicked={isKicked} />,
+		},
+		// {
+		// 	label: '댓글',
+		//	value:'',
+		// 	src: '/comment.svg',
+		// },
+		{
+			label: '공유',
+			value: '공유',
+			icon: <ShareIcon />,
+		},
+		{
+			label: '본문',
+			value: '본문',
+			icon: <PaperIcon />,
+		},
+	];
+
+	const handleClick = (label: (typeof actionButtons)[number]['label']) => {
 		switch (label) {
 			case '킥':
 				toggleKick();
@@ -97,13 +102,14 @@ function FloatingActionButtons({
 		>
 			{actionButtons.map((button) => (
 				<button
-					key={button.src}
+					key={button.label}
 					onClick={() => handleClick(button.label)}
-					className="px-2 flex flex-col gap-1.5 items-center body7-medium text-black-600
-						tablet:brightness-0 tablet:invert @mobile:brightness-0 @mobile:invert"
+					className={clsx(
+						'px-2 flex flex-col gap-1.5 items-center body7-medium text-black-000 desktop:text-black-900 hover:text-black-400',
+					)}
 				>
-					<Image src={button.src} alt={button.label} width={24} height={24} />
-					<span>{button.value || formatNumberByUnit(kickCount)}</span>
+					{button.icon}
+					<span>{button.value}</span>
 				</button>
 			))}
 		</div>
