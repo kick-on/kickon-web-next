@@ -1,28 +1,23 @@
 'use client';
 
+import { halftimeSortOptions } from '@/lib/constants/options';
 import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-const options = [
-	{ label: '최신순', value: 'CREATED_DESC' },
-	{ label: '인기순', value: 'POPULAR' },
-	{ label: '등록순', value: 'CREATED_ASC' },
-];
-
 export default function Sorter() {
-	const [selectedSort, setSelectedSort] = useState(options[0].value);
-	const selectedIndex = options.findIndex((option) => option.value === selectedSort);
+	const [selectedSort, setSelectedSort] = useState(halftimeSortOptions[0].value);
+	const selectedIndex = halftimeSortOptions.findIndex((option) => option.value === selectedSort);
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
 	useEffect(() => {
 		const sort = searchParams.get('sort');
 
-		if (options.some((option) => option.value === sort)) {
+		if (halftimeSortOptions.some((option) => option.value === sort)) {
 			setSelectedSort(sort);
 		} else {
-			setSelectedSort(options[0].value);
+			setSelectedSort(halftimeSortOptions[0].value);
 		}
 	}, [searchParams]);
 
@@ -36,11 +31,11 @@ export default function Sorter() {
 			<div
 				className="absolute top-0 left-0 h-full rounded-lg bg-primary-900 transition-all duration-200 ease-in-out"
 				style={{
-					width: `calc(100% / ${options.length})`,
+					width: `calc(100% / ${halftimeSortOptions.length})`,
 					transform: `translateX(calc(${selectedIndex} * 100%))`,
 				}}
 			></div>
-			{options.map(({ label, value }) => (
+			{halftimeSortOptions.map(({ label, value }) => (
 				<button
 					key={value}
 					onClick={() => handleOptionClick(value)}

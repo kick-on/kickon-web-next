@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import { memo } from 'react';
 
 const actionButtons = [
 	{
@@ -25,7 +26,7 @@ const actionButtons = [
 	},
 ];
 
-export default function FloatingActionButtons() {
+function FloatingActionButtons() {
 	return (
 		<div
 			className="absolute z-15 py-6 px-3 flex flex-col gap-8 rounded-lg shadow-calendar
@@ -46,3 +47,5 @@ export default function FloatingActionButtons() {
 		</div>
 	);
 }
+
+export default memo(FloatingActionButtons);
