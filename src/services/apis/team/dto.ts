@@ -11,4 +11,5 @@ export interface TeamDto {
 	leaguePk?: number;
 	leagueNameKr?: string;
 	leagueNameEn?: string;
+	leagueLogoUrl?: string;
 }
