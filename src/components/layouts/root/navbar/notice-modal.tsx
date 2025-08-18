@@ -28,7 +28,7 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 	return (
 		<div
 			ref={modalRef}
-			className="absolute top-[3.375rem] -right-[1.05rem] w-[20.25rem] h-[630px]
+			className="absolute top-[2.95rem] -right-[1.05rem] w-[20.25rem] h-[630px]
                 bg-black-000 border border-black-100 rounded-[0.625rem]
                 flex flex-col shadow-navbar-modal z-25"
 		>
