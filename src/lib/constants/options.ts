@@ -26,3 +26,9 @@ export const reportOptions = [
 	'저작권 및 법적인 문제예요.',
 	'기타',
 ];
+
+export const halftimeSortOptions = [
+	{ label: '최신순', value: 'CREATED_DESC' },
+	{ label: '인기순', value: 'POPULAR' },
+	{ label: '등록순', value: 'CREATED_ASC' },
+];

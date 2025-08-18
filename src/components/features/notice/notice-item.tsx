@@ -1,49 +1,94 @@
 'use client';
 
-import { getTimeAgo } from '@/lib/utils/getTimeAgo';
+import { useNotificationStore } from '@/lib/store/useNotificationStore';
+import { patchNotificationRead } from '@/services/apis/notifications/notifications.api';
+import { NotificationItem } from '@/services/apis/notifications/notifications.type';
+import clsx from 'clsx';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
-// 나중에는 notice:(notice 응답 타입)으로 한 번에 전달하고 파싱해서 사용하기
+type NormalizedType = 'result' | 'comment' | 'reminder' | 'default';
 
-export interface NoticeItemProps {
-	type: string;
-	date: string;
-	content: string;
-	teamLogo?: string;
+const normalizeType = (rawType: string): NormalizedType => {
+	if (rawType.includes('REPLY')) return 'comment';
+	if (rawType === 'GAME_RESULT') return 'result';
+	if (rawType.startsWith('GAME_REMINDER')) return 'reminder';
+
+	return 'default';
+};
+
+export interface NoticeItemProps extends NotificationItem {
+	isModal?: boolean;
+	onCloseModal?: () => void;
 }
+export default function NoticeItem({
+	pk,
+	type,
+	relativeTime,
+	read,
+	redirectUrl,
+	content,
+	teamLogo,
+	isModal = false,
+	onCloseModal,
+}: NoticeItemProps) {
+	const router = useRouter();
+	const markAsRead = useNotificationStore((state) => state.markAsRead);
 
-export default function NoticeItem({ type, date, content, teamLogo }: NoticeItemProps) {
-	const iconMap: Record<string, string> = {
-		match: '/kick/black.svg',
-		reply: '/comment.svg',
-		prediction: teamLogo ?? '/kick/default.svg',
+	const typeMap: Record<NormalizedType, { icon: string; label: string }> = {
+		result: {
+			icon: teamLogo ?? '/kick/default.svg',
+			label: '승부 예측',
+		},
+		comment: {
+			icon: '/comment.svg',
+			label: '답글',
+		},
+		reminder: {
+			icon: '/kick/black.svg',
+			label: '경기 일정',
+		},
+		default: {
+			icon: '/kick/default.svg',
+			label: '알림',
+		},
 	};
 
-	const getIconSrc = () => iconMap[type] ?? '/kick/default.svg';
-
-	const typeKorMap: Record<string, string> = {
-		match: '경기 일정',
-		reply: '답글',
-		prediction: '승부 예측',
+	const handleClickNotification = async () => {
+		if (!read) {
+			try {
+				await patchNotificationRead({ notificationPk: pk });
+				markAsRead(pk);
+			} catch (e) {
+				console.error('알림 읽음 API 실패', e);
+			}
+		}
+		router.push(redirectUrl);
+		if (isModal && onCloseModal) {
+			onCloseModal();
+		}
 	};
-	const formattedDate = getTimeAgo(date);
 
 	return (
-		<div className="relative flex gap-4 p-4 cursor-pointer hover:bg-black-100">
+		<div
+			onClick={handleClickNotification}
+			className={clsx(
+				'relative flex gap-4 p-4 cursor-pointer hover:bg-black-100',
+				read ? 'bg-black-100' : 'bg-black-000',
+			)}
+		>
 			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200">
-				<Image src={getIconSrc()} alt="알림 출처" width={18} height={18} />
+				<Image src={typeMap[normalizeType(type)].icon} alt="알림 출처" width={18} height={18} />
 			</div>
 			<div className="flex flex-col gap-[5px]">
 				<div className="flex text-black-600">
-					<span className="mr-[2px] subtitle2-medium">{typeKorMap[type]}</span>
+					<span className="mr-[2px] subtitle2-medium">{typeMap[normalizeType(type)].label}</span>
 					<span className="mx-2 mt-[1px] leading-none">·</span>
-					<span className="body7-regular">{formattedDate}</span>
+					<span className="body7-regular">{relativeTime}</span>
 				</div>
 				<span className="body6-regular">{content}</span>
 			</div>
-			<div className="absolute top-1/2 -translate-y-1/2 right-4">
-				<div className="w-[6px] h-[6px] rounded-full bg-negative" />
-			</div>
+			{!read && <div className="w-[6px] h-[6px] rounded-full bg-negative self-center ml-auto" />}
 		</div>
 	);
 }

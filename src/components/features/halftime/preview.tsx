@@ -27,7 +27,7 @@ export default function Preview({ src }: { src: string }) {
 		playerRef.current.currentTime = 0;
 	};
 
-	return (
+	return src ? (
 		<div
 			onMouseOver={handleMouseOver}
 			onMouseLeave={handleMouseLeave}
@@ -50,6 +50,10 @@ export default function Preview({ src }: { src: string }) {
 					},
 				}}
 			/>
+		</div>
+	) : (
+		<div className="w-full h-full bg-black-900 flex items-center justify-center text-caption-01 @mobile:text-caption-02 text-black-000">
+			동영상을 불러오지 못했어요.
 		</div>
 	);
 }

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import NoticeButton from './notice-button';
 import LoginButton from './login-button';
 import clsx from 'clsx';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 interface RightButtonsProps {
 	isMobile?: boolean;
@@ -14,6 +15,7 @@ interface RightButtonsProps {
 
 export default function RightButton({ isMobile = false, isTabletWidth = false, onClickProfile }: RightButtonsProps) {
 	const pathname = usePathname();
+	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	return (
 		<div
@@ -22,7 +24,7 @@ export default function RightButton({ isMobile = false, isTabletWidth = false, o
 				isMobile ? ' gap-[18px] ml-auto' : 'gap-6',
 			)}
 		>
-			<NoticeButton />
+			{currentUserInfo && <NoticeButton />}
 			<Suspense>
 				{isMobile ? (
 					<LoginButton onClickProfile={onClickProfile} />

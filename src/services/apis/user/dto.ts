@@ -31,6 +31,8 @@ export interface UserInfoDto {
 	favoriteTeams: TeamDto[];
 	league?: LeagueDto;
 	isInfluencer?: boolean;
+	canChangeTeam: boolean;
+	nextAvailableChangeDate: string;
 	isReporter: boolean;
 }
 

@@ -2,91 +2,109 @@
 
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import OptionItem from '@/components/common/option-item';
+import OptionItem, { Option } from '@/components/common/option-item';
 import clsx from 'clsx';
-import { getLeague } from '@/services/apis/league';
-import { getTeam } from '@/services/apis/team';
 import { TeamDto } from '@/services/apis/team/dto';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import AlertModal from '@/components/features/detail/alert-modal';
+import { formatNextChangeDate } from '@/lib/utils/date/formatNextChangeDate';
 
 export default function Selectbox({
 	category,
-	favoriteTeamLength,
-	league,
+	options,
 	content,
 	onChange,
+	favoriteTeams,
 	isEditable = true,
-	isOpen = false,
+	isDropdownOpen = false,
+	setIsDropdownOpen,
 }: {
 	category: '리그' | '응원팀';
-	favoriteTeamLength?: number;
-	league?: number;
-	content: LeagueDto | TeamDto;
-	onChange: (selectedOption: LeagueDto | TeamDto) => void;
+	options: LeagueDto[] | TeamDto[];
+	content: Option | null;
+	onChange: (selectedOption: number | TeamDto) => void;
+	favoriteTeams: TeamDto[];
 	isEditable?: boolean;
-	isOpen?: boolean;
+	isDropdownOpen?: boolean;
+	setIsDropdownOpen?: (isOpen: boolean) => void;
 }) {
-	const [isOptionListVisible, setIsOptionListVisible] = useState(isOpen);
-	const [options, setOptions] = useState<LeagueDto[] | TeamDto[]>([]);
 	const dropboxRef = useRef<HTMLDivElement | null>(null);
 	const isLeagueSelectBox = category === '리그';
 
+	// 리그-팀 공통으로 pk, nameKr, logoUrl 사용
+	const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+
+	useEffect(() => {
+		setSelectedOption(content);
+	}, [content]);
+
+	const { currentUserInfo } = useCurrentUserInfoStore();
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const nextChangeDate = formatNextChangeDate(currentUserInfo?.nextAvailableChangeDate);
+	const nextChangeDateElement =
+		typeof nextChangeDate === 'string' ? (
+			<span className="text-primary-900">{nextChangeDate}</span>
+		) : (
+			nextChangeDate.map(({ label, value }) => (
+				<span key={label}>
+					<span className="text-primary-900">{value}</span>
+					{label}
+					{label === '월' && <>&nbsp;</>}
+				</span>
+			))
+		);
+
 	const handleSelectBoxClick = () => {
-		setIsOptionListVisible(!isOptionListVisible);
+		if (currentUserInfo && !currentUserInfo.canChangeTeam) {
+			setIsModalOpen(true);
+			return;
+		}
+		setIsDropdownOpen(!isDropdownOpen);
 	};
 
 	const handleOptionClick = (selectedPk: number) => {
-		let selectedOption = {
-			pk: NO_CHEERING_TEAM_PK,
-			nameKr: '응원팀이 없어요.',
+		const selected = options.find((option) => option.pk === selectedPk) ?? {
+			pk: -1,
+			nameKr: '응원팀이 없어요',
 			nameEn: 'no cheering team',
 			logoUrl: '/ban.svg',
 		};
 
-		if (selectedPk !== NO_CHEERING_TEAM_PK) {
-			if (category === '리그') {
-				const selectedLeague = options.find((option) => option.pk === selectedPk) as LeagueDto;
-				selectedOption = {
-					pk: selectedLeague.pk,
-					nameKr: selectedLeague.nameKr,
-					nameEn: selectedLeague.nameEn,
-					logoUrl: selectedLeague.logoUrl,
-				};
-			} else {
-				selectedOption = options.find((option) => option.pk === selectedPk) as TeamDto;
+		if (isLeagueSelectBox) {
+			onChange(selectedPk);
+		} else {
+			// 기존과 동일한 팀을 선택한 경우
+			if (selectedOption && selectedOption.pk === selectedPk) {
+				setIsDropdownOpen(false);
+				return;
+			}
+
+			// 이미 선택한 팀을 선택한 경우
+			if (favoriteTeams.find((team) => team?.pk === selectedPk)) {
+				alert('이미 선택한 팀입니다.');
+				return;
+			}
+
+			// 유의미한 팀을 선택한 경우
+			if (selectedPk !== NO_CHEERING_TEAM_PK) {
+				onChange(selected);
 			}
 		}
 
-		console.log(selectedOption);
-		onChange(selectedOption);
-		setIsOptionListVisible(false);
+		setSelectedOption(selected);
+		setIsDropdownOpen(false);
 	};
 
 	useEffect(() => {
-		// props isOpen 값 변경 시마다 isOptionListVisible에 반영
-		setIsOptionListVisible(isOpen);
-	}, [isOpen]);
-
-	useEffect(() => {
-		const getOptions = async () => {
-			const response = isLeagueSelectBox ? await getLeague() : await getTeam(league);
-
-			if (!response) return;
-			setOptions(response.data);
-		};
-
-		getOptions();
-	}, [isLeagueSelectBox, league]);
-
-	useEffect(() => {
-		// isOptionListVisible가 true일 때만 리스너 등록
-		if (!isOptionListVisible) return;
+		// isDropdownOpen가 true일 때만 리스너 등록
+		if (!isDropdownOpen) return;
 
 		// 드롭박스 외부 클릭 시 닫음
 		const handleOutsideClick = (e: MouseEvent) => {
 			if (!dropboxRef.current.contains(e.target as Node)) {
-				setIsOptionListVisible(false);
+				setIsDropdownOpen(false);
 			}
 		};
 
@@ -94,7 +112,7 @@ export default function Selectbox({
 		return () => {
 			document.removeEventListener('click', handleOutsideClick);
 		};
-	}, [isOptionListVisible]);
+	}, [isDropdownOpen]);
 
 	return (
 		<div className="flex flex-col gap-2">
@@ -103,25 +121,23 @@ export default function Selectbox({
 					onClick={handleSelectBoxClick}
 					className={`flex gap-2.5 items-center px-4 py-3 w-full
 						border border-black-300 rounded-lg body3-regular @mobile:text-14
-						${content ? 'text-black-900' : 'text-black-600'}
+						${selectedOption ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
-					{content && (
+					{selectedOption && (
 						<Image
 							className="w-[1.125rem] h-[1.125rem] object-contain"
 							width={18}
 							height={18}
-							src={content.logoUrl}
-							alt={content.nameKr}
+							src={selectedOption.logoUrl}
+							alt={selectedOption.nameKr}
 						/>
 					)}
-					{content ? content.nameKr : `${isLeagueSelectBox ? '리그를' : '팀을'} 선택해 주세요.`}
-					{isEditable && (
-						<Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt={`${category} 선택`} />
-					)}
+					{selectedOption ? selectedOption.nameKr : `${isLeagueSelectBox ? '리그를' : '팀을'} 선택해 주세요.`}
+					{isEditable && <Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt="" />}
 				</button>
 
-				{isOptionListVisible && !!options.length && (
+				{isDropdownOpen && options.length > 0 && (
 					<div
 						className={clsx(
 							'z-10 w-full top-[3.25rem] shadow-select-options border border-black-300 rounded-[0.625rem]',
@@ -140,7 +156,7 @@ export default function Selectbox({
 								{index < options.length - 1 && <hr className="border-black-300" />}
 							</div>
 						))}
-						{isLeagueSelectBox && favoriteTeamLength === 1 && (
+						{isLeagueSelectBox && favoriteTeams.length === 1 && (
 							<div
 								className="bg-black-000 hover:bg-black-150 transition-colors
 									rounded-b-[0.5625rem] border-t border-black-300"
@@ -151,6 +167,21 @@ export default function Selectbox({
 					</div>
 				)}
 			</div>
+
+			{isModalOpen && (
+				<AlertModal
+					type="alert"
+					description={
+						<>
+							MY팀 변경은 6개월에 한 번만 가능해요.
+							<br />
+							다음 변경 가능일: {nextChangeDateElement}
+						</>
+					}
+					confirmButtonText="확인"
+					onConfirm={() => setIsModalOpen(false)}
+				/>
+			)}
 		</div>
 	);
 }
