@@ -16,7 +16,7 @@ function TopButtons({ globalMuted, toggleGlobalMuted }: { globalMuted?: boolean;
 			>
 				<Image src={'/chevron/right-white.svg'} alt="뒤로가기" width={24} height={24} className="rotate-180" />
 			</button>
-			{globalMuted && (
+			{globalMuted != null && (
 				<button onClick={toggleGlobalMuted} className="w-9 h-9 p-1.5 bg-black-900/10 rounded-full">
 					<Image
 						src={globalMuted ? '/mute.svg' : '/volume.svg'}
