@@ -6,7 +6,7 @@ import Sorter from '@/components/features/halftime/sorter';
 import { halftimeSortOptions } from '@/lib/constants/options';
 import { useFetchSize } from '@/lib/hooks/useFetchSize';
 import { useObserver } from '@/lib/hooks/useObserver';
-import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
+import { useAllHalftimePksStore } from '@/lib/store/useHalftimeStore';
 import { getHalftimeList } from '@/services/apis/shorts/shorts.api';
 import { BaseHalftimeDto, HalftimeSortType } from '@/services/apis/shorts/shorts.type';
 import { useSearchParams } from 'next/navigation';
@@ -17,7 +17,6 @@ export default function Page() {
 
 	const [halftimes, setHalftimes] = useState<BaseHalftimeDto[]>([]);
 	const { hasNext, appendAllHalftimePks, clearAllHalftimePks } = useAllHalftimePksStore();
-	const { setLastViewedHalftimePk } = useViewedHalftimesStore();
 
 	const [page, setPage] = useState(1);
 	const sort = searchParams.get('sort') ?? halftimeSortOptions[0].value;
@@ -29,11 +28,6 @@ export default function Page() {
 		getHalftimes(1, 'init');
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [sort]);
-
-	//
-	useEffect(() => {
-		setLastViewedHalftimePk(-1);
-	}, []);
 
 	const getHalftimes = async (pageNum: number, type: 'init' | 'append') => {
 		const isAppending = type === 'append';
