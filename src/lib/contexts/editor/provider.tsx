@@ -82,7 +82,8 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 				.getText()
 				.replace(/\u00A0/g, ' ')
 				.trim();
-			const isTrulyEmpty = text === '';
+			// 텍스트는 없어도 이미지나 영상 등 다른 노드가 있으면 내용이 있는 걸로 처리
+			const isTrulyEmpty = text === '' && !/<img|video|iframe/.test(html);
 
 			if (isTrulyEmpty) {
 				// 본문 내용이 모두 지워지면 텍스트 포맷 초기화
