@@ -24,7 +24,11 @@ export default function RightButton({ isMobile = false, isTabletWidth = false, o
 				isMobile ? ' gap-[18px] ml-auto' : 'gap-6',
 			)}
 		>
-			{currentUserInfo && <NoticeButton />}
+			{currentUserInfo && (
+				<div className="relative flex items-center">
+					<NoticeButton />
+				</div>
+			)}
 			<Suspense>
 				{isMobile ? (
 					<LoginButton onClickProfile={onClickProfile} />

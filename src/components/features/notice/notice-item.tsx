@@ -72,23 +72,22 @@ export default function NoticeItem({
 	return (
 		<div
 			onClick={handleClickNotification}
-			className={clsx(
-				'relative flex gap-4 p-4 cursor-pointer hover:bg-black-100',
-				read ? 'bg-black-100' : 'bg-black-000',
-			)}
+			className={clsx('relative flex gap-4 p-4 cursor-pointer hover:bg-black-100', read ? 'bg-black-100' : 'bg-white')}
 		>
-			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200">
+			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200 flex-shrink-0">
 				<Image src={typeMap[normalizeType(type)].icon} alt="알림 출처" width={18} height={18} />
 			</div>
-			<div className="flex flex-col gap-[5px]">
+
+			<div className="flex flex-col gap-[5px] flex-1 min-w-0">
 				<div className="flex text-black-600">
 					<span className="mr-[2px] subtitle2-medium">{typeMap[normalizeType(type)].label}</span>
 					<span className="mx-2 mt-[1px] leading-none">·</span>
 					<span className="body7-regular">{relativeTime}</span>
 				</div>
-				<span className="body6-regular">{content}</span>
+				<span className="body6-regular break-words">{content}</span>
 			</div>
-			{!read && <div className="w-[6px] h-[6px] rounded-full bg-negative self-center ml-auto" />}
+
+			{!read && <div className="w-[6px] h-[6px] rounded-full bg-negative self-center ml-auto flex-shrink-0" />}
 		</div>
 	);
 }
