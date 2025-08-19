@@ -11,6 +11,7 @@ export default function NoticeButton() {
 	const pathname = usePathname();
 	const router = useRouter();
 	const isMobile = useIsMobile();
+
 	const [isNoticeModalOpen, setIsNoticeModalOpen] = useState(false);
 
 	const handleNoticeIconClick = () => {

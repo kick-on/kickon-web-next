@@ -61,7 +61,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 	return (
 		<>
 			{isLoggedIn ? (
-				<div className="relative w-fit flex">
+				<div className="relative w-fit h-full flex">
 					<button
 						onClick={handleProfileButtonClick}
 						className={clsx(

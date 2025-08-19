@@ -14,7 +14,10 @@ export default function NoticeHeader({ isModal = false, onClose }: NoticeHeaderP
 
 	return (
 		<div
-			className={clsx('relative flex justify-center items-center border-b border-black-200', isModal ? 'py-5' : 'py-6')}
+			className={clsx(
+				'relative flex justify-center overflow-none items-center rounded-t-[0.625rem] border-b border-black-200 bg-white',
+				isModal ? 'py-5' : 'py-6',
+			)}
 		>
 			{!isModal && (
 				<button
