@@ -25,7 +25,7 @@ export default function Navbar() {
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
 	const navButtons: NavButton[] = [
-		!isDesktop ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
+		!isLeftSideBarVisible ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
 		{ href: '/gamble', content: '승부예측', isActive: pathname.split('/').includes('gamble') },
 		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
 		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },

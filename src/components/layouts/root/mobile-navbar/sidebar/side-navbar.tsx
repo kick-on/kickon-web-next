@@ -2,11 +2,6 @@
 
 import clsx from 'clsx';
 import Link from 'next/link';
-import Divider from './divider';
-import { HotNewsDto, NewsListDto } from '@/services/apis/news/news.type';
-import { useEffect, useState } from 'react';
-import TopNewsItem from '@/components/layouts/with-side/top-news-halftime/top-news-item';
-import { getHotNews, getNewsList } from '@/services/apis/news/news.api';
 import Image from 'next/image';
 import { NavButton } from '../../navbar';
 
@@ -17,41 +12,6 @@ export default function SideNavbar({
 	onClickButton: () => void;
 	navButtons: NavButton[];
 }) {
-	const [countToRender, setCountToRender] = useState<number | null>(null);
-	const [hotNews, setHotNews] = useState<HotNewsDto[] | null>(null);
-	const [recentNews, setRecentNews] = useState<NewsListDto[] | null>(null);
-
-	const isHotNewsEmpty = hotNews && hotNews.length === 0;
-
-	useEffect(() => {
-		if (countToRender === null) return;
-
-		const getHotNewsItem = async () => {
-			const hotNewsResponse = await getHotNews();
-
-			if (hotNewsResponse) {
-				setHotNews(hotNewsResponse.data.slice(0, countToRender));
-
-				// 많이 본 뉴스가 빈 배열인 경우 최신 뉴스 렌더링
-				if (hotNewsResponse.data.length === 0) {
-					const recentNewsResponse = await getNewsList({ order: 'recent', size: countToRender, page: 1 });
-					if (recentNewsResponse) {
-						setRecentNews(recentNewsResponse.data);
-					}
-				}
-			}
-		};
-
-		getHotNewsItem();
-	}, [countToRender]);
-
-	useEffect(() => {
-		if (window.innerHeight < 668) setCountToRender(2);
-		else if (window.innerHeight < 768) setCountToRender(3);
-		else if (window.innerHeight < 868) setCountToRender(4);
-		else setCountToRender(5);
-	}, []);
-
 	return (
 		<div className="flex flex-col justify-between h-full">
 			<nav className="flex flex-col gap-2">
@@ -72,34 +32,7 @@ export default function SideNavbar({
 				)}
 			</nav>
 
-			{hotNews !== null && (
-				<>
-					<Divider />
-
-					<div className="relative z-20 flex flex-col gap-4 mb-18">
-						<span className="text-black-700 subtitle1-medium mb-1 mt-2">
-							{isHotNewsEmpty ? '최신 뉴스' : '많이 본 뉴스'}
-						</span>
-						{isHotNewsEmpty
-							? recentNews !== null
-								? recentNews.map((news) => (
-										<div key={news?.pk} onClick={onClickButton}>
-											<TopNewsItem {...news} leagueNameKr={news?.team?.leagueNameKr || news.category} />
-										</div>
-									))
-								: null
-							: hotNews.map((news, i) =>
-									i > countToRender - 1 ? null : (
-										<div key={news.pk} onClick={onClickButton}>
-											<TopNewsItem {...news} />
-										</div>
-									),
-								)}
-					</div>
-				</>
-			)}
-
-			<div className="absolute z-10 -bottom-[3.625rem] right-9 w-[15.9375rem] h-[12.75rem] opacity-[0.08]">
+			<div className="absolute z-10 -bottom-[3.625rem] right-31 @mobile:right-9 w-[23rem] @mobile:w-[15.9375rem] aspect-[31/25] opacity-[0.08]">
 				<Image className="w-auto h-auto object-contain" src={'/logo/icon-red.svg'} alt="킥온 로고" fill />
 			</div>
 		</div>
