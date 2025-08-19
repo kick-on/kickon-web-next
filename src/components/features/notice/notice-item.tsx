@@ -72,7 +72,10 @@ export default function NoticeItem({
 	return (
 		<div
 			onClick={handleClickNotification}
-			className={clsx('relative flex gap-4 p-4 cursor-pointer hover:bg-black-100', read ? 'bg-black-100' : 'bg-white')}
+			className={clsx(
+				'relative flex gap-4 p-4 cursor-pointer hover:bg-black-100 last:pb-8',
+				read ? 'bg-black-100' : 'bg-white',
+			)}
 		>
 			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200 flex-shrink-0">
 				<Image src={typeMap[normalizeType(type)].icon} alt="알림 출처" width={18} height={18} />

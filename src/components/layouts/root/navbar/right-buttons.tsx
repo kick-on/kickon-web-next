@@ -20,15 +20,11 @@ export default function RightButton({ isMobile = false, isTabletWidth = false, o
 	return (
 		<div
 			className={clsx(
-				'grid grid-cols-[auto_auto] items-center justify-center',
+				'h-[2.375rem] grid grid-cols-[auto_auto] items-center justify-center',
 				isMobile ? ' gap-[18px] ml-auto' : 'gap-6',
 			)}
 		>
-			{currentUserInfo && (
-				<div className="relative flex items-center">
-					<NoticeButton />
-				</div>
-			)}
+			{currentUserInfo && <NoticeButton />}
 			<Suspense>
 				{isMobile ? (
 					<LoginButton onClickProfile={onClickProfile} />
