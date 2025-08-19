@@ -46,7 +46,7 @@ export default function Navbar() {
 		<MobileNavbar navButtons={navButtons} />
 	) : (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-30 transition-colors ease-out`}>
-			<div className="flex items-center h-[4.5rem] max-w-[85rem] min-w-[48rem] max-[1094px]:w-[48rem] max-[1440px]:w-[62.5rem] m-auto">
+			<div className="flex justify-between items-center h-[4.5rem] max-w-[85rem] min-w-[48rem] max-[1094px]:w-[48rem] max-[1440px]:w-[62.5rem] m-auto">
 				<nav className="flex items-center">
 					<Image
 						width={216}
