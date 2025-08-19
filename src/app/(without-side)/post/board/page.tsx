@@ -157,7 +157,7 @@ export default function Page() {
 
 				const response = await createBoard(postBody);
 				console.log('작성 성공', response);
-				router.push(`/board/${response.data.pk}`);
+				router.replace(`/board/${response.data.pk}`);
 			}
 		} catch (error) {
 			console.error(isEditMode ? '게시글 수정 실패:' : '게시글 작성 실패:', error);
