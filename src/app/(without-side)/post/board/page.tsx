@@ -232,12 +232,12 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
-			{currentUserInfo.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
+			{currentUserInfo?.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 
 			<div
 				className={clsx(
 					'flex w-full justify-center gap-4 mx-auto mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]',
-					currentUserInfo.isInfluencer && 'mb-[60px] @mobile:mb-[50px]',
+					currentUserInfo?.isInfluencer && 'mb-[60px] @mobile:mb-[50px]',
 				)}
 			>
 				<button
