@@ -137,6 +137,7 @@ body.overflow-hidden {
 .ProseMirror :is(img, iframe, video) + p,
 .ProseMirror :is(img, iframe, video) + :is(img, iframe, video) {
 	margin-top: 24px;
+	line-height: 1.5rem;
 }
 
 .tiptap p + p,
