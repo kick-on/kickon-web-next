@@ -1,5 +1,5 @@
 import { getTimeAgo } from '@/lib/utils/getTimeAgo';
-import { NewsItemDto } from '@/services/apis/news/dto';
+import { NewsListDto } from '@/services/apis/news/news.type';
 import Image from 'next/image';
 import Link from 'next/link';
 import SanitizedContent from '../sanitized-content';
@@ -18,7 +18,7 @@ export default function NewsItem({
 	replies,
 	team,
 	isMyTeam = false,
-}: NewsItemDto & { isMyTeam?: boolean }) {
+}: NewsListDto & { isMyTeam?: boolean }) {
 	return (
 		<Link href={`/news/${pk}`} className="group">
 			<article className="flex flex-col my-2 py-4 px-4 cursor-pointer">
@@ -67,7 +67,10 @@ export default function NewsItem({
 							height={24}
 							className="w-6 h-6 rounded-full object-cover"
 						/>
-						<span className="flex gap-1.5 text-black-900">{user.nickname}</span>
+						<span className="flex items-center gap-0.5 text-black-900">
+							{user.nickname}
+							{user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+						</span>
 						<span className={'@mobileml-0.5 ml-2'}>{getTimeAgo(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>

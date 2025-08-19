@@ -1,7 +1,7 @@
-import MostReadNewsList from './most-read-news-list/most-read-news-list';
 import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import Profile from './profile';
 import { Suspense } from 'react';
+import TopNewsHalftime from './top-news-halftime/top-news-halftime';
 
 export default async function RightSide() {
 	const { isMobile } = getServerDeviceType();
@@ -13,7 +13,7 @@ export default async function RightSide() {
 			<Suspense>
 				<Profile />
 			</Suspense>
-			<MostReadNewsList />
+			<TopNewsHalftime />
 		</aside>
 	);
 }

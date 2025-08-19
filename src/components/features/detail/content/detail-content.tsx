@@ -2,14 +2,16 @@
 import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
 import { Suspense, useEffect, useState } from 'react';
-import { postContentLike } from '@/services/apis/detail/kick';
 import DOMPurify from 'dompurify';
 import { getRelativeTime } from '@/lib/utils/getRelativeTime';
 import { categories } from '@/lib/constants/options';
-import LoginModal from '@/components/common/login-modal/login-modal';
+import LoginModal from '@/components/common/login-modal/login-content';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import parse, { Element } from 'html-react-parser';
+import { createNewsKick } from '@/services/apis/news/news.api';
+import { createBoardKick } from '@/services/apis/board/board.api';
 
+// TODO: 타입 선언
 const DetailContent = ({ data, type, isCommentAllowed }) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isNews = type === 'news';
@@ -75,7 +77,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 		}
 
 		try {
-			const success = await postContentLike(data.pk, isNews);
+			const success = isNews ? await createNewsKick(data.pk) : await createBoardKick(data.pk);
 			if (success) {
 				// API 응답이 성공하면 UI 업데이트
 				setIsLiked((prev) => !prev);
@@ -126,7 +128,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 			)}
 
-			<h1 className={`title1-bold @mobile:text-2xl ${titleMargin}`}>{data.title}</h1>
+			<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{data.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
 			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
@@ -140,9 +142,9 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 							className="w-full h-full rounded-full object-cover"
 						/>
 					</div>
-					<span className="flex items-center gap-1.5 text-black-900 @mobile:text-13">
+					<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
 						{data.user.nickname}
-						{/* <Image width={12} height={12} src="/certification-mark.svg" alt="인증" /> */}
+						{data.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 					</span>
 					<span className="ml-2">{getRelativeTime(data.createdAt)}</span>
 					<span>|</span>

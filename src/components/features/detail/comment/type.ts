@@ -1,4 +1,4 @@
-import { CommentDto } from '@/services/apis/detail/comment/dto';
+import { CommonCommentDto } from '@/services/apis/common/types';
 
 // comment section props
 export interface CommentSectionProps {
@@ -11,7 +11,7 @@ export interface CommentSectionProps {
 
 // comment item props
 export interface CommentItemProps {
-	content: CommentDto;
+	content: CommonCommentDto;
 	type: 'news' | 'board';
 	likedComments: Record<number, boolean>;
 	handleLikeToggle: (commentId: number) => void;

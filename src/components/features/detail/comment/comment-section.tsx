@@ -3,16 +3,17 @@
 import { useCallback, useEffect, useState } from 'react';
 import CommentInput from './comment-input';
 import CommentItem from './comment-item';
-import { deleteReply, getCommentList, postCommentKick } from '@/services/apis/detail/comment';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
-import LoginModal from '@/components/common/login-modal/login-modal';
+import LoginModal from '@/components/common/login-modal/login-content';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentSectionProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import AlertModal from '../alert-modal';
+import { createNewsCommentKick, deleteNewsReply, getNewsCommentList } from '@/services/apis/news/news-reply.api';
+import { createBoardCommentKick, deleteBoardReply, getBoardCommentList } from '@/services/apis/board/board-reply.api';
 
 function CommentSection({
 	type,
@@ -27,17 +28,20 @@ function CommentSection({
 	const isNews = type === 'news';
 	const baseUrl = `/${type}/${contentsId}`;
 
-	const [comments, setComments] = useState([]);
-	const [likedComments, setLikedComments] = useState({});
-	const [replyingTo, setReplyingTo] = useState([]);
-	const [replyVisibilities, setReplyVisibilities] = useState({});
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null);
-	const [hasError, setHasError] = useState(false);
-	const [totalPages, setTotalPages] = useState(1);
-	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false);
-	const [loadedPages, setLoadedPages] = useState([1]);
+	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false); // 모바일에서 더보기 버튼 나올지 말지
+
+	// TODO: 4. 다른 TODO 처리 후 재귀 컴포넌트로 각 comment item이 답글을 관리하도록 수정
+	const [replyingTo, setReplyingTo] = useState([]); // 열어둔 답글 리스트
+	const [replyVisibilities, setReplyVisibilities] = useState({}); // 댓글의 답글을 열지 말지
+
+	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정!
+	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id (수정하다가 다른 거 수정하기 누르는 경우??)
+	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
+
+	const [likedComments, setLikedComments] = useState({}); // 제거 예정
+	const [loadedPages, setLoadedPages] = useState([1]); // infinite lastReply + 스프레드 -> 제거 예정
 
 	// 현재 페이지 추출
 	const pageParam = searchParams.get('page');
@@ -45,13 +49,20 @@ function CommentSection({
 
 	const commentsPerPage = 10;
 
-	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+	// 댓글 리스트 조회
+	const [comments, setComments] = useState([]);
+	const [hasError, setHasError] = useState(false);
+	const [totalPages, setTotalPages] = useState(1);
 
+	// TODO: 2. 모바일에서 infinite와 lastReply 추가 + 스프레드
 	const fetchComments = useCallback(
 		async (page: number, append = false) => {
 			if (!contentsId || contentsId < 1) return;
 			try {
-				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
+				const response = isNews
+					? await getNewsCommentList(contentsId, page, commentsPerPage)
+					: await getBoardCommentList(contentsId, page, commentsPerPage);
+
 				console.log('댓글 리스트', response);
 				if (append) {
 					// 중복되지 않는 새 댓글만 추가
@@ -80,7 +91,10 @@ function CommentSection({
 
 			// 모든 로드된 페이지를 순서대로 불러옴
 			for (const page of loadedPages.sort((a, b) => a - b)) {
-				const response = await getCommentList(contentsId, page, commentsPerPage, isNews);
+				const response = isNews
+					? await getNewsCommentList(contentsId, page, commentsPerPage)
+					: await getBoardCommentList(contentsId, page, commentsPerPage);
+
 				if (response?.data) {
 					// 중복 제거하면서 댓글 추가
 					const newComments = response.data.filter((c) => !allComments.find((existing) => existing.pk === c.pk));
@@ -117,7 +131,10 @@ function CommentSection({
 	// 모바일에서 '더 보기' 클릭 시 댓글 추가 로드
 	const handleLoadMoreComment = async () => {
 		const nextPage = currentPage + 1;
-		const response = await getCommentList(contentsId, nextPage, commentsPerPage, isNews);
+		const response = isNews
+			? await getNewsCommentList(contentsId, nextPage, commentsPerPage)
+			: await getBoardCommentList(contentsId, nextPage, commentsPerPage);
+
 		const newComments = response?.data || [];
 
 		setComments((prev) => [...prev, ...newComments]);
@@ -141,7 +158,10 @@ function CommentSection({
 
 			// 해당 댓글의 최신 상태를 다시 불러와 갱신
 			try {
-				const response = await getCommentList(contentsId, currentPage, commentsPerPage, isNews);
+				const response = isNews
+					? await getNewsCommentList(contentsId, currentPage, commentsPerPage)
+					: await getBoardCommentList(contentsId, currentPage, commentsPerPage);
+
 				const updatedComment = response?.data.find((c) => c.pk === parentPk);
 				if (updatedComment) {
 					setComments((prev) => prev.map((c) => (c.pk === parentPk ? updatedComment : c)));
@@ -169,9 +189,10 @@ function CommentSection({
 			return;
 		}
 
-		const result = await postCommentKick(commentId, isNews);
+		const result = isNews ? await createNewsCommentKick(commentId) : await createBoardCommentKick(commentId);
 		if (!result) return;
 
+		// TODO: 1. 좋아요 api 응답에서 좋아요 개수 반환하도록 요청
 		// 로컬스토리지 및 상태 업데이트
 		setLikedComments((prev) => {
 			const updated = { ...prev, [commentId]: !prev[commentId] };
@@ -221,7 +242,7 @@ function CommentSection({
 	};
 	const handleDeleteComment = async (commentId: number, parentReplyId: number) => {
 		try {
-			const response = await deleteReply(commentId, type);
+			const response = isNews ? await deleteNewsReply(commentId) : await deleteBoardReply(commentId);
 			console.log('댓글 삭제', response);
 			if (response?.code === 'GET_SUCCESS') {
 				// 삭제 성공 시, 상태 업데이트
@@ -321,7 +342,7 @@ function CommentSection({
 				<>
 					{isMobile ? (
 						!isLastPageLoaded && (
-							<div className="flex gap-2 justify-center mt-4 cursor-pointer" onClick={handleLoadMoreComment}>
+							<div className="flex gap-2 justify-center my-4 cursor-pointer" onClick={handleLoadMoreComment}>
 								<div className="button5-regular">더 보기</div>
 								<Image src="/chevron/down.svg" alt="댓글 더 보기" width={16} height={16} />
 							</div>

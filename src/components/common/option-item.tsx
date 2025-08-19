@@ -5,15 +5,18 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
+export interface Option {
+	pk: number;
+	nameKr: string;
+	logoUrl: string;
+}
+
 export default function OptionItem({
 	pk,
 	nameKr,
 	logoUrl,
 	onClick,
-}: {
-	pk: number;
-	nameKr: string;
-	logoUrl: string;
+}: Option & {
 	onClick: (number) => void;
 }) {
 	const pathname = usePathname();

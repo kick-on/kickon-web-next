@@ -1,14 +1,16 @@
 import NewsItem from './news-item';
 import CommunityItem from './community-item';
 import CommunityDivisionBar from './community-division-bar';
-import { getNewsList } from '@/services/apis/news/getNewsList';
-import { getBoardList } from '@/services/apis/board/getBoardList';
+import { getNewsList } from '@/services/apis/news/news.api';
+import { getBoardList } from '@/services/apis/board/board.api';
 import FetchingFailedCard from '../fetching-failed-card';
 import TabBar from './tab-bar';
 import PaginationBar from '../pagination-bar';
 import clsx from 'clsx';
 import EmptyState from './empty-state';
 import MoreList, { MoreListProps } from './more-list';
+import { NewsListDto } from '@/services/apis/news/news.type';
+import { BoardListDto } from '@/services/apis/board/board.type';
 
 export const renderItems = (items, ItemComponent) => (
 	<div>
@@ -22,6 +24,10 @@ export const renderItems = (items, ItemComponent) => (
 		))}
 	</div>
 );
+
+const isBoardResponse = (data: NewsListDto[] | BoardListDto[]): data is BoardListDto[] => {
+	return (data as BoardListDto[])?.[0]?.isPinned !== undefined;
+};
 
 export default async function CategoryTab({
 	mode,
@@ -68,7 +74,9 @@ export default async function CategoryTab({
 			) : (
 				<div className="flex flex-col w-full">
 					{renderItems(
-						isNews ? response.data : [...response.data].sort((a, b) => Number(b.isPinned) - Number(a.isPinned)),
+						isBoardResponse(response.data)
+							? [...response.data].sort((a, b) => Number(b.isPinned) - Number(a.isPinned))
+							: response.data,
 						isNews ? (item) => <NewsItem {...item} /> : (item) => <CommunityItem {...item} />,
 					)}
 					<MoreList {...moreListProps} />

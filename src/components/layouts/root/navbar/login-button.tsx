@@ -3,7 +3,7 @@
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
-import { getUserInfo } from '@/services/auth';
+import { getUserInfo } from '@/services/apis/user';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -29,7 +29,12 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 		} else {
 			sessionStorage.setItem('previousPage', fullUrl);
 		}
-		openLoginModal();
+
+		if (isMobile) {
+			router.push('/login');
+		} else {
+			openLoginModal();
+		}
 	};
 
 	const handleProfileButtonClick = () => {
@@ -48,7 +53,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 
 				if (typeof response === 'string') {
 					console.log(response);
-				} else {
+				} else if (response.data.privacyAgreedAt) {
 					setCurrentUserInfo(response.data);
 				}
 			};
@@ -61,7 +66,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 	return (
 		<>
 			{isLoggedIn ? (
-				<div className="relative w-fit flex ml-auto">
+				<div className="relative w-fit h-full flex">
 					<button
 						onClick={handleProfileButtonClick}
 						className={clsx(

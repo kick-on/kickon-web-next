@@ -6,17 +6,16 @@ import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import PostEditor from '@/components/features/post/post-editor.tsx';
-import { PostContentsRequest } from '@/services/apis/post/dto';
-import { postNewContents } from '@/services/apis/post';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/auth';
+import { getUserInfo } from '@/services/apis/user';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
-import { extractImageFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
 import { categories } from '@/lib/constants/options';
-import { patchDetailContent } from '@/services/apis/detail/actions';
+import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
+import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
 
 export default function Page() {
 	const router = useRouter();
@@ -102,13 +101,19 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
+	// 중복 호출 방지
+	const isLoading = useRef(false);
+
 	const postNewsContents = async () => {
-		if (!currentUserInfo) {
+		console.log('isLoading', isLoading.current);
+		if (!currentUserInfo || isLoading.current) {
 			return;
 		}
+		isLoading.current = true;
 
-		const usedImageKeysFromBody = extractImageFilenamesFromContent(body.trim());
-		console.log(body.trim());
+		const usedImageKeysFromBody = extractMediaFilenamesFromContent(body.trim(), 'img');
+		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
+		const embeddedLink = extractEmbeddedLinks(body.trim());
 
 		let thumbnailFilename = '';
 		if (selectedImage) {
@@ -116,16 +121,20 @@ export default function Page() {
 		}
 		const usedImageKeys = [...usedImageKeysFromBody, ...(thumbnailFilename ? [thumbnailFilename] : [])];
 
-		console.log('게시글 생성, 삭제 시 보내는 이미지 키 배열', usedImageKeys);
+		console.log('usedImageKeys:', usedImageKeys);
+		console.log('usedVideoKeys:', usedVideoKeys);
+		console.log('embeddedLink:', embeddedLink);
 
 		// 공통 요청 데이터
-		const requestBody: PostContentsRequest = {
-			team: selectedTeam?.id || null,
+		const requestBody: CreateNewsRequest = {
 			title: title.trim(),
 			contents: body.trim(),
 			thumbnailUrl: selectedImage || '',
 			category: selectedOption.value,
-			usedImageKeys,
+			team: selectedTeam?.id || null,
+			...(usedImageKeys.length > 0 && { usedImageKeys }),
+			...(usedVideoKeys.length > 0 && { usedVideoKeys }),
+			...(embeddedLink.length > 0 && { embeddedLink }),
 		};
 
 		try {
@@ -133,16 +142,17 @@ export default function Page() {
 				const parsedData = JSON.parse(sessionStorage.getItem('detailContent'));
 				const contentPk = parsedData.data.pk;
 
-				const patchBody: Partial<PostContentsRequest> = {
+				const patchBody: PatchNewsDetailRequest = {
 					...requestBody,
 				};
 
 				console.log('수정 바디', patchBody);
-				const response = await patchDetailContent(contentPk, true, patchBody);
+				const response = await patchNewsDetail(contentPk, patchBody);
 				console.log('수정 성공', response);
 				router.replace(`/news/${contentPk}`);
 			} else {
-				const response = await postNewContents(requestBody, true);
+				console.log('생성 바디', requestBody);
+				const response = await createNews(requestBody);
 				console.log('작성 성공', response);
 				router.replace(`/news/${response.data.pk}`);
 			}
@@ -190,7 +200,7 @@ export default function Page() {
 				</button>
 				<button
 					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
-					disabled={!isFormValid}
+					disabled={!isFormValid && !isLoading}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all',
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',

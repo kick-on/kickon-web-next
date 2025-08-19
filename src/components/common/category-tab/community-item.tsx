@@ -1,10 +1,10 @@
 import { formatStringToDate } from '@/lib/utils/formatStringToDate';
-import { BoardItemDto } from '@/services/apis/board/dto';
+import { BoardListDto } from '@/services/apis/board/board.type';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
 
-type CommunityItemProps = BoardItemDto & {
+type CommunityItemProps = BoardListDto & {
 	isPinned?: boolean;
 };
 export default function CommunityItem({
@@ -34,7 +34,7 @@ export default function CommunityItem({
 						height={16}
 						src={team.logoUrl}
 						alt={team.nameKr || team.nameEn}
-						className="object-contain"
+						className="object-contain w-4 h-4"
 					/>
 				)}{' '}
 				<h2
@@ -62,7 +62,10 @@ export default function CommunityItem({
 						src={user.profileImageUrl || '/default-profile.svg'}
 						alt={`${user.nickname} 프로필 사진`}
 					/>
-					<div className="w-[5.625rem] @mobile:w-fit">{user.nickname}</div>
+					<div className="flex items-center gap-0.5 w-26 @mobile:w-fit">
+						{user.nickname}
+						{user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+					</div>
 				</div>
 
 				<div className="@mobile:hidden w-[4.0625rem] text-center">{formatStringToDate(createdAt)}</div>

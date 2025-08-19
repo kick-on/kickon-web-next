@@ -1,5 +1,134 @@
 @import 'tailwindcss';
 
+/* 테마 변수 방식 */
+
+@theme {
+	/* Font Family */
+	--font-pretendard: 'Pretendard';
+
+	/* Header (semibold) */
+	--text-header-01: 15px;
+	--text-header-01--line-height: 16px;
+	--text-header-01--font-weight: 600;
+
+	/* Display (semibold) */
+	--text-display-01: 36px;
+	--text-display-01--line-height: 36px;
+	--text-display-01--font-weight: 600;
+
+	--text-display-02: 24px;
+	--text-display-02--line-height: 36px;
+	--text-display-02--font-weight: 600;
+
+	--text-display-03: 20px;
+	--text-display-03--line-height: 32px;
+	--text-display-03--font-weight: 600;
+
+	/* Title (semibold)*/
+	--text-title-01: 28px;
+	--text-title-01--line-height: 36px;
+	--text-title-01--font-weight: 600;
+
+	--text-title-02: 24px;
+	--text-title-02--line-height: 26px;
+	--text-title-02--font-weight: 600;
+
+	--text-title-03: 20px;
+	--text-title-03--line-height: var(--lh-normal);
+	--text-title-03--font-weight: 600;
+
+	--text-title-04: 18px;
+	--text-title-04--line-height: 20px;
+	--text-title-04--font-weight: 600;
+
+	--text-title-05: 16px;
+	--text-title-05--line-height: 16px;
+	--text-title-05--font-weight: 600;
+
+	/* Subtitle (medium) */
+	--text-subtitle-01: 14px;
+	--text-subtitle-01--line-height: 16px;
+	--text-subtitle-01--font-weight: 500;
+
+	--text-subtitle-02: 13px;
+	--text-subtitle-02--line-height: 18px;
+	--text-subtitle-02--font-weight: 500;
+
+	/* Body (regular) */
+	--text-body-01: 24px;
+	--text-body-01--line-height: 24px;
+	--text-body-01--font-weight: 400;
+
+	--text-body-02: 20px;
+	--text-body-02--line-height: 24px;
+	--text-body-02--font-weight: 400;
+
+	--text-body-03: 16px;
+	--text-body-03--line-height: 24px;
+	--text-body-03--font-weight: 400;
+
+	--text-body-04: 15px;
+	--text-body-04--line-height: 16px;
+	--text-body-04--font-weight: 400;
+
+	--text-body-05: 14px;
+	--text-body-05--line-height: 16px;
+	--text-body-05--font-weight: 400;
+
+	--text-body-06: 13px;
+	--text-body-06--line-height: 20px;
+	--text-body-06--font-weight: 400;
+
+	--text-body-07-regular: 12px;
+	--text-body-07-regular--line-height: 20px;
+	--text-body-07-regular--font-weight: 400;
+
+	--text-body-08: 10px;
+	--text-body-08--line-height: 16px;
+	--text-body-08--font-weight: 400;
+
+	/* Button (medium)*/
+	--text-button-01: 18px;
+	--text-button-01--line-height: 24px;
+	--text-button-01--font-weight: 500;
+
+	--text-button-02: 16px;
+	--text-button-02--line-height: 28px;
+	--text-button-02--font-weight: 500;
+
+	--text-button-03: 15px;
+	--text-button-03--line-height: 16px;
+	--text-button-03--font-weight: 500;
+
+	--text-button-04: 14px;
+	--text-button-04--line-height: 16px;
+	--text-button-04--font-weight: 500;
+
+	--text-button-05: 12px;
+	--text-button-05--line-height: 16px;
+	--text-button-05--font-weight: 500;
+
+	--text-button-06: 10px;
+	--text-button-06--line-height: 16px;
+	--text-button-06--font-weight: 500;
+
+	/* Captions (regular) */
+	--text-caption-01: 12px;
+	--text-caption-01--line-height: 16px;
+	--text-caption-01--font-weight: 400;
+
+	--text-caption-02: 10px;
+	--text-caption-02--line-height: var(--lh-normal);
+	--text-caption-02--font-weight: 400;
+
+	/* Navigation (medium)*/
+	--text-nav-01: 18px;
+	--text-nav-01--line-height: 24px;
+	--text-nav-01--font-weight: 500;
+}
+
+/* 기존 개별 클래스 */
+
 @layer components {
 	/* Base Typography */
 	[class*='-'] {
@@ -237,6 +366,12 @@
 	}
 	.button5-regular {
 		font-weight: var(--font-weight-regular);
+	}
+
+	.button6-semibold {
+		font-size: var(--text-10);
+		font-weight: var(--font-weight-semibold);
+		line-height: 10px;
 	}
 
 	.button6-regular {

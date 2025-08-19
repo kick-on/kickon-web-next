@@ -75,7 +75,7 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 						onClick={handleRemoveImage}
 						className={clsx('absolute top-2 right-2 p-1 rounded-full', isPortrait ? 'bg-black-300' : 'bg-black-200')}
 					>
-						<Image src="/x.svg" alt="삭제 버튼" width={18} height={18} />
+						<Image src="/x/white.svg" alt="삭제 버튼" width={18} height={18} />
 					</button>
 				</div>
 			) : (

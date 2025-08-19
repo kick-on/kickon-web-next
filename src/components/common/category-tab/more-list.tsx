@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { getNewsList } from '@/services/apis/news/getNewsList';
-import { getBoardList } from '@/services/apis/board/getBoardList';
+import { getNewsList } from '@/services/apis/news/news.api';
+import { getBoardList } from '@/services/apis/board/board.api';
 import NewsItem from './news-item';
 import CommunityItem from './community-item';
 import { renderItems } from './category-tab';
-import { GetNewsListRequest } from '@/services/apis/news/dto';
-import { GetBoardListRequest } from '@/services/apis/board/dto';
+import { GetNewsListRequest } from '@/services/apis/news/news.type';
+import { GetBoardListRequest } from '@/services/apis/board/board.type';
 import { MetaDto } from '@/services/config/dto';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 

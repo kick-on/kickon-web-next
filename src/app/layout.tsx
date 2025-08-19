@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
-import Navbar from '@/components/layouts/root/navbar';
 import Footer from '@/components/layouts/root/footer';
 import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 import MarginWrapper from '@/components/layouts/root/margin-wrapper';
+import Navbar from '@/components/layouts/root/navbar';
+import PaddingWrapper from '@/components/layouts/root/padding-wrapper';
+import NotificationInitializer from '@/components/layouts/root/navbar/notification-initializer';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -28,12 +30,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
+				<NotificationInitializer />
 				<div className="@container">
 					<Navbar />
 					<LoginPortal />
 					<MarginWrapper>
 						<Banner />
-						<div className="pb-[9.375rem]">{children}</div>
+						<PaddingWrapper>{children}</PaddingWrapper>
 						<Footer />
 						<MinWidth />
 					</MarginWrapper>

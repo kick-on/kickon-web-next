@@ -47,14 +47,14 @@ export default function Sidebar({
 			<div
 				ref={sideBarRef}
 				className={clsx(
-					`fixed top-0 z-50 w-[15.9375rem] h-full flex flex-col p-4
-						body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
+					`fixed top-0 z-50 w-[40%] max-w-[28.5625rem] min-w-[15.9375rem] h-full flex flex-col p-4
+					body3-regular text-black-900 bg-black-000 transition-transform ease-in`,
 					side === 'left' ? 'left-0' : 'right-0',
 					!isMenuOpen ? (side === 'left' ? '-translate-x-full' : 'translate-x-full') : '',
 				)}
 			>
 				<button onClick={handleToggleMenu} className="ml-auto mb-8 w-fit brightness-0">
-					<Image src={'/x.svg'} alt="닫기" width={24} height={24} />
+					<Image src={'/x/white.svg'} alt="닫기" width={24} height={24} />
 				</button>
 				{children}
 			</div>

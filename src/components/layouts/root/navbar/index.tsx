@@ -4,11 +4,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import NavButton from './nav-button';
 import Image from 'next/image';
 import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
-import LoginButton from './login-button';
 import MobileNavbar from '../mobile-navbar';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import { Suspense } from 'react';
+import RightButtons from './right-buttons';
 
 export interface NavButton {
 	href: string;
@@ -26,10 +25,11 @@ export default function Navbar() {
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
 	const navButtons: NavButton[] = [
-		!isDesktop ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
+		!isLeftSideBarVisible ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
 		{ href: '/gamble', content: '승부예측', isActive: pathname.split('/').includes('gamble') },
 		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
 		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
+		{ href: '/halftime', content: '하프타임', isActive: pathname.split('/').includes('halftime') },
 		!isLeftSideBarVisible || !isDesktop
 			? { href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' }
 			: null,
@@ -41,7 +41,8 @@ export default function Navbar() {
 
 	if (!isDesktop === null) return null;
 
-	return !isDesktop ? (
+	// 모바일, 태블릿, 데스크톱에서 width가 충분히 작은 경우 MobileNavbar
+	return !isDesktop || !isLeftSideBarVisible ? (
 		<MobileNavbar navButtons={navButtons} />
 	) : (
 		<header className={`${isHome ? 'bg-black-000' : 'bg-black-800'} sticky z-30 transition-colors ease-out`}>
@@ -57,11 +58,7 @@ export default function Navbar() {
 					/>
 					{navButtons.map((props) => props && <NavButton key={props.content} {...props} />)}
 				</nav>
-				{(pathname === '/signup' || isTabletWidth) && (
-					<Suspense>
-						<LoginButton />
-					</Suspense>
-				)}
+				<RightButtons isTabletWidth={isTabletWidth} />
 			</div>
 		</header>
 	);

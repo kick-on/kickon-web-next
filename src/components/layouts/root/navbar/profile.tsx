@@ -9,6 +9,8 @@ import Divider from '../mobile-navbar/sidebar/divider';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import clsx from 'clsx';
+import Instagram from '@/assets/sns/instagram.svg';
+import X from '@/assets/sns/x.svg';
 
 export default function Profile({ onClickButton }: { onClickButton: () => void }) {
 	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
@@ -59,17 +61,17 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 		<>
 			<div className="flex flex-col gap-4">
 				<div className="px-1.5 flex flex-col gap-3">
-					<div className="flex gap-2 items-center">
+					<div className="flex items-center">
 						<Image
-							className="@mobile:w-9 @mobile:h-9 @mobile:mr-0 mr-1 w-12 h-12 object-cover rounded-full"
+							className="@mobile:w-9 @mobile:h-9 @mobile:mr-2 mr-3 w-12 h-12 object-cover rounded-full"
 							src={currentUserInfo.profileImageUrl || '/default-profile.svg'}
 							alt="프로필 이미지"
 							width={36}
 							height={36}
 						/>
-						<div className="flex gap-1 items-center body2-semibold @mobile:text-18">
+						<div className="flex gap-0.5 items-center mr-1.5 body2-semibold @mobile:text-18">
 							{currentUserInfo.nickname}
-							<span className="body2-regular text-black-800 @mobile:text-16">님</span>
+							{currentUserInfo.isReporter && <Image width={16} height={16} src="/reporter-mark.svg" alt="구단 기자" />}
 						</div>
 						<Image
 							className="w-4 h-4 object-contain"
@@ -137,10 +139,10 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 						onClick={() => window.open('https://www.instagram.com/kickonfc/', '_blank')}
 						className="relative w-6 h-6"
 					>
-						<Image className="w-auto h-auto object-contain" fill src={'/sns/instagram.svg'} alt="인스타그램 아이콘" />
+						<Instagram className="w-auto h-auto object-contain" src={'/sns/instagram.svg'} alt="인스타그램 아이콘" />
 					</button>
 					<button onClick={() => window.open('https://x.com/kickonfc', '_blank')} className="relative w-6 h-6">
-						<Image className="w-auto h-auto object-contain" fill src={'/sns/x.svg'} alt="트위터 아이콘" />
+						<X className="w-auto h-auto object-contain" fill src={'/sns/x.svg'} alt="트위터 아이콘" />
 					</button>
 				</div>
 			</div>
