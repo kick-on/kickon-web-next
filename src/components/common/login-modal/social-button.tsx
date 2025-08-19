@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function LoginButton({ social, onClick }) {
+export default function SocialButton({ social, onClick }) {
 	const src = social === '카카오' ? '/sns/kakao-small.svg' : '/sns/naver-small.svg';
 	const backgroundColor = social === '카카오' ? 'bg-[#FDE500]' : 'bg-[#00C73C]';
 	const textColor = social === '카카오' ? 'text-black-800' : 'text-black-000';

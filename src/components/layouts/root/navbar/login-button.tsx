@@ -29,7 +29,12 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 		} else {
 			sessionStorage.setItem('previousPage', fullUrl);
 		}
-		openLoginModal();
+
+		if (isMobile) {
+			router.push('/login');
+		} else {
+			openLoginModal();
+		}
 	};
 
 	const handleProfileButtonClick = () => {
