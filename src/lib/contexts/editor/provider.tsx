@@ -98,7 +98,7 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 				view.dispatch(tr);
 				setBody('');
 			} else {
-				const normalizedHTML = html.replace(/<p>\s*<\/p>/g, '<p><br></p>'); // 빈 <p></p> → <p><br></p> 변환
+				const normalizedHTML = html.replace(/<p>(\s|&nbsp;|<br>)*<\/p>/g, '');
 				setBody(normalizedHTML);
 			}
 		},

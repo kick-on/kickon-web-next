@@ -126,28 +126,40 @@ body.overflow-hidden {
 	margin: 16px 0;
 }
 
-.ProseMirror {
+.ProseMirror p {
+	margin: 0; /* 기본 마진 제거 */
+	line-height: 1.5; /* 텍스트 줄 간격 */
 	height: 100%; /* 에디터 전체 영역을 인풋으로 받음 */
 }
 
-.tiptap p {
-	margin-top: 12px;
-	margin-bottom: 24px;
+.ProseMirror p + p,
+.ProseMirror p + :is(img, iframe, video),
+.ProseMirror :is(img, iframe, video) + p,
+.ProseMirror :is(img, iframe, video) + :is(img, iframe, video) {
+	margin-top: 24px;
+}
+
+.tiptap p + p,
+.tiptap p + :is(img, video),
+.tiptap :is(img, video) + p,
+.tiptap :is(img, video) + :is(img, iframe, video) {
+	margin-top: 24px;
 }
 
 iframe.responsive-youtube {
+	/* iframe을 감싸는 div에 부여되는 클래스 */
 	width: 100%;
 	aspect-ratio: 16 / 9;
 	max-width: 100%;
 	height: auto;
-	margin-bottom: 10px;
+	margin: 24px auto;
 }
 
 .responsive-image {
+	/* 이미지 자체 클래스 */
 	max-width: 100%;
 	height: auto;
 	display: block;
-	margin: 1rem auto;
 	max-height: 300px;
 	object-fit: contain;
 }
