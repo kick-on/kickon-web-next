@@ -110,10 +110,13 @@ export default function Page() {
 		};
 	}, []);
 
+	// 중복 호출 방지
+	const isLoading = useRef(false);
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
 	const postCommunityContents = async () => {
-		if (!currentUserInfo || !isFormValid) return;
+		if (!currentUserInfo || !isFormValid || isLoading.current) return;
+		isLoading.current = true;
 
 		const usedImageKeys = extractMediaFilenamesFromContent(body.trim(), 'img');
 		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');

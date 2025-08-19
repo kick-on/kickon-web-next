@@ -101,10 +101,15 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
+	// 중복 호출 방지
+	const isLoading = useRef(false);
+
 	const postNewsContents = async () => {
-		if (!currentUserInfo) {
+		console.log('isLoading', isLoading.current);
+		if (!currentUserInfo || isLoading.current) {
 			return;
 		}
+		isLoading.current = true;
 
 		const usedImageKeysFromBody = extractMediaFilenamesFromContent(body.trim(), 'img');
 		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
@@ -195,7 +200,7 @@ export default function Page() {
 				</button>
 				<button
 					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
-					disabled={!isFormValid}
+					disabled={!isFormValid && !isLoading}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all',
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
