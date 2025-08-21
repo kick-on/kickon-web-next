@@ -6,7 +6,7 @@ import Sorter from '@/components/features/halftime/sorter';
 import { halftimeSortOptions } from '@/lib/constants/options';
 import { useFetchSize } from '@/lib/hooks/useFetchSize';
 import { useObserver } from '@/lib/hooks/useObserver';
-import { useHalftimeListQuery } from '@/lib/query/useHalftimeQuery';
+import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 

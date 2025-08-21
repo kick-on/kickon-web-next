@@ -2,7 +2,7 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
+import { useHalftimeQueryKeyStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
@@ -15,10 +15,10 @@ import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper';
 import shouldUpdateView from '@/lib/utils/boolean/shouldUpdateView';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
-import { useHalftimeListQuery } from '@/lib/query/useHalftimeQuery';
+import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 
 export default function Page() {
-	const { _hasHydrated: isQueryKeyLoaded, queryKey, setSort } = useAllHalftimePksStore();
+	const { _hasHydrated: isQueryKeyLoaded, halftimeListQueryKey, setSort } = useHalftimeQueryKeyStore();
 	const {
 		_hasHydrated: isHalftimesLoaded,
 		viewedHalftimes,
@@ -29,13 +29,13 @@ export default function Page() {
 	const params = useParams();
 	const { id: pk } = params;
 
-	const [, sort, size] = queryKey;
+	const [, sort, size] = halftimeListQueryKey;
 	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
 
 	const queryClient = useQueryClient();
-	const cachedData = queryClient.getQueryData(queryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
+	const cachedData = queryClient.getQueryData(halftimeListQueryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
 	const halftimes = cachedData?.pages?.flatMap((page) => page.data) ?? [];
-	const pks = halftimes.map((h) => h.pk);
+	const pks = halftimes?.map((h) => h.pk);
 
 	const getHalftime = async (pkToFetch: number) => {
 		// 이미 조회한 하프타임인 경우 return
@@ -97,22 +97,20 @@ export default function Page() {
 	useEffect(() => {
 		if (!pk || !isQueryKeyLoaded || !isHalftimesLoaded || !swiperRef.current) return;
 
-		console.log(viewedHalftimes);
 		const pkNum = Number(pk);
 		const currentIndex = viewedHalftimes.findIndex((h) => h.pk === pkNum);
 		window.history.replaceState(null, '', `/halftime/${pkNum}`);
 		swiperRef.current.swiper.slideTo(currentIndex === -1 ? 0 : currentIndex, 0);
 
 		// pk 배열이 빈 경우 (공유된 링크로 접근 등)
-		// store 변경 비동기 이슈로 제대로 동작하지 않음
 		if (pks.length === 0) {
 			setSort(defaultSort);
 			fetchPkList();
-		} else {
-			getHalftime(pkNum);
-			getNextHalftime(pkNum);
-			createView(pkNum);
 		}
+
+		getHalftime(pkNum);
+		getNextHalftime(pkNum);
+		createView(pkNum);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [isQueryKeyLoaded, isHalftimesLoaded]);
