@@ -6,7 +6,7 @@ import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/use
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { getHalftimeDetail, getHalftimeList } from '@/services/apis/shorts/shorts.api';
-import { GetHalftimeListRequest } from '@/services/apis/shorts/shorts.type';
+import { GetHalftimeListRequest, GetHalftimeListResponse } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -15,13 +15,13 @@ import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper';
 import shouldUpdateView from '@/lib/utils/boolean/shouldUpdateView';
 import { useFetchSize } from '@/lib/hooks/useFetchSize';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 
 export default function Page() {
 	const {
 		_hasHydrated: isPksLoaded,
 		hasNext,
 		nextParams,
-		allHalftimePks,
 		appendAllHalftimePks,
 		clearAllHalftimePks,
 	} = useAllHalftimePksStore();
@@ -82,22 +82,22 @@ export default function Page() {
 
 	const shouldFetchNext = (index: number) => {
 		// 마지막 영상인 경우 다음 동영상 fetch하지 않음
-		const isLastVideo = index === allHalftimePks.length - 1;
+		const isLastVideo = index === pks.length - 1;
 		if (isLastVideo) return false;
 
 		// 마지막 영상이 되기 전에 pk list fetch
-		const shouldFetchPks = index === allHalftimePks.length - 2;
+		const shouldFetchPks = index === pks.length - 2;
 		if (shouldFetchPks) getPkList();
 
 		return true;
 	};
 
 	const getNextHalftime = (currentPk: number) => {
-		const currentIndex = allHalftimePks.findIndex((p: number) => p === currentPk);
+		const currentIndex = pks.findIndex((p: number) => p === currentPk);
 		if (!shouldFetchNext(currentIndex)) return;
 
 		const nextPkIndex = currentIndex + 1;
-		const nextPk = allHalftimePks[nextPkIndex];
+		const nextPk = pks[nextPkIndex];
 
 		getHalftime(nextPk);
 	};
@@ -115,7 +115,7 @@ export default function Page() {
 
 		// pk 배열이 빈 경우 (공유된 링크로 접근 등)
 		// store 변경 비동기 이슈로 제대로 동작하지 않음
-		if (allHalftimePks.length === 0) {
+		if (pks.length === 0) {
 			getPkList({ sort: 'CREATED_DESC', size, page: 1 }, pkNum).then(() => {
 				getHalftime(pkNum).then(() => {
 					getNextHalftime(pkNum);
@@ -163,6 +163,13 @@ export default function Page() {
 	useEffect(() => {
 		setIsMobileNavber(isLeftSideVisible);
 	}, [isLeftSideVisible]);
+
+	const queryClient = useQueryClient();
+	const queryKey = JSON.parse(localStorage.getItem('halftimeListKey'));
+	const data = queryClient.getQueryData(queryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
+	const halftimes = data?.pages?.flatMap((page) => page.data) ?? [];
+	const pks = halftimes.map((h) => h.pk);
+	console.log(pks);
 
 	return (
 		<div
