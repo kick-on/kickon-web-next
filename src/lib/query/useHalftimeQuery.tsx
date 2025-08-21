@@ -9,7 +9,7 @@ export function useHalftimeListQuery(sort, size) {
 		},
 		initialPageParam: 1,
 		getNextPageParam: (lastPage, _, lastPageParam) => {
-			if (lastPage.meta.hasNext) {
+			if (lastPage?.meta?.hasNext) {
 				return lastPageParam + 1;
 			}
 			return undefined;

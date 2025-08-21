@@ -14,13 +14,13 @@ export default function Page() {
 	const searchParams = useSearchParams();
 	const sort = searchParams.get('sort') ?? halftimeSortOptions[0].value;
 	const size = useFetchSize();
+	localStorage.setItem('halftimeListKey', JSON.stringify(['halftimeList', sort, size]));
 
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
 	const halftimes = data?.pages?.flatMap((page) => page.data) ?? [];
 
 	const getHalftimes = () => {
 		if (hasNextPage && !isFetchingNextPage) {
-			localStorage.setItem('halftimeListKey', JSON.stringify(['halftimeList', sort, size]));
 			fetchNextPage();
 		}
 	};

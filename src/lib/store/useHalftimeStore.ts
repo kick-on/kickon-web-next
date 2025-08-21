@@ -9,9 +9,11 @@ import { persist } from 'zustand/middleware';
 // 하프타임 목록에서 저장할 pk 배열
 interface AllHalftimePksStore {
 	_hasHydrated: boolean;
+	queryKey: [string, string, number];
 	hasNext: boolean;
 	nextParams: GetHalftimeListRequest | null;
 	allHalftimePks: number[];
+	setSort: (sort: string) => void;
 	appendAllHalftimePks: (
 		nextParams: GetHalftimeListRequest,
 		halftimes: GetHalftimeListResponse,
@@ -24,9 +26,11 @@ export const useAllHalftimePksStore = create(
 	persist<AllHalftimePksStore>(
 		(set) => ({
 			_hasHydrated: false,
+			queryKey: ['halftimeList', 'CREATED_DESC', 12],
 			hasNext: false,
 			nextParams: null,
 			allHalftimePks: [],
+			setSort: (sort) => set((state) => ({ queryKey: ['halftimeList', sort, state.queryKey[2]] })),
 			appendAllHalftimePks: (nextParams, response, pkToPrepend) =>
 				set((state) => ({
 					hasNext: response.meta.hasNext,
