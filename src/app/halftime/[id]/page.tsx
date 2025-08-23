@@ -29,6 +29,7 @@ export default function Page() {
 	const params = useParams();
 	const { id: pk } = params;
 
+	console.log(halftimeListQueryKey);
 	const [, sort, size] = halftimeListQueryKey;
 	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
 

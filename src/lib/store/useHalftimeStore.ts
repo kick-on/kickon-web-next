@@ -10,6 +10,7 @@ import { persist } from 'zustand/middleware';
 interface HalftimeQueryKeyStore {
 	_hasHydrated: boolean;
 	halftimeListQueryKey: [string, string, number];
+	setKey: (key: [string, string, number]) => void;
 	setSort: (sort: string) => void;
 }
 
@@ -18,6 +19,7 @@ export const useHalftimeQueryKeyStore = create(
 		(set) => ({
 			_hasHydrated: false,
 			halftimeListQueryKey: ['halftimeList', 'CREATED_DESC', 12],
+			setKey: (key) => set({ halftimeListQueryKey: key }),
 			setSort: (sort) =>
 				set((state) => ({ halftimeListQueryKey: ['halftimeList', sort, state.halftimeListQueryKey[2]] })),
 		}),
