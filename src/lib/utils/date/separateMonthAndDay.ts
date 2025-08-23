@@ -1,4 +1,4 @@
-export const formatNextChangeDate = (dateStr: string | undefined) => {
+export const separateMonthAndDay = (dateStr: string | undefined) => {
 	if (!dateStr) return 'ERROR';
 
 	const date = new Date(dateStr);
