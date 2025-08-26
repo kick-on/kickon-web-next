@@ -50,8 +50,9 @@ export default function BottomButtons({ profileImageUrl, nickname, teamPks, isDu
 		<div className="mt-[6.25rem] flex gap-4">
 			<button
 				onClick={handleCancelButtonClick}
-				className="w-full h-11 flex justify-center items-center @mobile:text-15
-      rounded-lg bg-black-200 button2-semibold text-black-700"
+				className="w-full h-11 flex justify-center items-center
+          rounded-lg bg-black-200 text-button-02 font-semibold text-black-700
+          @mobile:text-button-03 @mobile:font-semibold"
 			>
 				취소
 			</button>
@@ -59,7 +60,8 @@ export default function BottomButtons({ profileImageUrl, nickname, teamPks, isDu
 				disabled={!nickname || isDuplicated || !teamPks || !isSomethingChanged}
 				onClick={handleCompleteButtonClick}
 				className="w-full h-11 flex justify-center items-center @mobile:text-15
-      rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
+          rounded-lg text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold
+          text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
 			>
 				수정 완료
 			</button>

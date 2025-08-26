@@ -15,8 +15,8 @@ export default function AccountManagementSection() {
 		<div className="relative flex flex-col gap-2">
 			<div className="flex gap-1.5 items-center subtitle1-semibold">계정 관리</div>
 			<div
-				className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-14
-      border border-black-300 rounded-lg bg-black-100 body3-regular"
+				className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-body-05
+					border border-black-300 rounded-lg bg-black-100 text-body-03"
 			>
 				<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo?.providerType} 로고`} />
 				{currentUserInfo?.email}
@@ -27,7 +27,7 @@ export default function AccountManagementSection() {
 					router.push('/withdrawal');
 					setCookie('fromProfile', 'true', 60);
 				}}
-				className="absolute -bottom-8 right-0 text-black-500 button5-regular underline"
+				className="absolute -bottom-8 right-0 text-black-500 text-button-05 font-regular underline"
 			>
 				회원 탈퇴
 			</button>
