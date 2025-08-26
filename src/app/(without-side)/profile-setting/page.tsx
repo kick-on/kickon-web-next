@@ -26,7 +26,7 @@ export default function Page() {
 	const isNicknameChanged = nickname !== currentUserInfo?.nickname;
 	const isFavoriteTeamsChanged =
 		JSON.stringify(teamPks) !== JSON.stringify(currentUserInfo?.favoriteTeams.map((team) => team?.pk));
-	const isAnythingChanged = isProfileImageChanged || isNicknameChanged || isFavoriteTeamsChanged;
+	const isSomethingChanged = isProfileImageChanged || isNicknameChanged || isFavoriteTeamsChanged;
 
 	useEffect(() => {
 		if (currentUserInfo) {
@@ -119,7 +119,7 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					disabled={!nickname || isDuplicated || !teamPks || !isAnythingChanged}
+					disabled={!nickname || isDuplicated || !teamPks || !isSomethingChanged}
 					onClick={handleCompleteButtonClick}
 					className="w-full h-11 flex justify-center items-center @mobile:text-15
             rounded-lg button2-semibold text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
