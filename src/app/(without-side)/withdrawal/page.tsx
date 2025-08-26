@@ -1,16 +1,16 @@
 'use client';
 
 import BottomButton from '@/components/common/bottom-button';
+import AlertSection from '@/components/features/leave/alert-section';
 import ReasonSection from '@/components/features/leave/reason-section';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getCookie } from '@/lib/utils';
 import { deleteUserMe } from '@/services/apis/user';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export const reasons = ['서비스 품질 및 정보 불만족', '다른 계정으로 재가입', '사용성 불만족', '기타'];
-const alerts = [
+export const alerts = [
 	`계정을 삭제하면 모든 활동 정보 및 포인트가 삭제되며,\n삭제 후 7일간 동일한 계정으로 다시 가입할 수 없어요.`,
 	`추후에 동일한 계정으로 재가입하셔도\n포인트 내역은 복구되지 않아요.`,
 	`다른 사용자 게시글의 댓글은 삭제되지 않으니\n미리 확인하세요.`,
@@ -68,21 +68,8 @@ export default function Page() {
 				etcContent={etcContent}
 				setEtcContent={setEtcContent}
 			/>
-
 			<hr className="w-full border-black-300 my-15" />
-
-			<div className="w-full p-4 flex flex-col gap-2.5 bg-black-800 rounded-lg">
-				{alerts.map((alert) => (
-					<div
-						key={alert}
-						className="flex gap-1.5 items-center text-black-000 body7-regular @mobile:font-12
-              @max-[374px]:whitespace-normal @max-[374px]:break-words whitespace-break-spaces break-keep"
-					>
-						<Image src={'/alert-circle.svg'} alt="주의 아이콘" width={18} height={18} />
-						{alert}
-					</div>
-				))}
-			</div>
+			<AlertSection />
 
 			<label className="flex items-center gap-2 body5-medium mt-[1.875rem] mb-20">
 				<input
