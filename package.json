@@ -45,6 +45,8 @@
     "@eslint/eslintrc": "^3",
     "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4.0.0",
+    "@tanstack/eslint-plugin-query": "^5.83.1",
+    "@tanstack/react-query": "^5.85.5",
     "@types/jsdom": "^21.1.7",
     "@types/lodash": "^4.17.16",
     "@types/node": "^20",
