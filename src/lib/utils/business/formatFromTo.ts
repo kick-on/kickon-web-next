@@ -1,3 +1,5 @@
+// 승부예측 조회 시 요청 date format
+// YYYY-MM-DD
 export const formatFromTo = (date: Date) => {
 	const year = date.getFullYear();
 	const month = String(date.getMonth() + 1).padStart(2, '0');
