@@ -2,12 +2,13 @@
 
 import BottomButton from '@/components/common/bottom-button';
 import AlertSection from '@/components/features/leave/alert-section';
+import CheckboxSection from '@/components/features/leave/checkbox-section';
 import ReasonSection from '@/components/features/leave/reason-section';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getCookie } from '@/lib/utils';
 import { deleteUserMe } from '@/services/apis/user';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const reasons = ['서비스 품질 및 정보 불만족', '다른 계정으로 재가입', '사용성 불만족', '기타'];
 export const alerts = [
@@ -21,8 +22,6 @@ export default function Page() {
 
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
-
-	const checkboxRef = useRef<HTMLInputElement | null>(null);
 
 	const [isValidCheck, setIsValidCheck] = useState(false);
 	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
@@ -68,22 +67,11 @@ export default function Page() {
 				etcContent={etcContent}
 				setEtcContent={setEtcContent}
 			/>
-			<hr className="w-full border-black-300 my-15" />
-			<AlertSection />
 
-			<label className="flex items-center gap-2 body5-medium mt-[1.875rem] mb-20">
-				<input
-					onChange={() => setIsValidCheck(!isValidCheck)}
-					ref={checkboxRef}
-					type="checkbox"
-					className="relative w-[0.875rem] h-[0.875rem] border border-black-300 rounded-xs appearance-none cursor-pointer
-            checked:bg-primary-900 checked:border-primary-900
-            before:content-[''] before:absolute before:w-full before:h-full
-            before:bg-[url('/check.svg')] before:bg-center before:bg-no-repeat
-            before:hidden checked:before:block"
-				/>
-				<span className="cursor-pointer body6-regular">안내사항을 모두 확인하였으며, 이에 동의합니다.</span>
-			</label>
+			<hr className="w-full border-black-300 my-15" />
+
+			<AlertSection />
+			<CheckboxSection setIsValidCheck={setIsValidCheck} />
 
 			<BottomButton
 				buttons={[
