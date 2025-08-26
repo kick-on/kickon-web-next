@@ -1,7 +1,10 @@
-export const formatStringToDate = (createdAt: string, year = 'numeric' as 'numeric' | '2-digit', hasTime = false) => {
+export const formatDate = (createdAt: string, year?: 'numeric' | '2-digit') => {
 	const date = new Date(createdAt);
 	date.setHours(date.getHours() + 9);
 
+	// numeric: YYYY.MM.DD
+	// 2-digit: YY.MM.DD
+	// undefined: MM.DD
 	const formattedDate = new Intl.DateTimeFormat('ko-KR', {
 		year: year,
 		month: '2-digit',
@@ -11,11 +14,17 @@ export const formatStringToDate = (createdAt: string, year = 'numeric' as 'numer
 		.replace(/\s/g, '')
 		.replace(/\.$/, '');
 
+	// W
+	const formattedWeekday = new Intl.DateTimeFormat('ko-KR', {
+		weekday: 'short',
+	}).format(date);
+
+	// HH:mm
 	const formattedTime = new Intl.DateTimeFormat('ko-KR', {
 		hour: '2-digit',
 		minute: '2-digit',
 		hour12: false, // 24시간 형식
 	}).format(date);
 
-	return formattedDate + (hasTime ? ' ' + formattedTime : '');
+	return { formattedDate, formattedWeekday, formattedTime };
 };
