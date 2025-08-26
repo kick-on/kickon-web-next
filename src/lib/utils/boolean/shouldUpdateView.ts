@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from '../cookie';
+import { getCookie, setCookie } from '@/lib/utils';
 
 const VIEW_EXPIRY = 60 * 60 * 24 * 1000;
 
