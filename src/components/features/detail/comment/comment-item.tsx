@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useMemo, useRef } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
-import { formatStringToDate } from '@/lib/utils/formatStringToDate';
+import { formatDate } from '@/lib/utils';
 import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
@@ -41,6 +41,8 @@ function CommentItem({
 
 	const isEditing = editingCommentId === content.pk;
 
+	const { formattedDate, formattedTime } = formatDate(content.createdAt, '2-digit');
+
 	return (
 		<div>
 			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
@@ -61,7 +63,7 @@ function CommentItem({
 								{content.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 							</span>
 							<span className="body6-regular text-black-600">
-								{formatStringToDate(content.createdAt, '2-digit', true)}
+								{formattedDate}&nbsp;{formattedTime}
 							</span>
 						</div>
 

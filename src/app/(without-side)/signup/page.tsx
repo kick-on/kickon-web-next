@@ -8,7 +8,7 @@ import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/apis/use
 import { updatePrivacy, updateUserInfo } from '@/services/apis/user';
 import { agreementDatas } from '@/lib/constants/agreementDatas';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { getCookie, setCookie } from '@/lib/utils/cookie';
+import { getCookie, setCookie } from '@/lib/utils';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 export default function Page() {

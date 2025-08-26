@@ -13,7 +13,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Keyboard } from 'swiper/modules';
 import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper';
-import shouldUpdateView from '@/lib/utils/boolean/shouldUpdateView';
+import { shouldUpdateView } from '@/lib/utils';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 

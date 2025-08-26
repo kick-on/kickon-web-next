@@ -2,18 +2,15 @@
 
 import clsx from 'clsx';
 import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
-import { formatGameStartDate } from '@/lib/utils/formatGameStartDate';
-import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipations';
-import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
 import GameInfoBox, { GameInfoBoxProps } from './game-info-box';
 import TeamButton from './team-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { GameDto } from '@/services/apis/game/dto';
+import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
 
 export default function PredictCard({
 	game,
@@ -30,9 +27,12 @@ export default function PredictCard({
 
 	const isFinished = type === 'finished';
 
-	const [startDate, startTime] = formatGameStartDate(startAt);
-	const participations = formatGambleParticipations(gambleResult.participationNumber);
-	const timeBefore = getGameStartTimeBefore(startAt);
+	const { formattedDate, formattedWeekday, formattedTime } = formatDate(startAt);
+	const startDate = `${formattedDate} (${formattedWeekday})`;
+	const startTime = formattedTime;
+
+	const participations = addCommas(gambleResult.participationNumber);
+	const timeBefore = getRelativeTime(startAt);
 
 	const isGambleInProgress = type === 'proceeding'; // 예측 진행 중
 	const isGameInProgress = type === 'finished' && (gameStatus === 'PENDING' || gameStatus === 'PROCEEDING'); // 경기 중

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { updateUserInfo } from '@/services/apis/user';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { setCookie } from '@/lib/utils/cookie';
+import { setCookie } from '@/lib/utils';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 import ProfileImageSection from '@/components/common/account/profile-image-section';
 

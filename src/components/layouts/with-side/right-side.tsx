@@ -1,4 +1,4 @@
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import { getServerDeviceType } from '@/lib/utils';
 import Profile from './profile';
 import { Suspense } from 'react';
 import TopNewsHalftime from './top-news-halftime/top-news-halftime';

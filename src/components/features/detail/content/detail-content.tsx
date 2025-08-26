@@ -3,7 +3,7 @@ import Image from 'next/image';
 import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
 import { Suspense, useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
-import { getRelativeTime } from '@/lib/utils/getRelativeTime';
+import { getRelativeTime } from '@/lib/utils';
 import { categories } from '@/lib/constants/options';
 import LoginModal from '@/components/common/login-modal/login-content';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';

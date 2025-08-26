@@ -1,6 +1,6 @@
 'use client';
 
-import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
+import { formatNumberByUnit } from '@/lib/utils';
 import { BaseHalftimeDto } from '@/services/apis/shorts/shorts.type';
 import Image from 'next/image';
 import Link from 'next/link';

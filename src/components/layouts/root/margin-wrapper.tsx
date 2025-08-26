@@ -1,7 +1,7 @@
 'use client';
 
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { isFullScreen } from '@/lib/utils/isFullScreen';
+import { isFullScreen } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
