@@ -113,12 +113,10 @@ export default function Page() {
 
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
-			<div className="mb-8 @mobile:mb-4 title1-bold @mobile:text-24 @mobile:font-semibold @mobile:leading-8">
-				회원가입
-			</div>
+			<div className="mb-8 @mobile:mb-4 text-title-01 font-bold @mobile:text-title-02">회원가입</div>
 			<div className="flex gap-2">
 				<Image width={24} height={24} src={socialLogoUrl} alt={socialLogoAlt} />
-				<div className="body3-regular @mobile:text-14">계정으로 가입을 진행하고 있어요.</div>
+				<div className="text-body-03 @mobile:text-body-05">계정으로 가입을 진행하고 있어요.</div>
 			</div>
 
 			<div className="mt-[4.75rem] @mobile:mt-[3.125rem] mb-[4.5rem] w-full flex flex-col gap-[3.125rem] @mobile:gap-10">
@@ -140,8 +138,8 @@ export default function Page() {
 				<button
 					onClick={handleSignupButtonClick}
 					disabled={isButtonDisabled}
-					className="w-full py-2.5 mt-14 rounded-lg button2-semibold text-black-000 @mobile:text-15
-										enabled:bg-primary-900 disabled:bg-black-300"
+					className="w-full py-2.5 mt-14 rounded-lg enabled:bg-primary-900 disabled:bg-black-300 
+						text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold text-black-000"
 				>
 					회원가입
 				</button>
