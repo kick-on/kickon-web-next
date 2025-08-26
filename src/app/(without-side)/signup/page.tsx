@@ -11,6 +11,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { getCookie, setCookie } from '@/lib/utils';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
+import BottomButton from '@/components/common/bottom-button';
 export default function Page() {
 	const router = useRouter();
 	const searchParams = useSearchParams();
@@ -111,6 +112,8 @@ export default function Page() {
 		};
 	}, [isValidAccess]);
 
+	const buttons = [{ text: '회원가입', onClick: handleSignupButtonClick, disabled: isButtonDisabled }];
+
 	return (
 		<div className="w-[21.5rem] m-auto flex flex-col items-center">
 			<div className="mb-8 @mobile:mb-4 text-title-01 font-bold @mobile:text-title-02">회원가입</div>
@@ -135,14 +138,8 @@ export default function Page() {
 						onChange={() => handleCheckboxChange(key)}
 					/>
 				))}
-				<button
-					onClick={handleSignupButtonClick}
-					disabled={isButtonDisabled}
-					className="w-full py-2.5 mt-14 rounded-lg enabled:bg-primary-900 disabled:bg-black-300 
-						text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold text-black-000"
-				>
-					회원가입
-				</button>
+
+				<BottomButton buttons={buttons} />
 			</div>
 		</div>
 	);
