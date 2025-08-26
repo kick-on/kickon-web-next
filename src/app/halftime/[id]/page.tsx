@@ -65,7 +65,7 @@ export default function Page() {
 	};
 
 	const createView = (pk: number) => {
-		if (!shouldUpdateView(pk)) return;
+		if (!shouldUpdateView('viewedHalftimes', pk)) return;
 
 		const currentHalftime = viewedHalftimes.find((h) => h.pk === pk);
 		if (!currentHalftime) return;

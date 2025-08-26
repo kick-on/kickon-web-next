@@ -2,9 +2,9 @@ import { getCookie, setCookie } from '../cookie';
 
 const VIEW_EXPIRY = 60 * 60 * 24 * 1000;
 
-export default function shouldUpdateView(pk: number) {
+export default function shouldUpdateView(key: string, pk: number) {
 	// (24시간 이내 열람한 하프타임 pk):(열람 시각) 쌍의 객체
-	const cookieValue = getCookie('viewedHalftimes');
+	const cookieValue = getCookie(key);
 	let viewedHalftimes: Record<string, number> = {};
 
 	if (cookieValue) {
