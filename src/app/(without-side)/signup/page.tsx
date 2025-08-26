@@ -3,7 +3,7 @@
 import Checkbox from '@/components/features/signup/checkbox';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import Nickname from '@/components/features/signup/nickname';
+import Nickname from '@/components/common/account/nickname';
 import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { updatePrivacy, updateUserInfo } from '@/services/apis/user';
 import { agreementDatas } from '@/lib/constants/agreementDatas';

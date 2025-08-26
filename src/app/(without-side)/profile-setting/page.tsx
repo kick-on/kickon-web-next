@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import Nickname from '@/components/features/signup/nickname';
+import Nickname from '@/components/common/account/nickname';
 import { useEffect, useState } from 'react';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { updateUserInfo } from '@/services/apis/user';
