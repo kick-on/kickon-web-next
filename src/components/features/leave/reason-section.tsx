@@ -1,6 +1,6 @@
 'use client';
 
-import { reasons } from '@/app/(without-side)/withdrawal/page';
+import { leaveReasons } from '@/lib/constants/leave';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
@@ -25,7 +25,7 @@ export default function ReasonSection({ selectedReasonIndex, setSelectedReasonIn
 			</span>
 
 			<div className="w-full flex flex-col gap-4">
-				{reasons.map((reason, i) => (
+				{leaveReasons.map((reason, i) => (
 					<label
 						key={reason}
 						id="reason"
