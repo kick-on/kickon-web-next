@@ -6,7 +6,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import FavoriteTeamSection from '@/components/common/account/favorite-team-section';
 import ProfileImageSection from '@/components/common/account/profile-image-section';
 import AccountManagementSection from '@/components/features/profile-setting/account-management-section';
-import BottomButtons from '@/components/features/profile-setting/bottom-buttons';
+import ButtonSection from '@/components/features/profile-setting/button-section';
 
 export default function Page() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -55,7 +55,7 @@ export default function Page() {
 			<hr className="w-full my-10 h-[1px] border-black-200 @mobile:border-black-300" />
 
 			<AccountManagementSection />
-			<BottomButtons {...bottomButtonProps} />
+			<ButtonSection {...bottomButtonProps} />
 		</div>
 	);
 }

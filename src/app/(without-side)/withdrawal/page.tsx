@@ -1,5 +1,6 @@
 'use client';
 
+import BottomButton from '@/components/common/bottom-button';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getCookie } from '@/lib/utils';
 import { deleteUserMe } from '@/services/apis/user';
@@ -142,24 +143,12 @@ export default function Page() {
 				<span className="cursor-pointer body6-regular">안내사항을 모두 확인하였으며, 이에 동의합니다.</span>
 			</label>
 
-			<div className="w-full flex gap-[0.9375rem]">
-				<button
-					onClick={() => router.push('/profile-setting')}
-					className="flex-1 py-2.5 rounded-lg bg-black-200 text-black-700
-						text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold"
-				>
-					취소
-				</button>
-				<button
-					onClick={handleWithdrawalButtonClick}
-					disabled={isButtonDisabled}
-					className="flex-1 py-2.5 rounded-lg text-black-000
-						text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold
-            enabled:bg-primary-900 disabled:bg-black-300"
-				>
-					회원 탈퇴
-				</button>
-			</div>
+			<BottomButton
+				buttons={[
+					{ text: '취소', onClick: () => router.push('/profile-setting') },
+					{ text: '회원 탈퇴', onClick: handleWithdrawalButtonClick, disabled: isButtonDisabled },
+				]}
+			/>
 		</div>
 	);
 }

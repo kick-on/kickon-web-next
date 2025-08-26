@@ -1,11 +1,12 @@
 'use client';
 
+import BottomButton from '@/components/common/bottom-button';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { updateUserInfo } from '@/services/apis/user';
 import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
 import { useRouter } from 'next/navigation';
 
-export default function BottomButtons({ profileImageUrl, nickname, teamPks, isDuplicated, setIsDuplicated }) {
+export default function ButtonSection({ profileImageUrl, nickname, teamPks, isDuplicated, setIsDuplicated }) {
 	const router = useRouter();
 	const { currentUserInfo, fetchUserInfo } = useCurrentUserInfoStore();
 
@@ -46,25 +47,21 @@ export default function BottomButtons({ profileImageUrl, nickname, teamPks, isDu
 		}
 	};
 
+	const buttons = [
+		{
+			text: '취소',
+			onClick: handleCancelButtonClick,
+		},
+		{
+			text: '수정 완료',
+			onClick: handleCompleteButtonClick,
+			disabled: !nickname || isDuplicated || !teamPks || !isSomethingChanged,
+		},
+	];
+
 	return (
-		<div className="mt-[6.25rem] flex gap-4">
-			<button
-				onClick={handleCancelButtonClick}
-				className="w-full h-11 flex justify-center items-center
-          rounded-lg bg-black-200 text-button-02 font-semibold text-black-700
-          @mobile:text-button-03 @mobile:font-semibold"
-			>
-				취소
-			</button>
-			<button
-				disabled={!nickname || isDuplicated || !teamPks || !isSomethingChanged}
-				onClick={handleCompleteButtonClick}
-				className="w-full h-11 flex justify-center items-center
-          rounded-lg text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold
-          text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
-			>
-				수정 완료
-			</button>
+		<div className="mt-[6.25rem]">
+			<BottomButton buttons={buttons} />
 		</div>
 	);
 }
