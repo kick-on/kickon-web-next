@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import PredictCard from '../home/predict-card';
 import { GameDto, GetMyPredictionsRequest } from '@/services/apis/game/dto';
 import { getMyPredictions } from '@/services/apis/game';
-import { formatFromTo } from '@/lib/utils/formatFromTo';
+import { formatFromTo } from '@/lib/utils';
 import NoGameCard from './no-game-card';
 import Stat from './stat';
 import MatchPredictionCalendar from '@/components/common/calendar';

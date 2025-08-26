@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
-import { compressImage } from '@/lib/utils/compressImage';
+import { compressImage } from '@/lib/utils';
 
 type EditorProviderProps = {
 	children: React.ReactNode;

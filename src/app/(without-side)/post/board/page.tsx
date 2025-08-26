@@ -7,7 +7,7 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
-import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';

@@ -9,7 +9,7 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyCalendar } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils/calendarUtils';
+import { getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';

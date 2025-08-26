@@ -9,7 +9,7 @@ import { LeagueDto } from '@/services/apis/league/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import AlertModal from '@/components/features/detail/alert-modal';
-import { separateMonthAndDay } from '@/lib/utils/date/separateMonthAndDay';
+import { separateMonthAndDay } from '@/lib/utils';
 
 export default function Selectbox({
 	category,

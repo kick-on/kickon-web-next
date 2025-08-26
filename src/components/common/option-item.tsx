@@ -1,6 +1,6 @@
 'use client';
 
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import { getServerDeviceType } from '@/lib/utils';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';

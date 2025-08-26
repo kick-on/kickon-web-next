@@ -1,7 +1,7 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getCookie } from '@/lib/utils/cookie';
+import { getCookie } from '@/lib/utils';
 import { deleteUserMe } from '@/services/apis/user';
 import clsx from 'clsx';
 import Image from 'next/image';
