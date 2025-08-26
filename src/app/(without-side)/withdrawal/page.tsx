@@ -16,7 +16,7 @@ export const alerts = [
 ];
 
 export default function Page() {
-	const [selectedReason, setSelectedReason] = useState<number | null>(null);
+	const [selectedReasonIndex, setSelectedReasonIndex] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
 	const [isValidCheck, setIsValidCheck] = useState(false);
 
@@ -37,8 +37,8 @@ export default function Page() {
 			<div className="mb-[3.125rem] @mobile:mb-[2.375rem] text-title-01 font-bold @mobile:text-title-02">회원 탈퇴</div>
 
 			<ReasonSection
-				selectedReason={selectedReason}
-				setSelectedReason={setSelectedReason}
+				selectedReasonIndex={selectedReasonIndex}
+				setSelectedReasonIndex={setSelectedReasonIndex}
 				etcContent={etcContent}
 				setEtcContent={setEtcContent}
 			/>
@@ -47,7 +47,7 @@ export default function Page() {
 
 			<AlertSection />
 			<CheckboxSection setIsValidCheck={setIsValidCheck} />
-			<ButtonSection selectedReason={selectedReason} etcContent={etcContent} isValidCheck={isValidCheck} />
+			<ButtonSection selectedReasonIndex={selectedReasonIndex} etcContent={etcContent} isValidCheck={isValidCheck} />
 		</div>
 	);
 }

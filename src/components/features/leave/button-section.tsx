@@ -6,20 +6,18 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { deleteUserMe } from '@/services/apis/user';
 import { useRouter } from 'next/navigation';
 
-export default function ButtonSection({ selectedReason, etcContent, isValidCheck }) {
+export default function ButtonSection({ selectedReasonIndex, etcContent, isValidCheck }) {
 	const router = useRouter();
 	const { clearCurrentUserInfo } = useCurrentUserInfoStore();
 
-	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
+	const isEtc = selectedReasonIndex === reasons.length - 1;
+	const isValidReason = isEtc ? etcContent.trim() !== '' : selectedReasonIndex !== null;
 	const isButtonDisabled = !(isValidReason && isValidCheck);
 
 	const handleWithdrawalButtonClick = async () => {
-		if (selectedReason === null) alert('탈퇴 사유를 선택해 주세요.');
+		if (selectedReasonIndex === null) alert('탈퇴 사유를 선택해 주세요.');
 
-		// 기타 선택 시 etc content를 넘김
-		const body = {
-			reason: reasons[selectedReason] === reasons.at(-1) ? etcContent : reasons[selectedReason],
-		};
+		const body = { reason: isEtc ? etcContent : reasons[selectedReasonIndex] };
 		const response = await deleteUserMe(body);
 
 		if (typeof response === 'string') {

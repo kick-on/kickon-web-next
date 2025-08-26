@@ -5,7 +5,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import clsx from 'clsx';
 import { useEffect, useRef } from 'react';
 
-export default function ReasonSection({ selectedReason, setSelectedReason, etcContent, setEtcContent }) {
+export default function ReasonSection({ selectedReasonIndex, setSelectedReasonIndex, etcContent, setEtcContent }) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -31,14 +31,14 @@ export default function ReasonSection({ selectedReason, setSelectedReason, etcCo
 						id="reason"
 						className={clsx(
 							'w-full py-[0.9375rem] px-4 flex flex-col gap-3 justify-center bg-black-000 border rounded-lg cursor-pointer',
-							selectedReason === i ? 'border-primary-900' : 'border-black-300',
+							selectedReasonIndex === i ? 'border-primary-900' : 'border-black-300',
 						)}
 					>
 						<div className="flex gap-4 items-center">
 							<input
 								name="reason"
 								type="radio"
-								onChange={() => setSelectedReason(i)}
+								onChange={() => setSelectedReasonIndex(i)}
 								className="relative appearance-none w-[1.125rem] h-[1.125rem] rounded-full border border-black-300
 									before:content-[''] before:absolute before:left-1/2 before:top-1/2
 									before:-translate-x-1/2 before:-translate-y-1/2
@@ -48,7 +48,7 @@ export default function ReasonSection({ selectedReason, setSelectedReason, etcCo
 							{reason}
 						</div>
 
-						{selectedReason === 3 && i === 3 && (
+						{selectedReasonIndex === 3 && i === 3 && (
 							<textarea
 								ref={textareaRef}
 								value={etcContent}
