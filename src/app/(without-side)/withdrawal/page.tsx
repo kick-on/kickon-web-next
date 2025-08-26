@@ -67,13 +67,8 @@ export default function Page() {
 	}, [router]);
 
 	return (
-		<div className="w-[21.5rem] m-auto flex flex-col items-center body3-regular @mobile:text-14">
-			<div
-				className="mb-[3.125rem] title1-bold 
-          @mobile:mb-[2.375rem] @mobile:text-24 @mobile:font-semibold @mobile:leading-8"
-			>
-				회원 탈퇴
-			</div>
+		<div className="w-[21.5rem] m-auto flex flex-col items-center text-body-03 @mobile:text-body-05">
+			<div className="mb-[3.125rem] @mobile:mb-[2.375rem] text-title-01 font-bold @mobile:text-title-02">회원 탈퇴</div>
 			<span className="mb-10 @mobile:mb-8">
 				<span className="font-semibold">{currentUserInfo?.nickname || '알수없음'}</span>님이 탈퇴하시려는 이유가
 				궁금해요.
@@ -111,8 +106,7 @@ export default function Page() {
 								placeholder="고객님의 소중한 피드백을 받아 더 나은 서비스로 보답할게요."
 								onChange={(e) => setEtcContent(e.target.value)}
 								className="w-full p-4 border border-black-300 rounded-md outline-none resize-none no-scrollbar
-									placeholder:text-12 placeholder:font-regular placeholder:leading-4 placeholder:text-black-600
-									placeholder:break-keep body6-regular"
+									placeholder:text-caption-01 placeholder:text-black-600 placeholder:break-keep text-body-06"
 							/>
 						)}
 					</label>
@@ -149,13 +143,18 @@ export default function Page() {
 			</label>
 
 			<div className="w-full flex gap-[0.9375rem]">
-				<button className="flex-1 py-2.5 rounded-lg bg-black-200 button2-semibold text-black-700 @mobile:text-15">
+				<button
+					onClick={() => router.push('/profile-setting')}
+					className="flex-1 py-2.5 rounded-lg bg-black-200 text-black-700
+						text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold"
+				>
 					취소
 				</button>
 				<button
 					onClick={handleWithdrawalButtonClick}
 					disabled={isButtonDisabled}
-					className="flex-1 py-2.5 rounded-lg button2-semibold text-black-000 @mobile:text-15
+					className="flex-1 py-2.5 rounded-lg text-black-000
+						text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold
             enabled:bg-primary-900 disabled:bg-black-300"
 				>
 					회원 탈퇴

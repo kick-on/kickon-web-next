@@ -59,7 +59,7 @@ export default function BottomButtons({ profileImageUrl, nickname, teamPks, isDu
 			<button
 				disabled={!nickname || isDuplicated || !teamPks || !isSomethingChanged}
 				onClick={handleCompleteButtonClick}
-				className="w-full h-11 flex justify-center items-center @mobile:text-15
+				className="w-full h-11 flex justify-center items-center
           rounded-lg text-button-02 font-semibold @mobile:text-button-03 @mobile:font-semibold
           text-black-000 enabled:bg-primary-900 disabled:bg-black-600"
 			>
