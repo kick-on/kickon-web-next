@@ -1,12 +1,10 @@
 'use client';
 
-import BottomButton from '@/components/common/bottom-button';
 import AlertSection from '@/components/features/leave/alert-section';
+import ButtonSection from '@/components/features/leave/button-section';
 import CheckboxSection from '@/components/features/leave/checkbox-section';
 import ReasonSection from '@/components/features/leave/reason-section';
-import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getCookie } from '@/lib/utils';
-import { deleteUserMe } from '@/services/apis/user';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -18,34 +16,11 @@ export const alerts = [
 ];
 
 export default function Page() {
-	const { clearCurrentUserInfo } = useCurrentUserInfoStore();
-
 	const [selectedReason, setSelectedReason] = useState<number | null>(null);
 	const [etcContent, setEtcContent] = useState('');
-
 	const [isValidCheck, setIsValidCheck] = useState(false);
-	const isValidReason = selectedReason === 3 ? etcContent.trim() !== '' : selectedReason !== null;
-	const isButtonDisabled = !(isValidReason && isValidCheck);
 
 	const router = useRouter();
-
-	const handleWithdrawalButtonClick = async () => {
-		if (selectedReason === null) alert('탈퇴 사유를 선택해 주세요.');
-
-		const body = {
-			reason: selectedReason === 3 ? etcContent : reasons[selectedReason],
-		};
-		const response = await deleteUserMe(body);
-
-		if (typeof response === 'string') {
-			alert(`서버 오류입니다.\n잠시 후 다시 시도해 주세요.`);
-			console.log(response);
-		} else {
-			clearCurrentUserInfo();
-			localStorage.clear();
-			router.replace('/');
-		}
-	};
 
 	// 프로필 세팅을 통한 접근이 아닌 경우 접근 제한
 	useEffect(() => {
@@ -72,13 +47,7 @@ export default function Page() {
 
 			<AlertSection />
 			<CheckboxSection setIsValidCheck={setIsValidCheck} />
-
-			<BottomButton
-				buttons={[
-					{ text: '취소', onClick: () => router.push('/profile-setting') },
-					{ text: '회원 탈퇴', onClick: handleWithdrawalButtonClick, disabled: isButtonDisabled },
-				]}
-			/>
+			<ButtonSection selectedReason={selectedReason} etcContent={etcContent} isValidCheck={isValidCheck} />
 		</div>
 	);
 }
