@@ -1,8 +1,14 @@
-import { ProxyParameter } from '@/app/api/proxy/route';
 import { SERVER_URL } from '@/services/config/constants';
 import useAuthStore from '../store/useAuthStore';
 
-export async function fetcher<T>({ url, method, headers, body }: ProxyParameter, revalidate?: number) {
+export interface FetcherParams {
+	method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
+	url: string;
+	headers?: Record<string, string>;
+	body?: Record<string, any>;
+}
+
+export async function fetcher<T>({ url, method, headers, body }: FetcherParams, revalidate?: number) {
 	const { accessToken } = useAuthStore.getState();
 	const hasBody = !!body;
 
