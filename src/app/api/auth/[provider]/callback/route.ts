@@ -73,7 +73,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 		response.cookies.set({
 			name: 'accessToken',
 			value: accessToken,
-			httpOnly: true,
+			httpOnly: false,
 			secure: true,
 			path: '/',
 			maxAge: 60 * 60, // 1시간
