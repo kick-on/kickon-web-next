@@ -9,19 +9,53 @@ export interface FetcherParams {
 }
 
 export async function fetcher<T>({ url, method, headers, body }: FetcherParams, revalidate?: number) {
-	const { accessToken } = useAuthStore.getState();
 	const hasBody = !!body;
 
-	const response = await fetch(`${SERVER_URL}${url}`, {
-		method,
-		headers: {
-			...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
-			...(hasBody ? { 'Content-Type': 'application/json' } : {}),
-			...headers,
-		},
-		body: hasBody ? JSON.stringify(body) : undefined,
-		next: { revalidate: revalidate ?? 0 }, // revalidate를 안 넘기면 캐싱 안 함
-	});
+	// api 호출
+	async function performRequest(token?: string) {
+		return fetch(`${SERVER_URL}${url}`, {
+			method,
+			headers: {
+				...(token ? { Authorization: `Bearer ${token}` } : {}),
+				...(hasBody ? { 'Content-Type': 'application/json' } : {}),
+				...headers,
+			},
+			body: hasBody ? JSON.stringify(body) : undefined,
+			next: { revalidate: revalidate ?? 0 }, // revalidate를 안 넘기면 캐싱 안 함
+		});
+	}
+
+	// 인증 에러 시 토큰 재발급
+	async function refreshAccessToken(): Promise<string | null> {
+		try {
+			const response = await fetch('/api/auth/refresh', {
+				method: 'POST',
+				credentials: 'include',
+				cache: 'no-store',
+			});
+			if (!response.ok) return null;
+
+			const json = (await response.json()) as { accessToken?: string; refreshToken?: string };
+			const newToken = (json as { accessToken?: string })?.accessToken ?? null;
+			if (newToken) {
+				useAuthStore.getState().setToken(newToken);
+			}
+			return newToken ?? null;
+		} catch {
+			return null;
+		}
+	}
+
+	// 1차 요청 (현재 보유한 access token 사용)
+	const initialToken = useAuthStore.getState().accessToken ?? undefined;
+	let response = await performRequest(initialToken);
+
+	if (response.status === 401 || response.status === 403) {
+		const newToken = await refreshAccessToken();
+		if (newToken) {
+			response = await performRequest(newToken);
+		}
+	}
 
 	const data: T = await response.json();
 	return data;
