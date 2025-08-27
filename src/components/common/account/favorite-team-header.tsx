@@ -56,7 +56,7 @@ export default function FavoriteTeamHeader({
 
 	return (
 		<>
-			<div className="subtitle1-semibold mb-2 flex items-center justify-between">
+			<div className="text-subtitle-01 font-semibold mb-2 flex items-center justify-between">
 				<div className="flex gap-1.5 items-center">
 					<span>
 						MY팀 {isSignup && '선택'} (<span className={clsx({ 'text-primary-900': isSignup })}>{teamCount}</span>
@@ -69,7 +69,7 @@ export default function FavoriteTeamHeader({
 						</button>
 
 						{isTooltipVisible && (
-							<button
+							<div
 								className={clsx(
 									`absolute z-15 py-3 w-max bg-black-900/80 rounded-md text-caption-01 text-black-000 text-center
 									starting:opacity-0 transition-opacity cursor-default`,
@@ -93,17 +93,17 @@ export default function FavoriteTeamHeader({
 										isMobile ? 'rotate-90 -left-3 top-1/2 -translate-y-1/2' : '-bottom-2 left-1/2 -translate-x-1/2 ',
 									)}
 								/>
-							</button>
+							</div>
 						)}
 					</div>
 				</div>
 				{isEditButtonVisible && (
-					<button onClick={handleEditButtonClick} className="ml-auto text-button-05 font-medium text-primary-900">
+					<button onClick={handleEditButtonClick} className="ml-auto text-button-05 text-primary-900">
 						편집
 					</button>
 				)}
 			</div>
-			<div className="caption1-regular mb-6">
+			<div className="text-caption-01 mb-6">
 				* {isSignup && '최대 3순위까지 선택할 수 있으며, '}프로필에는 1순위만 표기돼요.
 			</div>
 		</>

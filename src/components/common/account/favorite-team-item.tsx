@@ -41,7 +41,7 @@ export default function FavoriteTeamItem({
 		<div className="grow flex flex-col gap-1 relative">
 			<div
 				className="w-full h-7 @mobile:h-6 flex justify-center items-center
-          bg-black-900 rounded-lg text-black-000 caption1-medium"
+          bg-black-900 rounded-lg text-black-000 text-caption-01 font-medium"
 			>
 				{orderNum}
 			</div>

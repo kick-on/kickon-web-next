@@ -19,7 +19,7 @@ export default function Nickname({
 
 	return (
 		<div className="flex flex-col gap-2">
-			<div className="subtitle1-semibold">닉네임</div>
+			<div className="text-subtitle-01 font-semibold">닉네임</div>
 			<div className="relative bg-black-000">
 				<input
 					type="text"
@@ -27,13 +27,10 @@ export default function Nickname({
 					maxLength={8}
 					placeholder="닉네임은 최대 8글자"
 					onChange={onChange}
-					className={`w-full px-4 py-3 border rounded-lg body3-regular outline-none
+					className={`w-full px-4 py-3 border rounded-lg text-body-03 outline-none
               ${isInvalidNickname ? 'border-negative' : 'border-black-300'}
-              placeholder:[color:var(--color-black-600)]
-              placeholder:[font-size:var(--text-16)]
-              placeholder:[font-weight:var(--font-weight-regular)]
-              placeholder:[line-height:var(--lh-24)]
-							@mobile:text-14 @mobile:placeholder:[font-size:var(--text-14)]`}
+              placeholder:[color:var(--color-black-600)] placeholder:text-body-03
+							@mobile:text-body-05 @mobile:placeholder:text-body-05`}
 				/>
 				{nickname && (
 					<button className="absolute top-1/2 -translate-y-1/2 right-4" onClick={handleXbuttonClick}>
