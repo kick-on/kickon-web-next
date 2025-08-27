@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { getCookie } from '../utils';
+import { deleteCookie, getCookie } from '../utils';
 
 interface AuthStore {
 	accessToken: string | null;
@@ -28,6 +28,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 
 		const cookieToken = getCookie('accessToken');
 		if (cookieToken) {
+			deleteCookie('accessToken');
 			set({ accessToken: cookieToken });
 			return cookieToken;
 		}
