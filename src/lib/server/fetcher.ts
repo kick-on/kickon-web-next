@@ -31,12 +31,11 @@ export async function fetcher<T>({ url, method, headers, body }: FetcherParams, 
 			const response = await fetch('/api/auth/refresh', {
 				method: 'POST',
 				credentials: 'include',
-				cache: 'no-store',
 			});
 			if (!response.ok) return null;
 
-			const json = (await response.json()) as { accessToken?: string; refreshToken?: string };
-			const newToken = (json as { accessToken?: string })?.accessToken ?? null;
+			const json = (await response.json()) as { accessToken?: string };
+			const newToken = json?.accessToken ?? null;
 			if (newToken) {
 				useAuthStore.getState().setToken(newToken);
 			}
@@ -53,6 +52,7 @@ export async function fetcher<T>({ url, method, headers, body }: FetcherParams, 
 	if (response.status === 401 || response.status === 403) {
 		const newToken = await refreshAccessToken();
 		if (newToken) {
+			// 2차 요청 (재발급한 access token 사용)
 			response = await performRequest(newToken);
 		}
 	}
