@@ -9,10 +9,10 @@ export interface FetcherParams {
 }
 
 export async function fetcher<T>({ url, method, headers, body }: FetcherParams, revalidate?: number) {
-	const hasBody = !!body;
-
 	// api 호출
 	async function performRequest(token?: string) {
+		const hasBody = !!body;
+
 		return fetch(`${SERVER_URL}${url}`, {
 			method,
 			headers: {
@@ -45,18 +45,37 @@ export async function fetcher<T>({ url, method, headers, body }: FetcherParams, 
 		}
 	}
 
-	// 1차 요청 (현재 보유한 access token 사용)
-	const initialToken = useAuthStore.getState().accessToken ?? undefined;
-	let response = await performRequest(initialToken);
+	try {
+		// 1차 요청 (현재 보유한 access token 사용)
+		const initialToken = useAuthStore.getState().accessToken ?? undefined;
+		let response = await performRequest(initialToken);
 
-	if (response.status === 401 || response.status === 403) {
-		const newToken = await refreshAccessToken();
-		if (newToken) {
-			// 2차 요청 (재발급한 access token 사용)
-			response = await performRequest(newToken);
+		if (response.status === 401 || response.status === 403) {
+			const newToken = await refreshAccessToken();
+			if (newToken) {
+				// 2차 요청 (재발급한 access token 사용)
+				response = await performRequest(newToken);
+			}
 		}
-	}
 
-	const data: T = await response.json();
-	return data;
+		// 에러 핸들링
+		if (!response.ok) {
+			const errorData = await response.json().catch(() => ({ message: response.statusText }));
+			const errorMessage = errorData.message || `${response.status} ${response.statusText}`;
+			const error = new Error(errorMessage);
+			(error as any).statusCode = response.status;
+			(error as any).errorData = errorData;
+			throw error;
+		}
+
+		const contentType = response.headers.get('content-type');
+		if (contentType && contentType.includes('application/json')) {
+			return (await response.json()) as T;
+		} else {
+			return {} as T;
+		}
+	} catch (error) {
+		console.error(`${method} ${url} (${error.statusCode}):`, error);
+		throw error;
+	}
 }
