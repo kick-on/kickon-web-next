@@ -100,12 +100,14 @@ export default function PredictCard({
 			if (selectedButton === currentButton) {
 				// 기존 예측이 있는 경우에는 예측 삭제
 				if (myGambleResult) {
-					const response = await deleteGameGamble(myGambleResult.id);
-					console.log('delete', response);
+					try {
+						await deleteGameGamble(myGambleResult.id);
+					} catch (error) {
+						alert(error.errorData.message);
 
-					// 삭제 실패 시 현재 상태 유지
-					if (typeof response === 'string') {
-						console.error(response);
+						setIsClicked(false);
+						setIsCompleted(isEditing ? true : false); // 수정 중이었으면 다시 완료됨 상태로, 예측 생성 중이었으면 초기 상태로
+						setIsEditing(false);
 						return;
 					}
 				}
@@ -135,41 +137,34 @@ export default function PredictCard({
 	};
 
 	const handleCompleteButtonClick = async () => {
-		if (isEditing) {
-			// 수정 중인 상태에서는 patch 함수 호출
-			const request: PatchGameGambleRequest = {
-				gamble: myGambleResult?.id,
-				predictedHomeScore: leftScore,
-				predictedAwayScore: rightScore,
-			};
-			const response = await patchGameGamble(request);
-			console.log('patch', response);
+		try {
+			if (isEditing) {
+				// 수정 중인 상태에서는 patch 함수 호출
+				const request: PatchGameGambleRequest = {
+					gamble: myGambleResult?.id,
+					predictedHomeScore: leftScore,
+					predictedAwayScore: rightScore,
+				};
+				await patchGameGamble(request);
 
-			if (typeof response === 'string') {
-				console.error(response);
-			} else {
-				setIsClicked(false);
 				setIsEditing(false);
-				setIsCompleted(true);
 				refetchGames();
-			}
-		} else {
-			// 새로 생성하는 경우 post 함수 호출
-			const request: PostGameGambleRequest = {
-				game: pk,
-				predictedHomeScore: leftScore,
-				predictedAwayScore: rightScore,
-			};
-			const response = await postGameGamble(request);
-			console.log('post', response);
-
-			if (typeof response === 'string') {
-				console.error(response);
 			} else {
-				setIsClicked(false);
-				setIsCompleted(true);
+				// 새로 생성하는 경우 post 함수 호출
+				const request: PostGameGambleRequest = {
+					game: pk,
+					predictedHomeScore: leftScore,
+					predictedAwayScore: rightScore,
+				};
+				await postGameGamble(request);
+
 				refetchGames();
 			}
+		} catch (error) {
+			alert(error.errorData.message);
+		} finally {
+			setIsClicked(false);
+			setIsCompleted(isEditing ? true : false); // 수정 중이었으면 다시 완료됨 상태로, 예측 생성 중이었으면 초기 상태로
 		}
 	};
 
