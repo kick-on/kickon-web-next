@@ -8,3 +8,7 @@ export function getCookie(name: string): string | null {
 export function setCookie(name: string, value: string, maxAgeSeconds: number) {
 	document.cookie = `${name}=${value}; max-age=${maxAgeSeconds}; path=/`;
 }
+
+export function deleteCookie(name: string) {
+	document.cookie = `${name}=''; max-age=1; path=/`;
+}

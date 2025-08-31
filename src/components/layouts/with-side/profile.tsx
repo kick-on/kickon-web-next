@@ -10,6 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import useAuthStore from '@/lib/store/useAuthStore';
 
 export default function Profile() {
 	const router = useRouter();
@@ -21,6 +22,7 @@ export default function Profile() {
 
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const { currentUserInfo, setCurrentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
+	const { clearToken } = useAuthStore();
 
 	const fullUrl = `${pathname}${searchParams.toString() ? '?' + searchParams.toString() : ''}`;
 
@@ -38,6 +40,7 @@ export default function Profile() {
 		setIsLoggedIn(false);
 		fetch('/api/logout', { method: 'POST' }).then(() => {
 			clearCurrentUserInfo(); // 클라이언트 user info 초기화
+			clearToken();
 			router.push('/');
 		});
 	};

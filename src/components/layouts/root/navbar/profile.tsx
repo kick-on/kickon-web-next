@@ -11,9 +11,12 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import Instagram from '@/assets/sns/instagram.svg';
 import X from '@/assets/sns/x.svg';
+import useAuthStore from '@/lib/store/useAuthStore';
 
 export default function Profile({ onClickButton }: { onClickButton: () => void }) {
 	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
+	const { clearToken } = useAuthStore();
+
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const router = useRouter();
 	const pathname = usePathname();
@@ -23,6 +26,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 		onClickButton();
 		fetch('/api/logout', { method: 'POST' }).then(() => {
 			clearCurrentUserInfo(); // 클라이언트 user info 초기화
+			clearToken();
 			router.push('/');
 		});
 	};
