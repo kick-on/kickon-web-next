@@ -1,4 +1,4 @@
-import { formatStringToDate } from '@/lib/utils/formatStringToDate';
+import { formatDate } from '@/lib/utils';
 import { BoardListDto } from '@/services/apis/board/board.type';
 import clsx from 'clsx';
 import Image from 'next/image';
@@ -68,8 +68,8 @@ export default function CommunityItem({
 					</div>
 				</div>
 
-				<div className="@mobile:hidden w-[4.0625rem] text-center">{formatStringToDate(createdAt)}</div>
-				<div className="@mobile:inline hidden w-fit text-center">{formatStringToDate(createdAt, '2-digit')}</div>
+				<div className="@mobile:hidden w-[4.0625rem] text-center">{formatDate(createdAt, 'numeric').formattedDate}</div>
+				<div className="@mobile:inline hidden w-fit text-center">{formatDate(createdAt, '2-digit').formattedDate}</div>
 
 				<div className="@mobile:inline hidden">|</div>
 

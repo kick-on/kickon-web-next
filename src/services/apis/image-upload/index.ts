@@ -1,6 +1,6 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { PresignedUrlRequest, GetPresignedUrlResponse } from './dto';
-import { addTimestampToFileName } from '@/lib/utils/filenameUtils';
+import { formatFileName } from '@/lib/utils';
 
 interface GetPresignedUrlParams {
 	type: 'news-files' | 'board-files' | 'comment-files' | 'profile-images'; // 추후 스웨거의 enum 확인
@@ -8,7 +8,7 @@ interface GetPresignedUrlParams {
 }
 
 export async function getPresignedUrl({ type, fileName }: GetPresignedUrlParams): Promise<GetPresignedUrlResponse> {
-	const timestampedFileName = addTimestampToFileName(fileName);
+	const timestampedFileName = formatFileName(fileName);
 
 	const requestBody: PresignedUrlRequest = {
 		type,

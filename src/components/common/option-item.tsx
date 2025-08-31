@@ -1,6 +1,6 @@
 'use client';
 
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import { getServerDeviceType } from '@/lib/utils';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -27,7 +27,7 @@ export default function OptionItem({
 		<button
 			onClick={() => onClick(pk)}
 			className={clsx(
-				'w-full flex gap-4 items-center px-6 body5-regular text-black-900 whitespace-nowrap',
+				'w-full flex gap-4 items-center px-6 text-body-05 text-black-900 whitespace-nowrap',
 				isPost ? 'h-9' : `${isDesktop ? 'h-9' : 'h-[2.875rem]'}`,
 			)}
 		>

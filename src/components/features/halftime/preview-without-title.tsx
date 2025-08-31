@@ -1,4 +1,4 @@
-import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
+import { formatNumberByUnit } from '@/lib/utils';
 import { BaseHalftimeDto } from '@/services/apis/shorts/shorts.type';
 import Preview from './preview';
 import Link from 'next/link';

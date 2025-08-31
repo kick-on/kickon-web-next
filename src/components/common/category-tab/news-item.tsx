@@ -1,4 +1,4 @@
-import { getTimeAgo } from '@/lib/utils/getTimeAgo';
+import { getRelativeTime } from '@/lib/utils';
 import { NewsListDto } from '@/services/apis/news/news.type';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -71,7 +71,7 @@ export default function NewsItem({
 							{user.nickname}
 							{user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 						</span>
-						<span className={'@mobileml-0.5 ml-2'}>{getTimeAgo(createdAt)}</span>
+						<span className={'@mobileml-0.5 ml-2'}>{getRelativeTime(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>
 					</div>

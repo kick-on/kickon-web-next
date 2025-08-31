@@ -2,29 +2,23 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { useAllHalftimePksStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
+import { useHalftimeQueryKeyStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
-import { getHalftimeDetail, getHalftimeList } from '@/services/apis/shorts/shorts.api';
-import { GetHalftimeListRequest } from '@/services/apis/shorts/shorts.type';
+import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
+import { GetHalftimeListResponse } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { Keyboard } from 'swiper/modules';
 import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
 import { Swiper as SwiperType } from 'swiper';
-import shouldUpdateView from '@/lib/utils/boolean/shouldUpdateView';
-import { useFetchSize } from '@/lib/hooks/useFetchSize';
+import { shouldUpdateView } from '@/lib/utils';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
+import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 
 export default function Page() {
-	const {
-		_hasHydrated: isPksLoaded,
-		hasNext,
-		nextParams,
-		allHalftimePks,
-		appendAllHalftimePks,
-		clearAllHalftimePks,
-	} = useAllHalftimePksStore();
+	const { _hasHydrated: isQueryKeyLoaded, halftimeListQueryKey, setSort } = useHalftimeQueryKeyStore();
 	const {
 		_hasHydrated: isHalftimesLoaded,
 		viewedHalftimes,
@@ -34,6 +28,15 @@ export default function Page() {
 
 	const params = useParams();
 	const { id: pk } = params;
+
+	console.log(halftimeListQueryKey);
+	const [, sort, size] = halftimeListQueryKey;
+	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
+
+	const queryClient = useQueryClient();
+	const cachedData = queryClient.getQueryData(halftimeListQueryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
+	const halftimes = cachedData?.pages?.flatMap((page) => page.data) ?? [];
+	const pks = halftimes?.map((h) => h.pk);
 
 	const getHalftime = async (pkToFetch: number) => {
 		// 이미 조회한 하프타임인 경우 return
@@ -47,25 +50,8 @@ export default function Page() {
 		}
 	};
 
-	const getPkList = async (userParams?: GetHalftimeListRequest, pkToPrepend?: number) => {
-		if (!userParams && (!hasNext || !nextParams)) return;
-
-		const params = userParams ?? nextParams;
-		let pk = pkToPrepend;
-
-		try {
-			const response = await getHalftimeList(params);
-			if (response.data.find((d) => d.pk === pkToPrepend)) {
-				pk = undefined;
-			}
-			appendAllHalftimePks({ ...params, page: params.page + 1 }, response, pk);
-		} catch {
-			return;
-		}
-	};
-
 	const createView = (pk: number) => {
-		if (!shouldUpdateView(pk)) return;
+		if (!shouldUpdateView('viewedHalftimes', pk)) return;
 
 		const currentHalftime = viewedHalftimes.find((h) => h.pk === pk);
 		if (!currentHalftime) return;
@@ -82,58 +68,56 @@ export default function Page() {
 
 	const shouldFetchNext = (index: number) => {
 		// 마지막 영상인 경우 다음 동영상 fetch하지 않음
-		const isLastVideo = index === allHalftimePks.length - 1;
+		const isLastVideo = index === pks.length - 1;
 		if (isLastVideo) return false;
 
 		// 마지막 영상이 되기 전에 pk list fetch
-		const shouldFetchPks = index === allHalftimePks.length - 2;
-		if (shouldFetchPks) getPkList();
+		const shouldFetchPks = index === pks.length - 2;
+		if (shouldFetchPks && hasNextPage && !isFetchingNextPage) {
+			fetchNextPage();
+		}
 
 		return true;
 	};
 
 	const getNextHalftime = (currentPk: number) => {
-		const currentIndex = allHalftimePks.findIndex((p: number) => p === currentPk);
+		const currentIndex = pks.findIndex((p: number) => p === currentPk);
 		if (!shouldFetchNext(currentIndex)) return;
 
 		const nextPkIndex = currentIndex + 1;
-		const nextPk = allHalftimePks[nextPkIndex];
+		const nextPk = pks[nextPkIndex];
 
 		getHalftime(nextPk);
 	};
 
 	const swiperRef = useRef<SwiperRef>(null);
-	const size = useFetchSize();
+	const defaultSort = 'CREATE_DESC';
+	const { fetchNextPage: fetchPkList } = useHalftimeListQuery(defaultSort, size);
 
 	// 초기 렌더링 시 halftime fetch
 	useEffect(() => {
-		if (!pk || !isPksLoaded || !isHalftimesLoaded || !swiperRef.current) return;
+		if (!pk || !isQueryKeyLoaded || !isHalftimesLoaded || !swiperRef.current) return;
+
 		const pkNum = Number(pk);
 		const currentIndex = viewedHalftimes.findIndex((h) => h.pk === pkNum);
 		window.history.replaceState(null, '', `/halftime/${pkNum}`);
 		swiperRef.current.swiper.slideTo(currentIndex === -1 ? 0 : currentIndex, 0);
 
 		// pk 배열이 빈 경우 (공유된 링크로 접근 등)
-		// store 변경 비동기 이슈로 제대로 동작하지 않음
-		if (allHalftimePks.length === 0) {
-			getPkList({ sort: 'CREATED_DESC', size, page: 1 }, pkNum).then(() => {
-				getHalftime(pkNum).then(() => {
-					getNextHalftime(pkNum);
-				});
-			});
-		} else {
-			getHalftime(pkNum).then(() => {
-				getNextHalftime(pkNum);
-			});
+		if (pks.length === 0) {
+			setSort(defaultSort);
+			fetchPkList();
 		}
+
+		getHalftime(pkNum);
+		getNextHalftime(pkNum);
 		createView(pkNum);
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [isPksLoaded, isHalftimesLoaded]);
+	}, [isQueryKeyLoaded, isHalftimesLoaded]);
 
 	useEffect(() => {
 		return () => {
-			clearAllHalftimePks();
 			clearViewedHalftimes();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps

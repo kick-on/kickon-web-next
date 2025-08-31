@@ -1,7 +1,7 @@
 'use client';
 
 import { useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
-import { formatNumberByUnit } from '@/lib/utils/number/formatNumberByUnit';
+import { formatNumberByUnit } from '@/lib/utils';
 import { createBoardKick } from '@/services/apis/board/board.api';
 import { createNewsKick } from '@/services/apis/news/news.api';
 import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';

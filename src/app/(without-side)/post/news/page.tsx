@@ -12,7 +12,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
 import CategoryDropdown from '@/components/features/post/category-dropdown';
-import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils';
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';

@@ -11,9 +11,12 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import Instagram from '@/assets/sns/instagram.svg';
 import X from '@/assets/sns/x.svg';
+import useAuthStore from '@/lib/store/useAuthStore';
 
 export default function Profile({ onClickButton }: { onClickButton: () => void }) {
 	const { currentUserInfo, clearCurrentUserInfo } = useCurrentUserInfoStore();
+	const { clearToken } = useAuthStore();
+
 	const [extraUserInfo, setExtraUserInfo] = useState<Omit<UserPointRankingDto, 'userId'>>(null);
 	const router = useRouter();
 	const pathname = usePathname();
@@ -23,6 +26,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 		onClickButton();
 		fetch('/api/logout', { method: 'POST' }).then(() => {
 			clearCurrentUserInfo(); // 클라이언트 user info 초기화
+			clearToken();
 			router.push('/');
 		});
 	};
@@ -135,14 +139,11 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 
 				<span className="body6-medium">팔로우하고 소식을 받아보세요!</span>
 				<div className="flex gap-8">
-					<button
-						onClick={() => window.open('https://www.instagram.com/kickonfc/', '_blank')}
-						className="relative w-6 h-6"
-					>
-						<Instagram className="w-auto h-auto object-contain" src={'/sns/instagram.svg'} alt="인스타그램 아이콘" />
+					<button onClick={() => window.open('https://www.instagram.com/kickonfc/', '_blank')}>
+						<Instagram className="w-6 h-6 object-contain" src={'/sns/instagram.svg'} alt="인스타그램 아이콘" />
 					</button>
-					<button onClick={() => window.open('https://x.com/kickonfc', '_blank')} className="relative w-6 h-6">
-						<X className="w-auto h-auto object-contain" fill src={'/sns/x.svg'} alt="트위터 아이콘" />
+					<button onClick={() => window.open('https://x.com/kickonfc', '_blank')}>
+						<X className="w-6 h-6 object-contain" src={'/sns/x.svg'} alt="트위터 아이콘" />
 					</button>
 				</div>
 			</div>

@@ -1,6 +1,6 @@
 import { UAParser } from 'ua-parser-js';
 
-export default function getServerDeviceType() {
+export function getServerDeviceType() {
 	const device = UAParser().device;
 
 	// 모바일 데스크톱 외 나머지는 모두 데스크톱으로 취급

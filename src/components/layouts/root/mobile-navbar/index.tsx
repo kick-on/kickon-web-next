@@ -10,7 +10,7 @@ import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
-import { isFullScreen } from '@/lib/utils/isFullScreen';
+import { isFullScreen } from '@/lib/utils';
 import RightButtons from '../navbar/right-buttons';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 

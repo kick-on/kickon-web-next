@@ -9,7 +9,7 @@ import { LeagueDto } from '@/services/apis/league/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import AlertModal from '@/components/features/detail/alert-modal';
-import { formatNextChangeDate } from '@/lib/utils/date/formatNextChangeDate';
+import { separateMonthAndDay } from '@/lib/utils';
 
 export default function Selectbox({
 	category,
@@ -42,7 +42,7 @@ export default function Selectbox({
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const nextChangeDate = formatNextChangeDate(currentUserInfo?.nextAvailableChangeDate);
+	const nextChangeDate = separateMonthAndDay(currentUserInfo?.nextAvailableChangeDate);
 	const nextChangeDateElement =
 		typeof nextChangeDate === 'string' ? (
 			<span className="text-primary-900">{nextChangeDate}</span>
@@ -120,7 +120,7 @@ export default function Selectbox({
 				<button
 					onClick={handleSelectBoxClick}
 					className={`flex gap-2.5 items-center px-4 py-3 w-full
-						border border-black-300 rounded-lg body3-regular @mobile:text-14
+						border border-black-300 rounded-lg text-body-03 @mobile:text-body-05
 						${selectedOption ? 'text-black-900' : 'text-black-600'}
 						${isEditable ? 'bg-black-000' : 'pointer-events-none bg-black-100'}`}
 				>
