@@ -27,8 +27,8 @@ export default function Navbar() {
 	const navButtons = [
 		{ href: '/', content: '홈', isActive: pathname === '/' },
 		{ href: '/gamble', content: '승부예측', isActive: pathname.includes('/gamble') },
-		{ href: '/news', content: '뉴스', isActive: pathname.includes('/news') },
-		{ href: '/board', content: '클럽 커뮤니티', isActive: pathname.includes('/board') },
+		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.includes('/news') },
+		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.includes('/board') },
 		{ href: '/halftime', content: '하프타임', isActive: pathname.includes('/halftime') },
 		{ href: '/ranking', content: '랭킹', isActive: pathname.includes('/ranking') },
 	];
