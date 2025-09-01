@@ -1,6 +1,14 @@
 import { SuccessResponse } from '@/services/config/dto';
 import { CommonCommentDto, CommonCreateNewReplyDto } from '../common/types';
 
+// 뉴스 댓글 조회 요청
+export interface GetNewsCommentsRequest {
+	id: number;
+	page: number;
+	size: number;
+	infinite?: boolean;
+	lastReply?: number;
+}
 // 뉴스 댓글 조회 응답
 export type GetNewsCommentsResponse = SuccessResponse<CommonCommentDto[]>;
 
