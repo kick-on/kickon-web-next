@@ -44,7 +44,22 @@ export default function FavoriteTeamSection({
 
 	useEffect(() => {
 		if (initialTeams) {
-			setFavoriteTeams(initialTeams);
+			const teams =
+				initialTeams.length === 0
+					? [
+							{
+								pk: -1,
+								nameKr: '응원팀이 없어요',
+								nameEn: 'no cheering team',
+								logoUrl: '/ban.svg',
+								leaguePk: -1,
+								leagueNameKr: '응원팀이 없어요',
+								leagueNameEn: 'no cheering team',
+								leagueLogoUrl: '/ban.svg',
+							},
+						]
+					: initialTeams;
+			setFavoriteTeams(teams);
 		}
 	}, [initialTeams]);
 
