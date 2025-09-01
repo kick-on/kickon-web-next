@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getCookie, setCookie } from '../utils/cookie';
+import { getCookie, setCookie } from '@/lib/utils';
 
 const POST_VIEW_EXPIRY = 60 * 60 * 24 * 1000;
 
