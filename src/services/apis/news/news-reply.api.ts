@@ -1,8 +1,9 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
-import { createNewsReplyRequest, GetNewsCommentsRequest, GetNewsCommentsResponse } from './news-reply.type';
+import { createNewsReplyRequest, GetNewsCommentsResponse } from './news-reply.type';
 import { CommonCommentKickDto, CommonPatchReplyDto } from '../common/types';
+import { GetCommentsRequest } from './news.type';
 
 // 뉴스 댓글 목록 조회
 export const getNewsCommentList = async ({
@@ -11,7 +12,7 @@ export const getNewsCommentList = async ({
 	size,
 	infinite,
 	lastReply,
-}: GetNewsCommentsRequest): Promise<GetNewsCommentsResponse | null> => {
+}: GetCommentsRequest): Promise<GetNewsCommentsResponse | null> => {
 	const params = new URLSearchParams({
 		news: String(id),
 		page: String(page),

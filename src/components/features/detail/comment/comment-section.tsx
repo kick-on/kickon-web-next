@@ -42,8 +42,6 @@ function CommentSection({
 	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
 	const [stagedCommentId, setStagedCommentId] = useState<number | null>(null); // 수정을 시도하는 코멘트 id
 
-	const [loadedPages, setLoadedPages] = useState([1]); // infinite lastReply + 스프레드 -> 제거 예정
-
 	// 현재 페이지 추출
 	const pageParam = searchParams.get('page');
 	const [currentPage, setCurrentPage] = useState(pageParam ? Number(pageParam) : 1);
@@ -55,72 +53,37 @@ function CommentSection({
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
 
-	// TODO: 2. 모바일에서 infinite와 lastReply 추가 + 스프레드
-	const fetchComments = useCallback(
-		async (page: number, append = false) => {
-			if (!contentsId || contentsId < 1) return;
-			try {
-				const response = isNews
-					? await getNewsCommentList({
-							id: contentsId,
-							page: currentPage,
-							size: commentsPerPage,
-						})
-					: await getBoardCommentList(contentsId, page, commentsPerPage);
+	const fetchComments = async () => {
+		if (!contentsId || contentsId < 1) return;
 
-				console.log('댓글 리스트', response);
-				if (append) {
-					// 중복되지 않는 새 댓글만 추가
-					setComments((prev) => {
-						const newComments = response?.data?.filter((c) => !prev.find((p) => p.pk === c.pk)) || [];
-						return [...prev, ...newComments];
-					});
-				} else {
-					setComments(response?.data || []);
-				}
-				setTotalPages(response.meta?.totalPages || 1);
-				setHasError(false);
-				return response;
-			} catch {
-				setHasError(true);
-				return null;
+		const query = {
+			id: contentsId,
+			page: currentPage,
+			size: commentsPerPage,
+			...(isMobile ? { infinite: true, lastReply: comments.at(-1).pk } : {}),
+		};
+		try {
+			const response = isNews ? await getNewsCommentList(query) : await getBoardCommentList(query);
+
+			console.log('댓글 리스트', response);
+			if (isMobile) {
+				setComments((prev) => [...prev, ...response?.data]);
+			} else {
+				setComments(response?.data || []);
 			}
-		},
-		[contentsId, isNews],
-	);
-
-	// 모든 로드된 페이지의 댓글을 다시 불러오는 함수
-	const reloadAllLoadedComments = useCallback(async () => {
-		if (isMobile && loadedPages.length > 0) {
-			let allComments = [];
-
-			// 모든 로드된 페이지를 순서대로 불러옴
-			for (const page of loadedPages.sort((a, b) => a - b)) {
-				const response = isNews
-					? await getNewsCommentList({
-							id: contentsId,
-							page: currentPage,
-							size: commentsPerPage,
-						})
-					: await getBoardCommentList(contentsId, page, commentsPerPage);
-
-				if (response?.data) {
-					// 중복 제거하면서 댓글 추가
-					const newComments = response.data.filter((c) => !allComments.find((existing) => existing.pk === c.pk));
-					allComments = [...allComments, ...newComments];
-				}
-			}
-
-			setComments(allComments);
-			return true;
+			setTotalPages(response.meta?.totalPages || 1);
+			setHasError(false);
+			return response;
+		} catch {
+			setHasError(true);
+			return null;
 		}
-		return false;
-	}, [loadedPages, contentsId, commentsPerPage, isNews, isMobile]);
+	};
 
-	// 초기 또는 페이지 변경 시 댓글 불러오기
+	// 초기 접속 또는 페이지 변경 시 댓글 불러오기
 	useEffect(() => {
-		fetchComments(currentPage, isMobile); // 모바일은 append 방식
-	}, [currentPage, fetchComments, isMobile]);
+		fetchComments();
+	}, [currentPage, contentsId]);
 
 	// searchParams가 바뀌었을 때 currentPage를 갱신
 	useEffect(() => {
@@ -140,20 +103,19 @@ function CommentSection({
 	// 모바일에서 '더 보기' 클릭 시 댓글 추가 로드
 	const handleLoadMoreComment = async () => {
 		const nextPage = currentPage + 1;
-		const response = isNews
-			? await getNewsCommentList({
-					id: contentsId,
-					page: currentPage,
-					size: commentsPerPage,
-				})
-			: await getBoardCommentList(contentsId, nextPage, commentsPerPage);
+		const query = {
+			id: contentsId,
+			page: nextPage,
+			size: commentsPerPage,
+			infinite: true,
+			lastReply: comments.at(-1).pk,
+		};
+		const response = isNews ? await getNewsCommentList(query) : await getBoardCommentList(query);
 
 		const newComments = response?.data || [];
 
 		setComments((prev) => [...prev, ...newComments]);
 		setCurrentPage(nextPage);
-		// 로드된 페이지 추적
-		setLoadedPages((prev) => [...prev, nextPage]);
 
 		if (nextPage >= (response.meta?.totalPages || 1)) {
 			setIsLastPageLoaded(true);
@@ -169,32 +131,7 @@ function CommentSection({
 			setReplyingTo((prev) => prev.filter((id) => id !== parentPk));
 			setReplyVisibilities((prev) => ({ ...prev, [parentPk]: true }));
 
-			// 해당 댓글의 최신 상태를 다시 불러와 갱신
-			try {
-				const response = isNews
-					? await getNewsCommentList({
-							id: contentsId,
-							page: currentPage,
-							size: commentsPerPage,
-						})
-					: await getBoardCommentList(contentsId, currentPage, commentsPerPage);
-
-				const updatedComment = response?.data.find((c) => c.pk === parentPk);
-				if (updatedComment) {
-					setComments((prev) => prev.map((c) => (c.pk === parentPk ? updatedComment : c)));
-				}
-			} catch {
-				console.error('대댓글 업데이트 실패');
-			}
-			return;
-		}
-
-		// 모바일에서 여러 페이지가 로드된 경우 모든 페이지 다시 불러오기
-		const reloadedAll = await reloadAllLoadedComments();
-
-		// 모바일이 아니거나 모든 페이지 다시 불러오기 실패한 경우 현재 페이지만 다시 불러오기
-		if (!reloadedAll) {
-			await fetchComments(currentPage, false);
+			// 댓글 리스트 업데이트 로직 추가
 		}
 	};
 

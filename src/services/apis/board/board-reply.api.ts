@@ -3,18 +3,23 @@ import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
 import { createBoardReplyRequest, GetBoardCommentsResponse } from './board-reply.type';
 import { CommonCommentKickDto, CommonPatchReplyDto } from '../common/types';
+import { GetCommentsRequest } from '../news/news.type';
 
 // 게시글 댓글 목록 조회
-export const getBoardCommentList = async (
-	id: number,
-	page: number = 1,
-	size: number = 10,
-): Promise<GetBoardCommentsResponse | null> => {
+export const getBoardCommentList = async ({
+	id,
+	page,
+	size,
+	infinite,
+	lastReply,
+}: GetCommentsRequest): Promise<GetBoardCommentsResponse | null> => {
 	const params = new URLSearchParams({
 		board: String(id),
 		page: String(page),
 		size: String(size),
 	});
+	if (infinite !== undefined) params.append('infinite', String(infinite));
+	if (lastReply !== undefined) params.append('lastReply', String(infinite));
 
 	const response = await fetch(`${SERVER_URL}/api/board-reply?${params.toString()}`);
 
