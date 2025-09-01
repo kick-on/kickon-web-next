@@ -55,6 +55,7 @@ const DetailPage = () => {
 			setTotalReplies(contentData.data.replies);
 
 			// 세션 스토리지에 저장 (같은 키로 항상 덮어쓰기)
+			// IDEA: 수정 버튼을 클릭할 때 저장하면 어떨지
 			sessionStorage.setItem('detailContent', JSON.stringify(finalContents));
 			console.log('상세조회', contentData);
 		} catch (error) {

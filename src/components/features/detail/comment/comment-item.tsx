@@ -1,50 +1,147 @@
 'use client';
 
 import Image from 'next/image';
-import { useMemo, useRef } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
 import { formatDate } from '@/lib/utils';
 import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
+import useIsMobile from '@/lib/hooks/useIsMobile';
+import { createNewsCommentKick, deleteNewsReply } from '@/services/apis/news/news-reply.api';
+import { createBoardCommentKick, deleteBoardReply } from '@/services/apis/board/board-reply.api';
+import AlertModal from '../alert-modal';
+import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 
 function CommentItem({
 	content,
 	type,
-	handleLikeToggle,
-	handleReply,
-	closeReplyInput,
-	toggleReplyVisibility,
-	replyingTo,
-	replyVisibilities,
 	isCommentAllowed,
 	contentsId,
-	parentReply,
 	isReply = false,
-	parentReplyId,
-	onCommentSubmit,
-	onEnterEditMode,
-	onDeleteComment,
+	replyTo,
 	editingCommentId,
 	setEditingCommentId,
+	setComments,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const isMyComment = currentUserInfo?.id === content.user.id;
-	const isRepliesOpen = useMemo(() => {
-		return !isReply && Array.isArray(content.replies) && content.replies.length > 0;
-	}, [content.replies, isReply]);
-
-	const isReplyInputOpen = useMemo(() => replyingTo.includes(content.pk), [replyingTo, content.pk]);
-	const moreButtonRef = useRef(null);
-
-	const isEditing = editingCommentId === content.pk;
-
 	const { formattedDate, formattedTime } = formatDate(content.createdAt, '2-digit');
+
+	const isMobile = useIsMobile();
+
+	const isNews = type === 'news';
+	const isEditing = editingCommentId === content.pk;
+	const isMyComment = currentUserInfo?.id === content.user.id;
+
+	const [isReplyListOpen, setIsReplyListOpen] = useState(false);
+	const [isReplyInputOpen, setIsReplyInputOpen] = useState(false);
+
+	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+	const { openLoginModal } = useIsLoginModalOpenStore();
+
+	const handleCommentSubmit = async (isReply: boolean, parentPk?: number) => {
+		if (!currentUserInfo) {
+			openLoginModal();
+			return;
+		}
+
+		if (isReply && parentPk !== undefined) {
+			setIsReplyInputOpen(false);
+			setIsReplyListOpen(true);
+
+			// TODO: 댓글 리스트 업데이트 로직 추가
+			// TODO: total comments 카운트 업데이트 로직 추가
+		}
+	};
+
+	// 좋아요 토글 -> kicked가 서버한테 잘 오는지 판단하고 다시!! kickCount 이건 잘 돼!
+	const toggleCommentLike = async (commentPk: number) => {
+		if (!currentUserInfo) {
+			openLoginModal();
+			return;
+		}
+
+		const result = isNews ? await createNewsCommentKick(commentPk) : await createBoardCommentKick(commentPk);
+		if (!result) return;
+
+		setComments((prev) =>
+			prev.map((c) => {
+				if (c.pk !== commentPk) return c;
+				const isCurrentlyLiked = c.kicked;
+				return {
+					...c,
+					kicked: !isCurrentlyLiked,
+					kickCount: c.kickCount + (isCurrentlyLiked ? -1 : 1), // 즉시 +1/-1 반영
+				};
+			}),
+		);
+	};
+
+	const handleReplyInputOpen = () => {
+		if (isMobile) {
+			// 모바일: 무조건 열기만
+			setIsReplyInputOpen(true);
+		} else {
+			// PC: 토글
+			setIsReplyInputOpen(!isReplyInputOpen);
+		}
+	};
+
+	// 수정 모드로 진입
+	const handleEnterEditMode = (commentPk: number) => {
+		if (editingCommentId && editingCommentId !== commentPk) {
+			setIsConfirmModalOpen(true);
+			return;
+		}
+		setEditingCommentId(commentPk);
+	};
+
+	const handleDeleteComment = async (commentPk: number, parentCommentPk?: number) => {
+		try {
+			const response = isNews ? await deleteNewsReply(commentPk) : await deleteBoardReply(commentPk);
+			if (response?.code === 'GET_SUCCESS') {
+				if (isReply && parentCommentPk) {
+					// 답글 삭제
+					setComments((prev) =>
+						prev.map((parentComment) =>
+							parentComment.pk === parentCommentPk
+								? {
+										...parentComment,
+										replies: parentComment.replies?.filter((reply) => reply.pk !== commentPk),
+									}
+								: parentComment,
+						),
+					);
+				} else {
+					// 댓글 삭제
+					setComments((prev) => prev.filter((comment) => comment.pk !== commentPk));
+				}
+
+				// 만약 현재 수정 중이던 댓글을 삭제했다면, 수정 상태도 초기화
+				if (editingCommentId === commentPk) {
+					setEditingCommentId(null);
+				}
+			} else {
+				console.error('댓글 삭제 실패', response);
+			}
+		} catch (error) {
+			console.error('댓글 삭제 중 오류 발생', error);
+		}
+	};
+
+	const commentItemProps = {
+		type,
+		isCommentAllowed,
+		contentsId,
+		editingCommentId,
+		setEditingCommentId,
+		setComments,
+	};
 
 	return (
 		<div>
-			<div className={clsx('flex items-start mt-5 pb-3.5', isReply && 'pl-10')}>
+			<div className={clsx('flex items-start mt-5 pb-3.5')}>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
@@ -68,27 +165,21 @@ function CommentItem({
 
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
-							<div ref={moreButtonRef} className="relative">
-								<CommentMoreButton
-									onDeleteClick={() => {
-										if (isReply) {
-											onDeleteComment(content.pk, parentReplyId);
-										} else {
-											onDeleteComment(content.pk);
-										}
-									}}
-									onEditClick={() => {
-										onEnterEditMode(content.pk);
-									}}
-								/>
-							</div>
+							<CommentMoreButton
+								onDeleteClick={() => handleDeleteComment(content.pk, replyTo?.pk)}
+								onEditClick={() => {
+									handleEnterEditMode(content.pk);
+								}}
+							/>
 						)}
 					</div>
+
 					{/* 본문 */}
 					<div className="body5-regular text-black-900 mt-3 mb-3.5 whitespace-pre-line">
-						{isReply && <span className="text-[#890f0e] mr-1">@{parentReply}</span>}
+						{isReply && replyTo && <span className="text-[#890f0e] mr-1">@{replyTo.nickname}</span>}
 						{content.contents}
 					</div>
+
 					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
 					<div className="flex justify-between items-center gap-3.5">
 						<div className="flex flex-col gap-3.5">
@@ -98,30 +189,30 @@ function CommentItem({
 										'button5-regular rounded-sm px-2 py-1 mb-0.5 w-fit',
 										isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
 									)}
-									onClick={() => handleReply(content.pk)}
+									onClick={handleReplyInputOpen}
 								>
 									답글
 								</button>
 							)}
 
-							{isRepliesOpen && (
+							{content.replies?.length > 0 && (
 								<button
 									className="flex items-center gap-[0.625rem] text-black-600 body6-regular"
-									onClick={() => toggleReplyVisibility(content.pk)}
+									onClick={() => setIsReplyListOpen(!isReplyListOpen)}
 								>
 									<Image
-										src={replyVisibilities[content.pk] ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
+										src={isReplyListOpen ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
 										alt="toggle replies"
 										width={16}
 										height={16}
 									/>
-									{replyVisibilities[content.pk] ? '답글 숨기기' : `답글 ${content.replies.length}개`}
+									{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
 								</button>
 							)}
 						</div>
 
 						{/* 킥 버튼 (하단 우측) */}
-						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-2">
+						<button onClick={() => toggleCommentLike(content.pk)} className="flex items-center gap-2">
 							<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
 							<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
 						</button>
@@ -138,22 +229,47 @@ function CommentItem({
 							mentionNickname={isEditing ? undefined : content.user.nickname}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
-								onCommentSubmit(isReply, content.pk);
+								handleCommentSubmit(isReply, content.pk);
 								setEditingCommentId(null);
 							}}
 							onCommentCancel={() => {
 								if (isEditing) {
 									setEditingCommentId(null);
-									closeReplyInput(content.pk);
+									handleReplyInputOpen();
 								} else {
-									closeReplyInput(content.pk);
+									handleReplyInputOpen();
 								}
 							}}
 						/>
 					)}
+
+					{isReplyListOpen &&
+						content.replies?.map((reply) => (
+							<CommentItem
+								key={reply.pk}
+								content={reply}
+								isReply
+								replyTo={{ pk: content.pk, nickname: content.user.nickname }}
+								{...commentItemProps}
+							/>
+						))}
 				</div>
 			</div>
 			<hr className="border-t border-black-200 -mx-6 -ml-4" />
+
+			{isConfirmModalOpen && (
+				<AlertModal
+					type="confirm"
+					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
+					onCancel={() => {
+						setIsConfirmModalOpen(false);
+					}}
+					onConfirm={() => {
+						setEditingCommentId(content.pk);
+						setIsConfirmModalOpen(false);
+					}}
+				/>
+			)}
 		</div>
 	);
 }

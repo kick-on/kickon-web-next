@@ -37,7 +37,7 @@ export interface CommonCommentDto {
 	user: UserDto;
 	createdAt: string;
 	kickCount: number;
-	replies: string[];
+	replies: CommonCommentDto[];
 	kicked: boolean;
 }
 

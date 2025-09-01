@@ -1,57 +1,34 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CommentInput from './comment-input';
 import CommentItem from './comment-item';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
-import LoginModal from '@/components/common/login-modal/login-content';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentSectionProps } from './type';
-import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import AlertModal from '../alert-modal';
-import { createNewsCommentKick, deleteNewsReply, getNewsCommentList } from '@/services/apis/news/news-reply.api';
-import { createBoardCommentKick, deleteBoardReply, getBoardCommentList } from '@/services/apis/board/board-reply.api';
+import { getNewsCommentList } from '@/services/apis/news/news-reply.api';
+import { getBoardCommentList } from '@/services/apis/board/board-reply.api';
 
-function CommentSection({
-	type,
-	isCommentAllowed,
-	contentsId,
-	totalreplies = 0,
-	setTotalReplies,
-}: CommentSectionProps) {
-	const currentUserInfo = useCurrentUserInfoStore();
+function CommentSection({ type, isCommentAllowed, contentsId, totalreplies = 0 }: CommentSectionProps) {
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const isNews = type === 'news';
 	const baseUrl = `/${type}/${contentsId}`;
 
-	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false); // 모바일에서 더보기 버튼 나올지 말지
-
-	// TODO: 4. 다른 TODO 처리 후 재귀 컴포넌트로 각 comment item이 답글을 관리하도록 수정
-	const [replyingTo, setReplyingTo] = useState([]); // 열어둔 답글 리스트
-	const [replyVisibilities, setReplyVisibilities] = useState({}); // 댓글의 답글을 열지 말지
-
-	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정! -> 네이밍 수정!!
-	// -> 하나의 상태로 통합했으나 ({mode, commentId} 객체 형태로) mode로 관리함으로써 A 댓글을 편집 중이다가 B 댓글의 수정하기 버튼을 누르면 mode가 바뀌면서 state 자체가 바뀌니 편집 중이던 내용이 초기화 됨. (원래는 상태가 독립이었어서 문제 x)
-	// 이를 해결하려면 편집 중이던 내용을 따로 저장 (map으로 댓글마다 저장)해야 했는데 그럼 복잡도가 올라감
-	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
-	const [stagedCommentId, setStagedCommentId] = useState<number | null>(null); // 수정을 시도하는 코멘트 id
-
-	// 현재 페이지 추출
 	const pageParam = searchParams.get('page');
 	const [currentPage, setCurrentPage] = useState(pageParam ? Number(pageParam) : 1);
+	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false); // 모바일에서 더보기 버튼 나올지 말지
 
-	const commentsPerPage = 10;
+	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
 	// 댓글 리스트 조회
 	const [comments, setComments] = useState([]);
 	const [hasError, setHasError] = useState(false);
 	const [totalPages, setTotalPages] = useState(1);
+	const commentsPerPage = 10;
 
 	const fetchComments = async () => {
 		if (!contentsId || contentsId < 1) return;
@@ -122,40 +99,13 @@ function CommentSection({
 		}
 	};
 
-	// 댓글 또는 대댓글 작성 후 처리
-	const handleCommentSubmit = async (isReply: boolean, parentPk?: number) => {
-		setTotalReplies(totalreplies + 1); // 댓글 수 증가
-
-		if (isReply && parentPk !== undefined) {
-			// 대댓글 작성 후 대댓글 입력창 닫고 대댓글 보이게 하기
-			setReplyingTo((prev) => prev.filter((id) => id !== parentPk));
-			setReplyVisibilities((prev) => ({ ...prev, [parentPk]: true }));
-
-			// 댓글 리스트 업데이트 로직 추가
-		}
-	};
-
-	// 좋아요 토글 -> kicked가 서버한테 잘 오는지 판단하고 다시!! kickCount 이건 잘 돼!
-	const toggleCommentLike = async (commentId: number) => {
-		if (!currentUserInfo) {
-			setIsLoginModalOpen(true);
-			return;
-		}
-
-		const result = isNews ? await createNewsCommentKick(commentId) : await createBoardCommentKick(commentId);
-		if (!result) return;
-
-		setComments((prev) =>
-			prev.map((c) => {
-				if (c.pk !== commentId) return c;
-				const isCurrentlyLiked = c.kicked; // 현재 상태
-				return {
-					...c,
-					kicked: !isCurrentlyLiked, // 토글
-					kickCount: c.kickCount + (isCurrentlyLiked ? -1 : 1), // 즉시 +1/-1 반영
-				};
-			}),
-		);
+	const commentItemProps = {
+		type,
+		isCommentAllowed,
+		contentsId,
+		editingCommentId,
+		setEditingCommentId,
+		setComments,
 	};
 
 	// 에러 발생 시 에러 카드 표시
@@ -163,96 +113,10 @@ function CommentSection({
 		return <FetchingFailedCard height="300px" marginTop="50px" onClick={() => window.location.reload()} />;
 	}
 
-	const handleReply = (id: number) => {
-		setReplyingTo((prev) => {
-			const isAlreadyOpen = prev.includes(id);
-
-			if (isMobile) {
-				// 모바일: 무조건 열기만
-				return isAlreadyOpen ? prev : [...prev, id];
-			} else {
-				// PC: 토글
-				return isAlreadyOpen ? prev.filter((i) => i !== id) : [...prev, id];
-			}
-		});
-	};
-
-	const closeReplyInput = (id: number) => {
-		setReplyingTo((prev) => prev.filter((i) => i !== id));
-	};
-
-	// 수정 모드로 진입
-	const handleEnterEditMode = (commentId: number) => {
-		if (editingCommentId && editingCommentId !== commentId) {
-			setStagedCommentId(commentId);
-			setIsConfirmModalOpen(true);
-			return;
-		}
-		setEditingCommentId(commentId);
-	};
-	const handleDeleteComment = async (commentId: number, parentReplyId: number) => {
-		try {
-			const response = isNews ? await deleteNewsReply(commentId) : await deleteBoardReply(commentId);
-			console.log('댓글 삭제', response);
-			if (response?.code === 'GET_SUCCESS') {
-				// 삭제 성공 시, 상태 업데이트
-				if (parentReplyId) {
-					// 대댓글 삭제
-					setComments((prev) =>
-						prev.map((comment) =>
-							comment.pk === parentReplyId
-								? {
-										...comment,
-										replies: comment.replies?.filter((reply) => reply.pk !== commentId),
-									}
-								: comment,
-						),
-					);
-				} else {
-					// 댓글 삭제
-					setComments((prev) => prev.filter((comment) => comment.pk !== commentId));
-				}
-				setTotalReplies(totalreplies - 1);
-
-				// 만약 현재 수정 중이던 댓글을 삭제했다면, 수정 상태도 초기화
-				if (editingCommentId === commentId) {
-					setEditingCommentId(null);
-				}
-			} else {
-				console.error('댓글 삭제 실패', response);
-			}
-		} catch (error) {
-			console.error('댓글 삭제 중 오류 발생', error);
-		}
-	};
-
-	// 공통으로 자식 컴포넌트에 전달할 props 모음
-	const commentItemProps = {
-		type,
-		handleLikeToggle: toggleCommentLike,
-		handleReply,
-		closeReplyInput,
-		toggleReplyVisibility: (id) => setReplyVisibilities((prev) => ({ ...prev, [id]: !prev[id] })),
-		replyingTo,
-		replyVisibilities,
-		isCommentAllowed,
-		contentsId,
-		onCommentSubmit: handleCommentSubmit,
-		onEnterEditMode: handleEnterEditMode,
-		onDeleteComment: handleDeleteComment,
-		editingCommentId,
-		setEditingCommentId,
-	};
-
 	return (
 		<div className="px-4">
 			{isCommentAllowed && (
-				<CommentInput
-					contentType={type}
-					contentsId={contentsId}
-					editingCommentId={editingCommentId}
-					onCommentSubmit={(isReply) => handleCommentSubmit(isReply)}
-				/>
+				<CommentInput contentType={type} contentsId={contentsId} editingCommentId={editingCommentId} />
 			)}
 
 			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-200 px-4 py-3">
@@ -264,25 +128,7 @@ function CommentSection({
 			) : (
 				<div className="flex flex-col pr-2">
 					{comments.map((comment) => (
-						<div key={comment.pk}>
-							<CommentItem
-								key={comment.pk}
-								content={comment}
-								parentReply={comment.user.nickname}
-								{...commentItemProps}
-							/>
-							{replyVisibilities[comment.pk] &&
-								comment.replies?.map((reply) => (
-									<CommentItem
-										key={reply.pk}
-										content={reply}
-										isReply
-										parentReply={comment.user.nickname}
-										parentReplyId={comment.pk}
-										{...commentItemProps}
-									/>
-								))}
-						</div>
+						<CommentItem key={comment.pk} content={comment} {...commentItemProps} />
 					))}
 				</div>
 			)}
@@ -302,25 +148,6 @@ function CommentSection({
 						</div>
 					)}
 				</>
-			)}
-
-			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
-			{isConfirmModalOpen && (
-				<AlertModal
-					type="confirm"
-					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
-					onCancel={() => {
-						setIsConfirmModalOpen(false);
-						setStagedCommentId(null);
-					}}
-					onConfirm={() => {
-						if (stagedCommentId !== null) {
-							setEditingCommentId(stagedCommentId);
-						}
-						setIsConfirmModalOpen(false);
-						setStagedCommentId(null);
-					}}
-				/>
 			)}
 		</div>
 	);
