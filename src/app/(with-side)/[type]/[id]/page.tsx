@@ -10,7 +10,6 @@ import CommentSection from '@/components/features/detail/comment/comment-section
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-
 import { getNewsDetail } from '@/services/apis/news/news.api';
 import { getBoardDetail } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';

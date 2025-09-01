@@ -7,6 +7,9 @@ import TopButtons from './player-action/top-buttons';
 import FloatingActionButtons from './player-action/floating-action-buttons';
 import PlayButton from './player-action/play-button';
 import ControlBar from './player-action/control-bar';
+import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
+import VideoFetchFailed from './video-fetch-failed';
+import InformationSection from './player-action/information-section';
 
 export interface PlayerAttribute {
 	playing: boolean;
@@ -19,12 +22,17 @@ export interface PlayerAttribute {
 }
 
 export default function Player({
-	src,
+	user,
+	title,
+	videoUrl,
+	isKicked,
+	kickCount,
+	usedIn,
+	referencePk,
 	isCurrentPlayer,
 	globalMuted,
 	toggleGlobalMuted,
-}: {
-	src: string;
+}: GetHalftimeDetailDto & {
 	isCurrentPlayer: boolean;
 	globalMuted: boolean;
 	toggleGlobalMuted: () => void;
@@ -99,17 +107,19 @@ export default function Player({
 
 	const { playing, played } = playerState;
 
-	return (
+	return videoUrl ? (
 		<div className="relative w-full h-full flex items-center justify-center">
 			{isCurrentPlayer && (
 				<>
 					<TopButtons globalMuted={globalMuted} toggleGlobalMuted={toggleGlobalMuted} />
-					<FloatingActionButtons />
+					<FloatingActionButtons isKicked={isKicked} kickCount={kickCount} usedIn={usedIn} referencePk={referencePk} />
 					{!isFirstLoad && <PlayButton playing={playing} />}
 
 					{typeof window !== 'undefined' && isCurrentPlayer && (
 						<ControlBar playerRef={playerRef} setPlayerState={setPlayerState} played={played} />
 					)}
+
+					<InformationSection user={user} title={title} />
 				</>
 			)}
 
@@ -122,7 +132,7 @@ export default function Player({
 				)}
 			>
 				<ReactPlayer
-					src={src}
+					src={videoUrl}
 					ref={setPlayerRef}
 					loop
 					muted={globalMuted}
@@ -141,5 +151,7 @@ export default function Player({
 				/>
 			</div>
 		</div>
+	) : (
+		<VideoFetchFailed />
 	);
 }

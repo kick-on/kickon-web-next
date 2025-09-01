@@ -29,7 +29,12 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 		} else {
 			sessionStorage.setItem('previousPage', fullUrl);
 		}
-		openLoginModal();
+
+		if (isMobile) {
+			router.push('/login');
+		} else {
+			openLoginModal();
+		}
 	};
 
 	const handleProfileButtonClick = () => {
@@ -61,7 +66,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 	return (
 		<>
 			{isLoggedIn ? (
-				<div className="relative w-fit flex">
+				<div className="relative w-fit h-full flex">
 					<button
 						onClick={handleProfileButtonClick}
 						className={clsx(

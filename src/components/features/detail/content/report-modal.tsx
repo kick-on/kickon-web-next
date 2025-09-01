@@ -1,5 +1,5 @@
 'use client';
-import LoginModal from '@/components/common/login-modal/login-modal';
+import LoginModal from '@/components/common/login-modal/login-content';
 import { reportOptions } from '@/lib/constants/options';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { postReportBoard } from '@/services/apis/report/report-board.api';

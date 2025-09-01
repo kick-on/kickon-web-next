@@ -2,22 +2,151 @@
 
 import Player from '@/components/features/halftime/player';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import { useHalftimeQueryKeyStore, useViewedHalftimesStore } from '@/lib/store/useHalftimeStore';
+import { createBoardView } from '@/services/apis/board/board-view-history.api';
+import { createNewsView } from '@/services/apis/news/news-view-history.api';
+import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
+import { GetHalftimeListResponse } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
-import { SwiperSlide, Swiper } from 'swiper/react';
+import { useParams } from 'next/navigation';
+import { useEffect, useRef, useState } from 'react';
+import { Keyboard } from 'swiper/modules';
+import { Swiper, SwiperRef, SwiperSlide } from 'swiper/react';
+import { Swiper as SwiperType } from 'swiper';
+import { shouldUpdateView } from '@/lib/utils';
+import { InfiniteData, useQueryClient } from '@tanstack/react-query';
+import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 
 export default function Page() {
-	const [globalMute, setGlobalMute] = useState(true);
+	const { _hasHydrated: isQueryKeyLoaded, halftimeListQueryKey, setSort } = useHalftimeQueryKeyStore();
+	const {
+		_hasHydrated: isHalftimesLoaded,
+		viewedHalftimes,
+		appendViewedHalftime,
+		clearViewedHalftimes,
+	} = useViewedHalftimesStore();
+
+	const params = useParams();
+	const { id: pk } = params;
+
+	console.log(halftimeListQueryKey);
+	const [, sort, size] = halftimeListQueryKey;
+	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
+
+	const queryClient = useQueryClient();
+	const cachedData = queryClient.getQueryData(halftimeListQueryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
+	const halftimes = cachedData?.pages?.flatMap((page) => page.data) ?? [];
+	const pks = halftimes?.map((h) => h.pk);
+
+	const getHalftime = async (pkToFetch: number) => {
+		// 이미 조회한 하프타임인 경우 return
+		if (viewedHalftimes.find((h) => h.pk === pkToFetch)) return;
+
+		try {
+			const response = await getHalftimeDetail(pkToFetch);
+			appendViewedHalftime(response.data);
+		} catch {
+			alert('동영상을 불러오는 중 문제가 발생했습니다.');
+		}
+	};
+
+	const createView = (pk: number) => {
+		if (!shouldUpdateView('viewedHalftimes', pk)) return;
+
+		const currentHalftime = viewedHalftimes.find((h) => h.pk === pk);
+		if (!currentHalftime) return;
+
+		const isNews = currentHalftime.usedIn === 'NEWS';
+		const refrencePk = currentHalftime.referencePk;
+
+		if (isNews) {
+			createNewsView(refrencePk);
+		} else {
+			createBoardView(refrencePk);
+		}
+	};
+
+	const shouldFetchNext = (index: number) => {
+		// 마지막 영상인 경우 다음 동영상 fetch하지 않음
+		const isLastVideo = index === pks.length - 1;
+		if (isLastVideo) return false;
+
+		// 마지막 영상이 되기 전에 pk list fetch
+		const shouldFetchPks = index === pks.length - 2;
+		if (shouldFetchPks && hasNextPage && !isFetchingNextPage) {
+			fetchNextPage();
+		}
+
+		return true;
+	};
+
+	const getNextHalftime = (currentPk: number) => {
+		const currentIndex = pks.findIndex((p: number) => p === currentPk);
+		if (!shouldFetchNext(currentIndex)) return;
+
+		const nextPkIndex = currentIndex + 1;
+		const nextPk = pks[nextPkIndex];
+
+		getHalftime(nextPk);
+	};
+
+	const swiperRef = useRef<SwiperRef>(null);
+	const defaultSort = 'CREATE_DESC';
+	const { fetchNextPage: fetchPkList } = useHalftimeListQuery(defaultSort, size);
+
+	// 초기 렌더링 시 halftime fetch
+	useEffect(() => {
+		if (!pk || !isQueryKeyLoaded || !isHalftimesLoaded || !swiperRef.current) return;
+
+		const pkNum = Number(pk);
+		const currentIndex = viewedHalftimes.findIndex((h) => h.pk === pkNum);
+		window.history.replaceState(null, '', `/halftime/${pkNum}`);
+		swiperRef.current.swiper.slideTo(currentIndex === -1 ? 0 : currentIndex, 0);
+
+		// pk 배열이 빈 경우 (공유된 링크로 접근 등)
+		if (pks.length === 0) {
+			setSort(defaultSort);
+			fetchPkList();
+		}
+
+		getHalftime(pkNum);
+		getNextHalftime(pkNum);
+		createView(pkNum);
+
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isQueryKeyLoaded, isHalftimesLoaded]);
+
+	useEffect(() => {
+		return () => {
+			clearViewedHalftimes();
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	const handleSlideChange = (swiper: SwiperType) => {
+		const { activeIndex } = swiper;
+		if (!viewedHalftimes[activeIndex]) return;
+
+		// useRouter 사용에 따른 재렌더링 방지
+		window.history.replaceState(null, '', `/halftime/${viewedHalftimes[activeIndex].pk}`);
+
+		const currentPk = viewedHalftimes[activeIndex].pk;
+		createView(currentPk);
+		getNextHalftime(currentPk);
+	};
+
+	const [globalMuted, setGlobalMuted] = useState(true);
+
+	const toggleGlobalMuted = () => {
+		setGlobalMuted((prev) => !prev);
+	};
+
 	const [isMobileNavbar, setIsMobileNavber] = useState(false);
 	const isLeftSideVisible = !useIsLeftSideVisible();
 
 	useEffect(() => {
 		setIsMobileNavber(isLeftSideVisible);
 	}, [isLeftSideVisible]);
-
-	const toggleGlobalMute = () => {
-		setGlobalMute((prev) => !prev);
-	};
 
 	return (
 		<div
@@ -27,30 +156,26 @@ export default function Page() {
 			)}
 		>
 			<Swiper
+				ref={swiperRef}
 				cssMode
 				className="w-full h-full"
 				direction="vertical"
 				slidesPerView={1.2}
 				spaceBetween={24}
 				centeredSlides
+				onSlideChange={handleSlideChange}
+				modules={[Keyboard]}
+				keyboard={{ enabled: true }}
 			>
-				{[1, 2, 3, 4].map((i) => (
-					<SwiperSlide key={i} className="desktop:px-22 w-full">
+				{viewedHalftimes.map((halftime, i) => (
+					<SwiperSlide key={halftime?.pk ?? `error-${i}`} className="desktop:px-22 w-full">
 						{({ isActive }) => (
 							<div className="mx-auto w-auto h-full aspect-[14/25] @mobile:h-full @mobile:w-full @mobile:aspect-auto rounded-lg bg-black-300">
 								<Player
+									{...halftime}
 									isCurrentPlayer={isActive}
-									src={
-										i === 1
-											? '/video/test1.mp4'
-											: i === 2
-												? '/video/test2.mp4'
-												: i === 3
-													? 'https://www.youtube.com/watch?v=-NMmHBIijKg'
-													: 'https://www.youtube.com/shorts/KrMk5Ew-Vus'
-									}
-									globalMuted={globalMute}
-									toggleGlobalMuted={toggleGlobalMute}
+									globalMuted={globalMuted}
+									toggleGlobalMuted={toggleGlobalMuted}
 								/>
 							</div>
 						)}

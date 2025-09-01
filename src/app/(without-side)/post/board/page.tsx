@@ -7,7 +7,7 @@ import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getUserInfo } from '@/services/apis/user';
-import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils/filenameUtils';
+import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
@@ -110,10 +110,13 @@ export default function Page() {
 		};
 	}, []);
 
+	// 중복 호출 방지
+	const isLoading = useRef(false);
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
 
 	const postCommunityContents = async () => {
-		if (!currentUserInfo || !isFormValid) return;
+		if (!currentUserInfo || !isFormValid || isLoading.current) return;
+		isLoading.current = true;
 
 		const usedImageKeys = extractMediaFilenamesFromContent(body.trim(), 'img');
 		const usedVideoKeys = extractMediaFilenamesFromContent(body.trim(), 'video');
@@ -157,7 +160,7 @@ export default function Page() {
 
 				const response = await createBoard(postBody);
 				console.log('작성 성공', response);
-				router.push(`/board/${response.data.pk}`);
+				router.replace(`/board/${response.data.pk}`);
 			}
 		} catch (error) {
 			console.error(isEditMode ? '게시글 수정 실패:' : '게시글 작성 실패:', error);
@@ -229,12 +232,12 @@ export default function Page() {
 
 			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
 
-			{currentUserInfo.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
+			{currentUserInfo?.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 
 			<div
 				className={clsx(
 					'flex w-full justify-center gap-4 mx-auto mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]',
-					currentUserInfo.isInfluencer && 'mb-[60px] @mobile:mb-[50px]',
+					currentUserInfo?.isInfluencer && 'mb-[60px] @mobile:mb-[50px]',
 				)}
 			>
 				<button

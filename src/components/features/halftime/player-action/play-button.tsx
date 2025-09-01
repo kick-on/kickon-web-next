@@ -1,6 +1,7 @@
 import Image from 'next/image';
+import { memo } from 'react';
 
-export default function PlayButton({ playing }: { playing: boolean }) {
+function PlayButton({ playing }: { playing: boolean }) {
 	return (
 		<div
 			className={`w-18 h-18 flex items-center justify-center pointer-events-none
@@ -11,3 +12,5 @@ export default function PlayButton({ playing }: { playing: boolean }) {
 		</div>
 	);
 }
+
+export default memo(PlayButton);

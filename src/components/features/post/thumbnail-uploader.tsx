@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
-import { compressImage } from '@/lib/utils/compressImage';
+import { compressImage } from '@/lib/utils';
 
 interface ThumbnailUploaderProps {
 	selectedImage: string | null;

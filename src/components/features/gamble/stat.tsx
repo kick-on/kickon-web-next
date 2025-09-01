@@ -1,7 +1,7 @@
 'use client';
 
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { roundToOneDecimal } from '@/lib/utils/roundToOneDecimal';
+import { roundToOneDecimal } from '@/lib/utils';
 import { getMyStats } from '@/services/apis/game';
 import { MyStatsDto } from '@/services/apis/game/dto';
 import clsx from 'clsx';

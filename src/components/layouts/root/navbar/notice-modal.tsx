@@ -2,16 +2,35 @@
 
 import NoticeHeader from '@/components/features/notice/notice-header';
 import NoticeItem from '@/components/features/notice/notice-item';
-import { dummyNotices } from '@/lib/constants/dummyNotices';
+import { useNotificationStore } from '@/lib/store/useNotificationStore';
 import Image from 'next/image';
+import { useEffect, useRef } from 'react';
 
-// TODO: 알림을 확인한 후 bg 컬러 변경
 export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void }) {
+	const notifications = useNotificationStore((state) => state.notifications);
+	const modalRef = useRef<HTMLDivElement | null>(null);
+
+	useEffect(() => {
+		if (!modalRef.current) return;
+
+		const handleOutsideClick = (e: MouseEvent) => {
+			if (!modalRef.current.contains(e.target as Node)) {
+				onCloseModal();
+			}
+		};
+
+		document.addEventListener('click', handleOutsideClick);
+		return () => {
+			document.removeEventListener('click', handleOutsideClick);
+		};
+	}, [modalRef, onCloseModal]);
+
 	return (
 		<div
-			className="absolute top-[3.375rem] -right-[1.05rem] w-[20.25rem] h-[39.375rem] 
-                            bg-black-000 border border-black-100 rounded-[0.625rem]
-                            flex flex-col shadow-navbar-modal"
+			ref={modalRef}
+			className="absolute top-[3.375rem] -right-[1.05rem] w-[20.25rem] h-[630px]
+                bg-black-000 border border-black-100 rounded-[0.625rem]
+                flex flex-col shadow-navbar-modal z-25"
 		>
 			<Image
 				className="absolute -top-2.5 right-[1.125rem]"
@@ -24,15 +43,22 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 				alt="화살표"
 			/>
 			<NoticeHeader isModal={true} onClose={onCloseModal} />
-			{dummyNotices.map((notice) => (
-				<NoticeItem
-					key={notice.id}
-					type={notice.type}
-					date={notice.date}
-					content={notice.content}
-					teamLogo={notice.teamLogo}
-				/>
-			))}
+			<div className="flex-1 rounded-b-[0.625rem] overflow-y-auto no-scrollbar">
+				{notifications.map((notice) => (
+					<NoticeItem
+						key={notice.pk}
+						pk={notice.pk}
+						type={notice.type}
+						read={notice.read}
+						teamLogo={notice.teamLogo}
+						redirectUrl={notice.redirectUrl}
+						relativeTime={notice.relativeTime}
+						content={notice.content}
+						isModal={true}
+						onCloseModal={onCloseModal}
+					/>
+				))}
+			</div>
 		</div>
 	);
 }

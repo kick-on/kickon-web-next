@@ -1,5 +1,5 @@
 'use client';
-import LoginModal from '@/components/common/login-modal/login-modal';
+import LoginModal from '@/components/common/login-modal/login-content';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';

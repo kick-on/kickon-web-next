@@ -24,16 +24,26 @@ export default function Navbar() {
 	const isTabletWidth = useIsTabletWidth();
 	const isLeftSideBarVisible = useIsLeftSideVisible();
 
-	const navButtons: NavButton[] = [
-		!isDesktop ? { href: '/', content: '홈', isActive: pathname === '/' } : null,
-		{ href: '/gamble', content: '승부예측', isActive: pathname.split('/').includes('gamble') },
-		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.split('/').includes('news') },
-		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.split('/').includes('board') },
-		{ href: '/halftime', content: '하프타임', isActive: pathname.split('/').includes('halftime') },
-		!isLeftSideBarVisible || !isDesktop
-			? { href: '/ranking', content: '랭킹', isActive: pathname === '/ranking' }
-			: null,
+	const navButtons = [
+		{ href: '/', content: '홈', isActive: pathname === '/' },
+		{ href: '/gamble', content: '승부예측', isActive: pathname.includes('/gamble') },
+		{ href: '/news?q=전체', content: '뉴스', isActive: pathname.includes('/news') },
+		{ href: '/board?q=전체', content: '클럽 커뮤니티', isActive: pathname.includes('/board') },
+		{ href: '/halftime', content: '하프타임', isActive: pathname.includes('/halftime') },
+		{ href: '/ranking', content: '랭킹', isActive: pathname.includes('/ranking') },
 	];
+
+	const filteredNavButtons = navButtons.filter((button) => {
+		// isLeftSideBarVisible이 true일 때 '홈' 버튼은 숨김
+		if (isLeftSideBarVisible && button.href === '/') {
+			return false;
+		}
+		// isLeftSideBarVisible이 false 또는 데스크톱 환경이 아닐 때 '랭킹' 버튼을 제외
+		if (!isLeftSideBarVisible || !isDesktop) {
+			return button.href === '/ranking';
+		}
+		return true;
+	});
 
 	const handleLogoClick = () => {
 		router.push('/');
@@ -56,7 +66,10 @@ export default function Navbar() {
 						src={isHome ? '/logo/kick-on-black.svg' : '/logo/kick-on-white.svg'}
 						alt="킥온"
 					/>
-					{navButtons.map((props) => props && <NavButton key={props.content} {...props} />)}
+
+					{filteredNavButtons.map((props) => (
+						<NavButton key={props.content} {...props} />
+					))}
 				</nav>
 				<RightButtons isTabletWidth={isTabletWidth} />
 			</div>

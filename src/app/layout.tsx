@@ -8,6 +8,8 @@ import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 import MarginWrapper from '@/components/layouts/root/margin-wrapper';
 import Navbar from '@/components/layouts/root/navbar';
 import PaddingWrapper from '@/components/layouts/root/padding-wrapper';
+import NotificationInitializer from '@/components/layouts/root/navbar/notification-initializer';
+import ReactQueryProvider from '@/lib/provider/react-query-provider';
 
 export const metadata: Metadata = {
 	title: '킥온',
@@ -29,15 +31,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 	return (
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
+				<NotificationInitializer />
 				<div className="@container">
-					<Navbar />
-					<LoginPortal />
-					<MarginWrapper>
-						<Banner />
-						<PaddingWrapper>{children}</PaddingWrapper>
-						<Footer />
-						<MinWidth />
-					</MarginWrapper>
+					<ReactQueryProvider>
+						<Navbar />
+						<LoginPortal />
+						<MarginWrapper>
+							<Banner />
+							<PaddingWrapper>{children}</PaddingWrapper>
+							<Footer />
+							<MinWidth />
+						</MarginWrapper>
+					</ReactQueryProvider>
 				</div>
 			</body>
 		</html>

@@ -12,7 +12,7 @@ import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
-import { compressImage } from '@/lib/utils/compressImage';
+import { compressImage } from '@/lib/utils';
 
 type EditorProviderProps = {
 	children: React.ReactNode;
@@ -82,7 +82,8 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 				.getText()
 				.replace(/\u00A0/g, ' ')
 				.trim();
-			const isTrulyEmpty = text === '';
+			// 텍스트는 없어도 이미지나 영상 등 다른 노드가 있으면 내용이 있는 걸로 처리
+			const isTrulyEmpty = text === '' && !/<img|video|iframe/.test(html);
 
 			if (isTrulyEmpty) {
 				// 본문 내용이 모두 지워지면 텍스트 포맷 초기화
@@ -97,7 +98,7 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 				view.dispatch(tr);
 				setBody('');
 			} else {
-				const normalizedHTML = html.replace(/<p>\s*<\/p>/g, '<p><br></p>'); // 빈 <p></p> → <p><br></p> 변환
+				const normalizedHTML = html.trim();
 				setBody(normalizedHTML);
 			}
 		},

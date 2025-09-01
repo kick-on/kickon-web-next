@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ChangeEvent } from 'react';
 import Image from 'next/image';
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
+import { getServerDeviceType } from '@/lib/utils';
 
 export default function Score({
 	side,

@@ -3,7 +3,7 @@
 export default function Checkbox({ content, hasTerm, documentUrl, checked, onChange }) {
 	return (
 		<div className="flex">
-			<label className="flex items-center gap-2 body5-medium">
+			<label className="flex items-center gap-2 text-body-05 font-medium">
 				<input
 					type="checkbox"
 					checked={checked}
@@ -23,7 +23,7 @@ export default function Checkbox({ content, hasTerm, documentUrl, checked, onCha
 							window.open(documentUrl, '_blank');
 						}
 					}}
-					className="button5-regular text-black-700 underline ml-auto cursor-pointer"
+					className="text-button-05 text-black-700 underline ml-auto cursor-pointer"
 				>
 					약관보기
 				</span>

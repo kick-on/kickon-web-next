@@ -73,7 +73,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 		response.cookies.set({
 			name: 'accessToken',
 			value: accessToken,
-			httpOnly: true,
+			httpOnly: false,
 			secure: true,
 			path: '/',
 			maxAge: 60 * 60, // 1시간
@@ -85,7 +85,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 			name: 'refreshToken',
 			value: refreshToken,
 			httpOnly: true,
-			secure: true,
+			secure: false, // http에서도 요청에 쿠키가 포함되도록 설정
 			path: '/',
 			maxAge: 60 * 60 * 24 * 30, // 30일
 		});

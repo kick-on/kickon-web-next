@@ -2,18 +2,15 @@
 
 import clsx from 'clsx';
 import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
-import { formatGameStartDate } from '@/lib/utils/formatGameStartDate';
-import { formatGambleParticipations } from '@/lib/utils/formatGambleParicipations';
-import { getGameStartTimeBefore } from '@/lib/utils/getGameStartTimeBefore';
 import GameInfoBox, { GameInfoBoxProps } from './game-info-box';
 import TeamButton from './team-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
-import getServerDeviceType from '@/lib/utils/getServerDeviceType';
 import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { GameDto } from '@/services/apis/game/dto';
+import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
 
 export default function PredictCard({
 	game,
@@ -30,9 +27,12 @@ export default function PredictCard({
 
 	const isFinished = type === 'finished';
 
-	const [startDate, startTime] = formatGameStartDate(startAt);
-	const participations = formatGambleParticipations(gambleResult.participationNumber);
-	const timeBefore = getGameStartTimeBefore(startAt);
+	const { formattedDate, formattedWeekday, formattedTime } = formatDate(startAt);
+	const startDate = `${formattedDate} (${formattedWeekday})`;
+	const startTime = formattedTime;
+
+	const participations = addCommas(gambleResult.participationNumber);
+	const timeBefore = getRelativeTime(startAt);
 
 	const isGambleInProgress = type === 'proceeding'; // 예측 진행 중
 	const isGameInProgress = type === 'finished' && (gameStatus === 'PENDING' || gameStatus === 'PROCEEDING'); // 경기 중
@@ -100,12 +100,14 @@ export default function PredictCard({
 			if (selectedButton === currentButton) {
 				// 기존 예측이 있는 경우에는 예측 삭제
 				if (myGambleResult) {
-					const response = await deleteGameGamble(myGambleResult.id);
-					console.log('delete', response);
+					try {
+						await deleteGameGamble(myGambleResult.id);
+					} catch (error) {
+						alert(error.errorData.message);
 
-					// 삭제 실패 시 현재 상태 유지
-					if (typeof response === 'string') {
-						console.error(response);
+						setIsClicked(false);
+						setIsCompleted(isEditing ? true : false); // 수정 중이었으면 다시 완료됨 상태로, 예측 생성 중이었으면 초기 상태로
+						setIsEditing(false);
 						return;
 					}
 				}
@@ -135,41 +137,34 @@ export default function PredictCard({
 	};
 
 	const handleCompleteButtonClick = async () => {
-		if (isEditing) {
-			// 수정 중인 상태에서는 patch 함수 호출
-			const request: PatchGameGambleRequest = {
-				gamble: myGambleResult?.id,
-				predictedHomeScore: leftScore,
-				predictedAwayScore: rightScore,
-			};
-			const response = await patchGameGamble(request);
-			console.log('patch', response);
+		try {
+			if (isEditing) {
+				// 수정 중인 상태에서는 patch 함수 호출
+				const request: PatchGameGambleRequest = {
+					gamble: myGambleResult?.id,
+					predictedHomeScore: leftScore,
+					predictedAwayScore: rightScore,
+				};
+				await patchGameGamble(request);
 
-			if (typeof response === 'string') {
-				console.error(response);
-			} else {
-				setIsClicked(false);
 				setIsEditing(false);
-				setIsCompleted(true);
 				refetchGames();
-			}
-		} else {
-			// 새로 생성하는 경우 post 함수 호출
-			const request: PostGameGambleRequest = {
-				game: pk,
-				predictedHomeScore: leftScore,
-				predictedAwayScore: rightScore,
-			};
-			const response = await postGameGamble(request);
-			console.log('post', response);
-
-			if (typeof response === 'string') {
-				console.error(response);
 			} else {
-				setIsClicked(false);
-				setIsCompleted(true);
+				// 새로 생성하는 경우 post 함수 호출
+				const request: PostGameGambleRequest = {
+					game: pk,
+					predictedHomeScore: leftScore,
+					predictedAwayScore: rightScore,
+				};
+				await postGameGamble(request);
+
 				refetchGames();
 			}
+		} catch (error) {
+			alert(error.errorData.message);
+		} finally {
+			setIsClicked(false);
+			setIsCompleted(isEditing ? true : false); // 수정 중이었으면 다시 완료됨 상태로, 예측 생성 중이었으면 초기 상태로
 		}
 	};
 
