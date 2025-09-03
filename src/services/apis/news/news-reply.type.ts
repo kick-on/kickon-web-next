@@ -5,6 +5,6 @@ import { CommonCommentDto, CommonCreateNewReplyDto } from '../common/types';
 export type GetNewsCommentsResponse = SuccessResponse<CommonCommentDto[]>;
 
 // 새로운 댓글 생성 요청
-export interface createNewsReplyRequest extends CommonCreateNewReplyDto {
+export interface CreateNewsReplyRequest extends CommonCreateNewReplyDto {
 	news: number;
 }

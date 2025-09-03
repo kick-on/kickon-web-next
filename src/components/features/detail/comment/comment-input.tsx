@@ -7,6 +7,8 @@ import { CommentInputProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { createNewsReply, patchNewsReply } from '@/services/apis/news/news-reply.api';
 import { createBoardReply, patchBoardReply } from '@/services/apis/board/board-reply.api';
+import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
+import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
 
 const CommentInput = ({
 	type = 'comment',
@@ -19,6 +21,7 @@ const CommentInput = ({
 	onCommentCancel,
 }: CommentInputProps) => {
 	const isMobile = useIsMobile();
+	const isReply = type === 'reply' && replyTo;
 	const currentUserInfo = useCurrentUserInfoStore();
 	const inputRef = useRef<HTMLDivElement>(null);
 	const [inputHeight, setInputHeight] = useState(0);
@@ -38,7 +41,7 @@ const CommentInput = ({
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
-		if (type === 'reply' && replyTo && inputRef.current) {
+		if (isReply && inputRef.current) {
 			const mention = `<span contenteditable="false" style="color: #890f0e" class="mention">@${replyTo.nickname}</span>&nbsp;`;
 			inputRef.current.innerHTML = mention;
 			setHasMention(true);
@@ -165,7 +168,6 @@ const CommentInput = ({
 		if (isSubmitting) return;
 
 		setIsSubmitting(true);
-		const isReply = type === 'reply';
 		setTimeout(onCommentSubmit, 300);
 
 		let sanitizedContent = content;
@@ -174,34 +176,30 @@ const CommentInput = ({
 			sanitizedContent = sanitizedContent.replace(mentionPattern, '');
 		}
 
-		const editedRequestBody = {
-			contents: sanitizedContent,
-		};
-
 		try {
 			let response;
+			const isNews = contentType === 'news';
 
 			if (type === 'edit') {
-				response =
-					contentType === 'news'
-						? await patchNewsReply(editingCommentId, editedRequestBody)
-						: await patchBoardReply(editingCommentId, editedRequestBody);
-				console.log('댓글 수정 완료:', response);
+				const body = {
+					contents: sanitizedContent,
+				};
+
+				response = isNews
+					? await patchNewsReply(editingCommentId, body)
+					: await patchBoardReply(editingCommentId, body);
 			} else {
-				if (contentType === 'news') {
-					await createNewsReply({
-						contents: sanitizedContent,
-						...(isReply && replyTo.pk ? { parentReply: replyTo.pk } : {}),
-						news: contentsId,
-					});
-				} else {
-					await createBoardReply({
-						contents: sanitizedContent,
-						...(isReply && replyTo.pk ? { parentReply: replyTo.pk } : {}),
-						board: contentsId,
-					});
-				}
+				const isReply = type === 'reply' && replyTo;
+				const body: CreateNewsReplyRequest | CreateBoardReplyRequest = {
+					contents: sanitizedContent,
+					...(isReply ? { parentReply: replyTo.pk } : {}),
+					...(isNews ? { news: contentsId } : { board: contentsId }),
+				};
+				response = isNews
+					? await createNewsReply(body as CreateNewsReplyRequest)
+					: await createBoardReply(body as CreateBoardReplyRequest);
 			}
+			console.log('댓글 수정/등록', response);
 
 			setContent('');
 			if (inputRef.current) inputRef.current.innerHTML = '';

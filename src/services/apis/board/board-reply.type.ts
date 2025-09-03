@@ -10,6 +10,6 @@ export interface CreateNewsCommentKickRequest {
 }
 
 // 새로운 댓글 생성 요청
-export interface createBoardReplyRequest extends CommonCreateNewReplyDto {
+export interface CreateBoardReplyRequest extends CommonCreateNewReplyDto {
 	board: number;
 }

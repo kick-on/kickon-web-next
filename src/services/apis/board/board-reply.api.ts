@@ -1,7 +1,7 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
-import { createBoardReplyRequest, GetBoardCommentsResponse } from './board-reply.type';
+import { CreateBoardReplyRequest, GetBoardCommentsResponse } from './board-reply.type';
 import { CommonCommentKickDto, CommonPatchReplyDto } from '../common/types';
 import { GetCommentsRequest } from '../news/news.type';
 
@@ -51,7 +51,7 @@ export const createBoardCommentKick = async (id: number): Promise<SuccessRespons
 };
 
 // 댓글 생성
-export const createBoardReply = async (requestBody: createBoardReplyRequest): Promise<EmptySuccessResponse> => {
+export const createBoardReply = async (requestBody: CreateBoardReplyRequest): Promise<EmptySuccessResponse> => {
 	try {
 		const response = await fetcher<EmptySuccessResponse>({
 			method: 'POST',
