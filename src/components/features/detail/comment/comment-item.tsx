@@ -19,11 +19,11 @@ function CommentItem({
 	type,
 	isCommentAllowed,
 	contentsId,
-	isReply = false,
 	replyTo,
 	editingCommentId,
 	setEditingCommentId,
 	setComments,
+	setTotalReplies,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const { formattedDate, formattedTime } = formatDate(content.createdAt, '2-digit');
@@ -31,6 +31,7 @@ function CommentItem({
 	const isMobile = useIsMobile();
 
 	const isNews = type === 'news';
+	const isReply = Boolean(replyTo);
 	const isEditing = editingCommentId === content.pk;
 	const isMyComment = currentUserInfo?.id === content.user.id;
 
@@ -40,13 +41,17 @@ function CommentItem({
 	const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 	const { openLoginModal } = useIsLoginModalOpenStore();
 
-	const handleCommentSubmit = async (isReply: boolean, parentPk?: number) => {
+	const handleCommentSubmit = async () => {
 		if (!currentUserInfo) {
 			openLoginModal();
 			return;
 		}
 
-		if (isReply && parentPk !== undefined) {
+		if (isEditing) {
+			setEditingCommentId(null);
+		}
+
+		if (isReply) {
 			setIsReplyInputOpen(false);
 			setIsReplyListOpen(true);
 
@@ -130,13 +135,14 @@ function CommentItem({
 		}
 	};
 
-	const commentItemProps = {
+	const commentItemProps: Omit<CommentItemProps, 'content'> = {
 		type,
 		isCommentAllowed,
 		contentsId,
 		editingCommentId,
 		setEditingCommentId,
 		setComments,
+		setTotalReplies,
 	};
 
 	return (
@@ -227,10 +233,7 @@ function CommentItem({
 							contentsId={contentsId}
 							editingCommentId={editingCommentId}
 							defaultContent={isEditing ? content.contents : ''}
-							onCommentSubmit={(isReply) => {
-								handleCommentSubmit(isReply, content.pk);
-								setEditingCommentId(null);
-							}}
+							onCommentSubmit={handleCommentSubmit}
 							onCommentCancel={() => {
 								if (isEditing) {
 									setEditingCommentId(null);
@@ -245,7 +248,6 @@ function CommentItem({
 							<CommentItem
 								key={reply.pk}
 								content={reply}
-								isReply
 								replyTo={{ pk: content.pk, nickname: content.user.nickname }}
 								{...commentItemProps}
 							/>

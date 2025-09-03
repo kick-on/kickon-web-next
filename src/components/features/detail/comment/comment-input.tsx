@@ -166,7 +166,7 @@ const CommentInput = ({
 
 		setIsSubmitting(true);
 		const isReply = type === 'reply';
-		setTimeout(() => onCommentSubmit?.(isReply), 300);
+		setTimeout(onCommentSubmit, 300);
 
 		let sanitizedContent = content;
 		if (hasMention && replyTo) {

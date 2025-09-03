@@ -16,11 +16,11 @@ export interface CommentItemProps {
 	type: 'news' | 'board';
 	isCommentAllowed: boolean;
 	contentsId: number;
-	isReply?: boolean;
 	replyTo?: { pk: number; nickname: string };
 	editingCommentId?: number;
 	setEditingCommentId?: (id: number | null) => void;
 	setComments: Dispatch<SetStateAction<CommonCommentDto[]>>;
+	setTotalReplies: (count: number) => void;
 }
 
 // 코멘트 입력 props
@@ -34,6 +34,6 @@ export interface CommentInputProps {
 	contentsId: number;
 	editingCommentId: number;
 	defaultContent?: string;
-	onCommentSubmit?: (isReply: boolean) => void;
+	onCommentSubmit?: () => void;
 	onCommentCancel?: () => void;
 }

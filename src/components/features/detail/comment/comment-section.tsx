@@ -8,7 +8,7 @@ import PaginationBar from '@/components/common/pagination-bar';
 import { useSearchParams } from 'next/navigation';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
-import { CommentSectionProps } from './type';
+import { CommentItemProps, CommentSectionProps } from './type';
 import { getNewsCommentList } from '@/services/apis/news/news-reply.api';
 import { getBoardCommentList } from '@/services/apis/board/board-reply.api';
 
@@ -105,13 +105,14 @@ function CommentSection({
 		}
 	};
 
-	const commentItemProps = {
+	const commentItemProps: Omit<CommentItemProps, 'content'> = {
 		type,
 		isCommentAllowed,
 		contentsId,
 		editingCommentId,
 		setEditingCommentId,
 		setComments,
+		setTotalReplies,
 	};
 
 	// 에러 발생 시 에러 카드 표시
