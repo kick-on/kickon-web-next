@@ -68,17 +68,17 @@ const CommentInput = ({
 			setIsLoginModalOpen(true);
 			return;
 		}
-		if (!content.trim()) return alert('내용을 입력해주세요!');
+		if (!content.trim()) {
+			alert('내용을 입력해주세요!');
+			return;
+		}
 		if (isSubmitting) return;
-
 		setIsSubmitting(true);
-		setTimeout(onCommentSubmit, 300);
-
-		const sanitizedContent = content.replace(/\u200B/g, '');
 
 		try {
 			let response;
 			const isNews = contentType === 'news';
+			const sanitizedContent = content.replace(/\u200B/g, '');
 
 			if (type === 'edit') {
 				const body = {
@@ -101,8 +101,9 @@ const CommentInput = ({
 			}
 			console.log('댓글 수정/등록', response);
 
-			setContent('');
 			if (inputRef.current) inputRef.current.innerHTML = '';
+			setContent('');
+			onCommentSubmit();
 		} catch (error) {
 			console.error('댓글 처리 중 오류', error);
 			alert('댓글 처리 중 오류가 발생했습니다.');

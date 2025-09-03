@@ -42,11 +42,6 @@ function CommentItem({
 	const { openLoginModal } = useIsLoginModalOpenStore();
 
 	const handleCommentSubmit = async () => {
-		if (!currentUserInfo) {
-			openLoginModal();
-			return;
-		}
-
 		if (isEditing) {
 			setEditingCommentId(null);
 		}
