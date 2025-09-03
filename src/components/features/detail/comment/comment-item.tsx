@@ -78,7 +78,7 @@ function CommentItem({
 		);
 	};
 
-	const handleReplyInputOpen = () => {
+	const toggleReplyInputOpen = () => {
 		if (isMobile) {
 			// 모바일: 무조건 열기만
 			setIsReplyInputOpen(true);
@@ -189,7 +189,7 @@ function CommentItem({
 										'button5-regular rounded-sm px-2 py-1 mb-0.5 w-fit',
 										isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
 									)}
-									onClick={handleReplyInputOpen}
+									onClick={toggleReplyInputOpen}
 								>
 									답글
 								</button>
@@ -235,10 +235,8 @@ function CommentItem({
 							onCommentCancel={() => {
 								if (isEditing) {
 									setEditingCommentId(null);
-									handleReplyInputOpen();
-								} else {
-									handleReplyInputOpen();
 								}
+								setIsReplyInputOpen(false);
 							}}
 						/>
 					)}
