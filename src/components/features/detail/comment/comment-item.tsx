@@ -222,11 +222,10 @@ function CommentItem({
 					{(isReplyInputOpen || isEditing) && (
 						<CommentInput
 							type={isEditing ? 'edit' : 'reply'}
+							replyTo={replyTo}
+							contentType={type}
 							contentsId={contentsId}
 							editingCommentId={editingCommentId}
-							parentReplyId={isEditing ? undefined : content.pk}
-							contentType={type}
-							mentionNickname={isEditing ? undefined : content.user.nickname}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={(isReply) => {
 								handleCommentSubmit(isReply, content.pk);

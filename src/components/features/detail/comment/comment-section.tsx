@@ -12,7 +12,13 @@ import { CommentSectionProps } from './type';
 import { getNewsCommentList } from '@/services/apis/news/news-reply.api';
 import { getBoardCommentList } from '@/services/apis/board/board-reply.api';
 
-function CommentSection({ type, isCommentAllowed, contentsId, totalreplies = 0 }: CommentSectionProps) {
+function CommentSection({
+	type,
+	isCommentAllowed,
+	contentsId,
+	totalreplies = 0,
+	setTotalReplies,
+}: CommentSectionProps) {
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const isNews = type === 'news';

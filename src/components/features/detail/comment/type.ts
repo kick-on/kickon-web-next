@@ -26,12 +26,14 @@ export interface CommentItemProps {
 // 코멘트 입력 props
 export interface CommentInputProps {
 	type?: 'comment' | 'reply' | 'edit';
-	mentionNickname?: string;
-	parentReplyId?: number;
-	editingCommentId: number;
+	replyTo?: {
+		pk: number;
+		nickname: string;
+	};
 	contentType: 'news' | 'board';
-	defaultContent?: string;
 	contentsId: number;
+	editingCommentId: number;
+	defaultContent?: string;
 	onCommentSubmit?: (isReply: boolean) => void;
 	onCommentCancel?: () => void;
 }

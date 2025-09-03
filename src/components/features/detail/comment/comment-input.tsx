@@ -10,11 +10,10 @@ import { createBoardReply, patchBoardReply } from '@/services/apis/board/board-r
 
 const CommentInput = ({
 	type = 'comment',
-	mentionNickname,
-	contentsId,
-	parentReplyId,
-	editingCommentId,
+	replyTo,
 	contentType,
+	contentsId,
+	editingCommentId,
 	defaultContent,
 	onCommentSubmit,
 	onCommentCancel,
@@ -39,8 +38,8 @@ const CommentInput = ({
 
 	// 멘션 추가 처리
 	const insertMentionIfNeeded = () => {
-		if (type === 'reply' && mentionNickname && mentionNickname !== 'undefined' && inputRef.current) {
-			const mention = `<span contenteditable="false" style="color: #890f0e" class="mention">@${mentionNickname}</span>&nbsp;`;
+		if (type === 'reply' && replyTo && inputRef.current) {
+			const mention = `<span contenteditable="false" style="color: #890f0e" class="mention">@${replyTo.nickname}</span>&nbsp;`;
 			inputRef.current.innerHTML = mention;
 			setHasMention(true);
 
@@ -115,15 +114,15 @@ const CommentInput = ({
 			setInputHeight(clampedHeight);
 		}
 
-		if (hasMention) {
+		if (hasMention && replyTo) {
 			const mentionEl = inputRef.current.querySelector('.mention');
-			if (!mentionEl && mentionNickname) {
+			if (!mentionEl) {
 				// 멘션 복구
 				const mention = document.createElement('span');
 				mention.contentEditable = 'false';
 				mention.style.color = '#890f0e';
 				mention.className = 'mention';
-				mention.textContent = `@${mentionNickname}`;
+				mention.textContent = `@${replyTo.nickname}`;
 
 				const currentHTML = inputRef.current.innerHTML;
 				inputRef.current.innerHTML = '';
@@ -133,7 +132,7 @@ const CommentInput = ({
 				const tempDiv = document.createElement('div');
 				tempDiv.innerHTML = currentHTML;
 				let cleanHTML = tempDiv.innerHTML;
-				cleanHTML = cleanHTML.replace(new RegExp(`<span[^>]*>@${mentionNickname}</span>&nbsp;`, 'i'), '');
+				cleanHTML = cleanHTML.replace(new RegExp(`<span[^>]*>@${replyTo.nickname}</span>&nbsp;`, 'i'), '');
 				if (cleanHTML.trim()) {
 					inputRef.current.insertAdjacentHTML('beforeend', cleanHTML);
 				}
@@ -148,7 +147,7 @@ const CommentInput = ({
 			}
 
 			const inputText = inputRef.current.innerText;
-			const textWithoutMention = inputText.replace(`@${mentionNickname}`, '').trim();
+			const textWithoutMention = inputText.replace(`@${replyTo.nickname}`, '').trim();
 			setContent(textWithoutMention);
 		} else {
 			const inputText = inputRef.current.innerText.trim();
@@ -170,8 +169,8 @@ const CommentInput = ({
 		setTimeout(() => onCommentSubmit?.(isReply), 300);
 
 		let sanitizedContent = content;
-		if (hasMention && mentionNickname) {
-			const mentionPattern = new RegExp(`^@${mentionNickname}&nbsp;`);
+		if (hasMention && replyTo) {
+			const mentionPattern = new RegExp(`^@${replyTo.nickname}&nbsp;`);
 			sanitizedContent = sanitizedContent.replace(mentionPattern, '');
 		}
 
@@ -192,13 +191,13 @@ const CommentInput = ({
 				if (contentType === 'news') {
 					await createNewsReply({
 						contents: sanitizedContent,
-						...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
+						...(isReply && replyTo.pk ? { parentReply: replyTo.pk } : {}),
 						news: contentsId,
 					});
 				} else {
 					await createBoardReply({
 						contents: sanitizedContent,
-						...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
+						...(isReply && replyTo.pk ? { parentReply: replyTo.pk } : {}),
 						board: contentsId,
 					});
 				}
@@ -215,7 +214,7 @@ const CommentInput = ({
 		}
 	};
 
-	useEffect(insertMentionIfNeeded, [mentionNickname, type]);
+	useEffect(insertMentionIfNeeded, [replyTo, type]);
 	useEffect(() => {
 		if (type === 'edit' && defaultContent && inputRef.current) {
 			inputRef.current.innerText = defaultContent;
