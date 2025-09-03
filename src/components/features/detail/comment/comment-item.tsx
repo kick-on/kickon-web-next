@@ -228,7 +228,7 @@ function CommentItem({
 					{(isReplyInputOpen || isEditing) && (
 						<CommentInput
 							type={isEditing ? 'edit' : 'reply'}
-							replyTo={replyTo}
+							replyTo={isEditing ? replyTo : { pk: content.pk, nickname: content.user.nickname }}
 							contentType={type}
 							contentsId={contentsId}
 							editingCommentId={editingCommentId}
