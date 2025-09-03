@@ -28,8 +28,6 @@ const CommentInput = ({
 	const [content, setContent] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [hasMention, setHasMention] = useState(false);
-	const [hasNewLine, setHasNewLine] = useState(false);
 
 	useEffect(() => {
 		if (type === 'comment') {
@@ -39,67 +37,10 @@ const CommentInput = ({
 		}
 	}, [isMobile, type]);
 
-	// 멘션 추가 처리
-	const insertMentionIfNeeded = () => {
-		if (isReply && inputRef.current) {
-			const mention = `<span contenteditable="false" style="color: #890f0e" class="mention">@${replyTo.nickname}</span>&nbsp;`;
-			inputRef.current.innerHTML = mention;
-			setHasMention(true);
-
-			// 커서를 멘션 뒤로 이동
-			const range = document.createRange();
-			const sel = window.getSelection();
-			if (inputRef.current.lastChild) {
-				range.setStartAfter(inputRef.current.lastChild);
-				range.collapse(true);
-				sel?.removeAllRanges();
-				sel?.addRange(range);
-			}
-		}
-	};
-
-	// 키 이벤트 처리 (엔터, 백스페이스 등)
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		if (!hasMention) return;
-
-		const mentionEl = inputRef.current?.querySelector('.mention');
-		if (!mentionEl) return;
-
-		const selection = window.getSelection();
-		if (!selection || selection.rangeCount === 0) return;
-
-		const range = selection.getRangeAt(0);
-
-		if (e.key === 'Enter') {
-			setHasNewLine(true);
-			return;
-		}
-
-		if (e.key === 'Backspace') {
-			const mentionRect = mentionEl.getBoundingClientRect();
-			const cursorRect = range.getBoundingClientRect();
-
-			if (hasNewLine) {
-				if (cursorRect.left <= mentionRect.right + 5 && Math.abs(cursorRect.top - mentionRect.top) < 5) {
-					e.preventDefault(); // 멘션 바로 뒤면 삭제 막음
-					return;
-				}
-				return; // 그 외는 허용
-			}
-
-			// 줄바꿈 없을 때 멘션 보호
-			if (cursorRect.left <= mentionRect.right + 5) {
-				e.preventDefault();
-			}
-		}
-	};
-
 	// 입력 이벤트 처리
 	const handleInput = () => {
 		if (!inputRef.current) return;
 
-		const html = inputRef.current.innerHTML;
-		setHasNewLine(/<br>|<div>/i.test(html));
 		const el = inputRef.current;
 		const newScrollHeight = el.scrollHeight;
 
@@ -117,45 +58,8 @@ const CommentInput = ({
 			setInputHeight(clampedHeight);
 		}
 
-		if (hasMention && replyTo) {
-			const mentionEl = inputRef.current.querySelector('.mention');
-			if (!mentionEl) {
-				// 멘션 복구
-				const mention = document.createElement('span');
-				mention.contentEditable = 'false';
-				mention.style.color = '#890f0e';
-				mention.className = 'mention';
-				mention.textContent = `@${replyTo.nickname}`;
-
-				const currentHTML = inputRef.current.innerHTML;
-				inputRef.current.innerHTML = '';
-				inputRef.current.appendChild(mention);
-				inputRef.current.insertAdjacentHTML('beforeend', '&nbsp;');
-
-				const tempDiv = document.createElement('div');
-				tempDiv.innerHTML = currentHTML;
-				let cleanHTML = tempDiv.innerHTML;
-				cleanHTML = cleanHTML.replace(new RegExp(`<span[^>]*>@${replyTo.nickname}</span>&nbsp;`, 'i'), '');
-				if (cleanHTML.trim()) {
-					inputRef.current.insertAdjacentHTML('beforeend', cleanHTML);
-				}
-
-				// 커서 이동
-				const range = document.createRange();
-				const sel = window.getSelection();
-				range.setStartAfter(inputRef.current.lastChild!);
-				range.collapse(true);
-				sel?.removeAllRanges();
-				sel?.addRange(range);
-			}
-
-			const inputText = inputRef.current.innerText;
-			const textWithoutMention = inputText.replace(`@${replyTo.nickname}`, '').trim();
-			setContent(textWithoutMention);
-		} else {
-			const inputText = inputRef.current.innerText.trim();
-			setContent(inputText);
-		}
+		const inputText = inputRef.current.innerText.trim();
+		setContent(inputText);
 	};
 
 	// 댓글 등록
@@ -170,11 +74,7 @@ const CommentInput = ({
 		setIsSubmitting(true);
 		setTimeout(onCommentSubmit, 300);
 
-		let sanitizedContent = content;
-		if (hasMention && replyTo) {
-			const mentionPattern = new RegExp(`^@${replyTo.nickname}&nbsp;`);
-			sanitizedContent = sanitizedContent.replace(mentionPattern, '');
-		}
+		const sanitizedContent = content.replace(/\u200B/g, '');
 
 		try {
 			let response;
@@ -203,7 +103,6 @@ const CommentInput = ({
 
 			setContent('');
 			if (inputRef.current) inputRef.current.innerHTML = '';
-			setHasNewLine(false);
 		} catch (error) {
 			console.error('댓글 처리 중 오류', error);
 			alert('댓글 처리 중 오류가 발생했습니다.');
@@ -212,9 +111,19 @@ const CommentInput = ({
 		}
 	};
 
-	useEffect(insertMentionIfNeeded, [replyTo, type]);
+	// 멘션 뒤로 커서 이동
+	const handleFocus = () => {
+		if (!inputRef.current || !isReply) return;
+		inputRef.current.innerHTML = '\u200B'; // zero-width space 추가
+	};
+
 	useEffect(() => {
-		if (type === 'edit' && defaultContent && inputRef.current) {
+		if (!inputRef.current) return;
+
+		if (type === 'reply') {
+			inputRef.current.focus(); // 자동 포커싱
+		}
+		if (type === 'edit' && defaultContent) {
 			inputRef.current.innerText = defaultContent;
 			setContent(defaultContent);
 		}
@@ -238,14 +147,17 @@ const CommentInput = ({
 					<div
 						ref={inputRef}
 						contentEditable
+						onFocus={handleFocus}
 						onInput={handleInput}
-						onKeyDown={handleKeyDown}
 						className={clsx(
-							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar',
+							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar before:pointer-events-none before:select-none',
 							{
-								'empty-placeholder': content.trim().length === 0,
+								'before:content-[attr(data-mention)] before:text-primary-900 before:pr-1': isReply,
+								'before:content-[attr(data-placeholder)] before:text-black-600':
+									!isReply && content.trim().length === 0,
 							},
 						)}
+						data-mention={isReply ? `@${replyTo.nickname}` + ' ' : undefined}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
