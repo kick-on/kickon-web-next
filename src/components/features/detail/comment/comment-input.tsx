@@ -151,14 +151,14 @@ const CommentInput = ({
 						onFocus={handleFocus}
 						onInput={handleInput}
 						className={clsx(
-							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar before:pointer-events-none before:select-none',
+							'relative p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar before:pointer-events-none before:select-none',
 							{
 								'before:content-[attr(data-mention)] before:text-primary-900 before:pr-1': isReply,
-								'before:content-[attr(data-placeholder)] before:text-black-600':
+								'before:absolute before:top-4 before:left-4 before:content-[attr(data-placeholder)] before:text-black-600':
 									!isReply && content.trim().length === 0,
 							},
 						)}
-						data-mention={isReply ? `@${replyTo.nickname}` + ' ' : undefined}
+						data-mention={isReply ? `@${replyTo.nickname}` : undefined}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>
