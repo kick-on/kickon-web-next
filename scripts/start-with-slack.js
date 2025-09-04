@@ -1,28 +1,28 @@
+import { WebClient } from '@slack/web-api';
 import { spawn } from 'child_process';
-import axios from 'axios';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
-const DEPLOY_TYPE = process.env.NEXT_PUBLIC_DEPLOY_TYPE;
-const SLACK_TOKEN = process.env.NEXT_PUBLIC_SLACK_BOT_TOKEN;
-const SLACK_CHANNEL = process.env.NEXT_PUBLIC_SLACK_CHANNEL_ID;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, '../.env.local') });
+
+const SLACK_TOKEN = process.env.SLACK_BOT_TOKEN;
+const SLACK_CHANNEL = process.env.SLACK_CHANNEL_ID;
+
+const client = new WebClient(SLACK_TOKEN);
 
 // Slack 알림 함수
 async function sendSlackMessage(text) {
 	try {
-		const res = await axios.post(
-			'https://slack.com/api/chat.postMessage',
-			{
-				channel: SLACK_CHANNEL,
-				text,
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${SLACK_TOKEN}`,
-					'Content-Type': 'application/json',
-				},
-			},
-		);
+		const res = await client.chat.postMessage({
+			channel: SLACK_CHANNEL,
+			text,
+		});
 
-		if (!res.data.ok) {
+		if (!res.ok) {
 			console.error('❌ Slack API 전송 실패:', res.data.error);
 		} else {
 			console.log('✅ Slack 알림 전송 완료');
@@ -46,7 +46,7 @@ nextProcess.stdout.on('data', async (data) => {
 	// 서버가 완전히 준비됐다는 로그 패턴 감지
 	if (message.includes('Ready')) {
 		console.log('✅ Next.js 서버 준비 완료');
-		await sendSlackMessage(`:white_check_mark: [${DEPLOY_TYPE}] 프론트 서버가 정상적으로 실행되었습니다!`);
+		await sendSlackMessage(`:ballot_box_with_check: [FRONTEND] 배포가 완료되었습니다! :ballot_box_with_check:`);
 	}
 });
 
@@ -60,7 +60,7 @@ nextProcess.stderr.on('data', (data) => {
 nextProcess.on('error', async (err) => {
 	console.error('❌ Next.js 서버 실행 실패:', err.message);
 	// await sendSlackMessage(
-	//   `:x: [${DEPLOY_TYPE}] Next.js 서버 실행 실패!\n에러: ${err.message}`
+	//   `:x: [FRONTEND] Next.js 서버 실행 실패!\n에러: ${err.message}`
 	// );
 });
 
@@ -69,7 +69,7 @@ nextProcess.on('close', async (code) => {
 	if (code !== 0) {
 		console.error(`❌ Next.js 서버 비정상 종료 (code: ${code})`);
 		// await sendSlackMessage(
-		//   `:x: [${DEPLOY_TYPE}] Next.js 서버가 비정상 종료되었습니다. (code: ${code})`
+		//   `:x: [FRONTEND] Next.js 서버가 비정상 종료되었습니다. (code: ${code})`
 		// );
 	}
 });
