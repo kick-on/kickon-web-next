@@ -15,7 +15,7 @@ import {
 } from '@dnd-kit/core';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { arrayMove } from '@dnd-kit/sortable';
-import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import { TeamDto } from '@/services/apis/team/dto';
 
 export default function FavoriteTeamList({
