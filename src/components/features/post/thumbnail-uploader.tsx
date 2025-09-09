@@ -19,30 +19,44 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 		const file = event.target.files?.[0];
 		if (!file) return;
 
+		// 로컬 미리보기 URL 먼저 보여주기
+		const previewUrl = URL.createObjectURL(file);
+		onChange(previewUrl);
+
+		// orientation 판별 (미리보기 용)
+		const img = document.createElement('img');
+		img.src = previewUrl;
+		img.onload = () => {
+			setIsPortrait(img.height > img.width);
+		};
+
 		try {
-			console.log(`압축 전 파일 크기: ${(file.size / 1024).toFixed(2)} KB`);
+			let fileToUpload = file;
 
-			const compressedFile = await compressImage(file);
+			// 이미지가 5MB 이상일 때: alert 띄우고 확인되면 압축 진행
+			if (file.size > 5 * 1024 * 1024) {
+				const proceed = window.confirm(
+					'선택하신 파일은 5MB 이상입니다.\n압축을 진행하며 시간이 다소 소요될 수 있습니다.\n계속하시겠습니까?',
+				);
+				if (!proceed) return;
 
-			// 압축 후 파일 크기 출력
-			console.log(`압축 후 파일 크기: ${(compressedFile.size / 1024).toFixed(2)} KB`);
+				console.log(`압축 전 파일 크기: ${(file.size / 1024 / 1024).toFixed(2)} MB`);
+				fileToUpload = await compressImage(file);
+				console.log(`압축 후 파일 크기: ${(fileToUpload.size / 1024 / 1024).toFixed(2)} MB`);
+			}
 
-			const img = document.createElement('img');
-			img.src = URL.createObjectURL(compressedFile);
-			img.onload = () => {
-				setIsPortrait(img.height > img.width);
-				URL.revokeObjectURL(img.src);
-			};
-
+			// presigned URL 발급
 			const presignedResponse = await getPresignedUrl({
 				type: 'news-files',
-				fileName: compressedFile.name || file.name,
+				fileName: fileToUpload.name || file.name,
 			});
 
 			const { presignedUrl, s3Url } = presignedResponse.data;
 
-			await uploadToS3(presignedUrl, compressedFile);
+			// S3 업로드
+			await uploadToS3(presignedUrl, fileToUpload);
 
+			// 업로드 완료되면 미리보기 URL → s3Url로 교체
 			onChange(s3Url);
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
