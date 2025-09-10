@@ -27,12 +27,17 @@ export default function Page() {
 		value: '',
 	});
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const searchParams = useSearchParams();
+	const isEditMode = searchParams.get('edit') === 'true';
+
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
-	const searchParams = useSearchParams();
-	const isEditMode = searchParams.get('edit') === 'true';
+	const [isThumbnailUploaded, setIsThumbnailUploaded] = useState(false);
+	const isLoading = useRef(false); // 더블 클릭 -> 중복 호출 방지
+	const canSubmit = isFormValid && isThumbnailUploaded && !isLoading;
 
 	useEffect(() => {
 		if (!isEditMode) return;
@@ -101,9 +106,6 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
-	// 중복 호출 방지
-	const isLoading = useRef(false);
-
 	const postNewsContents = async () => {
 		console.log('isLoading', isLoading.current);
 		if (!currentUserInfo || isLoading.current) {
@@ -163,7 +165,11 @@ export default function Page() {
 
 	return (
 		<div className="flex flex-col w-full">
-			<ThumbnailUploader selectedImage={selectedImage} onChange={setSelectedImage} />
+			<ThumbnailUploader
+				selectedImage={selectedImage}
+				onChange={setSelectedImage}
+				onUploadingChange={setIsThumbnailUploaded}
+			/>
 
 			<div className="flex gap-4 mb-4">
 				<TeamSearchInput selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} />
@@ -200,10 +206,10 @@ export default function Page() {
 				</button>
 				<button
 					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
-					disabled={!isFormValid && !isLoading}
+					disabled={!canSubmit}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all',
-						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
+						canSubmit ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
 					{isEditMode ? '수정 완료' : '작성 완료'}

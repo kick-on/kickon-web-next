@@ -20,6 +20,8 @@ interface EditorContextProps {
 	handleTextFormatToggle: (type: string) => void;
 	handleHeadingChange: (value: string) => void;
 	handleAddVideo: (e: React.ChangeEvent<HTMLInputElement>) => void;
+
+	handleImageUpload: (file: File) => Promise<void>;
 }
 
 export const EditorContext = createContext<EditorContextProps | null>(null);

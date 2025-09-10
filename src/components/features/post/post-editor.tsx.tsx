@@ -4,6 +4,9 @@ import Toolbar from './editor/tool-bar';
 import { EditorContent } from '@tiptap/react';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import { EditorProvider } from '@/lib/contexts/editor/provider';
+import AlertModal from '../detail/alert-modal';
+import { compressImage } from '@/lib/utils';
+import { useState } from 'react';
 
 const EditorBody = () => {
 	const { editor } = useEditorContext();
@@ -29,8 +32,17 @@ const PostEditor = ({
 	editedTitle: string;
 	editedBody: string;
 }) => {
+	const { handleImageUpload } = useEditorContext();
+	const [pendingFile, setPendingFile] = useState<File | null>(null);
+	const [showModal, setShowModal] = useState(false);
 	return (
-		<EditorProvider setBody={setBody} isNews={isNews} editedBody={editedBody}>
+		<EditorProvider
+			setBody={setBody}
+			isNews={isNews}
+			editedBody={editedBody}
+			setPendingFile={setPendingFile}
+			setShowModal={setShowModal}
+		>
 			<input
 				placeholder="제목"
 				value={editedTitle ?? ''}
@@ -38,6 +50,22 @@ const PostEditor = ({
 				onChange={(e) => setTitle(e.target.value)}
 			/>
 			<EditorBody />
+			{showModal && pendingFile && (
+				<AlertModal
+					type="confirm"
+					description="파일의 용량이 커 압축이 진행될 예정입니다.\n계속하시겠습니까?"
+					onConfirm={async () => {
+						const compressedFile = await compressImage(pendingFile);
+						await handleImageUpload(compressedFile);
+						setPendingFile(null);
+						setShowModal(false);
+					}}
+					onCancel={() => {
+						setPendingFile(null);
+						setShowModal(false);
+					}}
+				/>
+			)}
 		</EditorProvider>
 	);
 };

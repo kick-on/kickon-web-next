@@ -12,16 +12,24 @@ import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
-import { compressImage } from '@/lib/utils';
 
 type EditorProviderProps = {
 	children: React.ReactNode;
 	setBody: (body: string) => void;
 	isNews: boolean;
 	editedBody: string;
+	setPendingFile: React.Dispatch<React.SetStateAction<File | null>>;
+	setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const EditorProvider = ({ children, setBody, isNews, editedBody }: EditorProviderProps) => {
+export const EditorProvider = ({
+	children,
+	setBody,
+	isNews,
+	editedBody,
+	setPendingFile,
+	setShowModal,
+}: EditorProviderProps) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [isLinkInputOpen, setIsLinkInputOpen] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
@@ -167,54 +175,47 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 		if (!event.target.files?.length || !editor) return;
 		const file = event.target.files[0];
 
-		try {
-			const compressedFile = await compressImage(file);
+		// 미리보기 url 먼저 삽입
+		const previewUrl = URL.createObjectURL(file);
+		editor.chain().focus().setImage({ src: previewUrl }).run();
 
-			// Presigned URL 요청
+		// 파일 크기 확인
+		if (file.size > 5 * 1024 * 1024) {
+			setPendingFile(file);
+			setShowModal(true);
+			return;
+		}
+
+		// 5MB 이하 -> 바로 업로드
+		await handleImageUpload(file);
+	};
+
+	const handleImageUpload = async (file: File) => {
+		try {
+			let fileToUpload = file;
+
 			const presignedResponse = await getPresignedUrl({
 				type: isNews ? 'news-files' : 'board-files',
-				fileName: compressedFile.name || file.name,
+				fileName: fileToUpload.name || file.name,
 			});
 
 			const { presignedUrl, s3Url } = presignedResponse.data;
+			await uploadToS3(presignedUrl, fileToUpload);
 
-			console.log('S3 업로드 요청:', presignedResponse);
+			// 삽입된 미리보기 url -> S3 url로 교체
+			editor.commands.updateAttributes('image', { src: s3Url });
 
-			// Presigned URL로 S3에 이미지 업로드
-			await uploadToS3(presignedUrl, compressedFile);
-			console.log('S3 업로드 완료:', s3Url);
-
-			// 업로드된 이미지 URL을 에디터에 추가
-			editor.chain().focus().setImage({ src: s3Url }).run();
-
-			// 이미지 삽입 후 빈 단락 추가하여 커서 위치시키기
+			// 커서 위치 조정
 			editor.chain().focus().createParagraphNear().run();
 
-			// 에디터 내용 업데이트 (비동기 반영 확인)
+			// body 업데이트
 			setTimeout(() => {
 				const updatedContent = editor.getHTML();
 				setBody(updatedContent);
-				console.log('업데이트된 에디터 내용:', updatedContent);
 			}, 100);
 		} catch (error) {
 			console.error('이미지 업로드 실패:', error);
 		}
-	};
-
-	const handleInsertLink = () => {
-		if (!editor || !linkUrl) return;
-		if (!isValidUrl(linkUrl)) {
-			alert('유효한 링크를 입력해주세요.');
-			return;
-		}
-		editor
-			.chain()
-			.focus()
-			.setLink({ href: linkUrl })
-			.createParagraphNear() // 커서 아래로 이동
-			.run();
-		setLinkUrl('');
-		setIsLinkInputOpen(false);
 	};
 
 	const handleAddVideo = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -256,6 +257,22 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 		}
 	};
 
+	const handleInsertLink = () => {
+		if (!editor || !linkUrl) return;
+		if (!isValidUrl(linkUrl)) {
+			alert('유효한 링크를 입력해주세요.');
+			return;
+		}
+		editor
+			.chain()
+			.focus()
+			.setLink({ href: linkUrl })
+			.createParagraphNear() // 커서 아래로 이동
+			.run();
+		setLinkUrl('');
+		setIsLinkInputOpen(false);
+	};
+
 	return (
 		<EditorContext.Provider
 			value={{
@@ -273,6 +290,7 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 				youtubeUrl,
 				setYoutubeUrl,
 				handleAddVideo,
+				handleImageUpload,
 			}}
 		>
 			{children}
