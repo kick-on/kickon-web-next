@@ -181,7 +181,7 @@ export const EditorProvider = ({
 		editor.chain().focus().setImage({ src: previewUrl }).run();
 
 		// 파일 크기 확인
-		if (file.size > 5 * 1024 * 1024) {
+		if (file.size > 2 * 1024 * 1024) {
 			setPendingFile(file);
 			setShowModal(true);
 			return;

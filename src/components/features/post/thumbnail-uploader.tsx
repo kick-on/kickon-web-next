@@ -38,7 +38,7 @@ export default function ThumbnailUploader({ selectedImage, onChange, onUploading
 			setIsPortrait(img.height > img.width);
 		};
 
-		if (file.size > 5 * 1024 * 1024) {
+		if (file.size > 2 * 1024 * 1024) {
 			// 5MB 이상 -> 모달 열고 confirm 대기
 			setPendingFile(file);
 			setShowModal(true);
