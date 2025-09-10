@@ -16,6 +16,7 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
+import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export default function Page() {
 	const router = useRouter();
@@ -36,8 +37,8 @@ export default function Page() {
 
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
 	const [isThumbnailUploaded, setIsThumbnailUploaded] = useState(false);
-	const isLoading = useRef(false); // 더블 클릭 -> 중복 호출 방지
-	const canSubmit = isFormValid && isThumbnailUploaded && !isLoading;
+	const { uploadingCount } = useEditorContext();
+	const canSubmit = isFormValid && isThumbnailUploaded && !uploadingCount;
 
 	useEffect(() => {
 		if (!isEditMode) return;
@@ -105,6 +106,8 @@ export default function Page() {
 			fetchUserInfo();
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
+
+	const isLoading = useRef(false); // 더블 클릭 -> 중복 호출 방지
 
 	const postNewsContents = async () => {
 		console.log('isLoading', isLoading.current);

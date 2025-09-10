@@ -11,6 +11,7 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
+import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export default function Page() {
 	const router = useRouter();
@@ -39,11 +40,14 @@ export default function Page() {
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 	const [isPinned, setIsPinned] = useState(false);
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+
+	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
+	const { uploadingCount } = useEditorContext();
+	const canSubmit = isFormValid && !uploadingCount;
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -255,11 +259,11 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={isFormValid ? postCommunityContents : undefined}
-					disabled={!isFormValid}
+					onClick={canSubmit ? postCommunityContents : undefined}
+					disabled={!canSubmit}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold px-4 py-2 rounded-lg transition-all',
-						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
+						canSubmit ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
 					{isEditMode ? '수정 완료' : '작성 완료'}

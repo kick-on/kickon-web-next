@@ -22,6 +22,7 @@ interface EditorContextProps {
 	handleAddVideo: (e: React.ChangeEvent<HTMLInputElement>) => void;
 
 	handleImageUpload: (file: File) => Promise<void>;
+	uploadingCount: number;
 }
 
 export const EditorContext = createContext<EditorContextProps | null>(null);

@@ -34,6 +34,7 @@ export const EditorProvider = ({
 	const [isLinkInputOpen, setIsLinkInputOpen] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
 	const [isYoutubeInputOpen, setIsYoutubeInputOpen] = useState(false);
+	const [uploadingCount, setUploadingCount] = useState(0);
 
 	const editor = useEditor({
 		extensions: [
@@ -192,15 +193,15 @@ export const EditorProvider = ({
 
 	const handleImageUpload = async (file: File) => {
 		try {
-			let fileToUpload = file;
+			setUploadingCount((c) => c + 1); // 업로드 시작
 
 			const presignedResponse = await getPresignedUrl({
 				type: isNews ? 'news-files' : 'board-files',
-				fileName: fileToUpload.name || file.name,
+				fileName: file.name,
 			});
 
 			const { presignedUrl, s3Url } = presignedResponse.data;
-			await uploadToS3(presignedUrl, fileToUpload);
+			await uploadToS3(presignedUrl, file);
 
 			// 삽입된 미리보기 url -> S3 url로 교체
 			editor.commands.updateAttributes('image', { src: s3Url });
@@ -215,6 +216,8 @@ export const EditorProvider = ({
 			}, 100);
 		} catch (error) {
 			console.error('이미지 업로드 실패:', error);
+		} finally {
+			setUploadingCount((c) => c - 1); // 업로드 종료
 		}
 	};
 
@@ -291,6 +294,7 @@ export const EditorProvider = ({
 				setYoutubeUrl,
 				handleAddVideo,
 				handleImageUpload,
+				uploadingCount,
 			}}
 		>
 			{children}
