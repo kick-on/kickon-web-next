@@ -8,10 +8,11 @@ import { GetHalftimeDetailDto } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
-import { KickIcon, ShareIcon, PaperIcon } from './icon';
+import { KickIcon, CommentIcon, ShareIcon, PaperIcon } from './icon';
+import CommentSection from './comment-section/comment-section';
 
 interface ActionButton {
-	label: '킥' | '공유' | '본문';
+	label: '킥' | '공유' | '본문' | '댓글';
 	value: string | number;
 	icon: React.ReactNode;
 }
@@ -19,10 +20,12 @@ interface ActionButton {
 function FloatingActionButtons({
 	isKicked: isKickedData,
 	kickCount: kickCountData,
+	replyCount: replyCountData,
 	usedIn,
 	referencePk,
-}: Pick<GetHalftimeDetailDto, 'isKicked' | 'kickCount' | 'usedIn' | 'referencePk'>) {
+}: Pick<GetHalftimeDetailDto, 'isKicked' | 'kickCount' | 'replyCount' | 'usedIn' | 'referencePk'>) {
 	const router = useRouter();
+	const [isCommentClicked, setIsCommentClicked] = useState(false);
 	const [isKicked, setIsKicked] = useState(isKickedData);
 	const [kickCount, setKickCount] = useState(kickCountData);
 	const { toggleIsKicked } = useViewedHalftimesStore();
@@ -33,11 +36,11 @@ function FloatingActionButtons({
 			value: formatNumberByUnit(kickCount),
 			icon: <KickIcon isKicked={isKicked} />,
 		},
-		// {
-		// 	label: '댓글',
-		//	value:'',
-		// 	src: '/comment.svg',
-		// },
+		{
+			label: '댓글',
+			value: formatNumberByUnit(replyCountData),
+			icon: <CommentIcon />,
+		},
 		{
 			label: '공유',
 			value: '공유',
@@ -54,6 +57,10 @@ function FloatingActionButtons({
 		switch (label) {
 			case '킥':
 				toggleKick();
+				break;
+			case '댓글':
+				console.log(replyCountData);
+				setIsCommentClicked(!isCommentClicked);
 				break;
 			case '공유':
 				copyUrlToClipboard();
@@ -112,6 +119,7 @@ function FloatingActionButtons({
 					<span>{button.value}</span>
 				</button>
 			))}
+			{isCommentClicked && <CommentSection />}
 		</div>
 	);
 }
