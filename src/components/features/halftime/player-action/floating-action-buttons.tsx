@@ -112,7 +112,7 @@ function FloatingActionButtons({
 					key={button.label}
 					onClick={() => handleClick(button.label)}
 					className={clsx(
-						'px-2 flex flex-col gap-1.5 items-center body7-medium text-black-000 desktop:text-black-900 hover:text-black-400',
+						'px-1 flex flex-col gap-1.5 items-center body7-medium text-black-000 desktop:text-black-900 hover:text-black-400',
 					)}
 				>
 					{button.icon}
