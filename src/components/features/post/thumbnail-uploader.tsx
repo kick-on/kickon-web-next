@@ -39,11 +39,11 @@ export default function ThumbnailUploader({ selectedImage, onChange, onUploading
 		};
 
 		if (file.size > 2 * 1024 * 1024) {
-			// 5MB 이상 -> 모달 열고 confirm 대기
+			// 2MB 이상 -> 모달 열고 confirm 대기
 			setPendingFile(file);
 			setShowModal(true);
 		} else {
-			// 5MB 미만 -> s3 업로드
+			// 2MB 미만 -> s3 업로드
 			handleFileUpload(file);
 		}
 	};
@@ -107,7 +107,7 @@ export default function ThumbnailUploader({ selectedImage, onChange, onUploading
 			{showModal && pendingFile && (
 				<AlertModal
 					type="confirm"
-					description={'파일의 용량이 커 압축이 진행될 예정입니다.\n계속하시겠습니까?'}
+					description={'파일의 용량이 커 압축이 진행됩니다.\n계속하시겠습니까?'}
 					onConfirm={async () => {
 						setShowModal(false);
 						if (pendingFile) {
@@ -119,17 +119,11 @@ export default function ThumbnailUploader({ selectedImage, onChange, onUploading
 					onCancel={() => {
 						setShowModal(false);
 						setPendingFile(null);
+						onChange(null);
+						if (fileInputRef.current) fileInputRef.current.value = '';
 					}}
 				/>
 			)}
 		</>
 	);
 }
-
-// 사용자가 파일 선택 -> 미리보기 url 삽입 -> 파일의 용량 확인 -> 5mb 이상? -> 압축될 거라고 alert -> 압축 -> s3 업로드 -> 미리보기 url을 s3 url로 교체
-// 사용자가 파일 선택 -> 미리보기 url 삽입 -> 파일의 용량 확인 -> 5mb 이하? -> 압축 ㄴㄴ -> s3 업로드 -> 교체
-
-// 걍 두 경우 모두 s3 업로드 되기 전까지 작성 완료 버튼 비활성화 시키고 5mb 이상은 파일의 크기가 커서 압축 진행된다. 계속하겠냐 alert 띄우기
-// 5mb으로 한 이유는? 쿠팡 페이지를 보면 로딩되는 이미지는 1mb 이하임 -> 우리는 next.js의 image 컴포넌트로 최적화 진행할 거고
-// lambda로 리사이징 할 거임 -> 즉 로딩되는 건 업로드될 때의 이미지가 아니라 이미 축소된 것임.
-// 그런데도 압축하는 이유는? s3 업로드 시간을 단축하고자. 그리고 너무 큰 이미지를 서버에 저장시키지 않으려고...
