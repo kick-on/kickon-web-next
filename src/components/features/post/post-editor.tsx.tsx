@@ -19,6 +19,36 @@ const EditorBody = () => {
 		</>
 	);
 };
+
+const ModalWrapper = ({
+	pendingFile,
+	setPendingFile,
+	setShowModal,
+}: {
+	pendingFile: File;
+	setPendingFile: (file: File | null) => void;
+	setShowModal: (open: boolean) => void;
+}) => {
+	const { handleImageUpload } = useEditorContext();
+
+	return (
+		<AlertModal
+			type="confirm"
+			description={'파일의 용량이 커 압축이 진행됩니다.\n계속하시겠습니까?'}
+			onConfirm={async () => {
+				const compressedFile = await compressImage(pendingFile);
+				await handleImageUpload(compressedFile);
+				setPendingFile(null);
+				setShowModal(false);
+			}}
+			onCancel={() => {
+				setPendingFile(null);
+				setShowModal(false);
+			}}
+		/>
+	);
+};
+
 const PostEditor = ({
 	setTitle,
 	setBody,
@@ -32,7 +62,6 @@ const PostEditor = ({
 	editedTitle: string;
 	editedBody: string;
 }) => {
-	const { handleImageUpload } = useEditorContext();
 	const [pendingFile, setPendingFile] = useState<File | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	return (
@@ -51,20 +80,7 @@ const PostEditor = ({
 			/>
 			<EditorBody />
 			{showModal && pendingFile && (
-				<AlertModal
-					type="confirm"
-					description="파일의 용량이 커 압축이 진행될 예정입니다.\n계속하시겠습니까?"
-					onConfirm={async () => {
-						const compressedFile = await compressImage(pendingFile);
-						await handleImageUpload(compressedFile);
-						setPendingFile(null);
-						setShowModal(false);
-					}}
-					onCancel={() => {
-						setPendingFile(null);
-						setShowModal(false);
-					}}
-				/>
+				<ModalWrapper pendingFile={pendingFile} setPendingFile={setPendingFile} setShowModal={setShowModal} />
 			)}
 		</EditorProvider>
 	);

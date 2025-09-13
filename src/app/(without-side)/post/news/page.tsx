@@ -16,7 +16,7 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
-import { useEditorContext } from '@/lib/contexts/editor/context';
+//import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export default function Page() {
 	const router = useRouter();
@@ -37,8 +37,8 @@ export default function Page() {
 
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
 	const [isThumbnailUploaded, setIsThumbnailUploaded] = useState(false);
-	const { uploadingCount } = useEditorContext();
-	const canSubmit = isFormValid && isThumbnailUploaded && !uploadingCount;
+	//const { uploadingCount } = useEditorContext();
+	const canSubmit = isFormValid && isThumbnailUploaded;
 
 	useEffect(() => {
 		if (!isEditMode) return;

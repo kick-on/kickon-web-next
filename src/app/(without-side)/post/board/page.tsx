@@ -11,7 +11,6 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
-import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export default function Page() {
 	const router = useRouter();
@@ -46,8 +45,8 @@ export default function Page() {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
-	const { uploadingCount } = useEditorContext();
-	const canSubmit = isFormValid && !uploadingCount;
+	//const { uploadingCount } = useEditorContext();
+	const canSubmit = isFormValid;
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
