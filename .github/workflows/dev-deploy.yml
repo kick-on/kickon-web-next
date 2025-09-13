@@ -28,7 +28,7 @@ jobs:
           yarn build
       - name: 파일 압축
         run: |
-          zip -r build.zip .
+          zip -r build.zip .next public package.json .env
 
       - name: S3에 업로드
         run: aws s3 cp build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
