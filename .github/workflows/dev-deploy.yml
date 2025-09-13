@@ -22,13 +22,13 @@ jobs:
         run: |
           echo "${{ secrets.DEV_ENV }}" | tr ' ' '\n' > .env
 
-      - name: 의존성 설치 및 빌드 테스트
+      - name: 의존성 설치 및 빌드
         run: |
-          yarn install --frozen-lockfile
+          yarn install
           yarn build
       - name: 파일 압축
         run: |
-          zip -r build.zip package.json yarn.lock src public scripts next.config.ts
+          zip -r build.zip .
 
       - name: S3에 업로드
         run: aws s3 cp build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
@@ -47,10 +47,3 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-2
-
-      - name: 배포 완료 슬랙 알림
-        run: |
-          yarn notify:deploy
-        env:
-          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
-          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID_DEV }}
