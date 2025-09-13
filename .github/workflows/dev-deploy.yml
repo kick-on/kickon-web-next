@@ -24,7 +24,7 @@ jobs:
 
       - name: 의존성 설치 및 빌드
         run: |
-          yarn install
+          yarn install --frozen-lockfile
           yarn build
       - name: 파일 압축
         run: |
