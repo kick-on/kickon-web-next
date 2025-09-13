@@ -22,13 +22,13 @@ jobs:
         run: |
           echo "${{ secrets.DEV_ENV }}" | tr ' ' '\n' > .env
 
-      - name: 의존성 설치 및 빌드
+      - name: 의존성 설치 및 빌드 테스트
         run: |
           yarn install --frozen-lockfile
           yarn build
       - name: 파일 압축
         run: |
-          zip -r build.zip .
+          zip -r build.zip package.json yarn.lock src public scripts next.config.ts
 
       - name: S3에 업로드
         run: aws s3 cp build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
