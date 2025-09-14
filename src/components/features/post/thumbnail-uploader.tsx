@@ -27,25 +27,27 @@ export default function ThumbnailUploader({ selectedImage, onChange, onUploading
 		const file = event.target.files?.[0];
 		if (!file) return;
 
-		// 미리보기 먼저 보여주기
+		if (file.size > 2 * 1024 * 1024) {
+			// 2MB 이상 -> 모달 먼저
+			setPendingFile(file);
+			setShowModal(true);
+		} else {
+			// 2MB 미만 -> 미리보기 + 업로드
+			showPreviewAndUpload(file);
+		}
+	};
+
+	const showPreviewAndUpload = (file: File) => {
 		const previewUrl = URL.createObjectURL(file);
 		onChange(previewUrl);
 
-		// orientation 체크
 		const img = document.createElement('img');
 		img.src = previewUrl;
 		img.onload = () => {
 			setIsPortrait(img.height > img.width);
 		};
 
-		if (file.size > 2 * 1024 * 1024) {
-			// 2MB 이상 -> 모달 열고 confirm 대기
-			setPendingFile(file);
-			setShowModal(true);
-		} else {
-			// 2MB 미만 -> s3 업로드
-			handleFileUpload(file);
-		}
+		handleFileUpload(file);
 	};
 
 	const handleFileUpload = async (file: File) => {
@@ -112,7 +114,7 @@ export default function ThumbnailUploader({ selectedImage, onChange, onUploading
 						setShowModal(false);
 						if (pendingFile) {
 							const compressedFile = await compressImage(pendingFile);
-							await handleFileUpload(compressedFile);
+							showPreviewAndUpload(compressedFile);
 							setPendingFile(null);
 						}
 					}}
