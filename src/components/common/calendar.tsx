@@ -9,9 +9,8 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyCalendar, getPredictionDates } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { formatFromTo, getEndOfWeek, getStartOfWeek, isSameDate, stripTime } from '@/lib/utils';
+import { formatFromTo, getEndOfWeek, getStartOfWeek, getTileClassName, stripTime } from '@/lib/utils';
 
-import { getTileClassName } from '../features/calendar/renderers/get-tile-class-name';
 import { renderTileContent } from '../features/calendar/renderers/render-tile-content';
 import { renderNavigationLabel } from '../features/calendar/renderers/render-navigation-label';
 
@@ -61,7 +60,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		const params = new URLSearchParams(searchParams);
 		params.set('year', year.toString());
 		params.set('month', month.toString());
-		router.replace(`?${params.toString()}`);
+		router.replace(`?${params.toString()}`, { scroll: false });
 	};
 
 	const handleMonthChange = (direction: 'prev' | 'next') => {
@@ -188,13 +187,11 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						prev2Label={null}
 						next2Label={null}
 						formatShortWeekday={(locale, date) => ['일', '월', '화', '수', '목', '금', '토'][date.getDay()]}
-						tileClassName={(props) =>
+						tileClassName={({ date }) =>
 							getTileClassName({
-								...props,
+								dateOfTile: date,
 								firstDayOfCurrentMonth,
 								isCollapsed,
-								startOfWeek,
-								endOfWeek,
 								today,
 								selectedDate,
 								isMatch,
