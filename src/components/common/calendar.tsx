@@ -140,9 +140,6 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 	const today = stripTime(new Date());
 
-	const startOfWeek = getStartOfWeek(selectedDate);
-	const endOfWeek = getEndOfWeek(startOfWeek);
-
 	// 오늘 날짜 기준으로 고정
 	const todayMonth = today.getMonth();
 	const todayYear = today.getFullYear();
