@@ -52,7 +52,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		return new Date(today.getFullYear(), today.getMonth(), 1);
 	};
 
-	const [currentMonthStart, setCurrentMonthStart] = useState(getYearMonthFromUrl);
+	const [firstDayOfCurrentMonth, setFirstDayOfCurrentMonth] = useState(getYearMonthFromUrl);
 
 	// URL 파라미터 업데이트
 	const updateUrlParams = (date: Date) => {
@@ -65,8 +65,8 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	};
 
 	const handleMonthChange = (direction: 'prev' | 'next') => {
-		const currentYear = currentMonthStart.getFullYear();
-		const currentMonth = currentMonthStart.getMonth();
+		const currentYear = firstDayOfCurrentMonth.getFullYear();
+		const currentMonth = firstDayOfCurrentMonth.getMonth();
 
 		let newYear = currentYear;
 		let newMonth = currentMonth + (direction === 'next' ? 1 : -1);
@@ -86,7 +86,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	// URL 파라미터가 변경될 때 새로운 월의 첫째 날 업데이트
 	useEffect(() => {
 		const newMonthStart = getYearMonthFromUrl();
-		setCurrentMonthStart(newMonthStart);
+		setFirstDayOfCurrentMonth(newMonthStart);
 	}, [searchParams]);
 
 	// 승부 예측 가능 기간 조회
@@ -114,7 +114,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	useEffect(() => {
 		async function fetchMarkedDates() {
 			try {
-				const formattedDate = formatFromTo(currentMonthStart);
+				const formattedDate = formatFromTo(firstDayOfCurrentMonth);
 				console.log(formattedDate);
 				const response = isMatch ? await getMonthlyMatchList(formattedDate) : await getMyCalendar();
 				console.log(response);
@@ -137,7 +137,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		}
 
 		fetchMarkedDates();
-	}, [currentMonthStart, isMatch]);
+	}, [firstDayOfCurrentMonth, isMatch]);
 
 	const today = stripTime(new Date());
 
@@ -152,9 +152,9 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 	// 화살표 표시 여부
 	const minDate = new Date(todayYear, todayMonth, 1); // 이번 달
-	const canGoPrevMonth = isMatch ? currentMonthStart.getTime() > minDate.getTime() : true;
+	const canGoPrevMonth = isMatch ? firstDayOfCurrentMonth.getTime() > minDate.getTime() : true;
 	const canGoNextMonth =
-		currentMonthStart.getTime() < new Date(todayYear, isMatch ? todayMonth + 1 : todayMonth, 1).getTime();
+		firstDayOfCurrentMonth.getTime() < new Date(todayYear, isMatch ? todayMonth + 1 : todayMonth, 1).getTime();
 
 	return (
 		<div className="w-full">
@@ -166,10 +166,10 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					}`}
 				>
 					<Calendar
-						key={currentMonthStart.toISOString()}
+						key={firstDayOfCurrentMonth.toISOString()}
 						view="month"
 						formatDay={(locale, date) => `${date.getDate()}`}
-						activeStartDate={currentMonthStart}
+						activeStartDate={firstDayOfCurrentMonth}
 						calendarType="gregory"
 						locale="ko-KR"
 						className={`custom-calendar ${isMobile && 'custom-calendar-mobile'}`}
@@ -191,7 +191,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						tileClassName={(props) =>
 							getTileClassName({
 								...props,
-								currentMonthStart,
+								firstDayOfCurrentMonth,
 								isCollapsed,
 								startOfWeek,
 								endOfWeek,
