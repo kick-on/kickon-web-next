@@ -16,10 +16,10 @@ export const getEndOfWeek = (startDate: Date): Date => {
 };
 
 interface TileClassNameProps {
-	dateOfTile: Date;
+	dateOfTile: Date; //캘린더 기준 현재 날짜
 	firstDayOfCurrentMonth: Date;
-	today: Date;
-	selectedDate: Date | null;
+	today: Date; // 오늘 날짜
+	selectedDate: Date | null; // 사용자가 선택한 날짜
 	isCollapsed: boolean;
 	isMatch: boolean;
 	predictionRange: { start: Date; end: Date } | null;
