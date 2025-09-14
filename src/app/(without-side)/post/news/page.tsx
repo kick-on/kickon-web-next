@@ -172,7 +172,7 @@ export default function Page() {
 			<ThumbnailUploader
 				selectedImage={selectedImage}
 				onChange={setSelectedImage}
-				setIsThumbnailUpdoad={setIsThumbnailUploaded}
+				setIsThumbnailUploaded={setIsThumbnailUploaded}
 			/>
 
 			<div className="flex gap-4 mb-4">

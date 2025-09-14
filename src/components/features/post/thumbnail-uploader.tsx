@@ -10,10 +10,10 @@ import AlertModal from '../detail/alert-modal';
 interface ThumbnailUploaderProps {
 	selectedImage: string | null;
 	onChange: (url: string | null) => void;
-	setIsThumbnailUpdoad: (uploading: boolean) => void;
+	setIsThumbnailUploaded: (uploading: boolean) => void;
 }
 
-export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbnailUpdoad }: ThumbnailUploaderProps) {
+export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbnailUploaded }: ThumbnailUploaderProps) {
 	const [isPortrait, setIsPortrait] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [pendingFile, setPendingFile] = useState<File | null>(null);
@@ -52,7 +52,7 @@ export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbn
 
 	const handleFileUpload = async (file: File) => {
 		try {
-			setIsThumbnailUpdoad?.(false); // 업로드 시작 (아직 업로드 안 됨)
+			setIsThumbnailUploaded?.(false); // 업로드 시작 (아직 업로드 안 됨)
 
 			const presignedResponse = await getPresignedUrl({
 				type: 'news-files',
@@ -63,11 +63,10 @@ export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbn
 			await uploadToS3(presignedUrl, file);
 
 			onChange(s3Url);
-			setIsThumbnailUpdoad?.(true); // 업로드 성공
+			setIsThumbnailUploaded?.(true); // 업로드 성공
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
-		} finally {
-			setIsThumbnailUpdoad?.(false); // 업로드 종료
+			setIsThumbnailUploaded?.(false); // 실패 시 false
 		}
 	};
 
