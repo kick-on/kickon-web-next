@@ -37,9 +37,9 @@ export default function Page() {
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
-	const [isThumbnailUploaded, setIsThumbnailUploaded] = useState(false);
+
 	//const { uploadingCount } = useEditorContext();
-	const canSubmit = isFormValid && isThumbnailUploaded;
+	const canSubmit = isFormValid;
 
 	useEffect(() => {
 		if (!isEditMode) return;
@@ -169,11 +169,7 @@ export default function Page() {
 
 	return (
 		<div className="flex flex-col w-full">
-			<ThumbnailUploader
-				selectedImage={selectedImage}
-				onChange={setSelectedImage}
-				setIsThumbnailUploaded={setIsThumbnailUploaded}
-			/>
+			<ThumbnailUploader selectedImage={selectedImage} onChange={setSelectedImage} />
 
 			<div className="flex gap-4 mb-4">
 				<TeamSearchInput selectedTeam={selectedTeam} setSelectedTeam={setSelectedTeam} />

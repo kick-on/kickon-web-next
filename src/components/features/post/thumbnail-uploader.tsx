@@ -10,10 +10,9 @@ import AlertModal from '../detail/alert-modal';
 interface ThumbnailUploaderProps {
 	selectedImage: string | null;
 	onChange: (url: string | null) => void;
-	setIsThumbnailUploaded: (uploading: boolean) => void;
 }
 
-export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbnailUploaded }: ThumbnailUploaderProps) {
+export default function ThumbnailUploader({ selectedImage, onChange }: ThumbnailUploaderProps) {
 	const [isPortrait, setIsPortrait] = useState(false);
 	const [showModal, setShowModal] = useState(false);
 	const [pendingFile, setPendingFile] = useState<File | null>(null);
@@ -52,8 +51,6 @@ export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbn
 
 	const handleFileUpload = async (file: File) => {
 		try {
-			setIsThumbnailUploaded?.(false); // 업로드 시작 (아직 업로드 안 됨)
-
 			const presignedResponse = await getPresignedUrl({
 				type: 'news-files',
 				fileName: file.name,
@@ -61,12 +58,9 @@ export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbn
 
 			const { presignedUrl, s3Url } = presignedResponse.data;
 			await uploadToS3(presignedUrl, file);
-
 			onChange(s3Url);
-			setIsThumbnailUploaded?.(true); // 업로드 성공
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
-			setIsThumbnailUploaded?.(false); // 실패 시 false
 		}
 	};
 
