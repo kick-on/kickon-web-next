@@ -1,7 +1,14 @@
 import { isSameDate, stripTime } from '@/lib/utils';
 
 export const renderTileContent =
-	(today: Date, selectedDate: Date, predictionRange: any, markedDatesMap: any) =>
+	(
+		today: Date,
+		predictionRange: {
+			start: Date;
+			end: Date;
+		},
+		markedDatesMap: Record<string, number>,
+	) =>
 	({ date }: { date: Date }) => {
 		const d = stripTime(date);
 		const year = d.getFullYear();

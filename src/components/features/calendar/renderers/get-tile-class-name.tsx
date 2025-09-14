@@ -1,5 +1,18 @@
 import { isSameDate, stripTime } from '@/lib/utils';
 
+interface TileClassNameProps {
+	date: Date;
+	currentMonthStart: Date;
+	isCollapsed: boolean;
+	startOfWeek: Date;
+	endOfWeek: Date;
+	today: Date;
+	selectedDate: Date | null;
+	isMatch: boolean;
+	predictionRange: { start: Date; end: Date } | null;
+	markedDatesMap: Record<string, number>;
+}
+
 export const getTileClassName = ({
 	date,
 	currentMonthStart,
@@ -11,7 +24,7 @@ export const getTileClassName = ({
 	isMatch,
 	predictionRange,
 	markedDatesMap,
-}: any) => {
+}: TileClassNameProps) => {
 	const d = stripTime(date);
 	const isCurrentMonth = date.getMonth() === currentMonthStart.getMonth();
 	if (!isCurrentMonth) return 'hidden-other-month-tile';

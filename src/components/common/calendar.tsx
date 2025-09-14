@@ -202,7 +202,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 								markedDatesMap,
 							})
 						}
-						tileContent={renderTileContent(today, selectedDate, predictionRange, markedDatesMap)}
+						tileContent={renderTileContent(today, predictionRange, markedDatesMap)}
 					/>
 				</div>
 				<button

@@ -1,10 +1,10 @@
 import Image from 'next/image';
 
-type ArrowButtonProps = {
+interface ArrowButtonProps {
 	direction: 'prev' | 'next';
 	onClick: (dir: 'prev' | 'next') => void;
 	show: boolean;
-};
+}
 
 export const ArrowButton = ({ direction, onClick, show }: ArrowButtonProps) => {
 	if (!show) return null;
