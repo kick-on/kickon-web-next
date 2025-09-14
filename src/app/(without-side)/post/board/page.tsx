@@ -11,6 +11,7 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
+import { EditorProvider } from '@/lib/contexts/editor/provider';
 
 export default function Page() {
 	const router = useRouter();
@@ -233,7 +234,9 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
+			<EditorProvider setBody={setBody} isNews={false} editedBody={body}>
+				<PostEditor setTitle={setTitle} editedTitle={title} />
+			</EditorProvider>
 
 			{currentUserInfo?.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 

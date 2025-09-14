@@ -16,6 +16,7 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
+import { EditorProvider } from '@/lib/contexts/editor/provider';
 //import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export default function Page() {
@@ -189,8 +190,9 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} editedTitle={title} editedBody={body} />
+			<EditorProvider setBody={setBody} isNews={true} editedBody={body}>
+				<PostEditor setTitle={setTitle} editedTitle={title} />
+			</EditorProvider>
 
 			<div className="flex w-full justify-center gap-4 mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]">
 				<button

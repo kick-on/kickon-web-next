@@ -23,6 +23,10 @@ interface EditorContextProps {
 
 	handleImageUpload: (file: File) => Promise<void>;
 	uploadingCount: number;
+	pendingFile: File;
+	showModal: boolean;
+	setPendingFile: React.Dispatch<React.SetStateAction<File | null>>;
+	setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const EditorContext = createContext<EditorContextProps | null>(null);

@@ -18,23 +18,16 @@ type EditorProviderProps = {
 	setBody: (body: string) => void;
 	isNews: boolean;
 	editedBody: string;
-	setPendingFile: React.Dispatch<React.SetStateAction<File | null>>;
-	setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const EditorProvider = ({
-	children,
-	setBody,
-	isNews,
-	editedBody,
-	setPendingFile,
-	setShowModal,
-}: EditorProviderProps) => {
+export const EditorProvider = ({ children, setBody, isNews, editedBody }: EditorProviderProps) => {
 	const [linkUrl, setLinkUrl] = useState('');
 	const [isLinkInputOpen, setIsLinkInputOpen] = useState(false);
 	const [youtubeUrl, setYoutubeUrl] = useState('');
 	const [isYoutubeInputOpen, setIsYoutubeInputOpen] = useState(false);
 	const [uploadingCount, setUploadingCount] = useState(0);
+	const [pendingFile, setPendingFile] = useState<File | null>(null);
+	const [showModal, setShowModal] = useState(false);
 
 	const editor = useEditor({
 		extensions: [
@@ -295,6 +288,10 @@ export const EditorProvider = ({
 				handleAddVideo,
 				handleImageUpload,
 				uploadingCount,
+				pendingFile,
+				showModal,
+				setPendingFile,
+				setShowModal,
 			}}
 		>
 			{children}
