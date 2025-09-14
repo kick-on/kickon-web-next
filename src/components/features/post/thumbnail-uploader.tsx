@@ -52,7 +52,7 @@ export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbn
 
 	const handleFileUpload = async (file: File) => {
 		try {
-			setIsThumbnailUpdoad?.(true); // 업로드 시작 알림
+			setIsThumbnailUpdoad?.(false); // 업로드 시작 (아직 업로드 안 됨)
 
 			const presignedResponse = await getPresignedUrl({
 				type: 'news-files',
@@ -63,10 +63,11 @@ export default function ThumbnailUploader({ selectedImage, onChange, setIsThumbn
 			await uploadToS3(presignedUrl, file);
 
 			onChange(s3Url);
+			setIsThumbnailUpdoad?.(true); // 업로드 성공
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
 		} finally {
-			setIsThumbnailUpdoad?.(false); // 업로드 종료 알림
+			setIsThumbnailUpdoad?.(false); // 업로드 종료
 		}
 	};
 
