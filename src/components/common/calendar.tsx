@@ -9,10 +9,10 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyCalendar, getPredictionDates } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { formatFromTo, getEndOfWeek, getStartOfWeek, getTileClassName, stripTime } from '@/lib/utils';
+import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
-import { renderTileContent } from '../features/calendar/renderers/render-tile-content';
 import { renderNavigationLabel } from '../features/calendar/renderers/render-navigation-label';
+import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
@@ -196,7 +196,14 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 								markedDatesMap,
 							})
 						}
-						tileContent={renderTileContent(today, predictionRange, markedDatesMap)}
+						tileContent={({ date }) => (
+							<RenderTileContent
+								date={date}
+								today={today}
+								predictionRange={predictionRange}
+								markedDatesMap={markedDatesMap}
+							/>
+						)}
 					/>
 				</div>
 				<button
