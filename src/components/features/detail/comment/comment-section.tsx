@@ -121,19 +121,19 @@ function CommentSection({
 	}
 
 	return (
-		<div className="px-4">
+		<div>
 			{isCommentAllowed && (
 				<CommentInput contentType={type} contentsId={contentsId} editingCommentId={editingCommentId} />
 			)}
 
-			<p className="body5-regular -mx-4 text-black-600 border-t border-b border-black-200 px-4 py-3">
+			<p className="body5-regular text-black-600 border-t border-b border-black-200 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개
 			</p>
 
 			{comments.length === 0 ? (
 				<p className="text-center body5-regular text-black-500 py-10">댓글이 없습니다.</p>
 			) : (
-				<div className="flex flex-col pr-2">
+				<div className="flex flex-col">
 					{comments.map((comment) => (
 						<CommentItem key={comment.pk} content={comment} {...commentItemProps} />
 					))}

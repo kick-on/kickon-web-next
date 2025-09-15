@@ -142,13 +142,13 @@ function CommentItem({
 
 	return (
 		<div>
-			<div className={clsx('flex items-start mt-5 pb-3.5')}>
+			<div className={clsx('pr-6 pt-5 pb-3.5 flex items-start border-b border-black-200', isReply ? 'pl-[54px] bg-black-100' : 'pl-4')}>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
-					width={24}
-					height={24}
-					className="w-6 h-6 rounded-full mr-[0.625rem] object-cover"
+					width={28}
+					height={28}
+					className="w-7 h-7 rounded-full mr-[0.625rem] object-cover"
 				/>
 
 				<div className="flex flex-col flex-1 relative">
@@ -204,8 +204,8 @@ function CommentItem({
 									<Image
 										src={isReplyListOpen ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
 										alt="toggle replies"
-										width={16}
-										height={16}
+										width={18}
+										height={18}
 									/>
 									{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
 								</button>
@@ -238,6 +238,8 @@ function CommentItem({
 						/>
 					)}
 
+				</div>
+			</div>
 					{isReplyListOpen &&
 						content.replies?.map((reply) => (
 							<CommentItem
@@ -247,9 +249,6 @@ function CommentItem({
 								{...commentItemProps}
 							/>
 						))}
-				</div>
-			</div>
-			<hr className="border-t border-black-200 -mx-6 -ml-4" />
 
 			{isConfirmModalOpen && (
 				<AlertModal
