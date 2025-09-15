@@ -51,7 +51,7 @@ export function CommentMoreButton({ onEditClick, onDeleteClick }: CommentMoreBut
 	return (
 		<div className="relative inline-block">
 			<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
-				<Image src="/more-horizontal.svg" alt="더보기" width={20} height={20} className="@mobile:w-4.5 @mobile:h-4.5" />
+				<Image src="/more-horizontal.svg" alt="더보기" width={18} height={18} className="@mobile:w-4.5 @mobile:h-4.5" />
 			</button>
 			{isOpen && (
 				<div

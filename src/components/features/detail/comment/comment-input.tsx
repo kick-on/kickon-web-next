@@ -133,7 +133,7 @@ const CommentInput = ({
 	return (
 		<div
 			className={
-				type === 'comment' ? 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5' : 'mt-5'
+				type === 'comment' ? 'bg-black-200 rounded-[0.625rem] mx-4 p-4 mb-19 flex flex-col gap-4 @mobile:h-53.5' : ''
 			}
 		>
 			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}

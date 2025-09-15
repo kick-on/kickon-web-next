@@ -153,8 +153,8 @@ function CommentItem({
 
 				<div className="flex flex-col flex-1 relative">
 					{/* 상단: 닉네임 + 날짜 + 더보기 */}
-					<div className="flex justify-between items-center mb-0.5">
-						<div className="flex items-center gap-4">
+					<div className="flex justify-between items-center">
+						<div className="flex items-center gap-4 mb-3">
 							<span className="flex items-center gap-0.5 body5-medium text-black-900">
 								{content.user.nickname}
 								{content.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
@@ -175,8 +175,41 @@ function CommentItem({
 						)}
 					</div>
 
+{
+
+(isEditing) ? (
+	<div className='space-y-4'>
+	<CommentInput
+		type={'edit'}
+		replyTo={replyTo}
+		contentType={type}
+		contentsId={contentsId}
+		editingCommentId={editingCommentId}
+		defaultContent={content.contents}
+		onCommentSubmit={handleCommentSubmit}
+		onCommentCancel={() => {
+			setEditingCommentId(null);
+			setIsReplyInputOpen(false);
+		}}
+		/>
+		{content.replies?.length > 0 && (
+			<button
+				className="flex items-center gap-[0.625rem] text-black-600 body6-regular"
+				onClick={() => setIsReplyListOpen(!isReplyListOpen)}
+			>
+				<Image
+					src={isReplyListOpen ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
+					alt="toggle replies"
+					width={18}
+					height={18}
+				/>
+				{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
+			</button>
+		)}
+		</div>
+) :<>
 					{/* 본문 */}
-					<div className="body5-regular text-black-900 mt-3 mb-3.5 whitespace-pre-line">
+					<div className="body5-regular text-black-900 mb-3.5 whitespace-pre-line">
 						{isReply && replyTo && <span className="text-[#890f0e] mr-1">@{replyTo.nickname}</span>}
 						{content.contents}
 					</div>
@@ -217,22 +250,19 @@ function CommentItem({
 							<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
 							<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
 						</button>
-					</div>
+					</div> </>}
 
 					{/* 댓글 입력창 */}
-					{(isReplyInputOpen || isEditing) && (
+					{(isReplyInputOpen) && (
 						<CommentInput
-							type={isEditing ? 'edit' : 'reply'}
-							replyTo={isEditing ? replyTo : { pk: content.pk, nickname: content.user.nickname }}
+							type={'reply'}
+							replyTo={{ pk: content.pk, nickname: content.user.nickname }}
 							contentType={type}
 							contentsId={contentsId}
 							editingCommentId={editingCommentId}
-							defaultContent={isEditing ? content.contents : ''}
+							defaultContent={''}
 							onCommentSubmit={handleCommentSubmit}
 							onCommentCancel={() => {
-								if (isEditing) {
-									setEditingCommentId(null);
-								}
 								setIsReplyInputOpen(false);
 							}}
 						/>
