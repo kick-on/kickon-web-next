@@ -45,7 +45,7 @@ function CommentItem({
 		if (isEditing) {
 			setEditingCommentId(null);
 		}
-		
+
 		if (isReplyInputOpen) {
 			setIsReplyInputOpen(false);
 			setIsReplyListOpen(true);
@@ -142,7 +142,12 @@ function CommentItem({
 
 	return (
 		<div>
-			<div className={clsx('pr-6 pt-5 pb-3.5 flex items-start border-b border-black-200', isReply ? 'pl-[54px] bg-black-100' : 'pl-4')}>
+			<div
+				className={clsx(
+					'pr-6 pt-5 pb-3.5 flex items-start border-b border-black-200',
+					isReply ? 'pl-[54px] bg-black-100' : 'pl-4',
+				)}
+			>
 				<Image
 					src={content.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
@@ -183,10 +188,12 @@ function CommentItem({
 					</div>
 
 					{/* 본문 */}
-					{!isEditing && <div className="body5-regular text-black-900 mb-3.5 whitespace-pre-line">
-						{isReply && replyTo && <span className="text-[#890f0e] mr-1">@{replyTo.nickname}</span>}
-						{content.contents}
-					</div>}
+					{!isEditing && (
+						<div className="body5-regular text-black-900 mb-3.5 whitespace-pre-line">
+							{isReply && replyTo && <span className="text-[#890f0e] mr-1">@{replyTo.nickname}</span>}
+							{content.contents}
+						</div>
+					)}
 
 					<div className="flex justify-between">
 						{/* 답글 입력 버튼 */}
@@ -203,13 +210,15 @@ function CommentItem({
 						)}
 
 						{/* 킥 버튼 (하단 우측) */}
-						{!isEditing && <button onClick={() => toggleCommentLike(content.pk)} className="ml-auto flex items-center gap-2">
-							<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
-							<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
-						</button>}
-					</div> 
+						{!isEditing && (
+							<button onClick={() => toggleCommentLike(content.pk)} className="ml-auto flex items-center gap-2">
+								<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
+								<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
+							</button>
+						)}
+					</div>
 
-					{(isReplyInputOpen || isEditing) && 
+					{(isReplyInputOpen || isEditing) && (
 						<CommentInput
 							type={isEditing ? 'edit' : 'reply'}
 							replyTo={isEditing ? replyTo : { pk: content.pk, nickname: content.user.nickname }}
@@ -218,12 +227,9 @@ function CommentItem({
 							editingCommentId={editingCommentId}
 							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={handleCommentSubmit}
-							onCommentCancel={isEditing 
-									? () => setEditingCommentId(null)
-									: () => setIsReplyInputOpen(false)
-							}
+							onCommentCancel={isEditing ? () => setEditingCommentId(null) : () => setIsReplyInputOpen(false)}
 						/>
-					}
+					)}
 
 					{/* 답글 토글 */}
 					{content.replies?.length > 0 && (
@@ -240,7 +246,6 @@ function CommentItem({
 							{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
 						</button>
 					)}
-
 				</div>
 			</div>
 
@@ -252,8 +257,7 @@ function CommentItem({
 						replyTo={{ pk: content.pk, nickname: content.user.nickname }}
 						{...commentItemProps}
 					/>
-				))
-			}
+				))}
 
 			{isConfirmModalOpen && (
 				<AlertModal
