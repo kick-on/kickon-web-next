@@ -11,6 +11,7 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
+import { EditorProvider } from '@/lib/contexts/editor/provider';
 
 export default function Page() {
 	const router = useRouter();
@@ -39,11 +40,12 @@ export default function Page() {
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 	const [isPinned, setIsPinned] = useState(false);
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+
+	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -230,7 +232,9 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
+			<EditorProvider setBody={setBody} isNews={false} editedBody={body}>
+				<PostEditor setTitle={setTitle} editedTitle={title} />
+			</EditorProvider>
 
 			{currentUserInfo?.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 
