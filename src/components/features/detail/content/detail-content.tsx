@@ -1,33 +1,46 @@
 'use client';
 import Image from 'next/image';
-import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
 import { Suspense, useEffect, useState } from 'react';
 import DOMPurify from 'dompurify';
+import parse, { Element } from 'html-react-parser';
+import MoreActionsButton from '@/components/features/detail/content/more-actions-button';
+import LoginModal from '@/components/common/login-modal/login-content';
 import { getRelativeTime } from '@/lib/utils';
 import { categories } from '@/lib/constants/options';
-import LoginModal from '@/components/common/login-modal/login-content';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import parse, { Element } from 'html-react-parser';
 import { createNewsKick } from '@/services/apis/news/news.api';
 import { createBoardKick } from '@/services/apis/board/board.api';
+import { CommonPostDetailDto } from '@/services/apis/common/types';
+import { NewsDetailDto } from '@/services/apis/news/news.type';
 
-// TODO: 타입 선언
-const DetailContent = ({ data, type, isCommentAllowed }) => {
+interface DetailContentProps {
+	commonDetailData: CommonPostDetailDto;
+	type: 'news' | 'board';
+	isCommentAllowed: boolean;
+}
+const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailContentProps) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+
 	const isNews = type === 'news';
+	const newsDetailData = isNews ? (commonDetailData as NewsDetailDto) : undefined;
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
-	const [isLiked, setIsLiked] = useState(data.isKicked);
-	const [likes, setLikes] = useState(data.likes);
+
+	const [isLiked, setIsLiked] = useState(commonDetailData.isKicked);
+	const [likes, setLikes] = useState(commonDetailData.likes);
+
 	const [sanitizedContent, setSanitizedContent] = useState('');
+
 	const [isImageLoaded, setIsImageLoaded] = useState(false);
 	const [isVerticalImage, setIsVerticalImage] = useState(false);
 
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const categoryLabel = categories.find((category) => category.value === data.category)?.label || data.category;
+
+	const categoryLabel =
+		categories.find((category) => category.value === newsDetailData?.category)?.label || newsDetailData?.category;
 
 	// 이미지 정보를 미리 가져오는 함수 (클라이언트 사이드에서만 실행)
 	useEffect(() => {
-		if (typeof window === 'undefined' || !isNews || !data.thumbnailUrl) return;
+		if (typeof window === 'undefined' || !isNews || !newsDetailData.thumbnailUrl) return;
 
 		// 이미지를 불러오기 위한 함수
 		const preloadImage = () => {
@@ -36,20 +49,20 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				setIsVerticalImage(img.naturalHeight > img.naturalWidth);
 				setIsImageLoaded(true);
 			};
-			img.src = data.thumbnailUrl;
+			img.src = newsDetailData.thumbnailUrl;
 		};
 
 		preloadImage();
-	}, [isNews, data.thumbnailUrl]);
+	}, [isNews, newsDetailData?.thumbnailUrl]);
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
-		const sanitized = DOMPurify.sanitize(data.content, {
+		const sanitized = DOMPurify.sanitize(commonDetailData.content, {
 			ADD_TAGS: ['iframe', 'br', 'p'],
 			ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target'],
 		});
 		setSanitizedContent(sanitized);
-	}, [data.content]);
+	}, [commonDetailData.content]);
 
 	const parsedContent = parse(sanitizedContent, {
 		replace: (domNode) => {
@@ -77,7 +90,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 		}
 
 		try {
-			const success = isNews ? await createNewsKick(data.pk) : await createBoardKick(data.pk);
+			const success = isNews ? await createNewsKick(commonDetailData.pk) : await createBoardKick(commonDetailData.pk);
 			if (success) {
 				// API 응답이 성공하면 UI 업데이트
 				setIsLiked((prev) => !prev);
@@ -91,7 +104,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 		}
 	};
 
-	const isMyContents = data?.user?.id === currentUserInfo?.id;
+	const isMyContents = commonDetailData?.user?.id === currentUserInfo?.id;
 
 	return (
 		<div className="px-4">
@@ -104,7 +117,7 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				`}
 				>
 					<Image
-						src={data.thumbnailUrl}
+						src={newsDetailData.thumbnailUrl}
 						alt="대표 이미지"
 						width={636}
 						height={322}
@@ -120,7 +133,13 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 			{isNews && (
 				<div className="flex gap-2 mb-2.5 items-center">
 					{!isCommentAllowed && (
-						<Image className="w-6 h-6 object-contain" src={data.team.logoUrl} alt="팀 로고" width={24} height={24} />
+						<Image
+							className="w-6 h-6 object-contain"
+							src={commonDetailData.team.logoUrl}
+							alt="팀 로고"
+							width={24}
+							height={24}
+						/>
 					)}
 					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
 						{categoryLabel}
@@ -128,14 +147,14 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 				</div>
 			)}
 
-			<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{data.title}</h1>
+			<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{commonDetailData.title}</h1>
 
 			{/* 작성자 & 액션 카운터 */}
 			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
 				<div className="flex items-center gap-2">
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
-							src={data.user.profileImageUrl || '/default-profile.svg'}
+							src={commonDetailData.user.profileImageUrl || '/default-profile.svg'}
 							alt="작성자 프로필"
 							width={24}
 							height={24}
@@ -143,12 +162,14 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 						/>
 					</div>
 					<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
-						{data.user.nickname}
-						{data.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+						{commonDetailData.user.nickname}
+						{commonDetailData.user.isReporter && (
+							<Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />
+						)}
 					</span>
-					<span className="ml-2">{getRelativeTime(data.createdAt)}</span>
+					<span className="ml-2">{getRelativeTime(commonDetailData.createdAt)}</span>
 					<span>|</span>
-					<span>읽음 {data.views}</span>
+					<span>읽음 {commonDetailData.views}</span>
 				</div>
 
 				<div className="flex gap-3 items-center text-black-600 body5-regular">
@@ -158,10 +179,10 @@ const DetailContent = ({ data, type, isCommentAllowed }) => {
 					</div>
 					<div className="flex items-center gap-1.5 @mobile:hidden">
 						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
-						<span>{data.replies}</span>
+						<span>{commonDetailData.replies}</span>
 					</div>
 					<Suspense>
-						<MoreActionsButton type={type} pk={data.pk} isMyContent={isMyContents} />
+						<MoreActionsButton type={type} pk={commonDetailData.pk} isMyContent={isMyContents} />
 					</Suspense>
 				</div>
 			</div>

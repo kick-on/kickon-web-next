@@ -36,11 +36,12 @@ function CommentSection({
 	const [replyingTo, setReplyingTo] = useState([]); // 열어둔 답글 리스트
 	const [replyVisibilities, setReplyVisibilities] = useState({}); // 댓글의 답글을 열지 말지
 
-	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정!
-	const [pendingCommentId, setPendingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id (수정하다가 다른 거 수정하기 누르는 경우??)
+	// TODO: 3. 가능하면 하나의 상태로 만들기 / 불가능하면 네이밍 명확하게 수정! -> 네이밍 수정!!
+	// -> 하나의 상태로 통합했으나 ({mode, commentId} 객체 형태로) mode로 관리함으로써 A 댓글을 편집 중이다가 B 댓글의 수정하기 버튼을 누르면 mode가 바뀌면서 state 자체가 바뀌니 편집 중이던 내용이 초기화 됨. (원래는 상태가 독립이었어서 문제 x)
+	// 이를 해결하려면 편집 중이던 내용을 따로 저장 (map으로 댓글마다 저장)해야 했는데 그럼 복잡도가 올라감
 	const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 코멘트 id
+	const [stagedCommentId, setStagedCommentId] = useState<number | null>(null); // 수정을 시도하는 코멘트 id
 
-	const [likedComments, setLikedComments] = useState({}); // 제거 예정
 	const [loadedPages, setLoadedPages] = useState([1]); // infinite lastReply + 스프레드 -> 제거 예정
 
 	// 현재 페이지 추출
@@ -60,7 +61,11 @@ function CommentSection({
 			if (!contentsId || contentsId < 1) return;
 			try {
 				const response = isNews
-					? await getNewsCommentList(contentsId, page, commentsPerPage)
+					? await getNewsCommentList({
+							id: contentsId,
+							page: currentPage,
+							size: commentsPerPage,
+						})
 					: await getBoardCommentList(contentsId, page, commentsPerPage);
 
 				console.log('댓글 리스트', response);
@@ -92,7 +97,11 @@ function CommentSection({
 			// 모든 로드된 페이지를 순서대로 불러옴
 			for (const page of loadedPages.sort((a, b) => a - b)) {
 				const response = isNews
-					? await getNewsCommentList(contentsId, page, commentsPerPage)
+					? await getNewsCommentList({
+							id: contentsId,
+							page: currentPage,
+							size: commentsPerPage,
+						})
 					: await getBoardCommentList(contentsId, page, commentsPerPage);
 
 				if (response?.data) {
@@ -120,19 +129,23 @@ function CommentSection({
 		}
 	}, [pageParam, isMobile]);
 
-	// 로컬스토리지에서 좋아요 상태 복원
-	useEffect(() => {
-		const storedLikes = localStorage.getItem('likedComments');
-		if (storedLikes) {
-			setLikedComments(JSON.parse(storedLikes));
-		}
-	}, []);
+	// // 로컬스토리지에서 좋아요 상태 복원
+	// useEffect(() => {
+	// 	const storedLikes = localStorage.getItem('likedComments');
+	// 	if (storedLikes) {
+	// 		setLikedComments(JSON.parse(storedLikes));
+	// 	}
+	// }, []);
 
 	// 모바일에서 '더 보기' 클릭 시 댓글 추가 로드
 	const handleLoadMoreComment = async () => {
 		const nextPage = currentPage + 1;
 		const response = isNews
-			? await getNewsCommentList(contentsId, nextPage, commentsPerPage)
+			? await getNewsCommentList({
+					id: contentsId,
+					page: currentPage,
+					size: commentsPerPage,
+				})
 			: await getBoardCommentList(contentsId, nextPage, commentsPerPage);
 
 		const newComments = response?.data || [];
@@ -159,7 +172,11 @@ function CommentSection({
 			// 해당 댓글의 최신 상태를 다시 불러와 갱신
 			try {
 				const response = isNews
-					? await getNewsCommentList(contentsId, currentPage, commentsPerPage)
+					? await getNewsCommentList({
+							id: contentsId,
+							page: currentPage,
+							size: commentsPerPage,
+						})
 					: await getBoardCommentList(contentsId, currentPage, commentsPerPage);
 
 				const updatedComment = response?.data.find((c) => c.pk === parentPk);
@@ -181,9 +198,8 @@ function CommentSection({
 		}
 	};
 
-	// 좋아요 토글
+	// 좋아요 토글 -> kicked가 서버한테 잘 오는지 판단하고 다시!! kickCount 이건 잘 돼!
 	const toggleCommentLike = async (commentId: number) => {
-		// 로그인 안 되어 있으면 모달 열기
 		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
@@ -192,19 +208,16 @@ function CommentSection({
 		const result = isNews ? await createNewsCommentKick(commentId) : await createBoardCommentKick(commentId);
 		if (!result) return;
 
-		// TODO: 1. 좋아요 api 응답에서 좋아요 개수 반환하도록 요청
-		// 로컬스토리지 및 상태 업데이트
-		setLikedComments((prev) => {
-			const updated = { ...prev, [commentId]: !prev[commentId] };
-			localStorage.setItem('likedComments', JSON.stringify(updated));
-			return updated;
-		});
-
-		// 좋아요 수 변경
 		setComments((prev) =>
-			prev.map((c) =>
-				c.pk === commentId ? { ...c, kickCount: c.kickCount + (likedComments[commentId] ? -1 : 1) } : c,
-			),
+			prev.map((c) => {
+				if (c.pk !== commentId) return c;
+				const isCurrentlyLiked = c.kicked; // 현재 상태
+				return {
+					...c,
+					kicked: !isCurrentlyLiked, // 토글
+					kickCount: c.kickCount + (isCurrentlyLiked ? -1 : 1), // 즉시 +1/-1 반영
+				};
+			}),
 		);
 	};
 
@@ -234,7 +247,7 @@ function CommentSection({
 	// 수정 모드로 진입
 	const handleEnterEditMode = (commentId: number) => {
 		if (editingCommentId && editingCommentId !== commentId) {
-			setPendingCommentId(commentId);
+			setStagedCommentId(commentId);
 			setIsConfirmModalOpen(true);
 			return;
 		}
@@ -279,7 +292,6 @@ function CommentSection({
 	// 공통으로 자식 컴포넌트에 전달할 props 모음
 	const commentItemProps = {
 		type,
-		likedComments,
 		handleLikeToggle: toggleCommentLike,
 		handleReply,
 		closeReplyInput,
@@ -362,14 +374,14 @@ function CommentSection({
 					description={`작성 중인 수정사항이 초기화됩니다.\n이 댓글을 수정하시겠습니까?`}
 					onCancel={() => {
 						setIsConfirmModalOpen(false);
-						setPendingCommentId(null);
+						setStagedCommentId(null);
 					}}
 					onConfirm={() => {
-						if (pendingCommentId !== null) {
-							setEditingCommentId(pendingCommentId);
+						if (stagedCommentId !== null) {
+							setEditingCommentId(stagedCommentId);
 						}
 						setIsConfirmModalOpen(false);
-						setPendingCommentId(null);
+						setStagedCommentId(null);
 					}}
 				/>
 			)}

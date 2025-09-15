@@ -12,7 +12,6 @@ import { CommentMoreButton } from './comment-more-button';
 function CommentItem({
 	content,
 	type,
-	likedComments,
 	handleLikeToggle,
 	handleReply,
 	closeReplyInput,
@@ -123,15 +122,8 @@ function CommentItem({
 
 						{/* 킥 버튼 (하단 우측) */}
 						<button onClick={() => handleLikeToggle(content.pk)} className="flex items-center gap-2">
-							<Image
-								src={likedComments[content.pk] ? '/kick/red.svg' : '/kick/gray.svg'}
-								alt="kick"
-								width={16}
-								height={16}
-							/>
-							<span className={likedComments[content.pk] ? 'text-black-900' : 'text-gray-500'}>
-								{content.kickCount + (likedComments[content.pk] && content.kickCount === 0 ? 1 : 0)}
-							</span>
+							<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
+							<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
 						</button>
 					</div>
 

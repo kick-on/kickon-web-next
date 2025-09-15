@@ -5,7 +5,7 @@ import { TeamDto } from '@/services/apis/team/dto';
 import dynamic from 'next/dynamic';
 import FavoriteTeamItem from './favorite-team-item';
 import SelectSection from './select-section';
-import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { NO_CHEERING_TEAM, NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import FavoriteTeamHeader from './favorite-team-header';
 
 // dnd-kit 컴포넌트 hydration mismatch 가능성 존재 -> ssr 비활성화
@@ -44,7 +44,8 @@ export default function FavoriteTeamSection({
 
 	useEffect(() => {
 		if (initialTeams) {
-			setFavoriteTeams(initialTeams);
+			const teams = initialTeams.length === 0 ? [NO_CHEERING_TEAM] : initialTeams;
+			setFavoriteTeams(teams);
 		}
 	}, [initialTeams]);
 

@@ -6,7 +6,7 @@ import OptionItem, { Option } from '@/components/common/option-item';
 import clsx from 'clsx';
 import { TeamDto } from '@/services/apis/team/dto';
 import { LeagueDto } from '@/services/apis/league/dto';
-import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import AlertModal from '@/components/features/detail/alert-modal';
 import { separateMonthAndDay } from '@/lib/utils';

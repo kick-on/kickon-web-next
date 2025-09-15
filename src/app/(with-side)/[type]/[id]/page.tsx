@@ -10,14 +10,12 @@ import CommentSection from '@/components/features/detail/comment/comment-section
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getCookie, setCookie } from '@/lib/utils';
 import { getNewsDetail } from '@/services/apis/news/news.api';
 import { getBoardDetail } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
-
-const POST_VIEW_EXPIRY = 60 * 60 * 24 * 1000;
+import usePostViewStatus from '@/lib/hooks/usePostViewStatus';
 
 const DetailPage = () => {
 	const params = useParams();
@@ -36,7 +34,7 @@ const DetailPage = () => {
 	const isOurTeam = Boolean(currentUserInfo?.favoriteTeams.find((team) => team?.pk === contents?.team?.pk));
 	const isCommentAllowed = isTeamNull || isOurTeam;
 
-	const [shouldCallApi, setShouldCallApi] = useState(false);
+	const shouldCallApi = usePostViewStatus(id);
 
 	const getDetailContentData = async () => {
 		try {
@@ -64,31 +62,6 @@ const DetailPage = () => {
 		}
 	};
 
-	// TODO: 훅으로 분리
-	useEffect(() => {
-		// (24시간 이내 열람한 게시글 id):(열람 시각) 쌍의 객체
-		const cookieValue = getCookie('viewedPosts');
-		let viewedPosts: Record<string, number> = {};
-
-		if (cookieValue) {
-			try {
-				viewedPosts = JSON.parse(cookieValue);
-			} catch {
-				viewedPosts = {};
-			}
-		}
-
-		const now = Date.now();
-		const lastViewed = viewedPosts[id];
-
-		// 24시간이 지났거나, 처음 보는 글이면 API 호출
-		if (!lastViewed || now - lastViewed > POST_VIEW_EXPIRY) {
-			setShouldCallApi(true);
-			viewedPosts[id] = now;
-			setCookie('viewedPosts', JSON.stringify(viewedPosts), 60 * 60 * 24); // max-age(24시간) in seconds
-		}
-	}, [id]);
-
 	useEffect(() => {
 		if (!type || !id) {
 			router.replace('/404');
@@ -98,11 +71,11 @@ const DetailPage = () => {
 		getDetailContentData();
 	}, [type, id]);
 
-	// TODO: 로직 점검 변수명 명확하게 수정!
-	const viewSent = useRef(false);
+	// TODO: 로직 점검 -> hasViewApiCalled 안 쓰는 방향으로...!!
+	const hasViewApiCalled = useRef(false);
 
 	useEffect(() => {
-		if (!contents || viewSent.current || !shouldCallApi) return; // 중복 호출 방지
+		if (!contents || hasViewApiCalled.current || !shouldCallApi) return;
 
 		if (isNews) {
 			createNewsView(id);
@@ -110,14 +83,14 @@ const DetailPage = () => {
 			createBoardView(id);
 		}
 
-		viewSent.current = true;
+		hasViewApiCalled.current = true;
 	}, [contents, id, shouldCallApi, isNews]);
 
 	return (
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
 			<ComponentFrame isMain={true}>
 				{contents ? (
-					<DetailContent data={contents} type={type} isCommentAllowed={isCommentAllowed} />
+					<DetailContent commonDetailData={contents} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={getDetailContentData} />
 				)}
