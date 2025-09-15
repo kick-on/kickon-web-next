@@ -38,9 +38,6 @@ export default function Page() {
 
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
 
-	//const { uploadingCount } = useEditorContext();
-	const canSubmit = isFormValid;
-
 	useEffect(() => {
 		if (!isEditMode) return;
 
@@ -207,10 +204,10 @@ export default function Page() {
 				</button>
 				<button
 					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
-					disabled={!canSubmit}
+					disabled={!isFormValid}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all',
-						canSubmit ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
+						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
 					{isEditMode ? '수정 완료' : '작성 완료'}

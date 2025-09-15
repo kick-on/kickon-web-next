@@ -169,18 +169,17 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 		if (!event.target.files?.length || !editor) return;
 		const file = event.target.files[0];
 
-		// 미리보기 url 먼저 삽입
-		const previewUrl = URL.createObjectURL(file);
-		editor.chain().focus().setImage({ src: previewUrl }).run();
-
 		// 파일 크기 확인
 		if (file.size > 2 * 1024 * 1024) {
+			// 용량이 큰 경우 -> 우선 모달만 띄움 (미리보기 X)
 			setPendingFile(file);
 			setShowModal(true);
 			return;
 		}
 
-		// 5MB 이하 -> 바로 업로드
+		const previewUrl = URL.createObjectURL(file);
+		editor.chain().focus().setImage({ src: previewUrl }).run();
+		// 작은 파일(<=2MB)은 바로 업로드 + 삽입
 		await handleImageUpload(file);
 	};
 

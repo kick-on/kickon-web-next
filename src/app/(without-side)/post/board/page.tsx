@@ -46,8 +46,6 @@ export default function Page() {
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
 	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
-	//const { uploadingCount } = useEditorContext();
-	const canSubmit = isFormValid;
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -261,11 +259,11 @@ export default function Page() {
 					취소
 				</button>
 				<button
-					onClick={canSubmit ? postCommunityContents : undefined}
-					disabled={!canSubmit}
+					onClick={isFormValid ? postCommunityContents : undefined}
+					disabled={!isFormValid}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold px-4 py-2 rounded-lg transition-all',
-						canSubmit ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
+						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',
 					)}
 				>
 					{isEditMode ? '수정 완료' : '작성 완료'}

@@ -9,6 +9,21 @@ import { compressImage } from '@/lib/utils';
 
 const PostEditor = ({ setTitle, editedTitle }: { setTitle: (title: string) => void; editedTitle: string }) => {
 	const { editor, showModal, pendingFile, setPendingFile, setShowModal, handleImageUpload } = useEditorContext();
+
+	const handleConfirmModal = async () => {
+		const previewUrl = URL.createObjectURL(pendingFile);
+		editor.chain().focus().setImage({ src: previewUrl }).run(); // 미리보기 삽입 후 압축
+		const compressedFile = await compressImage(pendingFile);
+		await handleImageUpload(compressedFile); // 압축한 이미지 업로드
+		setPendingFile(null);
+		setShowModal(false);
+	};
+
+	const handleCancleModal = () => {
+		setPendingFile(null);
+		setShowModal(false);
+	};
+
 	return (
 		<>
 			<input
@@ -25,16 +40,8 @@ const PostEditor = ({ setTitle, editedTitle }: { setTitle: (title: string) => vo
 				<AlertModal
 					type="confirm"
 					description={'파일의 용량이 커 압축이 진행됩니다.\n계속하시겠습니까?'}
-					onConfirm={async () => {
-						const compressedFile = await compressImage(pendingFile);
-						await handleImageUpload(compressedFile);
-						setPendingFile(null);
-						setShowModal(false);
-					}}
-					onCancel={() => {
-						setPendingFile(null);
-						setShowModal(false);
-					}}
+					onConfirm={handleConfirmModal}
+					onCancel={handleCancleModal}
 				/>
 			)}
 		</>
