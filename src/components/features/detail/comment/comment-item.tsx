@@ -45,8 +45,8 @@ function CommentItem({
 		if (isEditing) {
 			setEditingCommentId(null);
 		}
-
-		if (isReply) {
+		
+		if (isReplyInputOpen) {
 			setIsReplyInputOpen(false);
 			setIsReplyListOpen(true);
 
@@ -175,110 +175,78 @@ function CommentItem({
 						)}
 					</div>
 
-{
-
-(isEditing) ? (
-	<div className='space-y-4'>
-	<CommentInput
-		type={'edit'}
-		replyTo={replyTo}
-		contentType={type}
-		contentsId={contentsId}
-		editingCommentId={editingCommentId}
-		defaultContent={content.contents}
-		onCommentSubmit={handleCommentSubmit}
-		onCommentCancel={() => {
-			setEditingCommentId(null);
-			setIsReplyInputOpen(false);
-		}}
-		/>
-		{content.replies?.length > 0 && (
-			<button
-				className="flex items-center gap-[0.625rem] text-black-600 body6-regular"
-				onClick={() => setIsReplyListOpen(!isReplyListOpen)}
-			>
-				<Image
-					src={isReplyListOpen ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
-					alt="toggle replies"
-					width={18}
-					height={18}
-				/>
-				{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
-			</button>
-		)}
-		</div>
-) :<>
 					{/* 본문 */}
-					<div className="body5-regular text-black-900 mb-3.5 whitespace-pre-line">
+					{!isEditing && <div className="body5-regular text-black-900 mb-3.5 whitespace-pre-line">
 						{isReply && replyTo && <span className="text-[#890f0e] mr-1">@{replyTo.nickname}</span>}
 						{content.contents}
-					</div>
+					</div>}
 
-					{/* 하단 영역: 답글 버튼, 답글 토글, 킥 버튼 */}
-					<div className="flex justify-between items-center gap-3.5">
-						<div className="flex flex-col gap-3.5">
-							{isCommentAllowed && !isReply && !isReplyInputOpen && (
-								<button
-									className={clsx(
-										'button5-regular rounded-sm px-2 py-1 mb-0.5 w-fit',
-										isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
-									)}
-									onClick={toggleReplyInputOpen}
-								>
-									답글
-								</button>
-							)}
-
-							{content.replies?.length > 0 && (
-								<button
-									className="flex items-center gap-[0.625rem] text-black-600 body6-regular"
-									onClick={() => setIsReplyListOpen(!isReplyListOpen)}
-								>
-									<Image
-										src={isReplyListOpen ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
-										alt="toggle replies"
-										width={18}
-										height={18}
-									/>
-									{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
-								</button>
-							)}
-						</div>
+					<div className="flex justify-between">
+						{/* 답글 입력 버튼 */}
+						{isCommentAllowed && !isEditing && !isReply && !isReplyInputOpen && (
+							<button
+								className={clsx(
+									'button5-regular rounded-sm px-2 py-1 mb-0.5 w-fit',
+									isReplyInputOpen ? 'text-black-100 bg-black-500' : 'text-black-700 bg-black-200',
+								)}
+								onClick={toggleReplyInputOpen}
+							>
+								답글
+							</button>
+						)}
 
 						{/* 킥 버튼 (하단 우측) */}
-						<button onClick={() => toggleCommentLike(content.pk)} className="flex items-center gap-2">
+						{!isEditing && <button onClick={() => toggleCommentLike(content.pk)} className="ml-auto flex items-center gap-2">
 							<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
 							<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
-						</button>
-					</div> </>}
+						</button>}
+					</div> 
 
-					{/* 댓글 입력창 */}
-					{(isReplyInputOpen) && (
+					{(isReplyInputOpen || isEditing) && 
 						<CommentInput
-							type={'reply'}
-							replyTo={{ pk: content.pk, nickname: content.user.nickname }}
+							type={isEditing ? 'edit' : 'reply'}
+							replyTo={isEditing ? replyTo : { pk: content.pk, nickname: content.user.nickname }}
 							contentType={type}
 							contentsId={contentsId}
 							editingCommentId={editingCommentId}
-							defaultContent={''}
+							defaultContent={isEditing ? content.contents : ''}
 							onCommentSubmit={handleCommentSubmit}
-							onCommentCancel={() => {
-								setIsReplyInputOpen(false);
-							}}
+							onCommentCancel={isEditing 
+									? () => setEditingCommentId(null)
+									: () => setIsReplyInputOpen(false)
+							}
 						/>
+					}
+
+					{/* 답글 토글 */}
+					{content.replies?.length > 0 && (
+						<button
+							className="flex items-center gap-[0.625rem] text-black-600 body6-regular mt-3.5"
+							onClick={() => setIsReplyListOpen(!isReplyListOpen)}
+						>
+							<Image
+								src={isReplyListOpen ? '/chevron/score-up.svg' : '/chevron/score-down.svg'}
+								alt="toggle replies"
+								width={18}
+								height={18}
+							/>
+							{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
+						</button>
 					)}
 
 				</div>
 			</div>
-					{isReplyListOpen &&
-						content.replies?.map((reply) => (
-							<CommentItem
-								key={reply.pk}
-								content={reply}
-								replyTo={{ pk: content.pk, nickname: content.user.nickname }}
-								{...commentItemProps}
-							/>
-						))}
+
+			{isReplyListOpen &&
+				content.replies?.map((reply) => (
+					<CommentItem
+						key={reply.pk}
+						content={reply}
+						replyTo={{ pk: content.pk, nickname: content.user.nickname }}
+						{...commentItemProps}
+					/>
+				))
+			}
 
 			{isConfirmModalOpen && (
 				<AlertModal
