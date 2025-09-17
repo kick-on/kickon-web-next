@@ -89,7 +89,7 @@ const DetailPage = () => {
 
 	return (
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
-			<ComponentFrame isMain={true}>
+			<ComponentFrame isMain={true} className="overflow-hidden">
 				{postDetail ? (
 					<DetailContent commonDetailData={postDetail} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
