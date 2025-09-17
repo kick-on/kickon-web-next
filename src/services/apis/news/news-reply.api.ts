@@ -19,7 +19,7 @@ export const getNewsCommentList = async ({
 		size: String(size),
 	});
 	if (infinite !== undefined) params.append('infinite', String(infinite));
-	if (lastReply !== undefined) params.append('lastReply', String(infinite));
+	if (lastReply !== undefined) params.append('lastReply', String(lastReply));
 
 	const response = await fetch(`${SERVER_URL}/api/news-reply?${params.toString()}`);
 

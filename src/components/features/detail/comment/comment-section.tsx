@@ -43,8 +43,9 @@ function CommentSection({
 			id: contentsId,
 			page: currentPage,
 			size: commentsPerPage,
-			...(isMobile ? { infinite: true, lastReply: comments.at(-1).pk } : {}),
+			...(isMobile && comments.length > 0 ? { infinite: true, lastReply: comments.at(-1).pk } : {}),
 		};
+
 		try {
 			const response = isNews ? await getNewsCommentList(query) : await getBoardCommentList(query);
 
