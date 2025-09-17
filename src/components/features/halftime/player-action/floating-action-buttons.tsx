@@ -9,7 +9,9 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { KickIcon, CommentIcon, ShareIcon, PaperIcon } from './icon';
-import CommentSection from './comment-section/comment-section';
+import { useIsHalftimeCommentOpen } from '@/lib/store/useHalftimeCommentStore';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import CommentFloatingPanel from './comment-section/comment-floating-panel';
 
 interface ActionButton {
 	label: '킥' | '공유' | '본문' | '댓글';
@@ -25,9 +27,12 @@ function FloatingActionButtons({
 	referencePk,
 }: Pick<GetHalftimeDetailDto, 'isKicked' | 'kickCount' | 'replyCount' | 'usedIn' | 'referencePk'>) {
 	const router = useRouter();
-	const [isCommentClicked, setIsCommentClicked] = useState(false);
+
 	const [isKicked, setIsKicked] = useState(isKickedData);
 	const [kickCount, setKickCount] = useState(kickCountData);
+
+	const isLeftSideVisible = useIsLeftSideVisible();
+	const { isHalftimeCommentOpen, toggleHalftimeComment } = useIsHalftimeCommentOpen();
 	const { toggleIsKicked } = useViewedHalftimesStore();
 
 	const actionButtons: ActionButton[] = [
@@ -59,8 +64,7 @@ function FloatingActionButtons({
 				toggleKick();
 				break;
 			case '댓글':
-				console.log(replyCountData);
-				setIsCommentClicked(!isCommentClicked);
+				toggleHalftimeComment();
 				break;
 			case '공유':
 				copyUrlToClipboard();
@@ -101,26 +105,28 @@ function FloatingActionButtons({
 	};
 
 	return (
-		<div
-			className="absolute z-20 py-6 px-3 flex flex-col gap-8 rounded-lg shadow-calendar
+		<>
+			<div
+				className="absolute z-20 py-6 px-3 flex flex-col gap-8 rounded-lg shadow-calendar
 				desktop:border desktop:border-black-200
 				desktop:bg-black-000/20 desktop:bottom-0 desktop:-right-20
 				bg-black-900/10 bottom-8 tablet:right-4 @mobile:right-3"
-		>
-			{actionButtons.map((button) => (
-				<button
-					key={button.label}
-					onClick={() => handleClick(button.label)}
-					className={clsx(
-						'px-1 flex flex-col gap-1.5 items-center body7-medium text-black-000 desktop:text-black-900 hover:text-black-400',
-					)}
-				>
-					{button.icon}
-					<span>{button.value}</span>
-				</button>
-			))}
-			{isCommentClicked && <CommentSection />}
-		</div>
+			>
+				{actionButtons.map((button) => (
+					<button
+						key={button.label}
+						onClick={() => handleClick(button.label)}
+						className={clsx(
+							'px-1 flex flex-col gap-1.5 items-center body7-medium text-black-000 desktop:text-black-900 hover:text-black-400',
+						)}
+					>
+						{button.icon}
+						<span>{button.value}</span>
+					</button>
+				))}
+				{isHalftimeCommentOpen && isLeftSideVisible && <CommentFloatingPanel />}
+			</div>
+		</>
 	);
 }
 

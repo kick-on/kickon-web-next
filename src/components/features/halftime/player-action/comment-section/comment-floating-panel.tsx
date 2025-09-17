@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function CommentFloationPanel() {
+export default function CommentFloatingPanel() {
 	return (
 		<div
 			className="absolute w-[22.0625rem] h-[45.75rem] left-[4.875rem] bottom-0

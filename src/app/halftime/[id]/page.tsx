@@ -16,6 +16,8 @@ import { Swiper as SwiperType } from 'swiper';
 import { shouldUpdateView } from '@/lib/utils';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
+import { useIsHalftimeCommentOpen } from '@/lib/store/useHalftimeCommentStore';
+import CommentBottomSheet from '@/components/features/halftime/player-action/comment-section/comment-bottom-sheet';
 
 export default function Page() {
 	const { _hasHydrated: isQueryKeyLoaded, halftimeListQueryKey, setSort } = useHalftimeQueryKeyStore();
@@ -142,11 +144,14 @@ export default function Page() {
 	};
 
 	const [isMobileNavbar, setIsMobileNavber] = useState(false);
-	const isLeftSideVisible = !useIsLeftSideVisible();
+	const isLeftSideVisible = useIsLeftSideVisible();
 
 	useEffect(() => {
-		setIsMobileNavber(isLeftSideVisible);
+		setIsMobileNavber(!isLeftSideVisible);
 	}, [isLeftSideVisible]);
+
+	// 댓글 바텀시트
+	const { isHalftimeCommentOpen } = useIsHalftimeCommentOpen();
 
 	return (
 		<div
@@ -182,6 +187,8 @@ export default function Page() {
 					</SwiperSlide>
 				))}
 			</Swiper>
+
+			{isHalftimeCommentOpen && !isLeftSideVisible && <CommentBottomSheet swiperRef={swiperRef} />}
 		</div>
 	);
 }
