@@ -158,7 +158,7 @@ function CommentItem({
 
 				<div className="flex flex-col flex-1 relative">
 					{/* 상단: 닉네임 + 날짜 + 더보기 */}
-					<div className="flex justify-between items-center">
+					<div className="flex justify-between items-start">
 						<div className="flex items-center gap-4 mb-3">
 							<span className="flex items-center gap-0.5 body5-medium text-black-900">
 								{content.user.nickname}
