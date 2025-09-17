@@ -22,16 +22,16 @@ export default function useNotificationSocket(userId: string | null) {
 		const client = new Client({
 			webSocketFactory: () => socket,
 			reconnectDelay: 5000,
-			debug: (str) => console.log('%c[STOMP DEBUG]', 'color: gray', str), // 디버깅 로그
+			// debug: (str) => console.log('%c[STOMP DEBUG]', 'color: gray', str), // 디버깅 로그
 		});
 
 		client.onConnect = (frame) => {
 			console.log('[STOMP] 연결 성공', frame);
 			const subscription = client.subscribe(`/topic/notify/${userId}`, (message) => {
-				console.log('[STOMP] 메시지 수신 RAW:', message);
+				// console.log('[STOMP] 메시지 수신 RAW:', message);
 				try {
 					const newNotification = JSON.parse(message.body);
-					console.log('[STOMP] 파싱된 알림:', newNotification);
+					// console.log('[STOMP] 파싱된 알림:', newNotification);
 					useNotificationStore.getState().addNotification(newNotification);
 				} catch (e) {
 					console.error('[STOMP] 메시지 파싱 실패', e);
