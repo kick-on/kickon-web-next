@@ -48,6 +48,7 @@ export function CommentMoreButton({ onEditClick, onDeleteClick }: CommentMoreBut
 
 	const buttonCommonClass =
 		'block w-full text-center px-[27px] py-[10px] whitespace-nowrap @mobile:px-[30px] @mobile:py-[15px] hover:bg-black-200 @mobile:active:bg-black-200';
+
 	return (
 		<div className="relative inline-block">
 			<button ref={buttonRef} onClick={() => setIsOpen((prev) => !prev)} className="flex items-center pl-1">
@@ -57,7 +58,7 @@ export function CommentMoreButton({ onEditClick, onDeleteClick }: CommentMoreBut
 				<div
 					ref={menuRef}
 					className={clsx(
-						'absolute z-50 mt-2 flex flex-col rounded-lg border border-black-300 bg-black-000 text-black-900 button4-medium @mobile:text-13 shadow-[0_4px_10px_0_rgba(0,0,0,0.16)]',
+						'absolute z-50 mt-2 right-0 flex flex-col rounded-lg border border-black-300 bg-black-000 text-black-900 button4-medium @mobile:text-13 shadow-[0_4px_10px_0_rgba(0,0,0,0.16)]',
 						'w-[6.5625rem]',
 						'@mobile:right-0',
 					)}
