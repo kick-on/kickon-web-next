@@ -3,19 +3,19 @@ import { Dispatch, SetStateAction } from 'react';
 
 // comment section props
 export interface CommentSectionProps {
-	type: 'news' | 'board';
+	postType: 'news' | 'board';
+	postId: number;
 	isCommentAllowed: boolean;
-	contentsId: number;
 	totalreplies?: number;
 	setTotalReplies?: (count: number) => void;
 }
 
 // comment item props
 export interface CommentItemProps {
-	content: CommonCommentDto;
-	type: 'news' | 'board';
+	postType: 'news' | 'board';
+	postId: number;
+	comment: CommonCommentDto;
 	isCommentAllowed: boolean;
-	contentsId: number;
 	replyTo?: { pk: number; nickname: string };
 	editingCommentId?: number;
 	setEditingCommentId?: (id: number | null) => void;
@@ -30,8 +30,8 @@ export interface CommentInputProps {
 		pk: number;
 		nickname: string;
 	};
-	contentType: 'news' | 'board';
-	contentsId: number;
+	postType: 'news' | 'board';
+	postId: number;
 	editingCommentId: number;
 	defaultContent?: string;
 	onCommentSubmit?: () => void;

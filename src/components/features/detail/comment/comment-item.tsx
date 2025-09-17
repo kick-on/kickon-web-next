@@ -15,10 +15,10 @@ import AlertModal from '../alert-modal';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 
 function CommentItem({
-	content,
-	type,
+	postType,
+	postId,
+	comment,
 	isCommentAllowed,
-	contentsId,
 	replyTo,
 	editingCommentId,
 	setEditingCommentId,
@@ -26,14 +26,14 @@ function CommentItem({
 	setTotalReplies,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const { formattedDate, formattedTime } = formatDate(content.createdAt, '2-digit');
+	const { formattedDate, formattedTime } = formatDate(comment.createdAt, '2-digit');
 
 	const isMobile = useIsMobile();
 
-	const isNews = type === 'news';
+	const isNews = postType === 'news';
 	const isReply = Boolean(replyTo);
-	const isEditing = editingCommentId === content.pk;
-	const isMyComment = currentUserInfo?.id === content.user.id;
+	const isEditing = editingCommentId === comment.pk;
+	const isMyComment = currentUserInfo?.id === comment.user.id;
 
 	const [isReplyListOpen, setIsReplyListOpen] = useState(false);
 	const [isReplyInputOpen, setIsReplyInputOpen] = useState(false);
@@ -130,10 +130,10 @@ function CommentItem({
 		}
 	};
 
-	const commentItemProps: Omit<CommentItemProps, 'content'> = {
-		type,
+	const commentItemProps: Omit<CommentItemProps, 'comment'> = {
+		postType,
 		isCommentAllowed,
-		contentsId,
+		postId,
 		editingCommentId,
 		setEditingCommentId,
 		setComments,
@@ -149,7 +149,7 @@ function CommentItem({
 				)}
 			>
 				<Image
-					src={content.user?.profileImageUrl || '/default-profile.svg'}
+					src={comment.user?.profileImageUrl || '/default-profile.svg'}
 					alt="프로필"
 					width={28}
 					height={28}
@@ -161,8 +161,8 @@ function CommentItem({
 					<div className="flex justify-between items-start">
 						<div className="flex items-center gap-4 mb-3">
 							<span className="flex items-center gap-0.5 body5-medium text-black-900">
-								{content.user.nickname}
-								{content.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+								{comment.user.nickname}
+								{comment.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 							</span>
 							<span className="body6-regular text-black-600">
 								{formattedDate}&nbsp;{formattedTime}
@@ -172,15 +172,15 @@ function CommentItem({
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
 							<CommentMoreButton
-								onDeleteClick={() => handleDeleteComment(content.pk, replyTo?.pk)}
+								onDeleteClick={() => handleDeleteComment(comment.pk, replyTo?.pk)}
 								onEditClick={() => {
 									if (isReplyInputOpen) {
 										if (window.confirm('작성 중인 내용이 사라집니다. 계속하시겠습니까?')) {
 											setIsReplyInputOpen(false);
-											handleEnterEditMode(content.pk);
+											handleEnterEditMode(comment.pk);
 										}
 									} else {
-										handleEnterEditMode(content.pk);
+										handleEnterEditMode(comment.pk);
 									}
 								}}
 							/>
@@ -191,7 +191,7 @@ function CommentItem({
 					{!isEditing && (
 						<div className="body5-regular text-black-900 mb-3.5 whitespace-pre-line">
 							{isReply && replyTo && <span className="text-[#890f0e] mr-1">@{replyTo.nickname}</span>}
-							{content.contents}
+							{comment.contents}
 						</div>
 					)}
 
@@ -211,28 +211,28 @@ function CommentItem({
 
 						{/* 킥 버튼 (하단 우측) */}
 						{!isEditing && (
-							<button onClick={() => toggleCommentLike(content.pk)} className="ml-auto flex items-center gap-2">
-								<Image src={content.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
-								<span className={content.kicked ? 'text-black-900' : 'text-gray-500'}>{content.kickCount}</span>
+							<button onClick={() => toggleCommentLike(comment.pk)} className="ml-auto flex items-center gap-2">
+								<Image src={comment.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
+								<span className={comment.kicked ? 'text-black-900' : 'text-gray-500'}>{comment.kickCount}</span>
 							</button>
 						)}
 					</div>
 
 					{(isReplyInputOpen || isEditing) && (
 						<CommentInput
+							postType={postType}
+							postId={postId}
 							type={isEditing ? 'edit' : 'reply'}
-							replyTo={isEditing ? replyTo : { pk: content.pk, nickname: content.user.nickname }}
-							contentType={type}
-							contentsId={contentsId}
+							replyTo={isEditing ? replyTo : { pk: comment.pk, nickname: comment.user.nickname }}
 							editingCommentId={editingCommentId}
-							defaultContent={isEditing ? content.contents : ''}
+							defaultContent={isEditing ? comment.contents : ''}
 							onCommentSubmit={handleCommentSubmit}
 							onCommentCancel={isEditing ? () => setEditingCommentId(null) : () => setIsReplyInputOpen(false)}
 						/>
 					)}
 
 					{/* 답글 토글 */}
-					{content.replies?.length > 0 && (
+					{comment.replies?.length > 0 && (
 						<button
 							className="flex items-center gap-[0.625rem] text-black-600 body6-regular mt-3.5"
 							onClick={() => setIsReplyListOpen(!isReplyListOpen)}
@@ -243,18 +243,18 @@ function CommentItem({
 								width={18}
 								height={18}
 							/>
-							{isReplyListOpen ? '답글 숨기기' : `답글 ${content.replies?.length}개`}
+							{isReplyListOpen ? '답글 숨기기' : `답글 ${comment.replies?.length}개`}
 						</button>
 					)}
 				</div>
 			</div>
 
 			{isReplyListOpen &&
-				content.replies?.map((reply) => (
+				comment.replies?.map((reply) => (
 					<CommentItem
 						key={reply.pk}
-						content={reply}
-						replyTo={{ pk: content.pk, nickname: content.user.nickname }}
+						comment={reply}
+						replyTo={{ pk: comment.pk, nickname: comment.user.nickname }}
 						{...commentItemProps}
 					/>
 				))}
@@ -267,7 +267,7 @@ function CommentItem({
 						setIsConfirmModalOpen(false);
 					}}
 					onConfirm={() => {
-						setEditingCommentId(content.pk);
+						setEditingCommentId(comment.pk);
 						setIsConfirmModalOpen(false);
 					}}
 				/>

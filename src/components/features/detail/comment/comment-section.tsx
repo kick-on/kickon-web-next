@@ -13,16 +13,16 @@ import { getNewsCommentList } from '@/services/apis/news/news-reply.api';
 import { getBoardCommentList } from '@/services/apis/board/board-reply.api';
 
 function CommentSection({
-	type,
+	postType,
+	postId,
 	isCommentAllowed,
-	contentsId,
 	totalreplies = 0,
 	setTotalReplies,
 }: CommentSectionProps) {
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
-	const isNews = type === 'news';
-	const baseUrl = `/${type}/${contentsId}`;
+	const isNews = postType === 'news';
+	const baseUrl = `/${postType}/${postId}`;
 
 	const pageParam = searchParams.get('page');
 	const [currentPage, setCurrentPage] = useState(pageParam ? Number(pageParam) : 1);
@@ -37,10 +37,10 @@ function CommentSection({
 	const commentsPerPage = 10;
 
 	const fetchComments = async () => {
-		if (!contentsId || contentsId < 1) return;
+		if (!postId || postId < 1) return;
 
 		const query = {
-			id: contentsId,
+			id: postId,
 			page: currentPage,
 			size: commentsPerPage,
 			...(isMobile && comments.length > 0 ? { infinite: true, lastReply: comments.at(-1).pk } : {}),
@@ -67,7 +67,7 @@ function CommentSection({
 	// 초기 접속 또는 페이지 변경 시 댓글 불러오기
 	useEffect(() => {
 		fetchComments();
-	}, [currentPage, contentsId]);
+	}, [currentPage, postId]);
 
 	// searchParams가 바뀌었을 때 currentPage를 갱신
 	useEffect(() => {
@@ -88,7 +88,7 @@ function CommentSection({
 	const handleLoadMoreComment = async () => {
 		const nextPage = currentPage + 1;
 		const query = {
-			id: contentsId,
+			id: postId,
 			page: nextPage,
 			size: commentsPerPage,
 			infinite: true,
@@ -106,10 +106,10 @@ function CommentSection({
 		}
 	};
 
-	const commentItemProps: Omit<CommentItemProps, 'content'> = {
-		type,
+	const commentItemProps: Omit<CommentItemProps, 'comment'> = {
+		postType,
+		postId,
 		isCommentAllowed,
-		contentsId,
 		editingCommentId,
 		setEditingCommentId,
 		setComments,
@@ -123,9 +123,7 @@ function CommentSection({
 
 	return (
 		<div>
-			{isCommentAllowed && (
-				<CommentInput contentType={type} contentsId={contentsId} editingCommentId={editingCommentId} />
-			)}
+			{isCommentAllowed && <CommentInput postType={postType} postId={postId} editingCommentId={editingCommentId} />}
 
 			<p className="body5-regular text-black-600 border-t border-b border-black-200 px-4 py-3">
 				댓글 <span className="text-black-900">{totalreplies}</span>개
@@ -136,7 +134,7 @@ function CommentSection({
 			) : (
 				<div className="flex flex-col">
 					{comments.map((comment) => (
-						<CommentItem key={comment.pk} content={comment} {...commentItemProps} />
+						<CommentItem key={comment.pk} comment={comment} {...commentItemProps} />
 					))}
 				</div>
 			)}

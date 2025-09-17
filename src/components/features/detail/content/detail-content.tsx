@@ -21,6 +21,8 @@ interface DetailContentProps {
 const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailContentProps) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
+	// TODO: common detail data를 받고 news detail data를 새로 선언하는 방식
+	// -> common detail data(-> postDetail)에서 타입 가드 사용해서 내려받은 props를 상황에 맞게 사용
 	const isNews = type === 'news';
 	const newsDetailData = isNews ? (commonDetailData as NewsDetailDto) : undefined;
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';

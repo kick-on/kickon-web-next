@@ -11,10 +11,10 @@ import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
 import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
 
 const CommentInput = ({
+	postType,
+	postId,
 	type = 'comment',
 	replyTo,
-	contentType,
-	contentsId,
 	editingCommentId,
 	defaultContent,
 	onCommentSubmit,
@@ -77,7 +77,7 @@ const CommentInput = ({
 
 		try {
 			let response;
-			const isNews = contentType === 'news';
+			const isNews = postType === 'news';
 			const sanitizedContent = content.replace(/\u200B/g, '');
 
 			if (type === 'edit') {
@@ -93,7 +93,7 @@ const CommentInput = ({
 				const body: CreateNewsReplyRequest | CreateBoardReplyRequest = {
 					contents: sanitizedContent,
 					...(isReply ? { parentReply: replyTo.pk } : {}),
-					...(isNews ? { news: contentsId } : { board: contentsId }),
+					...(isNews ? { news: postId } : { board: postId }),
 				};
 				response = isNews
 					? await createNewsReply(body as CreateNewsReplyRequest)
