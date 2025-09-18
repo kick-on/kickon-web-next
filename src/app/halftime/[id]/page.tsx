@@ -31,7 +31,6 @@ export default function Page() {
 	const params = useParams();
 	const { id: pk } = params;
 
-	console.log(halftimeListQueryKey);
 	const [, sort, size] = halftimeListQueryKey;
 	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
 
@@ -39,6 +38,9 @@ export default function Page() {
 	const cachedData = queryClient.getQueryData(halftimeListQueryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
 	const halftimes = cachedData?.pages?.flatMap((page) => page.data) ?? [];
 	const pks = halftimes?.map((h) => h.pk);
+
+	// 댓글 바텀시트
+	const { isHalftimeCommentOpen, closeHalftimeComment } = useIsHalftimeCommentOpen();
 
 	const getHalftime = async (pkToFetch: number) => {
 		// 이미 조회한 하프타임인 경우 return
@@ -121,6 +123,7 @@ export default function Page() {
 	useEffect(() => {
 		return () => {
 			clearViewedHalftimes();
+			closeHalftimeComment();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -149,9 +152,6 @@ export default function Page() {
 	useEffect(() => {
 		setIsMobileNavber(!isLeftSideVisible);
 	}, [isLeftSideVisible]);
-
-	// 댓글 바텀시트
-	const { isHalftimeCommentOpen } = useIsHalftimeCommentOpen();
 
 	return (
 		<div
