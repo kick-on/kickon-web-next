@@ -5,7 +5,7 @@ export default function CommentContent() {
 	const { closeHalftimeComment } = useIsHalftimeCommentOpen();
 
 	return (
-		<div className="relative h-full rounded-[0.625rem] grid grid-rows-[auto_1fr_auto] overflow-hidden">
+		<div className="h-full rounded-[0.625rem] grid grid-rows-[auto_1fr_auto] overflow-hidden">
 			<section
 				className="p-4 w-full bg-black-000 flex items-center justify-between border-b border-black-200"
 				style={{ filter: 'drop-shadow(0 -14px 12px rgba(0, 0, 0, 0.20))' }}
@@ -25,7 +25,7 @@ export default function CommentContent() {
 				))}
 			</section>
 
-			<section className="w-full h-28 bg-black-500">dd</section>
+			<section className="w-full h-28">댓글 input</section>
 		</div>
 	);
 }
