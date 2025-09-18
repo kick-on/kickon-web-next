@@ -4,7 +4,7 @@ import CommentContent from './comment-content';
 export default function CommentFloatingPanel() {
 	return (
 		<div
-			className="absolute w-[22.0625rem] h-[45.75rem] left-[4.875rem] bottom-0
+			className="absolute w-[22.0625rem] max-h-[45.75rem] h-[70dvh] min-h-120 left-[4.875rem] bottom-0
 				bg-black-000 rounded-lg shadow-calendar"
 		>
 			<CommentContent />
