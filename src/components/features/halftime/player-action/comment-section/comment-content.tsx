@@ -19,7 +19,7 @@ export default function CommentContent() {
 				</button>
 			</section>
 
-			<section className="overflow-y-scroll h-full">
+			<section className="h-full halftime-comment-scrollbar">
 				{new Array(10).fill(null).map((_, i) => (
 					<div key={i} className="h-30 border"></div>
 				))}
