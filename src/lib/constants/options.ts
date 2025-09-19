@@ -31,4 +31,4 @@ export const halftimeSortOptions = [
 	{ label: '최신순', value: 'CREATED_DESC' },
 	{ label: '인기순', value: 'POPULAR' },
 	{ label: '등록순', value: 'CREATED_ASC' },
-];
+] as const;

@@ -4,6 +4,7 @@ import {
 	GetHalftimeListRequest,
 	GetHalftimeListResponse,
 	GetTodaysHalftimeResponse,
+	HalftimeSortType,
 } from './shorts.type';
 
 // 하프타임 리스트 조회
@@ -30,9 +31,12 @@ export const getHalftimeList = async ({ sort, page, size }: GetHalftimeListReque
 };
 
 // 하프타임 상세 조회
-export const getHalftimeDetail = async (pk: number) => {
+export const getHalftimeDetail = async (pk: number, sort?: HalftimeSortType) => {
 	try {
-		const response = await fetcher<GetHalftimeDetailResponse>({ method: 'GET', url: `/api/shorts/${pk}` });
+		const response = await fetcher<GetHalftimeDetailResponse>({
+			method: 'GET',
+			url: `/api/shorts/${pk}?sort=${sort || 'CREATED_DESC'}`,
+		});
 
 		if (!response) {
 			console.error('하프타임 상세 조회 실패 - 응답 없음');

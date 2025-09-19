@@ -1,7 +1,7 @@
 'use client';
 
 import { formatNumberByUnit } from '@/lib/utils';
-import { BaseHalftimeDto } from '@/services/apis/shorts/shorts.type';
+import { BaseHalftimeDto, HalftimeSortType } from '@/services/apis/shorts/shorts.type';
 import Image from 'next/image';
 import Link from 'next/link';
 import Preview from './preview';
@@ -14,12 +14,14 @@ export default function PreviewWithTitle({
 	kickCount,
 	hasKick,
 	ref,
+	sort,
 }: Pick<BaseHalftimeDto, 'pk' | 'videoUrl' | 'title' | 'viewCount' | 'kickCount'> & {
 	hasKick?: boolean;
 	ref?: React.RefObject<any>;
+	sort?: HalftimeSortType;
 }) {
 	return (
-		<Link ref={ref} key={pk} href={`/halftime/${pk}`}>
+		<Link ref={ref} key={pk} href={`/halftime/${pk}${sort ? `?sort=${sort}` : ''}`}>
 			<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
 				<Preview src={videoUrl} />
 			</div>
