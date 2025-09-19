@@ -42,11 +42,17 @@ export default function TodaysHalftime() {
 				</Link>
 			</header>
 
-			<div className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-4">
-				{videos.map((video) => (
-					<PreviewWithTitle key={video.pk} {...video} />
-				))}
-			</div>
+			{videos.length ? (
+				<div className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-4">
+					{videos.map((video) => (
+						<PreviewWithTitle key={video.pk} {...video} />
+					))}
+				</div>
+			) : (
+				<Link href={'/halftime'} className="py-10 text-center text-body-03 text-black-7800">
+					모든 하프타임 둘러보러 가기 &gt;
+				</Link>
+			)}
 		</ComponentFrame>
 	);
 }
