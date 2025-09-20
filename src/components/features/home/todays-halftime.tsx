@@ -42,7 +42,7 @@ export default function TodaysHalftime() {
 				</Link>
 			</header>
 
-			{false ? (
+			{videos.length ? (
 				<div className="grid grid-cols-2 grid-rows-2 gap-x-3 gap-y-4">
 					{videos.map((video) => (
 						<PreviewWithTitle key={video.pk} {...video} />

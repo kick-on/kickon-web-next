@@ -20,7 +20,7 @@ export default function TopHalftime() {
 		getVideos();
 	}, []);
 
-	return false ? (
+	return videos.length ? (
 		<div className="grid grid-cols-2 grid-rows-2 gap-2.5">
 			{videos.map((video) => (
 				<PreviewWithoutTitle key={video.pk} {...video} />
