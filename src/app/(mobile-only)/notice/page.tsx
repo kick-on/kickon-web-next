@@ -8,19 +8,23 @@ export default function Page() {
 	const notifications = useNotificationStore((state) => state.notifications);
 
 	return (
-		<div>
+		<div className="h-dvh flex flex-col">
 			<NoticeHeader />
-			{notifications.map((notice) => (
-				<NoticeItem
-					key={notice.pk}
-					pk={notice.pk}
-					type={notice.type}
-					read={notice.read}
-					redirectUrl={notice.redirectUrl}
-					relativeTime={notice.relativeTime}
-					content={notice.content}
-				/>
-			))}
+			{notifications.length ? (
+				notifications.map((notice) => (
+					<NoticeItem
+						key={notice.pk}
+						pk={notice.pk}
+						type={notice.type}
+						read={notice.read}
+						redirectUrl={notice.redirectUrl}
+						relativeTime={notice.relativeTime}
+						content={notice.content}
+					/>
+				))
+			) : (
+				<div className="m-auto pb-4 text-center text-body-03 text-black-800">킥온에서 다양한 소식을 만나보세요!</div>
+			)}
 		</div>
 	);
 }
