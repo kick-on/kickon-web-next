@@ -29,6 +29,7 @@ export interface GetHalftimeDetailDto extends BaseHalftimeDto {
 	replyCount: number;
 	user: UserDto;
 	isKicked: boolean;
+	nextPk: number | undefined;
 }
 export type GetHalftimeDetailResponse = SuccessResponse<GetHalftimeDetailDto>;
 
