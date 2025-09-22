@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function Sorter() {
-	const [selectedSort, setSelectedSort] = useState(halftimeSortOptions[0].value);
+	const [selectedSort, setSelectedSort] = useState<string>(halftimeSortOptions[0].value);
 	const selectedIndex = halftimeSortOptions.findIndex((option) => option.value === selectedSort);
 	const searchParams = useSearchParams();
 	const router = useRouter();
