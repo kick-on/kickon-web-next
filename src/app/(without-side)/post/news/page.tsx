@@ -16,6 +16,8 @@ import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/ut
 import { categories } from '@/lib/constants/options';
 import { createNews, patchNewsDetail } from '@/services/apis/news/news.api';
 import { CreateNewsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
+import { EditorProvider } from '@/lib/contexts/editor/provider';
+//import { useEditorContext } from '@/lib/contexts/editor/context';
 
 export default function Page() {
 	const router = useRouter();
@@ -27,12 +29,14 @@ export default function Page() {
 		value: '',
 	});
 	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const searchParams = useSearchParams();
+	const isEditMode = searchParams.get('edit') === 'true';
+
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
 	const [selectedImage, setSelectedImage] = useState<string | null>(null);
+
 	const isFormValid = !!(selectedImage?.trim() && selectedOption.value && title.trim() && body.trim());
-	const searchParams = useSearchParams();
-	const isEditMode = searchParams.get('edit') === 'true';
 
 	useEffect(() => {
 		if (!isEditMode) return;
@@ -101,8 +105,7 @@ export default function Page() {
 		}
 	}, [currentUserInfo, setCurrentUserInfo, router]);
 
-	// 중복 호출 방지
-	const isLoading = useRef(false);
+	const isLoading = useRef(false); // 더블 클릭 -> 중복 호출 방지
 
 	const postNewsContents = async () => {
 		console.log('isLoading', isLoading.current);
@@ -180,8 +183,9 @@ export default function Page() {
 					<Image src="/help-circle.svg" alt="게시글 작성 가이드라인" width={20} height={20} />
 				</button>
 			</div>
-
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={true} editedTitle={title} editedBody={body} />
+			<EditorProvider setBody={setBody} isNews={true} editedBody={body}>
+				<PostEditor setTitle={setTitle} editedTitle={title} />
+			</EditorProvider>
 
 			<div className="flex w-full justify-center gap-4 mt-[30px] mb-[100px] @mobile:mt-[38px] @mobile:mb-[50px]">
 				<button
@@ -200,7 +204,7 @@ export default function Page() {
 				</button>
 				<button
 					onClick={selectedImage ? postNewsContents : () => alert('대표 이미지를 등록해 주세요.')}
-					disabled={!isFormValid && !isLoading}
+					disabled={!isFormValid}
 					className={clsx(
 						'w-41 @mobile:w-37 button2-semibold @mobile:text-15 px-4 py-2 rounded-lg transition-all',
 						isFormValid ? 'text-black-100 bg-primary-900' : 'bg-black-600 text-black-000',

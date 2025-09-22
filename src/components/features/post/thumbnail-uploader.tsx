@@ -5,6 +5,7 @@ import { useRef, useState } from 'react';
 import clsx from 'clsx';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { compressImage } from '@/lib/utils';
+import AlertModal from '../detail/alert-modal';
 
 interface ThumbnailUploaderProps {
 	selectedImage: string | null;
@@ -13,36 +14,50 @@ interface ThumbnailUploaderProps {
 
 export default function ThumbnailUploader({ selectedImage, onChange }: ThumbnailUploaderProps) {
 	const [isPortrait, setIsPortrait] = useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [pendingFile, setPendingFile] = useState<File | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageClick = () => {
+		fileInputRef.current?.click();
+	};
+
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (!file) return;
 
+		if (file.size > 2 * 1024 * 1024) {
+			// 2MB 이상 -> 모달 먼저
+			setPendingFile(file);
+			setShowModal(true);
+		} else {
+			// 2MB 미만 -> 미리보기 + 업로드
+			showPreviewAndUpload(file);
+		}
+	};
+
+	const showPreviewAndUpload = (file: File) => {
+		const previewUrl = URL.createObjectURL(file);
+		onChange(previewUrl);
+
+		const img = document.createElement('img');
+		img.src = previewUrl;
+		img.onload = () => {
+			setIsPortrait(img.height > img.width);
+		};
+
+		handleFileUpload(file);
+	};
+
+	const handleFileUpload = async (file: File) => {
 		try {
-			console.log(`압축 전 파일 크기: ${(file.size / 1024).toFixed(2)} KB`);
-
-			const compressedFile = await compressImage(file);
-
-			// 압축 후 파일 크기 출력
-			console.log(`압축 후 파일 크기: ${(compressedFile.size / 1024).toFixed(2)} KB`);
-
-			const img = document.createElement('img');
-			img.src = URL.createObjectURL(compressedFile);
-			img.onload = () => {
-				setIsPortrait(img.height > img.width);
-				URL.revokeObjectURL(img.src);
-			};
-
 			const presignedResponse = await getPresignedUrl({
 				type: 'news-files',
-				fileName: compressedFile.name || file.name,
+				fileName: file.name,
 			});
 
 			const { presignedUrl, s3Url } = presignedResponse.data;
-
-			await uploadToS3(presignedUrl, compressedFile);
-
+			await uploadToS3(presignedUrl, file);
 			onChange(s3Url);
 		} catch (error) {
 			console.error('파일 업로드 실패:', error);
@@ -54,10 +69,6 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 		if (fileInputRef.current) {
 			fileInputRef.current.value = '';
 		}
-	};
-
-	const handleImageClick = () => {
-		fileInputRef.current?.click();
 	};
 
 	return (
@@ -88,6 +99,27 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 				</div>
 			)}
 			<input type="file" ref={fileInputRef} onChange={handleFileChange} style={{ display: 'none' }} accept="image/*" />
+
+			{showModal && pendingFile && (
+				<AlertModal
+					type="confirm"
+					description={'파일의 용량이 커 압축이 진행됩니다.\n계속하시겠습니까?'}
+					onConfirm={async () => {
+						setShowModal(false);
+						if (pendingFile) {
+							const compressedFile = await compressImage(pendingFile);
+							showPreviewAndUpload(compressedFile);
+							setPendingFile(null);
+						}
+					}}
+					onCancel={() => {
+						setShowModal(false);
+						setPendingFile(null);
+						onChange(null);
+						if (fileInputRef.current) fileInputRef.current.value = '';
+					}}
+				/>
+			)}
 		</>
 	);
 }
