@@ -4,6 +4,7 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import NoGameCard from '@/components/features/home/no-game-card';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { isPastDate } from '@/lib/utils/date/isPastDate';
 import { getGames } from '@/services/apis/game';
 import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/game/dto';
 import { useCallback, useEffect, useState } from 'react';
@@ -68,7 +69,11 @@ export default function PredictCardList({ teamPk }: { teamPk: undefined | number
 						<div>
 							{proceedingGames.games.map((game, i) => (
 								<div key={game.pk}>
-									<PredictCard type={'proceeding'} refetchGames={() => getGamesByStatus('proceeding')} game={game} />
+									<PredictCard
+										type={isPastDate(game.startAt) ? 'finished' : 'proceeding'}
+										refetchGames={() => getGamesByStatus('proceeding')}
+										game={game}
+									/>
 									{i !== proceedingGames.games.length - 1 && <hr className="mx-4 my-2 border-black-200" />}
 								</div>
 							))}
