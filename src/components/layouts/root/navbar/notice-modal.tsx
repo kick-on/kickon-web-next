@@ -43,22 +43,26 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 				alt="화살표"
 			/>
 			<NoticeHeader isModal={true} onClose={onCloseModal} />
-			<div className="flex-1 rounded-b-[0.625rem] overflow-y-auto no-scrollbar">
-				{notifications.map((notice) => (
-					<NoticeItem
-						key={notice.pk}
-						pk={notice.pk}
-						type={notice.type}
-						read={notice.read}
-						teamLogo={notice.teamLogo}
-						redirectUrl={notice.redirectUrl}
-						relativeTime={notice.relativeTime}
-						content={notice.content}
-						isModal={true}
-						onCloseModal={onCloseModal}
-					/>
-				))}
-			</div>
+			{notifications.length ? (
+				<div className="flex-1 rounded-b-[0.625rem] overflow-y-auto no-scrollbar">
+					{notifications.map((notice) => (
+						<NoticeItem
+							key={notice.pk}
+							pk={notice.pk}
+							type={notice.type}
+							read={notice.read}
+							teamLogo={notice.teamLogo}
+							redirectUrl={notice.redirectUrl}
+							relativeTime={notice.relativeTime}
+							content={notice.content}
+							isModal={true}
+							onCloseModal={onCloseModal}
+						/>
+					))}
+				</div>
+			) : (
+				<div className="m-auto pb-4 text-center text-body-03 text-black-800">킥온에서 다양한 소식을 만나보세요!</div>
+			)}
 		</div>
 	);
 }

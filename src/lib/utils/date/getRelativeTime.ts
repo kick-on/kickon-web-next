@@ -1,11 +1,12 @@
 export const getRelativeTime = (dateString: string) => {
-	const past = new Date(dateString);
+	const date = new Date(dateString);
 
 	// 현재 시간을 UTC로 맞추기
 	const now = new Date();
 	const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
 
-	const diffInSeconds = Math.floor((nowUTC.getTime() - past.getTime()) / 1000);
+	const absTime = Math.abs(nowUTC.getTime() - date.getTime());
+	const diffInSeconds = Math.floor(absTime / 1000);
 
 	const rtf = new Intl.RelativeTimeFormat('ko', { numeric: 'auto' });
 
