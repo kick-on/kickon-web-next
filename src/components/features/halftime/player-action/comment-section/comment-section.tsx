@@ -6,7 +6,7 @@ import { useSwiper } from 'swiper/react';
 import CommentFloatingPanel from './comment-floating-panel';
 import { createPortal } from 'react-dom';
 
-export default function CommentSection({ onClose }: { onClose: () => void }) {
+export default function CommentSection({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
 	const isLeftSideVisible = useIsLeftSideVisible();
 	const swiper = useSwiper();
 
@@ -14,7 +14,7 @@ export default function CommentSection({ onClose }: { onClose: () => void }) {
 		<CommentFloatingPanel onClose={onClose} />
 	) : (
 		createPortal(
-			<CommentBottomSheet swiper={swiper} onClose={onClose} />,
+			<CommentBottomSheet swiper={swiper} isCommentBottomSheetOpen={isOpen} onClose={onClose} />,
 			document.getElementById('comment-bottom-sheet-portal'),
 		)
 	);

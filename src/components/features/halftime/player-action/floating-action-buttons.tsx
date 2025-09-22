@@ -121,7 +121,9 @@ function FloatingActionButtons({
 						<span>{button.value}</span>
 					</button>
 				))}
-				{isHalftimeCommentOpen && <CommentSection onClose={() => setIsHalftimeCommentOpen(false)} />}
+				{isHalftimeCommentOpen && (
+					<CommentSection isOpen={isHalftimeCommentOpen} onClose={() => setIsHalftimeCommentOpen(false)} />
+				)}
 			</div>
 		</>
 	);

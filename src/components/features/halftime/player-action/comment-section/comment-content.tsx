@@ -1,11 +1,23 @@
 import Image from 'next/image';
 
-export default function CommentContent({ onClose }: { onClose: () => void }) {
+export default function CommentContent({
+	onClose,
+	onDragStart,
+	onDragEnd,
+}: {
+	onClose: () => void;
+	onDragStart?: (e: React.TouchEvent | React.DragEvent) => void;
+	onDragEnd?: (e: React.TouchEvent | React.DragEvent) => void;
+}) {
 	return (
 		<div className="h-full rounded-[0.625rem] grid grid-rows-[auto_1fr_auto] overflow-hidden">
 			<section
 				className="p-4 w-full bg-black-000 flex items-center justify-between border-b border-black-200"
 				style={{ filter: 'drop-shadow(0 -14px 12px rgba(0, 0, 0, 0.20))' }}
+				onDragStart={onDragStart}
+				onDragEnd={onDragEnd}
+				onTouchStart={onDragStart}
+				onTouchEnd={onDragEnd}
 			>
 				<div className="text-title-05">
 					댓글&nbsp;
