@@ -9,9 +9,7 @@ import clsx from 'clsx';
 import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { KickIcon, CommentIcon, ShareIcon, PaperIcon } from './icon';
-import { useIsHalftimeCommentOpen } from '@/lib/store/useHalftimeCommentStore';
-import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import CommentFloatingPanel from './comment-section/comment-floating-panel';
+import CommentSection from './comment-section/comment-section';
 
 interface ActionButton {
 	label: '킥' | '공유' | '본문' | '댓글';
@@ -31,8 +29,7 @@ function FloatingActionButtons({
 	const [isKicked, setIsKicked] = useState(isKickedData);
 	const [kickCount, setKickCount] = useState(kickCountData);
 
-	const isLeftSideVisible = useIsLeftSideVisible();
-	const { isHalftimeCommentOpen, toggleHalftimeComment } = useIsHalftimeCommentOpen();
+	const [isHalftimeCommentOpen, setIsHalftimeCommentOpen] = useState(false);
 	const { toggleIsKicked } = useViewedHalftimesStore();
 
 	const actionButtons: ActionButton[] = [
@@ -64,7 +61,7 @@ function FloatingActionButtons({
 				toggleKick();
 				break;
 			case '댓글':
-				toggleHalftimeComment();
+				setIsHalftimeCommentOpen(!isHalftimeCommentOpen);
 				break;
 			case '공유':
 				copyUrlToClipboard();
@@ -124,7 +121,7 @@ function FloatingActionButtons({
 						<span>{button.value}</span>
 					</button>
 				))}
-				{isHalftimeCommentOpen && isLeftSideVisible && <CommentFloatingPanel />}
+				{isHalftimeCommentOpen && <CommentSection onClose={() => setIsHalftimeCommentOpen(false)} />}
 			</div>
 		</>
 	);

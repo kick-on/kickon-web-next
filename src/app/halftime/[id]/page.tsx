@@ -16,8 +16,6 @@ import { Swiper as SwiperType } from 'swiper';
 import { shouldUpdateView } from '@/lib/utils';
 import { InfiniteData, useQueryClient } from '@tanstack/react-query';
 import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
-import { useIsHalftimeCommentOpen } from '@/lib/store/useHalftimeCommentStore';
-import CommentBottomSheet from '@/components/features/halftime/player-action/comment-section/comment-bottom-sheet';
 
 export default function Page() {
 	const { _hasHydrated: isQueryKeyLoaded, halftimeListQueryKey, setSort } = useHalftimeQueryKeyStore();
@@ -38,9 +36,6 @@ export default function Page() {
 	const cachedData = queryClient.getQueryData(halftimeListQueryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
 	const halftimes = cachedData?.pages?.flatMap((page) => page.data) ?? [];
 	const pks = halftimes?.map((h) => h.pk);
-
-	// 댓글 바텀시트
-	const { isHalftimeCommentOpen, closeHalftimeComment } = useIsHalftimeCommentOpen();
 
 	const getHalftime = async (pkToFetch: number) => {
 		// 이미 조회한 하프타임인 경우 return
@@ -123,7 +118,6 @@ export default function Page() {
 	useEffect(() => {
 		return () => {
 			clearViewedHalftimes();
-			closeHalftimeComment();
 		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -187,8 +181,7 @@ export default function Page() {
 					</SwiperSlide>
 				))}
 			</Swiper>
-
-			{isHalftimeCommentOpen && !isLeftSideVisible && <CommentBottomSheet swiperRef={swiperRef} />}
+			<div id="comment-bottom-sheet-portal" />
 		</div>
 	);
 }

@@ -1,9 +1,6 @@
-import { useIsHalftimeCommentOpen } from '@/lib/store/useHalftimeCommentStore';
 import Image from 'next/image';
 
-export default function CommentContent() {
-	const { closeHalftimeComment } = useIsHalftimeCommentOpen();
-
+export default function CommentContent({ onClose }: { onClose: () => void }) {
 	return (
 		<div className="h-full rounded-[0.625rem] grid grid-rows-[auto_1fr_auto] overflow-hidden">
 			<section
@@ -14,7 +11,7 @@ export default function CommentContent() {
 					댓글&nbsp;
 					<span className="text-black-600 text-subtitle-01">14</span>
 				</div>
-				<button className="w-6 h-6 flex justify-center items-center" onClick={closeHalftimeComment}>
+				<button className="w-6 h-6 flex justify-center items-center" onClick={onClose}>
 					<Image src={'/x/white.svg'} alt="닫기" width={24} height={24} className="w-6 h-6" />
 				</button>
 			</section>
