@@ -65,15 +65,10 @@ export default function Profile() {
 		if (currentUserInfo) {
 			const getUserPointRankingInfo = async () => {
 				const response = await getUserPointRanking();
-
-				if (typeof response === 'string') {
-					console.log(response);
-				} else {
-					setExtraUserInfo({
-						totalPoints: response.data.totalPoints,
-						ranking: response.data.ranking,
-					});
-				}
+				setExtraUserInfo({
+					totalPoints: response.data.totalPoints,
+					ranking: response.data.ranking,
+				});
 			};
 
 			getUserPointRankingInfo();
