@@ -60,6 +60,8 @@ export default function SelectSection({
 
 		const getTeamOptions = async () => {
 			const response = await getTeam(selectedLeaguePk);
+
+			if (!response) return;
 			setTeamOptions(response.data);
 		};
 

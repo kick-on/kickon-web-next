@@ -39,7 +39,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 		}
 		try {
 			const response = await getTeam(undefined, term);
-			const teamData = response.data.map((team) => ({
+			const teamData = response?.data?.map((team) => ({
 				id: team.pk,
 				name: team.nameKr ?? team.nameEn,
 				logo: team.logoUrl,
