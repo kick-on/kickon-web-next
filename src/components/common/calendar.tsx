@@ -9,7 +9,7 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyCalendar, getPredictionDates } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
+import { formatFromTo, getEndOfWeek, getStartOfWeek, getTileClassName, stripTime } from '@/lib/utils';
 
 import { renderNavigationLabel } from '../features/calendar/renderers/render-navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
@@ -26,8 +26,6 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	const searchParams = useSearchParams();
 
 	const isMatch = type === 'match';
-
-	const calendarRef = useRef<HTMLDivElement>(null);
 
 	const [isCollapsed, setIsCollapsed] = useState(isMatch ? false : true); // 접혀 있는 상태인가
 	const [markedDatesMap, setMarkedDatesMap] = useState<Record<string, number>>({});
@@ -144,7 +142,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	const todayMonth = today.getMonth();
 	const todayYear = today.getFullYear();
 
-	// const maxDate = new Date(todayYear, todayMonth + 2, 1); // 다음 달의 다음 달 1일
+	// const maxDate = new Date(todayYear, todayMonth + 2, 1); // 다음 달의 1일
 
 	// 화살표 표시 여부
 	const minDate = new Date(todayYear, todayMonth, 1); // 이번 달
@@ -152,9 +150,30 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	const canGoNextMonth =
 		firstDayOfCurrentMonth.getTime() < new Date(todayYear, isMatch ? todayMonth + 1 : todayMonth, 1).getTime();
 
+	// 오늘 기준 주 시작/끝
+	const todayWeekStart = getStartOfWeek(today);
+
+	// 현재 주 시작/끝 (selectedDate 기준)
+	const currentWeekStart = selectedDate ? getStartOfWeek(selectedDate) : todayWeekStart;
+	const currentWeekEnd = getEndOfWeek(currentWeekStart);
+
+	const handleWeekChange = (direction: 'prev' | 'next') => {
+		const newDate = new Date(currentWeekStart);
+		newDate.setDate(currentWeekStart.getDate() + (direction === 'next' ? 7 : -7));
+		setSelectedDate(stripTime(newDate));
+		const newMonthStart = new Date(newDate.getFullYear(), newDate.getMonth(), 1); // 달이 바뀌어서 갱신
+		setFirstDayOfCurrentMonth(newMonthStart);
+	};
+
+	// 화살표 활성화 조건
+	const canGoPrevWeek = currentWeekStart.getTime() > todayWeekStart.getTime();
+	const canGoNextWeek = predictionRange
+		? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime()
+		: true;
+
 	return (
 		<div className="w-full">
-			<div className="relative ">
+			<div className="relative">
 				<div>
 					<Calendar
 						key={firstDayOfCurrentMonth.toISOString()}
@@ -163,17 +182,24 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						activeStartDate={firstDayOfCurrentMonth}
 						calendarType="gregory"
 						locale="ko-KR"
-						className={`custom-calendar ${isMobile && 'custom-calendar-mobile'} relative transition-all duration-[2000ms] ease-linear opacity-100 ${
-							isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'
-						}`}
+						className={`custom-calendar 
+							${isMobile ? 'custom-calendar-mobile' : ''} 
+							${isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'}
+							relative transition-all duration-[2000ms] ease-linear opacity-100`}
 						onClickDay={(value) => setSelectedDate(stripTime(value))}
 						navigationLabel={({ date }) =>
 							renderNavigationLabel({
 								year: date.getFullYear(),
 								month: date.toLocaleString('ko-KR', { month: 'long' }),
-								canGoPrev: canGoPrevMonth,
-								canGoNext: canGoNextMonth,
-								onMonthChange: handleMonthChange,
+								canGoPrev: isCollapsed ? canGoPrevWeek : canGoPrevMonth,
+								canGoNext: isCollapsed ? canGoNextWeek : canGoNextMonth,
+								onMonthChange: (direction) => {
+									if (isCollapsed) {
+										handleWeekChange(direction);
+									} else {
+										handleMonthChange(direction);
+									}
+								},
 							})
 						}
 						prevLabel={null}
@@ -184,7 +210,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						tileClassName={({ date }) =>
 							getTileClassName({
 								dateOfTile: date,
-								firstDayOfCurrentMonth,
+								firstDayOfCurrentMonth: firstDayOfCurrentMonth,
 								isCollapsed,
 								today,
 								selectedDate,

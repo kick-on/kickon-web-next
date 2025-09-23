@@ -35,9 +35,12 @@ export const getTileClassName = ({
 	predictionRange,
 	markedDatesMap,
 }: TileClassNameProps) => {
-	const d = stripTime(dateOfTile);
-	const isCurrentMonth = dateOfTile.getMonth() === firstDayOfCurrentMonth.getMonth();
-	if (!isCurrentMonth) return 'hidden-other-month-tile';
+	const tileDate = stripTime(dateOfTile);
+	if (!isCollapsed && firstDayOfCurrentMonth && dateOfTile.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
+		return 'hidden-other-month-tile';
+	}
+	// collapsed 모드일 때는 !isCollapsed 조건이 false -> month 체크 안 함 -> 모든 타일 보임
+	// collapsed가 false일 때만 month 체크 -> 이번 달 아닌 타일 숨김
 
 	// selectedDate로 이번 주 범위 계산
 	let startOfWeek: Date | null = null;
@@ -47,13 +50,13 @@ export const getTileClassName = ({
 		endOfWeek = getEndOfWeek(startOfWeek);
 	}
 
-	if (isCollapsed && selectedDate && (d < startOfWeek! || d > endOfWeek!)) {
+	if (isCollapsed && selectedDate && (tileDate < startOfWeek! || tileDate > endOfWeek!)) {
 		return 'hidden-tile'; // 히든 타일로 바뀌면서 트랜지션 발생
 	}
-	const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+	const dStr = `${tileDate.getFullYear()}-${String(tileDate.getMonth() + 1).padStart(2, '0')}-${String(tileDate.getDate()).padStart(2, '0')}`;
 	const hasMatch = markedDatesMap[dStr] > 0;
 
-	if (predictionRange && d > predictionRange.end) {
+	if (predictionRange && tileDate > predictionRange.end) {
 		const classes = ['disabled-after'];
 		const dayOfWeek = dateOfTile.getDay();
 
@@ -71,14 +74,14 @@ export const getTileClassName = ({
 		return classes.join(' ');
 	}
 
-	const isFocused = selectedDate && isSameDate(d, selectedDate);
-	const isToday = isSameDate(d, today);
+	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
+	const isToday = isSameDate(tileDate, today);
 
 	let baseClass = '';
 	if (isFocused && isToday) baseClass = 'focused-today-tile';
 	else if (isFocused) baseClass = 'focused-tile';
 	else if (isToday) baseClass = 'not-focused-today-tile';
-	else if (d < today) baseClass = isMatch ? 'past-tile pointer-events-none' : 'future-tile';
+	else if (tileDate < today) baseClass = isMatch ? 'past-tile pointer-events-none' : 'future-tile';
 	else baseClass = isMatch ? 'future-tile' : 'past-tile pointer-events-none';
 
 	return `${baseClass} ${hasMatch ? 'has-match' : ''}`.trim();
