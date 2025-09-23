@@ -45,8 +45,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 				logo: team.logoUrl,
 			}));
 			setTeams(teamData);
-		} catch (error) {
-			console.error('팀 리스트 가져오기 실패:', error);
+		} catch {
 			setTeams([]);
 		}
 	}, []);
