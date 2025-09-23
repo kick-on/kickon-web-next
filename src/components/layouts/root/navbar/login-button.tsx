@@ -50,12 +50,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 		if (!currentUserInfo) {
 			const getCurrentUserInfo = async () => {
 				const response = await getUserInfo();
-
-				if (typeof response === 'string') {
-					console.log(response);
-				} else if (response.data.privacyAgreedAt) {
-					setCurrentUserInfo(response.data);
-				}
+				setCurrentUserInfo(response.data);
 			};
 
 			getCurrentUserInfo();

@@ -17,18 +17,8 @@ export const useCurrentUserInfoStore = create(
 			setCurrentUserInfo: (userInfo) => set({ currentUserInfo: userInfo }),
 			clearCurrentUserInfo: () => set({ currentUserInfo: null }),
 			fetchUserInfo: async () => {
-				// api 호출해서 상태 업데이트
-				try {
-					const userInfo = await getUserInfo();
-
-					if (typeof userInfo !== 'string') {
-						set({ currentUserInfo: userInfo.data });
-					} else {
-						console.error('Failed to fetch user info:', userInfo);
-					}
-				} catch (error) {
-					console.error('Failed to fetch user info:', error);
-				}
+				const userInfo = await getUserInfo();
+				set({ currentUserInfo: userInfo.data });
 			},
 		}),
 		{

@@ -7,7 +7,6 @@ import { useRouter, useSearchParams } from 'next/navigation';
 
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/apis/user';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import ThumbnailUploader from '@/components/features/post/thumbnail-uploader';
 import TeamSearchInput from '@/components/features/post/team-search-input';
@@ -28,7 +27,7 @@ export default function Page() {
 		label: '',
 		value: '',
 	});
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
@@ -93,17 +92,7 @@ export default function Page() {
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
 		}
-		const fetchUserInfo = async () => {
-			const user = await getUserInfo();
-			if (typeof user !== 'string' && user?.data) {
-				setCurrentUserInfo(user.data);
-			}
-		};
-
-		if (!currentUserInfo) {
-			fetchUserInfo();
-		}
-	}, [currentUserInfo, setCurrentUserInfo, router]);
+	}, [currentUserInfo, router]);
 
 	const isLoading = useRef(false); // 더블 클릭 -> 중복 호출 방지
 

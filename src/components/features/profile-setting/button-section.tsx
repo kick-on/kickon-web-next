@@ -32,18 +32,17 @@ export default function ButtonSection({ profileImageUrl, nickname, teamPks, isDu
 	};
 
 	const editUserInfo = async (body: UpdateUserInfoRequest) => {
-		const response = await updateUserInfo(body);
-
-		if (response === 'DUPLICATED_NICKNAME') {
-			setIsDuplicated(true);
-		} else if (typeof response === 'string') {
-			alert(response);
-			setIsDuplicated(false);
-		} else {
-			// 회원 정보 수정 성공
-			// -> 새로 유저 정보 fetch해서 current user info 업데이트
-			await fetchUserInfo();
+		try {
+			await updateUserInfo(body);
+			await fetchUserInfo(); // 회원 정보 수정 성공 -> current user info 업데이트
 			alert('정상적으로 수정되었습니다.');
+		} catch (error) {
+			if (error.errorData.code === 'DUPLICATED_NICKNAME') {
+				setIsDuplicated(true);
+			} else {
+				alert(error.message);
+				setIsDuplicated(false);
+			}
 		}
 	};
 

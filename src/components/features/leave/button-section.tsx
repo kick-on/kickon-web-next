@@ -17,17 +17,16 @@ export default function ButtonSection({ selectedReasonIndex, etcContent, isValid
 	const handleWithdrawalButtonClick = async () => {
 		if (selectedReasonIndex === null) alert('탈퇴 사유를 선택해 주세요.');
 
-		const body = { reason: isEtc ? etcContent : leaveReasons[selectedReasonIndex] };
-		const response = await deleteUserMe(body);
+		try {
+			const body = { reason: isEtc ? etcContent : leaveReasons[selectedReasonIndex] };
+			await deleteUserMe(body);
 
-		if (typeof response === 'string') {
-			alert(`서버 오류입니다.\n잠시 후 다시 시도해 주세요.`);
-			console.log(response);
-		} else {
 			alert('탈퇴가 완료되었습니다.');
 			clearCurrentUserInfo();
 			localStorage.clear();
 			router.replace('/');
+		} catch (error) {
+			alert(error.message);
 		}
 	};
 
