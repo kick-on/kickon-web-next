@@ -21,7 +21,7 @@ export const RenderTileContent: React.FC<TileContentProps> = ({ date, today, pre
 
 	return (
 		<div className="flex flex-col items-center gap-1 mt-1">
-			{isToday && <span>오늘</span>}
+			{isToday && <span className="font-semibold">오늘</span>}
 			{count > 0 && (
 				<div className="flex flex-row items-center gap-2">
 					<div className="calendar-dot" />

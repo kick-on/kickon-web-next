@@ -163,19 +163,6 @@
 	background-color: #fff;
 }
 
-.custom-calendar .today-text {
-	display: flex;
-	text-align: center;
-	font-size: 15px;
-	font-weight: 600;
-	line-height: 16px;
-}
-
-.custom-calendar-mobile .today-text {
-	font-size: 13px;
-	line-height: 18px;
-}
-
 .has-match {
 	padding-bottom: 12px !important;
 }
