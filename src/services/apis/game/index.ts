@@ -1,5 +1,4 @@
 import { fetcher } from '@/lib/server/fetcher';
-import { FailResponse } from '@/services/config/dto';
 import {
 	GetGamesRequest,
 	GetGamesResponse,
@@ -14,7 +13,7 @@ export const getGames = async (req: GetGamesRequest): Promise<GetGamesResponse |
 	const params = new URLSearchParams();
 	appendParams(params, req);
 
-	const response = await fetcher<GetGamesResponse | FailResponse>({
+	const response = await fetcher<GetGamesResponse>({
 		method: 'GET',
 		url: `/api/game?${params.toString()}`,
 	});
@@ -23,11 +22,11 @@ export const getGames = async (req: GetGamesRequest): Promise<GetGamesResponse |
 };
 
 // 내가 참여한 예측 리스트 조회
-export const getMyPredictions = async (req: GetMyPredictionsRequest): Promise<GetMyPredictionsResponse | null> => {
+export const getMyPredictions = async (req: GetMyPredictionsRequest): Promise<GetMyPredictionsResponse> => {
 	const params = new URLSearchParams();
 	appendParams(params, req);
 
-	const response = await fetcher<GetMyPredictionsResponse | FailResponse>({
+	const response = await fetcher<GetMyPredictionsResponse>({
 		method: 'GET',
 		url: `/api/game/my-predictions?${params.toString()}`,
 	});
@@ -36,8 +35,8 @@ export const getMyPredictions = async (req: GetMyPredictionsRequest): Promise<Ge
 };
 
 // 예측 통계 조회
-export const getMyStats = async (): Promise<GetMyStatsResponse | null> => {
-	const response = await fetcher<GetMyStatsResponse | FailResponse>({
+export const getMyStats = async (): Promise<GetMyStatsResponse> => {
+	const response = await fetcher<GetMyStatsResponse>({
 		method: 'GET',
 		url: '/api/game/my-stats',
 	});
