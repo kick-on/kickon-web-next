@@ -28,14 +28,12 @@ export default function PredictCardList({ teamPk }: { teamPk: undefined | number
 				status: status,
 				team: teamPk,
 			};
-			console.log(request);
-			const response = await getGames(request);
 
-			if (!response) {
-				setter(null);
-			} else {
-				console.log(response.data);
+			try {
+				const response = await getGames(request);
 				setter(response.data);
+			} catch {
+				setter(null);
 			}
 		},
 		[teamPk],

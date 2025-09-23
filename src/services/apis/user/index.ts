@@ -4,21 +4,17 @@ import { fetcher } from '@/lib/server/fetcher';
 
 // 개인정보 동의 업데이트
 export const updatePrivacy = async (body: UpdatePrivacyRequest) => {
-	try {
-		const response = await fetcher<EmptySuccessResponse | FailResponse>({
-			method: 'PATCH',
-			url: '/api/user/privacy',
-			body,
-		});
+	const response = await fetcher<EmptySuccessResponse | FailResponse>({
+		method: 'PATCH',
+		url: '/api/user/privacy',
+		body,
+	});
 
-		if (!response.code.split('_').includes('SUCCESS')) {
-			console.error(response);
-			return response.message;
-		}
-		return response;
-	} catch (error) {
-		console.error('개인정보 동의 실패: ', error);
+	if (!response.code.split('_').includes('SUCCESS')) {
+		console.error(response);
+		return response.message;
 	}
+	return response;
 };
 
 // 유저 정보 수정

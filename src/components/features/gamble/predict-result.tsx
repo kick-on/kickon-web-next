@@ -29,12 +29,9 @@ export default function PredictResult() {
 
 			try {
 				const response = await getMyPredictions(request);
-
-				if (response) {
-					setGames(response.data.games);
-				}
+				setGames(response.data.games);
 			} catch (error) {
-				console.error(error);
+				alert(error.message);
 			}
 		};
 

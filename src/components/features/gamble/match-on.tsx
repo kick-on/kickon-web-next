@@ -47,14 +47,9 @@ export default function MatchOn() {
 
 			try {
 				const response = await getGames(request);
-
-				if (response) {
-					setGames(response.data.games);
-				} else {
-					alert('실패');
-				}
+				setGames(response.data.games);
 			} catch (error) {
-				console.error(error);
+				alert(error.message);
 			}
 		};
 

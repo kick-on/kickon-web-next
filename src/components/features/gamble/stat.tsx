@@ -36,8 +36,12 @@ export default function Stat() {
 
 	useEffect(() => {
 		const apiCall = async () => {
-			const response = await getMyStats();
-			setStatData(response.data);
+			try {
+				const response = await getMyStats();
+				setStatData(response.data);
+			} catch (error) {
+				alert(error.message);
+			}
 		};
 
 		apiCall();
