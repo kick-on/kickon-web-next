@@ -48,7 +48,7 @@ export const getTileClassName = ({
 	}
 
 	if (isCollapsed && selectedDate && (d < startOfWeek! || d > endOfWeek!)) {
-		return 'hidden-tile';
+		return 'hidden-tile'; // 히든 타일로 바뀌면서 트랜지션 발생
 	}
 	const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 	const hasMatch = markedDatesMap[dStr] > 0;

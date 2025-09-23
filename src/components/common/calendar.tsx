@@ -154,13 +154,8 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 	return (
 		<div className="w-full">
-			<div className={`relative opacity-100 ${isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'}`}>
-				<div
-					ref={calendarRef}
-					className={`relative transition-all duration-[400ms] ease opacity-100 ${
-						isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'
-					}`}
-				>
+			<div className="relative ">
+				<div>
 					<Calendar
 						key={firstDayOfCurrentMonth.toISOString()}
 						view="month"
@@ -168,7 +163,9 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 						activeStartDate={firstDayOfCurrentMonth}
 						calendarType="gregory"
 						locale="ko-KR"
-						className={`custom-calendar ${isMobile && 'custom-calendar-mobile'}`}
+						className={`custom-calendar ${isMobile && 'custom-calendar-mobile'} relative transition-all duration-[2000ms] ease-linear opacity-100 ${
+							isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'
+						}`}
 						onClickDay={(value) => setSelectedDate(stripTime(value))}
 						navigationLabel={({ date }) =>
 							renderNavigationLabel({
