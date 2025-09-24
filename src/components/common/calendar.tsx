@@ -138,6 +138,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 	const today = stripTime(new Date());
 
+	//TODO: 여기 다시 보셈 ㄱㄱ
 	// 오늘 날짜 기준으로 고정
 	const todayMonth = today.getMonth();
 	const todayYear = today.getFullYear();
@@ -174,61 +175,60 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	return (
 		<div className="w-full">
 			<div className="relative">
-				<div>
-					<Calendar
-						key={firstDayOfCurrentMonth.toISOString()}
-						view="month"
-						formatDay={(locale, date) => `${date.getDate()}`}
-						activeStartDate={firstDayOfCurrentMonth}
-						calendarType="gregory"
-						locale="ko-KR"
-						className={`custom-calendar 
-							${isMobile ? 'custom-calendar-mobile' : ''} 
-							${isCollapsed ? 'max-h-[250px]' : 'max-h-[1000px]'}
-							relative transition-all duration-[2000ms] ease-linear opacity-100`}
-						onClickDay={(value) => setSelectedDate(stripTime(value))}
-						navigationLabel={({ date }) =>
-							renderNavigationLabel({
-								year: date.getFullYear(),
-								month: date.toLocaleString('ko-KR', { month: 'long' }),
-								canGoPrev: isCollapsed ? canGoPrevWeek : canGoPrevMonth,
-								canGoNext: isCollapsed ? canGoNextWeek : canGoNextMonth,
-								onMonthChange: (direction) => {
-									if (isCollapsed) {
-										handleWeekChange(direction);
-									} else {
-										handleMonthChange(direction);
-									}
-								},
-							})
-						}
-						prevLabel={null}
-						nextLabel={null}
-						prev2Label={null}
-						next2Label={null}
-						formatShortWeekday={(locale, date) => ['일', '월', '화', '수', '목', '금', '토'][date.getDay()]}
-						tileClassName={({ date }) =>
-							getTileClassName({
-								dateOfTile: date,
-								firstDayOfCurrentMonth: firstDayOfCurrentMonth,
-								isCollapsed,
-								today,
-								selectedDate,
-								isMatch,
-								predictionRange,
-								markedDatesMap,
-							})
-						}
-						tileContent={({ date }) => (
-							<RenderTileContent
-								date={date}
-								today={today}
-								predictionRange={predictionRange}
-								markedDatesMap={markedDatesMap}
-							/>
-						)}
-					/>
-				</div>
+				<Calendar
+					key={firstDayOfCurrentMonth.toISOString()}
+					view="month"
+					formatDay={(locale, date) => `${date.getDate()}`}
+					activeStartDate={firstDayOfCurrentMonth}
+					calendarType="gregory"
+					locale="ko-KR"
+					className={`custom-calendar
+							${isMobile && 'custom-calendar-mobile'} 
+							${isCollapsed ? 'h-[250px]' : ' h-[470px] @mobile:max-h-[500px]'}
+							relative transition-all duration-[500ms] ease-linear opacity-100`}
+					onClickDay={(value) => setSelectedDate(stripTime(value))}
+					navigationLabel={({ date }) =>
+						renderNavigationLabel({
+							year: date.getFullYear(),
+							month: date.toLocaleString('ko-KR', { month: 'long' }),
+							canGoPrev: isCollapsed ? canGoPrevWeek : canGoPrevMonth,
+							canGoNext: isCollapsed ? canGoNextWeek : canGoNextMonth,
+							onMonthChange: (direction) => {
+								if (isCollapsed) {
+									handleWeekChange(direction);
+								} else {
+									handleMonthChange(direction);
+								}
+							},
+						})
+					}
+					prevLabel={null}
+					nextLabel={null}
+					prev2Label={null}
+					next2Label={null}
+					formatShortWeekday={(locale, date) => ['일', '월', '화', '수', '목', '금', '토'][date.getDay()]}
+					tileClassName={({ date }) =>
+						getTileClassName({
+							dateOfTile: date,
+							firstDayOfCurrentMonth: firstDayOfCurrentMonth,
+							isCollapsed,
+							today,
+							selectedDate,
+							isMatch,
+							predictionRange,
+							markedDatesMap,
+						})
+					}
+					tileContent={({ date }) => (
+						<RenderTileContent
+							date={date}
+							today={today}
+							predictionRange={predictionRange}
+							markedDatesMap={markedDatesMap}
+						/>
+					)}
+				/>
+
 				<button
 					onClick={() => setIsCollapsed((prev) => !prev)}
 					className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
