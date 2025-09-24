@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
-import { getMonthlyMatchList, getMyPredictionDates, getPredictionDates } from '@/services/apis/calendar';
+import { getMonthlyMatchList, getMyPredictionDates, getPredictionOpenPeriod } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { formatFromTo, getEndOfWeek, getStartOfWeek, getTileClassName, stripTime } from '@/lib/utils';
 
@@ -69,7 +69,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	useEffect(() => {
 		async function fetchPredictionDates() {
 			try {
-				const response = await getPredictionDates();
+				const response = await getPredictionOpenPeriod();
 				console.log(response);
 				if (response?.data) {
 					const { startDate, endDate } = response.data;

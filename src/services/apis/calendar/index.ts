@@ -29,7 +29,7 @@ export const getMonthlyMatchList = async (month: string): Promise<GetMonthlyMatc
 };
 
 // 승부 예측 가능 기간 조회 api
-export const getPredictionDates = async (): Promise<GetPredictionOpenPeriodResponse | null> => {
+export const getPredictionOpenPeriod = async (): Promise<GetPredictionOpenPeriodResponse | null> => {
 	try {
 		const response = await fetcher<GetPredictionOpenPeriodResponse>({
 			method: 'GET',
