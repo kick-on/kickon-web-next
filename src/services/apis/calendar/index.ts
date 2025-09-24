@@ -71,7 +71,7 @@ export const getNextMatchDate = async (todayStr: string): Promise<GetNextMatchDa
 // 승부 예측
 
 // 내가 참여한 승부 예측 경기 날짜 조회 api (캘린더 점찍기 용) TODO: 이름 수정 필요
-export const getMyCalendar = async (): Promise<GetPredictionDatesResponse | null> => {
+export const getMyPredictionDates = async (): Promise<GetPredictionDatesResponse | null> => {
 	try {
 		const response = await fetcher<GetPredictionDatesResponse>({ method: 'GET', url: '/api/game/my-calendar' });
 
