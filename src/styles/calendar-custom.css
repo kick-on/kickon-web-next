@@ -117,13 +117,13 @@
 	font-weight: 500;
 	margin: 0;
 }
-/* 오늘 이전 날짜 */
-.custom-calendar .past-tile {
+/* 활성화 안 되는 날짜 */
+.custom-calendar .disabled-tile {
 	color: #cccccc;
 }
 
-/* 오늘 이후 날짜 */
-.custom-calendar .future-tile {
+/* 활성화 되는 날짜 */
+.custom-calendar .active-tile {
 	color: #000000;
 }
 

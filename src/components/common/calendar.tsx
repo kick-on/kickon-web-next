@@ -11,7 +11,7 @@ import { getMonthlyMatchList, getMyPredictionDates, getPredictionOpenPeriod } fr
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { formatFromTo, getEndOfWeek, getStartOfWeek, getTileClassName, stripTime } from '@/lib/utils';
 
-import { renderNavigationLabel } from '../features/calendar/renderers/render-navigation-label';
+import { NavigationLabel } from '../features/calendar/renderers/render-navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
 
 interface MatchPredictionCalendarProps {
@@ -136,6 +136,11 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		updateUrlParams(newDate);
 	};
 
+	const handleYearChange = (newYear: number) => {
+		const newDate = new Date(newYear, firstDayOfCurrentMonth.getMonth(), 1);
+		updateUrlParams(newDate);
+	};
+
 	// predictionRange가 있으면 start 기준으로 이전 달 이동 막기
 	const canGoPrevMonth = predictionRange
 		? firstDayOfCurrentMonth.getTime() >
@@ -185,24 +190,26 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					locale="ko-KR"
 					className={`custom-calendar
 							${isMobile && 'custom-calendar-mobile'} 
-							${isWeekCalendar ? 'h-[250px]' : ' h-[470px] @mobile:max-h-[500px]'}
+							${isWeekCalendar ? 'h-[250px]' : ' h-full @mobile:max-h-[500px]'}
 							relative transition-all duration-[500ms] ease-linear opacity-100`}
 					onClickDay={(value) => setSelectedDate(stripTime(value))}
-					navigationLabel={({ date }) =>
-						renderNavigationLabel({
-							year: date.getFullYear(),
-							month: date.toLocaleString('ko-KR', { month: 'long' }),
-							canGoPrev: isWeekCalendar ? canGoPrevWeek : canGoPrevMonth,
-							canGoNext: isWeekCalendar ? canGoNextWeek : canGoNextMonth,
-							onMonthChange: (direction) => {
+					navigationLabel={({ date }) => (
+						<NavigationLabel
+							year={date.getFullYear()}
+							month={date.toLocaleString('ko-KR', { month: 'long' })}
+							canGoPrev={isWeekCalendar ? canGoPrevWeek : canGoPrevMonth}
+							canGoNext={isWeekCalendar ? canGoNextWeek : canGoNextMonth}
+							isMatch={isMatch}
+							onMonthChange={(direction) => {
 								if (isWeekCalendar) {
 									handleWeekChange(direction);
 								} else {
 									handleMonthChange(direction);
 								}
-							},
-						})
-					}
+							}}
+							onYearChange={handleYearChange}
+						/>
+					)}
 					prevLabel={null}
 					nextLabel={null}
 					prev2Label={null}
