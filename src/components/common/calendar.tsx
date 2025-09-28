@@ -182,7 +182,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		<div className="w-full">
 			<div className="relative">
 				<Calendar
-					key={`${firstDayOfCurrentMonth.toISOString()}-${isWeekCalendar ? 'week' : 'month'}`}
+					key={`${firstDayOfCurrentMonth.toISOString()}`}
 					view="month"
 					formatDay={(locale, date) => `${date.getDate()}`}
 					activeStartDate={firstDayOfCurrentMonth}
@@ -190,7 +190,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					locale="ko-KR"
 					className={`custom-calendar
 							${isMobile && 'custom-calendar-mobile'} 
-							${isWeekCalendar ? 'h-fit' : ' h-full'}
+							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
 							relative transition-all duration-[500ms] ease-linear opacity-100`}
 					onClickDay={(value) => setSelectedDate(stripTime(value))}
 					navigationLabel={({ date }) => (
