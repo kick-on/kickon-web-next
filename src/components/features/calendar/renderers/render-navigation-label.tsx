@@ -27,13 +27,13 @@ export function NavigationLabel({
 	const options = [
 		{ label: '2025년', value: 2025 },
 		{ label: '2026년', value: 2026 },
-	]; // 흠...
+	];
 
 	return (
 		<div className="flex w-full flex-1 items-center justify-center">
-			<div className="absolute left-0 @mobile:ml-5 ml-9 year z-50">
+			<div className="absolute left-0 @mobile:ml-5 ml-9 z-50">
 				{isMatch ? (
-					<span>{year}년</span>
+					<span className="button1-medium @mobile:text-12">{year}년</span>
 				) : (
 					<div className="relative w-fit">
 						<div
@@ -42,22 +42,19 @@ export function NavigationLabel({
 							onClick={() => setIsVisibleDropdown((prev) => !prev)}
 							className="flex gap-[4px] items-center justify-between cursor-pointer"
 						>
-							<div className="body1-medium @mobile:text-13">{selectedYear}년</div>
+							<div className="button1-medium @mobile:text-12">{selectedYear}년</div>
 							<Image width={16} height={16} src="/chevron/up-and-down.svg" alt="옵션 선택" />
 						</div>
 						{isVisibleDropdown && (
-							<div className="px-[30px] py-[10px] z-50 absolute top-8 bg-black-000 border border-gray-200 rounded-[10px] shadow-[0_4px_16px_0_rgba(0,0,0,0.20)]">
-								<div className="flex flex-col space-y-[20px]">
+							<div className="px-[30px] py-[10px] @mobile:py-4 z-50 absolute top-8 bg-black-000 border border-gray-200 rounded-[10px] shadow-[0_4px_16px_0_rgba(0,0,0,0.20)]">
+								<div className="flex flex-col space-y-[20px] @mobile:space-y-[30px]">
 									{options.map((option, index) => (
 										<div
 											key={option.value}
-											className={clsx(
-												'w-12 flex items-center justify-center @mobile:text-13 cursor-pointer transition-colors',
-												{
-													'text-primary-900 body5-medium': selectedYear === option.value,
-													'body5-regular': selectedYear !== option.value,
-												},
-											)}
+											className={clsx('w-12 flex items-center justify-center cursor-pointer transition-colors', {
+												'text-primary-900 body5-medium': selectedYear === option.value,
+												'body5-regular': selectedYear !== option.value,
+											})}
 											onClick={() => {
 												setSelectedYear(option.value);
 												setIsVisibleDropdown(false);
