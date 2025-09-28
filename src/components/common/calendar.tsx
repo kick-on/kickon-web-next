@@ -192,7 +192,16 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							${isMobile && 'custom-calendar-mobile'} 
 							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
 							relative transition-all duration-[500ms] ease-linear opacity-100`}
-					onClickDay={(value) => setSelectedDate(stripTime(value))}
+					onClickDay={(value) => {
+						const newDate = stripTime(value);
+						setSelectedDate(newDate);
+
+						// 만약 선택된 날짜의 달이 현재 달과 다르면 activeStartDate 업데이트
+						if (newDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
+							const newMonthStart = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
+							setFirstDayOfCurrentMonth(newMonthStart);
+						}
+					}}
 					navigationLabel={({ date }) => (
 						<NavigationLabel
 							year={date.getFullYear()}
