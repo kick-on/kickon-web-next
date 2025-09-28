@@ -113,10 +113,10 @@ export default function Page() {
 	};
 
 	const [isMobileNavbar, setIsMobileNavber] = useState(false);
-	const isLeftSideVisible = !useIsLeftSideVisible();
+	const isLeftSideVisible = useIsLeftSideVisible();
 
 	useEffect(() => {
-		setIsMobileNavber(isLeftSideVisible);
+		setIsMobileNavber(!isLeftSideVisible);
 	}, [isLeftSideVisible]);
 
 	return (
@@ -153,6 +153,7 @@ export default function Page() {
 					</SwiperSlide>
 				))}
 			</Swiper>
+			<div id="comment-bottom-sheet-portal" />
 		</div>
 	);
 }
