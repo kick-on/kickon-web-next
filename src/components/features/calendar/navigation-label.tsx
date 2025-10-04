@@ -4,6 +4,7 @@ import { ArrowButton } from './arrow-button';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { getEndOfWeek, getStartOfWeek, stripTime } from '@/lib/utils';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 interface NavigationLabelProps {
 	isMatch: boolean;
@@ -24,18 +25,24 @@ export function NavigationLabel({
 	isWeekCalendar,
 	updateUrlParams,
 }: NavigationLabelProps) {
+	const { currentUserInfo } = useCurrentUserInfoStore();
+
 	const year = firstDayOfCurrentMonth.getFullYear();
 	const month = firstDayOfCurrentMonth.toLocaleString('ko-KR', { month: 'long' });
+	const today = stripTime(new Date());
+
+	// privacyAgreedAt -> 서비스 이용 시작년도 추출
+	const joinedYear = currentUserInfo?.privacyAgreedAt ? new Date(currentUserInfo.privacyAgreedAt).getFullYear() : year; // fallback: 현재 연도
+	const currentYear = new Date().getFullYear();
+
+	// 옵션 동적 생성 (최신 연도가 위로 오도록 reverse)
+	const options = Array.from({ length: currentYear - joinedYear + 1 }, (_, i) => {
+		const yearOption = joinedYear + i;
+		return { label: `${yearOption}년`, value: yearOption };
+	}).reverse();
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const [selectedYear, setSelectedYear] = useState(year);
-
-	const today = stripTime(new Date());
-
-	const options = [
-		{ label: '2025년', value: 2025 },
-		{ label: '2026년', value: 2026 },
-	];
 
 	const handleYearChange = (newYear: number) => {
 		const newDate = new Date(newYear, firstDayOfCurrentMonth.getMonth(), 1);
@@ -61,18 +68,6 @@ export function NavigationLabel({
 		updateUrlParams(newDate);
 	};
 
-	// predictionRange가 있으면 start 기준으로 이전 달 이동 막기
-	const canGoPrevMonth = predictionRange
-		? firstDayOfCurrentMonth.getTime() >
-			new Date(predictionRange.start.getFullYear(), predictionRange.start.getMonth(), 1).getTime()
-		: true;
-
-	// predictionRange가 있으면 end 기준으로 다음 달 이동 막기
-	const canGoNextMonth = predictionRange
-		? firstDayOfCurrentMonth.getTime() <
-			new Date(predictionRange.end.getFullYear(), predictionRange.end.getMonth(), 1).getTime()
-		: true;
-
 	const currentWeekStart = selectedDate ? getStartOfWeek(selectedDate) : getStartOfWeek(today);
 	const currentWeekEnd = getEndOfWeek(currentWeekStart);
 
@@ -91,11 +86,25 @@ export function NavigationLabel({
 		}
 	};
 
-	const canGoPrevWeek = currentWeekStart.getTime() > getStartOfWeek(today).getTime();
+	const isPrevArrowVisible = () => {
+		if (isWeekCalendar) {
+			return currentWeekStart.getTime() > getStartOfWeek(today).getTime();
+		}
+		return predictionRange
+			? firstDayOfCurrentMonth.getTime() >
+					new Date(predictionRange.start.getFullYear(), predictionRange.start.getMonth(), 1).getTime()
+			: true;
+	};
 
-	const canGoNextWeek = predictionRange
-		? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime()
-		: true;
+	const isNextArrowVisible = () => {
+		if (isWeekCalendar) {
+			return predictionRange ? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime() : true;
+		}
+		return predictionRange
+			? firstDayOfCurrentMonth.getTime() <
+					new Date(predictionRange.end.getFullYear(), predictionRange.end.getMonth(), 1).getTime()
+			: true;
+	};
 
 	return (
 		<div className="flex w-full flex-1 items-center justify-center">
@@ -142,19 +151,21 @@ export function NavigationLabel({
 			<div className="relative w-full flex-1 flex items-center justify-center">
 				<ArrowButton
 					direction="prev"
-					onClick={isWeekCalendar ? handleWeekChange : handleMonthChange}
-					show={isWeekCalendar ? canGoPrevWeek : canGoPrevMonth}
+					onClick={() => (isWeekCalendar ? handleWeekChange('prev') : handleMonthChange('prev'))}
+					isVisible={isPrevArrowVisible()}
 				/>
+
 				{month && (
 					<span className="flex justify-center items-center">
 						<span className="month-number">{month.slice(0, -1)}</span>
 						<span className="month-text">{month.slice(-1)}</span>
 					</span>
 				)}
+
 				<ArrowButton
 					direction="next"
-					onClick={isWeekCalendar ? handleWeekChange : handleMonthChange}
-					show={isWeekCalendar ? canGoNextWeek : canGoNextMonth}
+					onClick={() => (isWeekCalendar ? handleWeekChange('next') : handleMonthChange('next'))}
+					isVisible={isNextArrowVisible()}
 				/>
 			</div>
 		</div>
