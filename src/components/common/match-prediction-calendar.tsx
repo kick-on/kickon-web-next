@@ -59,11 +59,35 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		router.replace(`?${params.toString()}`, { scroll: false });
 	};
 
-	// URL 파라미터가 변경될 때 새로운 월의 첫째 날 업데이트
 	useEffect(() => {
+		// 년,월 계산 (params 기반)
 		const newMonthStart = getYearMonthFromUrl();
-		setFirstDayOfCurrentMonth(newMonthStart);
-	}, [searchParams]);
+
+		// 첫째 날은 searchParams가 바뀐 경우에만 업데이트
+		if (newMonthStart.getTime() !== firstDayOfCurrentMonth.getTime()) {
+			setFirstDayOfCurrentMonth(newMonthStart);
+		}
+
+		// 점찍기 페치 (type에 따라 분기)
+		async function fetchMarkedDates() {
+			try {
+				const formattedDate = formatFromTo(newMonthStart);
+				const response = type === 'match' ? await getMonthlyMatchList(formattedDate) : await getMyPredictionDates();
+
+				if (response?.data?.dates) {
+					const countMap: Record<string, number> = {};
+					response.data.dates.forEach(({ date, count }) => {
+						countMap[date] = count;
+					});
+					setMarkedDatesMap(countMap);
+				}
+			} catch (e) {
+				console.error('캘린더 점찍기용 날짜 조회 실패:', e);
+			}
+		}
+
+		fetchMarkedDates();
+	}, [searchParams, type]);
 
 	// 승부 예측 가능 기간 조회
 	useEffect(() => {
@@ -85,28 +109,6 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 		fetchPredictionDates();
 	}, []);
-
-	// 월이 변경되면 해당 월의 경기 날짜 조회 + 가장 가까운 경기 날 조회를 위해 selected date를 변경
-	useEffect(() => {
-		async function fetchMarkedDates() {
-			try {
-				const formattedDate = formatFromTo(firstDayOfCurrentMonth);
-				const response = isMatch ? await getMonthlyMatchList(formattedDate) : await getMyPredictionDates();
-				if (response?.data?.dates) {
-					const countMap: Record<string, number> = {};
-					response.data.dates.forEach(({ date, count }) => {
-						countMap[date] = count;
-					});
-					setMarkedDatesMap(countMap);
-				}
-			} catch (e) {
-				console.error('캘린더 점찍기용 날짜 조회 실패:', e);
-			}
-		}
-		//setSelectedDate(firstDayOfCurrentMonth); -> 서버 복구되면 재시도
-
-		fetchMarkedDates();
-	}, [firstDayOfCurrentMonth, isMatch]);
 
 	const calendarContext = {
 		firstDayOfCurrentMonth,
