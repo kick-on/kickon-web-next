@@ -2,12 +2,11 @@ import { isSameDate, stripTime } from '@/lib/utils';
 
 interface TileContentProps {
 	date: Date;
-	today: Date;
 	predictionRange: { start: Date; end: Date };
 	markedDatesMap: Record<string, number>;
 }
 
-export const RenderTileContent: React.FC<TileContentProps> = ({ date, today, predictionRange, markedDatesMap }) => {
+export const RenderTileContent: React.FC<TileContentProps> = ({ date, predictionRange, markedDatesMap }) => {
 	const d = stripTime(date);
 	const year = d.getFullYear();
 	const month = String(d.getMonth() + 1).padStart(2, '0');
@@ -16,7 +15,7 @@ export const RenderTileContent: React.FC<TileContentProps> = ({ date, today, pre
 
 	if (predictionRange && d > predictionRange.end) return null;
 
-	const isToday = isSameDate(d, today);
+	const isToday = isSameDate(d, stripTime(new Date()));
 	const count = markedDatesMap[dStr];
 
 	return (

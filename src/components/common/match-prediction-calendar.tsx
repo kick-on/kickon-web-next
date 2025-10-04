@@ -9,9 +9,9 @@ import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyPredictionDates, getPredictionOpenPeriod } from '@/services/apis/calendar';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { formatFromTo, getEndOfWeek, getStartOfWeek, getTileClassName, stripTime } from '@/lib/utils';
+import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
-import { NavigationLabel } from '../features/calendar/renderers/render-navigation-label';
+import { NavigationLabel } from '../features/calendar/navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
 
 interface MatchPredictionCalendarProps {
@@ -92,14 +92,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 			try {
 				const formattedDate = formatFromTo(firstDayOfCurrentMonth);
 				const response = isMatch ? await getMonthlyMatchList(formattedDate) : await getMyPredictionDates();
-				console.log(response);
 				if (response?.data?.dates) {
-					const parsedDates = response.data.dates.map((d) => {
-						const [year, month, day] = d.date.split('-').map(Number);
-						return new Date(year, month - 1, day);
-					});
-
-					console.log(parsedDates);
 					const countMap: Record<string, number> = {};
 					response.data.dates.forEach(({ date, count }) => {
 						countMap[date] = count;
@@ -115,68 +108,16 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		fetchMarkedDates();
 	}, [firstDayOfCurrentMonth, isMatch]);
 
-	const today = stripTime(new Date());
-
-	const handleMonthChange = (direction: 'prev' | 'next') => {
-		const currentYear = firstDayOfCurrentMonth.getFullYear();
-		const currentMonth = firstDayOfCurrentMonth.getMonth();
-
-		let newYear = currentYear;
-		let newMonth = currentMonth + (direction === 'next' ? 1 : -1);
-
-		if (newMonth > 11) {
-			newMonth = 0;
-			newYear += 1;
-		} else if (newMonth < 0) {
-			newMonth = 11;
-			newYear -= 1;
-		}
-
-		const newDate = new Date(newYear, newMonth, 1);
-		updateUrlParams(newDate);
+	const calendarContext = {
+		firstDayOfCurrentMonth,
+		selectedDate,
+		setSelectedDate,
+		isWeekCalendar,
+		predictionRange,
+		isMatch,
+		markedDatesMap,
+		updateUrlParams,
 	};
-
-	const handleYearChange = (newYear: number) => {
-		const newDate = new Date(newYear, firstDayOfCurrentMonth.getMonth(), 1);
-		updateUrlParams(newDate);
-	};
-
-	// predictionRange가 있으면 start 기준으로 이전 달 이동 막기
-	const canGoPrevMonth = predictionRange
-		? firstDayOfCurrentMonth.getTime() >
-			new Date(predictionRange.start.getFullYear(), predictionRange.start.getMonth(), 1).getTime()
-		: true;
-
-	// predictionRange가 있으면 end 기준으로 다음 달 이동 막기
-	const canGoNextMonth = predictionRange
-		? firstDayOfCurrentMonth.getTime() <
-			new Date(predictionRange.end.getFullYear(), predictionRange.end.getMonth(), 1).getTime()
-		: true;
-
-	const currentWeekStart = selectedDate ? getStartOfWeek(selectedDate) : getStartOfWeek(today);
-	const currentWeekEnd = getEndOfWeek(currentWeekStart);
-
-	const handleWeekChange = (direction: 'prev' | 'next') => {
-		const newDate = new Date(currentWeekStart);
-		newDate.setDate(currentWeekStart.getDate() + (direction === 'next' ? 7 : -7));
-		setSelectedDate(stripTime(newDate));
-
-		// 새로운 주가 속한 달 계산
-		const newMonth = newDate.getMonth();
-		const currentMonth = firstDayOfCurrentMonth.getMonth();
-
-		// 주 이동으로 달이 바뀌었을 때만 갱신
-		if (newMonth !== currentMonth) {
-			const newMonthStart = new Date(newDate.getFullYear(), newMonth, 1);
-			setFirstDayOfCurrentMonth(newMonthStart);
-		}
-	};
-
-	const canGoPrevWeek = currentWeekStart.getTime() > getStartOfWeek(today).getTime();
-
-	const canGoNextWeek = predictionRange
-		? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime()
-		: true;
 
 	return (
 		<div className="w-full">
@@ -202,23 +143,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							setFirstDayOfCurrentMonth(newMonthStart);
 						}
 					}}
-					navigationLabel={({ date }) => (
-						<NavigationLabel
-							year={date.getFullYear()}
-							month={date.toLocaleString('ko-KR', { month: 'long' })}
-							canGoPrev={isWeekCalendar ? canGoPrevWeek : canGoPrevMonth}
-							canGoNext={isWeekCalendar ? canGoNextWeek : canGoNextMonth}
-							isMatch={isMatch}
-							onMonthChange={(direction) => {
-								if (isWeekCalendar) {
-									handleWeekChange(direction);
-								} else {
-									handleMonthChange(direction);
-								}
-							}}
-							onYearChange={handleYearChange}
-						/>
-					)}
+					navigationLabel={({}) => <NavigationLabel {...calendarContext} />}
 					prevLabel={null}
 					nextLabel={null}
 					prev2Label={null}
@@ -227,23 +152,10 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					tileClassName={({ date }) =>
 						getTileClassName({
 							dateOfTile: date,
-							firstDayOfCurrentMonth: firstDayOfCurrentMonth,
-							isWeekCalendar,
-							today,
-							selectedDate,
-							isMatch,
-							predictionRange,
-							markedDatesMap,
+							...calendarContext,
 						})
 					}
-					tileContent={({ date }) => (
-						<RenderTileContent
-							date={date}
-							today={today}
-							predictionRange={predictionRange}
-							markedDatesMap={markedDatesMap}
-						/>
-					)}
+					tileContent={({ date }) => <RenderTileContent date={date} {...calendarContext} />}
 				/>
 
 				<button

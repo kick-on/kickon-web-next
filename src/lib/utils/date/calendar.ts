@@ -18,7 +18,6 @@ export const getEndOfWeek = (startDate: Date): Date => {
 interface TileClassNameProps {
 	dateOfTile: Date; //캘린더 기준 현재 날짜
 	firstDayOfCurrentMonth: Date;
-	today: Date; // 오늘 날짜
 	selectedDate: Date | null; // 사용자가 선택한 날짜
 	isWeekCalendar: boolean;
 	isMatch: boolean;
@@ -28,7 +27,6 @@ interface TileClassNameProps {
 export const getTileClassName = ({
 	dateOfTile,
 	firstDayOfCurrentMonth,
-	today,
 	selectedDate,
 	isWeekCalendar,
 	isMatch,
@@ -81,7 +79,7 @@ export const getTileClassName = ({
 
 	// 오늘 / 선택 상태
 	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
-	const isToday = isSameDate(tileDate, today);
+	const isToday = isSameDate(tileDate, stripTime(new Date()));
 
 	if (isToday) {
 		if (isFocused) return 'focused-today-tile';
@@ -91,7 +89,7 @@ export const getTileClassName = ({
 	// 활성화 / 비활성화 구분
 	if (isMatch) {
 		// 오늘 기준 과거 -> disabled
-		if (tileDate < today) return 'disabled-tile pointer-events-none';
+		if (tileDate < stripTime(new Date())) return 'disabled-tile pointer-events-none';
 		// 오늘 포함 미래 -> active
 		return isFocused ? 'focused-tile' : 'active-tile';
 	} else {
