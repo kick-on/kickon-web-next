@@ -53,18 +53,9 @@ export function NavigationLabel({
 		const currentYear = firstDayOfCurrentMonth.getFullYear();
 		const currentMonth = firstDayOfCurrentMonth.getMonth();
 
-		let newYear = currentYear;
-		let newMonth = currentMonth + (direction === 'next' ? 1 : -1);
+		const offset = direction === 'next' ? 1 : -1;
+		const newDate = new Date(currentYear, currentMonth + offset, 1);
 
-		if (newMonth > 11) {
-			newMonth = 0;
-			newYear += 1;
-		} else if (newMonth < 0) {
-			newMonth = 11;
-			newYear -= 1;
-		}
-
-		const newDate = new Date(newYear, newMonth, 1);
 		updateUrlParams(newDate);
 	};
 
