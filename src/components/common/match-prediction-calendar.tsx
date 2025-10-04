@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Calendar from 'react-calendar';
 import Image from 'next/image';
@@ -86,7 +86,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		fetchPredictionDates();
 	}, []);
 
-	// 월이 변경되면 해당 월의 경기 날짜 조회 + 상위로 변경된 월의 1일 전달 (가장 가까운 경기 날 조회)
+	// 월이 변경되면 해당 월의 경기 날짜 조회 + 가장 가까운 경기 날 조회를 위해 selected date를 변경
 	useEffect(() => {
 		async function fetchMarkedDates() {
 			try {
