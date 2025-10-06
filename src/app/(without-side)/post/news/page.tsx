@@ -27,7 +27,7 @@ export default function Page() {
 		label: '',
 		value: '',
 	});
-	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, _hasHydrated } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
@@ -84,7 +84,7 @@ export default function Page() {
 	}, [isMobile, isEditMode]);
 
 	useEffect(() => {
-		if (hasShownAlert.current) return;
+		if (hasShownAlert.current || !_hasHydrated) return;
 		hasShownAlert.current = true;
 
 		if (!currentUserInfo) {
@@ -92,7 +92,7 @@ export default function Page() {
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
 		}
-	}, [currentUserInfo, router]);
+	}, [currentUserInfo, _hasHydrated, router]);
 
 	const isLoading = useRef(false); // 더블 클릭 -> 중복 호출 방지
 

@@ -14,7 +14,7 @@ import { EditorProvider } from '@/lib/contexts/editor/provider';
 
 export default function Page() {
 	const router = useRouter();
-	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, _hasHydrated } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
@@ -79,7 +79,7 @@ export default function Page() {
 	}, [isEditMode, teams]);
 
 	useEffect(() => {
-		if (hasShownAlert.current) return;
+		if (hasShownAlert.current || !_hasHydrated) return;
 		hasShownAlert.current = true;
 
 		if (!currentUserInfo) {
@@ -87,7 +87,7 @@ export default function Page() {
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
 		}
-	}, [currentUserInfo, router]);
+	}, [currentUserInfo, _hasHydrated, router]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
