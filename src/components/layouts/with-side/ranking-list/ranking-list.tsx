@@ -3,11 +3,11 @@
 import ComponentFrame from '@/components/common/component-frame';
 import RankingItem from './ranking-item';
 import SelectBox from './select-box';
-import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/ranking';
+import { getActualSeasonRanking, getGambleSeasonRanking } from '@/services/apis/ranking/ranking.api';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { useCallback, useEffect, useState } from 'react';
-import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/dto';
+import { ActualRankingDto, GambleRankingDto } from '@/services/apis/ranking/ranking.type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { usePathname } from 'next/navigation';
 
