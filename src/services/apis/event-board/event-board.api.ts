@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetBannerResposne } from './dto';
+import { GetBannerResposne } from './event-board.type';
 
 // 배너 게시글 조회
 export const getBanner = async (): Promise<GetBannerResposne | null> => {
