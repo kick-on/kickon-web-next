@@ -1,4 +1,4 @@
-import { GetUserPointRankingResponse } from './dto';
+import { GetUserPointRankingResponse } from './user-point-event.type';
 import { FailResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
 

@@ -1,8 +1,8 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserPointRanking } from '@/services/apis/user-point-event';
-import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
+import { getUserPointRanking } from '@/services/apis/user-point-event/user-point-event.api';
+import { UserPointRankingDto } from '@/services/apis/user-point-event/user-point-event.type';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Divider from '../mobile-navbar/sidebar/divider';
