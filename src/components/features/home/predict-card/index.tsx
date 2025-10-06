@@ -9,7 +9,7 @@ import Header, { HeaderProps } from './header';
 import { useState } from 'react';
 import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { GameDto } from '@/services/apis/game/dto';
+import { GameDto } from '@/services/apis/game/game.type';
 import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
 
 export default function PredictCard({

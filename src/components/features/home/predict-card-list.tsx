@@ -5,8 +5,8 @@ import NoGameCard from '@/components/features/home/no-game-card';
 import PredictCard from '@/components/features/home/predict-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { isPastDate } from '@/lib/utils/date/isPastDate';
-import { getGames } from '@/services/apis/game';
-import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/game/dto';
+import { getGames } from '@/services/apis/game/game.api';
+import { GameTaggedLeagueDto, GetGamesRequest } from '@/services/apis/game/game.type';
 import { useCallback, useEffect, useState } from 'react';
 
 export default function PredictCardList({ teamPk }: { teamPk: undefined | number }) {

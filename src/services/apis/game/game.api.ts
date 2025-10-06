@@ -5,7 +5,7 @@ import {
 	GetMyPredictionsRequest,
 	GetMyPredictionsResponse,
 	GetMyStatsResponse,
-} from './dto';
+} from './game.type';
 import { appendParams } from '@/lib/server/appendParams';
 
 // 매치 리스트 조회
