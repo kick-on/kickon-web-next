@@ -1,5 +1,5 @@
 import { fetcher } from '@/lib/server/fetcher';
-import { PatchGameGambleRequest, PostGameGambleRequest } from './dto';
+import { PatchGameGambleRequest, PostGameGambleRequest } from './user-game-gamble.type';
 import { EmptySuccessResponse } from '@/services/config/dto';
 
 // 승부예측 생성
