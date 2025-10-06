@@ -89,7 +89,8 @@ export function NavigationLabel({
 
 	const isPrevArrowVisible = () => {
 		if (isWeekCalendar) {
-			return currentWeekStart.getTime() > getStartOfWeek(today).getTime();
+			// 선택한 날짜가 포함된 주의 첫째 날 = 오늘이 포함된 주의 시작일과 같으면 -> 이전 주로 이동 불가
+			return getStartOfWeek(today).getTime() !== currentWeekStart.getTime();
 		}
 		return predictionRange
 			? firstDayOfCurrentMonth.getTime() >
