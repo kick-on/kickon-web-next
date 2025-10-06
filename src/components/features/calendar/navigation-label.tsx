@@ -73,39 +73,58 @@ export function NavigationLabel({
 	const currentWeekEnd = getEndOfWeek(currentWeekStart);
 
 	const handleWeekChange = (direction: 'prev' | 'next') => {
+		const offset = direction === 'next' ? 7 : -1; // 이전 주 이동은 토요일, 다음 주 이동은 일요일에 고정
 		const newDate = new Date(currentWeekStart);
-		newDate.setDate(currentWeekStart.getDate() + (direction === 'next' ? 7 : -7));
+		newDate.setDate(currentWeekStart.getDate() + offset);
+
 		setSelectedDate(stripTime(newDate));
 
-		// 새로운 주가 속한 달 계산
-		const newMonth = newDate.getMonth();
-		const currentMonth = firstDayOfCurrentMonth.getMonth();
-
-		// 주 이동으로 달이 바뀌었을 때만 갱신
-		if (newMonth !== currentMonth) {
+		// 주 이동으로 달이 바뀌었을 때만 URL 갱신
+		if (newDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
 			updateUrlParams(newDate);
 		}
 	};
 
 	const isPrevArrowVisible = () => {
-		if (isWeekCalendar) {
-			// 선택한 날짜가 포함된 주의 첫째 날 = 오늘이 포함된 주의 시작일과 같으면 -> 이전 주로 이동 불가
-			return getStartOfWeek(today).getTime() !== currentWeekStart.getTime();
+		if (isMatch) {
+			if (isWeekCalendar) {
+				// 선택한 날짜가 포함된 주의 첫째 날 = 오늘이 포함된 주의 시작일과 같으면 -> 이전 주로 이동 불가
+				return getStartOfWeek(today).getTime() !== currentWeekStart.getTime();
+			}
+			return predictionRange
+				? firstDayOfCurrentMonth.getTime() >
+						new Date(predictionRange.start.getFullYear(), predictionRange.start.getMonth(), 1).getTime()
+				: true;
 		}
-		return predictionRange
-			? firstDayOfCurrentMonth.getTime() >
-					new Date(predictionRange.start.getFullYear(), predictionRange.start.getMonth(), 1).getTime()
-			: true;
+
+		const minYear = Math.min(...options.map((o) => o.value));
+		const firstDayOfMinYear = new Date(minYear, 0, 1);
+
+		if (isWeekCalendar) {
+			return currentWeekStart.getTime() > firstDayOfMinYear.getTime();
+		}
+		return firstDayOfCurrentMonth.getTime() > firstDayOfMinYear.getTime();
 	};
 
 	const isNextArrowVisible = () => {
-		if (isWeekCalendar) {
-			return predictionRange ? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime() : true;
+		if (isMatch) {
+			if (isWeekCalendar) {
+				return predictionRange ? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime() : true;
+			}
+			return predictionRange
+				? firstDayOfCurrentMonth.getTime() <
+						new Date(predictionRange.end.getFullYear(), predictionRange.end.getMonth(), 1).getTime()
+				: true;
 		}
-		return predictionRange
-			? firstDayOfCurrentMonth.getTime() <
-					new Date(predictionRange.end.getFullYear(), predictionRange.end.getMonth(), 1).getTime()
-			: true;
+		const maxYear = Math.max(...options.map((o) => o.value));
+
+		if (isWeekCalendar) {
+			const lastDayOfMaxYear = new Date(maxYear, 11, 31);
+			return currentWeekEnd.getTime() < lastDayOfMaxYear.getTime();
+		}
+
+		const firstDayOfMaxYear = new Date(maxYear, 11, 1);
+		return firstDayOfCurrentMonth.getTime() < firstDayOfMaxYear.getTime();
 	};
 
 	return (
