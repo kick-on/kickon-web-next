@@ -1,5 +1,5 @@
-import { getUserInfo } from '@/services/apis/user';
-import { UserInfoDto } from '@/services/apis/user/dto';
+import { getUserInfo } from '@/services/apis/user/user.api';
+import { UserInfoDto } from '@/services/apis/user/user.type';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 

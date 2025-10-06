@@ -1,4 +1,4 @@
-import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './dto';
+import type { GetUserInfoResponse, UpdatePrivacyRequest, UpdateUserInfoRequest } from './user.type';
 import type { EmptySuccessResponse } from '../../config/dto';
 import { fetcher } from '@/lib/server/fetcher';
 

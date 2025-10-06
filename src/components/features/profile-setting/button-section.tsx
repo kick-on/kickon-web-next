@@ -2,8 +2,8 @@
 
 import BottomButton from '@/components/common/bottom-button';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { updateUserInfo } from '@/services/apis/user';
-import { UpdateUserInfoRequest } from '@/services/apis/user/dto';
+import { updateUserInfo } from '@/services/apis/user/user.api';
+import { UpdateUserInfoRequest } from '@/services/apis/user/user.type';
 import { useRouter } from 'next/navigation';
 
 export default function ButtonSection({ profileImageUrl, nickname, teamPks, isDuplicated, setIsDuplicated }) {

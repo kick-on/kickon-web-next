@@ -5,7 +5,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { getUserPointRanking } from '@/services/apis/user-point-event';
 import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
-import { getUserInfo } from '@/services/apis/user';
+import { getUserInfo } from '@/services/apis/user/user.api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';

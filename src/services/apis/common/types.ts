@@ -1,5 +1,5 @@
 import { TeamDto } from '../team/dto';
-import { UserDto } from '../user/dto';
+import { UserDto } from '../user/user.type';
 
 // 뉴스 게시글 목록
 export interface CommonPostListDto {

@@ -1,6 +1,6 @@
 import BottomButton from '@/components/common/bottom-button';
-import { updatePrivacy, updateUserInfo } from '@/services/apis/user';
-import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/apis/user/dto';
+import { updatePrivacy, updateUserInfo } from '@/services/apis/user/user.api';
+import { UpdatePrivacyRequest, UpdateUserInfoRequest } from '@/services/apis/user/user.type';
 import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 import { useRouter } from 'next/navigation';
 

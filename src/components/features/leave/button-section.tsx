@@ -3,7 +3,7 @@
 import BottomButton from '@/components/common/bottom-button';
 import { leaveReasons } from '@/lib/constants/leave';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { deleteUserMe } from '@/services/apis/user';
+import { deleteUserMe } from '@/services/apis/user/user.api';
 import { useRouter } from 'next/navigation';
 
 export default function ButtonSection({ selectedReasonIndex, etcContent, isValidCheck }) {
