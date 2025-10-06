@@ -1,7 +1,7 @@
 import { SuccessResponse } from '@/services/config/dto';
 import { GambleResultDto, MyGambleResultDto } from '../user-game-gamble/user-game-gamble.type';
 import { LeagueDto } from '../league/dto';
-import { TeamDto } from '../team/dto';
+import { TeamDto } from '../team/team.type';
 
 // 매치 리스트 조회
 export interface GetGamesRequest {

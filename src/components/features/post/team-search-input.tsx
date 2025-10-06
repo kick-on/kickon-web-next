@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { getTeam } from '@/services/apis/team';
+import { getTeam } from '@/services/apis/team/team.api';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
 interface Team {

@@ -1,5 +1,5 @@
 import { LeagueDto } from '../league/dto';
-import { TeamDto } from '../team/dto';
+import { TeamDto } from '../team/team.type';
 import { SuccessResponse } from '../../config/dto';
 
 // 개인정보 동의

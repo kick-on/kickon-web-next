@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import OptionItem, { Option } from '@/components/common/option-item';
 import clsx from 'clsx';
-import { TeamDto } from '@/services/apis/team/dto';
+import { TeamDto } from '@/services/apis/team/team.type';
 import { LeagueDto } from '@/services/apis/league/dto';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';

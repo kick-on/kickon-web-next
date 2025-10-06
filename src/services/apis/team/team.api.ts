@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetTeamResponse } from './dto';
+import { GetTeamResponse } from './team.type';
 import { appendParams } from '@/lib/server/appendParams';
 
 // 팀 조회

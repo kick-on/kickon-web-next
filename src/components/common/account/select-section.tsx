@@ -3,9 +3,9 @@
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import Selectbox from './selectbox';
 import { LeagueDto } from '@/services/apis/league/dto';
-import { TeamDto } from '@/services/apis/team/dto';
+import { TeamDto } from '@/services/apis/team/team.type';
 import { getLeague } from '@/services/apis/league';
-import { getTeam } from '@/services/apis/team';
+import { getTeam } from '@/services/apis/team/team.api';
 import { NO_CHEERING_TEAM, NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import { Option } from '../option-item';
 

@@ -1,4 +1,4 @@
-import { TeamDto } from '../team/dto';
+import { TeamDto } from '../team/team.type';
 import { UserDto } from '../user/user.type';
 
 // 뉴스 게시글 목록
