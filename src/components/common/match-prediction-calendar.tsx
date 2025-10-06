@@ -22,7 +22,6 @@ interface MatchPredictionCalendarProps {
 
 export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
 	const isMobile = useIsMobile();
-	const router = useRouter();
 	const searchParams = useSearchParams();
 
 	const isMatch = type === 'match';
@@ -48,16 +47,6 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 	};
 
 	const [firstDayOfCurrentMonth, setFirstDayOfCurrentMonth] = useState(getYearMonthFromUrl); // 현재 월의 첫째 날
-
-	// URL 파라미터 업데이트
-	const updateUrlParams = (date: Date) => {
-		const year = date.getFullYear();
-		const month = date.getMonth() + 1;
-		const params = new URLSearchParams(searchParams);
-		params.set('year', year.toString());
-		params.set('month', month.toString());
-		router.replace(`?${params.toString()}`, { scroll: false });
-	};
 
 	useEffect(() => {
 		// 년,월 계산 (params 기반)
@@ -110,7 +99,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		fetchPredictionDates();
 	}, []);
 
-	const calendarContext = {
+	const calendarData = {
 		firstDayOfCurrentMonth,
 		selectedDate,
 		setSelectedDate,
@@ -118,7 +107,6 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		predictionRange,
 		isMatch,
 		markedDatesMap,
-		updateUrlParams,
 	};
 
 	return (
@@ -145,7 +133,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							setFirstDayOfCurrentMonth(newMonthStart);
 						}
 					}}
-					navigationLabel={({}) => <NavigationLabel {...calendarContext} />}
+					navigationLabel={({}) => <NavigationLabel {...calendarData} />}
 					prevLabel={null}
 					nextLabel={null}
 					prev2Label={null}
@@ -154,10 +142,10 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					tileClassName={({ date }) =>
 						getTileClassName({
 							dateOfTile: date,
-							...calendarContext,
+							...calendarData,
 						})
 					}
-					tileContent={({ date }) => <RenderTileContent date={date} {...calendarContext} />}
+					tileContent={({ date }) => <RenderTileContent date={date} {...calendarData} />}
 				/>
 
 				<button
