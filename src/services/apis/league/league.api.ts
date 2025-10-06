@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetLeagueResponse } from './dto';
+import { GetLeagueResponse } from './league.type';
 
 // 리그 조회
 export const getLeague = async (): Promise<GetLeagueResponse | null> => {

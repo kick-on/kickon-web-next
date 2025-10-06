@@ -1,4 +1,4 @@
-import { LeagueDto } from '../league/dto';
+import { LeagueDto } from '../league/league.type';
 import { TeamDto } from '../team/team.type';
 import { SuccessResponse } from '../../config/dto';
 
