@@ -1,5 +1,5 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetActualSeasonRankingResponse, GetGambleSeasonRankingResponse } from './dto';
+import { GetActualSeasonRankingResponse, GetGambleSeasonRankingResponse } from './ranking.type';
 
 // 실제 시즌 순위 조회
 export const getActualSeasonRanking = async (league: number): Promise<GetActualSeasonRankingResponse | null> => {

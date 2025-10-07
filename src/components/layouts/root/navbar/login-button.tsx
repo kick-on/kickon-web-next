@@ -3,7 +3,7 @@
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
-import { getUserInfo } from '@/services/apis/user';
+import { getUserInfo } from '@/services/apis/user/user.api';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -50,12 +50,7 @@ export default function LoginButton({ onClickProfile }: { onClickProfile?: () =>
 		if (!currentUserInfo) {
 			const getCurrentUserInfo = async () => {
 				const response = await getUserInfo();
-
-				if (typeof response === 'string') {
-					console.log(response);
-				} else if (response.data.privacyAgreedAt) {
-					setCurrentUserInfo(response.data);
-				}
+				setCurrentUserInfo(response.data);
 			};
 
 			getCurrentUserInfo();

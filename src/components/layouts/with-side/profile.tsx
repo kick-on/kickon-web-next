@@ -3,9 +3,9 @@
 import ComponentFrame from '@/components/common/component-frame';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
-import { getUserPointRanking } from '@/services/apis/user-point-event';
-import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
-import { getUserInfo } from '@/services/apis/user';
+import { getUserPointRanking } from '@/services/apis/user-point-event/user-point-event.api';
+import { UserPointRankingDto } from '@/services/apis/user-point-event/user-point-event.type';
+import { getUserInfo } from '@/services/apis/user/user.api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -55,12 +55,7 @@ export default function Profile() {
 		if (!currentUserInfo) {
 			const getCurrentUserInfo = async () => {
 				const response = await getUserInfo();
-
-				if (typeof response === 'string') {
-					console.log(response);
-				} else if (response.data.privacyAgreedAt) {
-					setCurrentUserInfo(response.data);
-				}
+				setCurrentUserInfo(response.data);
 			};
 
 			getCurrentUserInfo();
@@ -70,15 +65,10 @@ export default function Profile() {
 		if (currentUserInfo) {
 			const getUserPointRankingInfo = async () => {
 				const response = await getUserPointRanking();
-
-				if (typeof response === 'string') {
-					console.log(response);
-				} else {
-					setExtraUserInfo({
-						totalPoints: response.data.totalPoints,
-						ranking: response.data.ranking,
-					});
-				}
+				setExtraUserInfo({
+					totalPoints: response.data.totalPoints,
+					ranking: response.data.ranking,
+				});
 			};
 
 			getUserPointRankingInfo();
