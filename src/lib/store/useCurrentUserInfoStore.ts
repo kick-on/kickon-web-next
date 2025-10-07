@@ -1,9 +1,10 @@
-import { getUserInfo } from '@/services/apis/user';
-import { UserInfoDto } from '@/services/apis/user/dto';
+import { getUserInfo } from '@/services/apis/user/user.api';
+import { UserInfoDto } from '@/services/apis/user/user.type';
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface CurrentUserInfoStoreDto {
+	_hasHydrated: boolean;
 	currentUserInfo: UserInfoDto;
 	setCurrentUserInfo: (userInfo: UserInfoDto) => void;
 	clearCurrentUserInfo: () => void;
@@ -13,26 +14,22 @@ interface CurrentUserInfoStoreDto {
 export const useCurrentUserInfoStore = create(
 	persist<CurrentUserInfoStoreDto>(
 		(set) => ({
+			_hasHydrated: false,
 			currentUserInfo: null,
 			setCurrentUserInfo: (userInfo) => set({ currentUserInfo: userInfo }),
 			clearCurrentUserInfo: () => set({ currentUserInfo: null }),
 			fetchUserInfo: async () => {
-				// api 호출해서 상태 업데이트
-				try {
-					const userInfo = await getUserInfo();
-
-					if (typeof userInfo !== 'string') {
-						set({ currentUserInfo: userInfo.data });
-					} else {
-						console.error('Failed to fetch user info:', userInfo);
-					}
-				} catch (error) {
-					console.error('Failed to fetch user info:', error);
-				}
+				const userInfo = await getUserInfo();
+				set({ currentUserInfo: userInfo.data, _hasHydrated: true });
 			},
 		}),
 		{
 			name: 'KICKON_CURRENT_USER_INFO', // 로컬 스토리지에 저장될 키 이름
+			onRehydrateStorage: () => (state) => {
+				if (state) {
+					state._hasHydrated = true;
+				}
+			},
 		},
 	),
 );

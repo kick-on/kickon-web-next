@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import PredictCard from '../home/predict-card';
-import { GameDto, GetGamesRequest } from '@/services/apis/game/dto';
-import { getGames } from '@/services/apis/game';
+import { GameDto, GetGamesRequest } from '@/services/apis/game/game.type';
+import { getGames } from '@/services/apis/game/game.api';
 import { formatFromTo } from '@/lib/utils';
 import NoGameCard from './no-game-card';
 import MatchPredictionCalendar from '@/components/common/calendar';
@@ -47,14 +47,9 @@ export default function MatchOn() {
 
 			try {
 				const response = await getGames(request);
-
-				if (response) {
-					setGames(response.data.games);
-				} else {
-					alert('실패');
-				}
+				setGames(response.data.games);
 			} catch (error) {
-				console.error(error);
+				alert(error.message);
 			}
 		};
 

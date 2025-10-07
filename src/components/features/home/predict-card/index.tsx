@@ -1,15 +1,19 @@
 'use client';
 
 import clsx from 'clsx';
-import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
+import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/user-game-gamble.type';
 import GameInfoBox, { GameInfoBoxProps } from './game-info-box';
 import TeamButton from './team-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
-import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
+import {
+	deleteGameGamble,
+	patchGameGamble,
+	postGameGamble,
+} from '@/services/apis/user-game-gamble/user-game-gamble.api';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { GameDto } from '@/services/apis/game/dto';
+import { GameDto } from '@/services/apis/game/game.type';
 import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
 
 export default function PredictCard({

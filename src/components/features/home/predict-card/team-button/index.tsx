@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Score from './score';
 import { Dispatch, SetStateAction } from 'react';
 import MobileUpdownButton from './mobile-updown-button';
-import { GameDto } from '@/services/apis/game/dto';
+import { GameDto } from '@/services/apis/game/game.type';
 
 interface TeamButtonInfoDto {
 	teamName: string;

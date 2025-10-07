@@ -1,4 +1,4 @@
-import { ActualRankingDto } from '@/services/apis/ranking/dto';
+import { ActualRankingDto } from '@/services/apis/ranking/ranking.type';
 import Image from 'next/image';
 
 export default function RankingItem({

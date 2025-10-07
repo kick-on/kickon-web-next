@@ -2,8 +2,8 @@
 
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { roundToOneDecimal } from '@/lib/utils';
-import { getMyStats } from '@/services/apis/game';
-import { MyStatsDto } from '@/services/apis/game/dto';
+import { getMyStats } from '@/services/apis/game/game.api';
+import { MyStatsDto } from '@/services/apis/game/game.type';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import Chart from './chart';
@@ -36,8 +36,12 @@ export default function Stat() {
 
 	useEffect(() => {
 		const apiCall = async () => {
-			const response = await getMyStats();
-			setStatData(response.data);
+			try {
+				const response = await getMyStats();
+				setStatData(response.data);
+			} catch (error) {
+				alert(error.message);
+			}
 		};
 
 		apiCall();

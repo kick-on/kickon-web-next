@@ -1,9 +1,9 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetLeagueResponse } from './dto';
+import { GetBannerResposne } from './event-board.type';
 
-// 리그 조회
-export const getLeague = async (): Promise<GetLeagueResponse | null> => {
-	const response = await fetch(`${SERVER_URL}/api/league`);
+// 배너 게시글 조회
+export const getBanner = async (): Promise<GetBannerResposne | null> => {
+	const response = await fetch(`${SERVER_URL}/api/event-board`);
 
 	if (!response.ok) {
 		let errorPayload: unknown;
@@ -12,7 +12,7 @@ export const getLeague = async (): Promise<GetLeagueResponse | null> => {
 		} catch (error) {
 			errorPayload = error; // response가 json이 아닌 경우 방어
 		}
-		console.error('리그 조회 실패:', errorPayload);
+		console.error('배너 조회 실패:', errorPayload);
 		return null;
 	}
 	return response.json();

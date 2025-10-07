@@ -1,6 +1,6 @@
 'use client';
 
-import { TeamDto } from '@/services/apis/team/dto';
+import { TeamDto } from '@/services/apis/team/team.type';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
