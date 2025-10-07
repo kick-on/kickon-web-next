@@ -22,8 +22,8 @@ interface MatchPredictionCalendarProps {
 
 export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
 	const isMobile = useIsMobile();
+	const router = useRouter();
 	const searchParams = useSearchParams();
-
 	const isMatch = type === 'match';
 
 	const [isWeekCalendar, setIsWeekCalendar] = useState(isMatch ? false : true); // 주 단위 캘린더인가 (접힌 상태인가)
@@ -46,21 +46,22 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		return new Date(today.getFullYear(), today.getMonth(), 1);
 	};
 
-	const [firstDayOfCurrentMonth, setFirstDayOfCurrentMonth] = useState(getYearMonthFromUrl); // 현재 월의 첫째 날
+	const firstDayOfCurrentMonth = getYearMonthFromUrl(); // 현재 월의 첫째 날
+
+	const updateUrlParams = (date: Date) => {
+		const year = date.getFullYear();
+		const month = date.getMonth() + 1;
+		const params = new URLSearchParams(searchParams);
+		params.set('year', year.toString());
+		params.set('month', month.toString());
+		router.replace(`?${params.toString()}`, { scroll: false });
+	};
 
 	useEffect(() => {
-		// 년,월 계산 (params 기반)
-		const newMonthStart = getYearMonthFromUrl();
-
-		// 첫째 날은 searchParams가 바뀐 경우에만 업데이트
-		if (newMonthStart.getTime() !== firstDayOfCurrentMonth.getTime()) {
-			setFirstDayOfCurrentMonth(newMonthStart);
-		}
-
 		// 점찍기 페치 (type에 따라 분기)
 		async function fetchMarkedDates() {
 			try {
-				const formattedDate = formatFromTo(newMonthStart);
+				const formattedDate = formatFromTo(firstDayOfCurrentMonth);
 				const response = type === 'match' ? await getMonthlyMatchList(formattedDate) : await getMyPredictionDates();
 
 				if (response?.data?.dates) {
@@ -107,6 +108,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		predictionRange,
 		isMatch,
 		markedDatesMap,
+		updateUrlParams,
 	};
 
 	return (
@@ -124,13 +126,12 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
 							relative transition-all duration-[500ms] ease-linear opacity-100`}
 					onClickDay={(value) => {
-						const newDate = stripTime(value);
-						setSelectedDate(newDate);
+						const clickedDate = stripTime(value);
+						setSelectedDate(clickedDate);
 
-						// 만약 선택된 날짜의 달이 현재 달과 다르면 activeStartDate 업데이트
-						if (newDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
-							const newMonthStart = new Date(newDate.getFullYear(), newDate.getMonth(), 1);
-							setFirstDayOfCurrentMonth(newMonthStart);
+						// 만약 선택된 날짜의 달이 현재 파라미터의 달과 다르다면 -> 파라미터 변경 -> 자동으로 firstDayOfCurrentMonth도 변경
+						if (clickedDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
+							updateUrlParams(clickedDate);
 						}
 					}}
 					navigationLabel={({}) => <NavigationLabel {...calendarData} />}

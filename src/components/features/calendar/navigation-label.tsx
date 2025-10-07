@@ -5,7 +5,6 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { getEndOfWeek, getStartOfWeek, stripTime } from '@/lib/utils';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { useRouter, useSearchParams } from 'next/navigation';
 
 interface NavigationLabelProps {
 	isMatch: boolean;
@@ -14,6 +13,7 @@ interface NavigationLabelProps {
 	firstDayOfCurrentMonth: Date;
 	predictionRange: { start: Date; end: Date } | null;
 	isWeekCalendar: boolean;
+	updateUrlParams: (date: Date) => void;
 }
 
 export function NavigationLabel({
@@ -23,9 +23,8 @@ export function NavigationLabel({
 	firstDayOfCurrentMonth,
 	predictionRange,
 	isWeekCalendar,
+	updateUrlParams,
 }: NavigationLabelProps) {
-	const router = useRouter();
-	const searchParams = useSearchParams();
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	const year = firstDayOfCurrentMonth.getFullYear();
@@ -45,15 +44,6 @@ export function NavigationLabel({
 		return { label: `${yearOption}년`, value: yearOption };
 	}).reverse();
 
-	// URL 파라미터 업데이트
-	const updateUrlParams = (date: Date) => {
-		const year = date.getFullYear();
-		const month = date.getMonth() + 1;
-		const params = new URLSearchParams(searchParams);
-		params.set('year', year.toString());
-		params.set('month', month.toString());
-		router.replace(`?${params.toString()}`, { scroll: false });
-	};
 	const handleYearChange = (newYear: number) => {
 		const newDate = new Date(newYear, firstDayOfCurrentMonth.getMonth(), 1);
 		updateUrlParams(newDate);
