@@ -5,7 +5,7 @@ import { CommonCommentDto, CommonCreateNewReplyDto } from '../common/types';
 export type GetBoardCommentsResponse = SuccessResponse<CommonCommentDto[]>;
 
 // 댓글 킥 요청
-export interface CreateNewsCommentKickRequest {
+export interface CreateboardCommentKickRequest {
 	reply: number; // 댓글 PK값
 }
 
@@ -13,3 +13,6 @@ export interface CreateNewsCommentKickRequest {
 export interface CreateBoardReplyRequest extends CommonCreateNewReplyDto {
 	board: number;
 }
+
+// 댓글 생성 및 수정 응답
+export type CreateEditboardReplyRespones = SuccessResponse<CommonCommentDto>;

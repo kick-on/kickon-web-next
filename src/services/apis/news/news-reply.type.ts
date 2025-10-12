@@ -8,3 +8,6 @@ export type GetNewsCommentsResponse = SuccessResponse<CommonCommentDto[]>;
 export interface CreateNewsReplyRequest extends CommonCreateNewReplyDto {
 	news: number;
 }
+
+// 댓글 생성 및 수정 응답
+export type CreateEditNewsReplyRespones = SuccessResponse<CommonCommentDto>;
