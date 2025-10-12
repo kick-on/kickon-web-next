@@ -114,7 +114,7 @@ export function NavigationLabel({
 
 	return (
 		<div className="flex w-full flex-1 items-center justify-center">
-			<div className="absolute left-0 @mobile:ml-5 ml-9 z-50">
+			<div className="absolute left-0 @mobile:ml-5 ml-9">
 				{isMatch ? (
 					<span className="button1-medium @mobile:text-12">{year}년</span>
 				) : (
