@@ -48,7 +48,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 	const firstDayOfCurrentMonth = getYearMonthFromUrl(); // 현재 월의 첫째 날
 
-	const updateUrlParams = (date: Date) => {
+	const updateUrlWithDate = (date: Date) => {
 		const year = date.getFullYear();
 		const month = date.getMonth() + 1;
 		const params = new URLSearchParams(searchParams);
@@ -108,7 +108,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		predictionRange,
 		isMatch,
 		markedDatesMap,
-		updateUrlParams,
+		updateUrlWithDate,
 	};
 
 	return (
@@ -131,7 +131,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 
 						// 만약 선택된 날짜의 달이 현재 파라미터의 달과 다르다면 -> 파라미터 변경 -> 자동으로 firstDayOfCurrentMonth도 변경
 						if (clickedDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
-							updateUrlParams(clickedDate);
+							updateUrlWithDate(clickedDate);
 						}
 					}}
 					navigationLabel={({}) => <NavigationLabel {...calendarData} />}

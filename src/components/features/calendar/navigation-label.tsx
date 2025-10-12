@@ -13,7 +13,7 @@ interface NavigationLabelProps {
 	firstDayOfCurrentMonth: Date;
 	predictionRange: { start: Date; end: Date } | null;
 	isWeekCalendar: boolean;
-	updateUrlParams: (date: Date) => void;
+	updateUrlWithDate: (date: Date) => void;
 }
 
 export function NavigationLabel({
@@ -23,9 +23,10 @@ export function NavigationLabel({
 	firstDayOfCurrentMonth,
 	predictionRange,
 	isWeekCalendar,
-	updateUrlParams,
+	updateUrlWithDate,
 }: NavigationLabelProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const calendarMode = isWeekCalendar ? 'week' : 'month';
 
 	const year = firstDayOfCurrentMonth.getFullYear();
 	const month = firstDayOfCurrentMonth.toLocaleString('ko-KR', { month: 'long' });
@@ -46,33 +47,27 @@ export function NavigationLabel({
 
 	const handleYearChange = (newYear: number) => {
 		const newDate = new Date(newYear, firstDayOfCurrentMonth.getMonth(), 1);
-		updateUrlParams(newDate);
-	};
-
-	const handleMonthChange = (direction: 'prev' | 'next') => {
-		const currentYear = firstDayOfCurrentMonth.getFullYear();
-		const currentMonth = firstDayOfCurrentMonth.getMonth();
-
-		const offset = direction === 'next' ? 1 : -1;
-		const newDate = new Date(currentYear, currentMonth + offset, 1);
-
-		updateUrlParams(newDate);
+		updateUrlWithDate(newDate);
 	};
 
 	const currentWeekStart = selectedDate ? getStartOfWeek(selectedDate) : getStartOfWeek(today);
 	const currentWeekEnd = getEndOfWeek(currentWeekStart);
 
-	const handleWeekChange = (direction: 'prev' | 'next') => {
-		const offset = direction === 'next' ? 7 : -1; // 이전 주 이동은 토요일, 다음 주 이동은 일요일에 고정
-		const newDate = new Date(currentWeekStart);
-		newDate.setDate(currentWeekStart.getDate() + offset);
+	const handleNavigation = (mode: 'month' | 'week', direction: 'prev' | 'next') => {
+		const baseDate = mode === 'month' ? firstDayOfCurrentMonth : currentWeekStart;
+		const offset = mode === 'month' ? (direction === 'next' ? 1 : -1) : direction === 'next' ? 7 : -1;
+
+		const newDate =
+			mode === 'month'
+				? new Date(baseDate.getFullYear(), baseDate.getMonth() + offset, 1)
+				: new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate() + offset);
 
 		setSelectedDate(stripTime(newDate));
 
-		// 주 이동으로 달이 바뀌었을 때만 URL 갱신
-		if (newDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
-			updateUrlParams(newDate);
-		}
+		// 월 이동 시에는 항상, 주 이동 시에는 선택한 날짜의 월과 현재 월의 비교 결과에 따라
+		const shouldUpdateUrl = mode === 'month' || newDate.getMonth() !== firstDayOfCurrentMonth.getMonth();
+
+		if (shouldUpdateUrl) updateUrlWithDate(newDate);
 	};
 
 	const isPrevArrowVisible = () => {
@@ -162,7 +157,7 @@ export function NavigationLabel({
 			<div className="relative w-full flex-1 flex items-center justify-center">
 				<ArrowButton
 					direction="prev"
-					onClick={() => (isWeekCalendar ? handleWeekChange('prev') : handleMonthChange('prev'))}
+					onClick={() => handleNavigation(calendarMode, 'prev')}
 					isVisible={isPrevArrowVisible()}
 				/>
 
@@ -175,7 +170,7 @@ export function NavigationLabel({
 
 				<ArrowButton
 					direction="next"
-					onClick={() => (isWeekCalendar ? handleWeekChange('next') : handleMonthChange('next'))}
+					onClick={() => handleNavigation(calendarMode, 'next')}
 					isVisible={isNextArrowVisible()}
 				/>
 			</div>
