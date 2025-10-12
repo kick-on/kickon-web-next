@@ -59,7 +59,7 @@ export const getTileClassName = ({
 	const hasMatch = markedDatesMap[dStr] > 0;
 
 	// predictionRange 처리
-	if (predictionRange && tileDate > predictionRange.end) {
+	if (isMatch && predictionRange && tileDate > predictionRange.end) {
 		const classes = ['disabled-after'];
 		const dayOfWeek = dateOfTile.getDay();
 
