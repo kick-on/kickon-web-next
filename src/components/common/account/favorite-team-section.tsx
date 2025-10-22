@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { TeamDto } from '@/services/apis/team/dto';
+import { TeamDto } from '@/services/apis/team/team.type';
 import dynamic from 'next/dynamic';
 import FavoriteTeamItem from './favorite-team-item';
 import SelectSection from './select-section';

@@ -14,9 +14,7 @@ export default function TodaysHalftime() {
 	useEffect(() => {
 		const getVideos = async () => {
 			const response = await getTodaysHalftime();
-			if (response) {
-				setVideos(response.data);
-			}
+			setVideos(response.data);
 		};
 
 		getVideos();

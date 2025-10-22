@@ -1,8 +1,8 @@
 'use client';
 
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserPointRanking } from '@/services/apis/user-point-event';
-import { UserPointRankingDto } from '@/services/apis/user-point-event/dto';
+import { getUserPointRanking } from '@/services/apis/user-point-event/user-point-event.api';
+import { UserPointRankingDto } from '@/services/apis/user-point-event/user-point-event.type';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Divider from '../mobile-navbar/sidebar/divider';
@@ -44,15 +44,10 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 		if (currentUserInfo) {
 			const getUserPointRankingInfo = async () => {
 				const response = await getUserPointRanking();
-
-				if (typeof response === 'string') {
-					console.log(response);
-				} else {
-					setExtraUserInfo({
-						totalPoints: response.data.totalPoints,
-						ranking: response.data.ranking,
-					});
-				}
+				setExtraUserInfo({
+					totalPoints: response.data.totalPoints,
+					ranking: response.data.ranking,
+				});
 			};
 
 			getUserPointRankingInfo();

@@ -12,9 +12,7 @@ export default function TopHalftime() {
 	useEffect(() => {
 		const getVideos = async () => {
 			const response = await getTodaysHalftime();
-			if (response) {
-				setVideos(response.data);
-			}
+			setVideos(response.data);
 		};
 
 		getVideos();
