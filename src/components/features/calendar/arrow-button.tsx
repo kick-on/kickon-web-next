@@ -3,11 +3,11 @@ import Image from 'next/image';
 interface ArrowButtonProps {
 	direction: 'prev' | 'next';
 	onClick: (dir: 'prev' | 'next') => void;
-	show: boolean;
+	isVisible: boolean;
 }
 
-export const ArrowButton = ({ direction, onClick, show }: ArrowButtonProps) => {
-	if (!show) return null;
+export const ArrowButton = ({ direction, onClick, isVisible }: ArrowButtonProps) => {
+	if (!isVisible) return null;
 
 	const isPrev = direction === 'prev';
 	return (

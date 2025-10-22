@@ -6,7 +6,7 @@ import { GameDto, GetGamesRequest } from '@/services/apis/game/game.type';
 import { getGames } from '@/services/apis/game/game.api';
 import { formatFromTo } from '@/lib/utils';
 import NoGameCard from './no-game-card';
-import MatchPredictionCalendar from '@/components/common/calendar';
+import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
 import { getNextMatchDate } from '@/services/apis/calendar';
 
 export default function MatchOn() {
