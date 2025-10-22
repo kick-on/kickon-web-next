@@ -6,9 +6,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 	const errorCode = searchParams.get('errorCode');
 	const { provider } = await params;
 
-	// 쿠키에서 토큰 가져오기
-	const accessToken = req.cookies.get('accessToken')?.value;
-	const refreshToken = req.cookies.get('refreshToken')?.value;
+	// 쿠키 or 경로에서 토큰 가져오기
+	const accessToken = req.cookies.get('accessToken')?.value || searchParams.get('accessToken');
+	const refreshToken = req.cookies.get('refreshToken')?.value || searchParams.get('refreshToken');
 
 	const redirectUrl = new URL(DOMAIN_URL);
 	const finalizePath = '/auth/finalize';
@@ -77,6 +77,32 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 			path: '/',
 			maxAge: 60,
 		});
+	}
+
+	// 로컬에서는 별도로 쿠키 설정
+	const isLocal = DOMAIN_URL === 'http://localhost:3000';
+	if (isLocal) {
+		if (accessToken) {
+			response.cookies.set({
+				name: 'accessToken',
+				value: accessToken,
+				httpOnly: false,
+				secure: !isLocal,
+				path: '/',
+				maxAge: 60 * 60, // 1시간
+			});
+		}
+
+		if (refreshToken) {
+			response.cookies.set({
+				name: 'refreshToken',
+				value: refreshToken,
+				httpOnly: true,
+				secure: !isLocal,
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30, // 30일
+			});
+		}
 	}
 
 	return response;
