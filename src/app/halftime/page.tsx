@@ -10,6 +10,7 @@ import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
 import { useHalftimeQueryKeyStore } from '@/lib/store/useHalftimeStore';
+import { HalftimeSortType } from '@/services/apis/shorts/shorts.type';
 
 export default function Page() {
 	const searchParams = useSearchParams();
@@ -17,7 +18,7 @@ export default function Page() {
 	const size = useFetchSize();
 
 	const { setKey } = useHalftimeQueryKeyStore();
-	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
+	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort as HalftimeSortType, size);
 	const halftimes = data?.pages?.flatMap((page) => page.data) ?? [];
 
 	const getHalftimes = () => {

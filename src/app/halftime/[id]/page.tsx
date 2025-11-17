@@ -6,7 +6,7 @@ import { useHalftimeQueryKeyStore, useViewedHalftimesStore } from '@/lib/store/u
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { getHalftimeDetail } from '@/services/apis/shorts/shorts.api';
-import { GetHalftimeListResponse } from '@/services/apis/shorts/shorts.type';
+import { GetHalftimeListResponse, HalftimeSortType } from '@/services/apis/shorts/shorts.type';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -31,7 +31,7 @@ export default function Page() {
 
 	console.log(halftimeListQueryKey);
 	const [, sort, size] = halftimeListQueryKey;
-	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
+	const { fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort as HalftimeSortType, size);
 
 	const queryClient = useQueryClient();
 	const cachedData = queryClient.getQueryData(halftimeListQueryKey) as InfiniteData<GetHalftimeListResponse, unknown>;
@@ -92,7 +92,7 @@ export default function Page() {
 
 	const swiperRef = useRef<SwiperRef>(null);
 	const defaultSort = 'CREATE_DESC';
-	const { fetchNextPage: fetchPkList } = useHalftimeListQuery(defaultSort, size);
+	const { fetchNextPage: fetchPkList } = useHalftimeListQuery(defaultSort as HalftimeSortType, size);
 
 	// 초기 렌더링 시 halftime fetch
 	useEffect(() => {
