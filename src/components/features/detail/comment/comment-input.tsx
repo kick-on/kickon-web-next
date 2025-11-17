@@ -5,10 +5,9 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { createNewsReply, patchNewsReply } from '@/services/apis/news/news-reply.api';
-import { createBoardReply, patchBoardReply } from '@/services/apis/board/board-reply.api';
 import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
 import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
+import { useCreateCommentMutation, useEditCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
 
 const CommentInput = ({
 	postType,
@@ -63,6 +62,8 @@ const CommentInput = ({
 	};
 
 	// 댓글 등록
+	const editCommentMutation = useEditCommentMutation(postType);
+	const createCommentMutation = useCreateCommentMutation(postType);
 	const handleSubmit = async () => {
 		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
@@ -76,18 +77,15 @@ const CommentInput = ({
 		setIsSubmitting(true);
 
 		try {
-			let response;
 			const isNews = postType === 'news';
 			const sanitizedContent = content.replace(/\u200B/g, '');
 
 			if (type === 'edit') {
-				const body = {
+				const requestBody = {
 					contents: sanitizedContent,
 				};
 
-				response = isNews
-					? await patchNewsReply(editingCommentId, body)
-					: await patchBoardReply(editingCommentId, body);
+				await editCommentMutation.mutateAsync({ commentPk: editingCommentId, requestBody });
 			} else {
 				const isReply = type === 'reply' && replyTo;
 				const body: CreateNewsReplyRequest | CreateBoardReplyRequest = {
@@ -95,11 +93,9 @@ const CommentInput = ({
 					...(isReply ? { parentReply: replyTo.pk } : {}),
 					...(isNews ? { news: postId } : { board: postId }),
 				};
-				response = isNews
-					? await createNewsReply(body as CreateNewsReplyRequest)
-					: await createBoardReply(body as CreateBoardReplyRequest);
+
+				await createCommentMutation.mutateAsync(body);
 			}
-			console.log('댓글 수정/등록', response);
 
 			if (inputRef.current) inputRef.current.innerHTML = '';
 			setContent('');

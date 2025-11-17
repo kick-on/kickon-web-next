@@ -48,6 +48,11 @@ export interface CommonCreateNewReplyDto {
 }
 
 // 댓글 수정 요청
+export interface CommonPatchReplyRequest {
+	commentPk: number;
+	requestBody: CommonPatchReplyDto;
+}
+
 export interface CommonPatchReplyDto {
 	contents: string;
 	usedImageKeys?: string[];

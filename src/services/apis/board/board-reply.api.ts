@@ -1,8 +1,8 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
-import { CreateBoardReplyRequest, CreateEditboardReplyRespones, GetBoardCommentsResponse } from './board-reply.type';
-import { CommonCommentKickDto, CommonPatchReplyDto } from '../common/types';
+import { CreateBoardReplyRequest, CreateEditBoardReplyRespones, GetBoardCommentsResponse } from './board-reply.type';
+import { CommonCommentKickDto, CommonPatchReplyDto, CommonPatchReplyRequest } from '../common/types';
 import { GetCommentsRequest } from '../news/news.type';
 
 // 게시글 댓글 목록 조회
@@ -51,9 +51,9 @@ export const createBoardCommentKick = async (id: number): Promise<SuccessRespons
 };
 
 // 댓글 생성
-export const createBoardReply = async (requestBody: CreateBoardReplyRequest): Promise<CreateEditboardReplyRespones> => {
+export const createBoardReply = async (requestBody: CreateBoardReplyRequest): Promise<CreateEditBoardReplyRespones> => {
 	try {
-		const response = await fetcher<CreateEditboardReplyRespones>({
+		const response = await fetcher<CreateEditBoardReplyRespones>({
 			method: 'POST',
 			url: '/api/board-reply',
 			body: requestBody,
@@ -79,12 +79,12 @@ export const deleteBoardReply = async (commentPk: number): Promise<EmptySuccessR
 };
 
 // 게시글 댓글 수정
-export const patchBoardReply = async (
-	commentPk: number,
-	requestBody: CommonPatchReplyDto,
-): Promise<CreateEditboardReplyRespones> => {
+export const patchBoardReply = async ({
+	commentPk,
+	requestBody,
+}: CommonPatchReplyRequest): Promise<CreateEditBoardReplyRespones> => {
 	try {
-		const response = await fetcher<CreateEditboardReplyRespones>({
+		const response = await fetcher<CreateEditBoardReplyRespones>({
 			method: 'PATCH',
 			url: `/api/board-reply/${commentPk}`,
 			body: requestBody,
