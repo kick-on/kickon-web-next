@@ -9,8 +9,6 @@ import { CommentItemProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CommentMoreButton } from './comment-more-button';
 import useIsMobile from '@/lib/hooks/useIsMobile';
-import { createNewsCommentKick, deleteNewsReply } from '@/services/apis/news/news-reply.api';
-import { createBoardCommentKick, deleteBoardReply } from '@/services/apis/board/board-reply.api';
 import AlertModal from '../alert-modal';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { useCreateCommentKickMutation, useDeleteCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
