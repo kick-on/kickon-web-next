@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import CommentInput from './comment-input';
 import CommentItem from './comment-item';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';

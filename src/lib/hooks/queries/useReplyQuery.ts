@@ -1,18 +1,13 @@
 import { createBoardReply, getBoardCommentList, patchBoardReply } from '@/services/apis/board/board-reply.api';
-import { CreateBoardReplyRequest, CreateEditBoardReplyRespones } from '@/services/apis/board/board-reply.type';
+import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
 import { getBoardDetail } from '@/services/apis/board/board.api';
-import { PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { CommonPatchReplyRequest } from '@/services/apis/common/types';
 import { createNewsReply, getNewsCommentList, patchNewsReply } from '@/services/apis/news/news-reply.api';
-import {
-	CreateEditNewsReplyRespones,
-	CreateNewsReplyRequest,
-	GetNewsCommentsResponse,
-} from '@/services/apis/news/news-reply.type';
+import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
 import { getNewsDetail } from '@/services/apis/news/news.api';
-import { GetCommentsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
+import { GetCommentsRequest } from '@/services/apis/news/news.type';
 import { SuccessResponse } from '@/services/config/dto';
-import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 type PostType = 'news' | 'board';
 

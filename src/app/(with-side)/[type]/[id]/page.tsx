@@ -16,7 +16,6 @@ import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import usePostViewStatus from '@/lib/hooks/usePostViewStatus';
-import { useTotalCommentCountQuery } from '@/lib/hooks/queries/useReplyQuery';
 
 const DetailPage = () => {
 	const params = useParams();
