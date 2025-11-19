@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import CommentInput from './comment-input';
 import { formatDate } from '@/lib/utils';
@@ -13,6 +13,7 @@ import { createNewsCommentKick, deleteNewsReply } from '@/services/apis/news/new
 import { createBoardCommentKick, deleteBoardReply } from '@/services/apis/board/board-reply.api';
 import AlertModal from '../alert-modal';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
+import { useDeleteCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
 
 function CommentItem({
 	postType,
@@ -81,22 +82,21 @@ function CommentItem({
 		setEditingCommentId(commentPk);
 	};
 
-	const handleDeleteComment = async (commentPk: number, parentCommentPk?: number) => {
-		try {
-			// TODO: 답글 및 댓글 삭제 관련 mutation 생성
-			const response = isNews ? await deleteNewsReply(commentPk) : await deleteBoardReply(commentPk);
-			if (response?.code === 'GET_SUCCESS') {
-				// 만약 현재 수정 중이던 댓글을 삭제했다면, 수정 상태도 초기화
-				if (editingCommentId === commentPk) {
-					setEditingCommentId(null);
-				}
-			} else {
-				console.error('댓글 삭제 실패', response);
-			}
-		} catch (error) {
-			console.error('댓글 삭제 중 오류 발생', error);
-		}
+	// 댓글 삭제
+	const { mutateAsync, isSuccess, isError } = useDeleteCommentMutation(postType);
+	const handleDeleteComment = async () => {
+		await mutateAsync(comment.pk);
 	};
+
+	useEffect(() => {
+		if (isError) {
+			alert('댓글 삭제 중 문제가 발생했습니다.');
+		}
+
+		if (isSuccess && editingCommentId === comment.pk) {
+			setEditingCommentId(null);
+		}
+	}, [isSuccess]);
 
 	const commentItemProps: Omit<CommentItemProps, 'comment'> = {
 		postType,
@@ -138,7 +138,7 @@ function CommentItem({
 						{/* 더보기 버튼 (내 댓글일 때만)*/}
 						{isMyComment && (
 							<CommentMoreButton
-								onDeleteClick={() => handleDeleteComment(comment.pk, replyTo?.pk)}
+								onDeleteClick={() => handleDeleteComment()}
 								onEditClick={() => {
 									if (isReplyInputOpen) {
 										if (window.confirm('작성 중인 내용이 사라집니다. 계속하시겠습니까?')) {

@@ -1,8 +1,18 @@
-import { createBoardReply, getBoardCommentList, patchBoardReply } from '@/services/apis/board/board-reply.api';
+import {
+	createBoardReply,
+	deleteBoardReply,
+	getBoardCommentList,
+	patchBoardReply,
+} from '@/services/apis/board/board-reply.api';
 import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
 import { getBoardDetail } from '@/services/apis/board/board.api';
 import { CommonPatchReplyRequest } from '@/services/apis/common/types';
-import { createNewsReply, getNewsCommentList, patchNewsReply } from '@/services/apis/news/news-reply.api';
+import {
+	createNewsReply,
+	deleteNewsReply,
+	getNewsCommentList,
+	patchNewsReply,
+} from '@/services/apis/news/news-reply.api';
 import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
 import { getNewsDetail } from '@/services/apis/news/news.api';
 import { GetCommentsRequest } from '@/services/apis/news/news.type';
@@ -61,6 +71,17 @@ export const useEditCommentMutation = (type: PostType) => {
 	const mutationFn = type === 'news' ? patchNewsReply : patchBoardReply;
 
 	return useMutation<SuccessResponse<unknown>, unknown, CommonPatchReplyRequest>({
+		mutationFn,
+		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: commentKeys.all }),
+	});
+};
+
+// 댓글 삭제
+export const useDeleteCommentMutation = (type: PostType) => {
+	const queryClient = useQueryClient();
+	const mutationFn = type === 'news' ? deleteNewsReply : deleteBoardReply;
+
+	return useMutation<SuccessResponse<unknown>, unknown, number>({
 		mutationFn,
 		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: commentKeys.all }),
 	});
