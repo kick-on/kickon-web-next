@@ -101,7 +101,6 @@ const DetailPage = () => {
 					postType={type}
 					postId={postDetail?.pk || 0}
 					totalreplies={totalReplies}
-					setTotalReplies={setTotalReplies}
 				/>
 			</ComponentFrame>
 

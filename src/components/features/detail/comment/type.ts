@@ -7,7 +7,6 @@ export interface CommentSectionProps {
 	postId: number;
 	isCommentAllowed: boolean;
 	totalreplies?: number;
-	setTotalReplies?: (count: number) => void;
 }
 
 // comment item props
@@ -19,8 +18,6 @@ export interface CommentItemProps {
 	replyTo?: { pk: number; nickname: string };
 	editingCommentId?: number;
 	setEditingCommentId?: (id: number | null) => void;
-	setComments: Dispatch<SetStateAction<CommonCommentDto[]>>;
-	setTotalReplies: (count: number) => void;
 }
 
 // 코멘트 입력 props

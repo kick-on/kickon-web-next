@@ -99,7 +99,7 @@ const CommentInput = ({
 
 			if (inputRef.current) inputRef.current.innerHTML = '';
 			setContent('');
-			onCommentSubmit();
+			onCommentSubmit?.();
 		} catch (error) {
 			console.error('댓글 처리 중 오류', error);
 			alert('댓글 처리 중 오류가 발생했습니다.');

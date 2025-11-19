@@ -22,8 +22,6 @@ function CommentItem({
 	replyTo,
 	editingCommentId,
 	setEditingCommentId,
-	setComments,
-	setTotalReplies,
 }: CommentItemProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const { formattedDate, formattedTime } = formatDate(comment.createdAt, '2-digit');
@@ -49,9 +47,6 @@ function CommentItem({
 		if (isReplyInputOpen) {
 			setIsReplyInputOpen(false);
 			setIsReplyListOpen(true);
-
-			// TODO: 댓글 리스트 업데이트 로직 추가
-			// TODO: total comments 카운트 업데이트 로직 추가
 		}
 	};
 
@@ -62,20 +57,9 @@ function CommentItem({
 			return;
 		}
 
+		// TODO: 킥 관련 mutation 생성
 		const result = isNews ? await createNewsCommentKick(commentPk) : await createBoardCommentKick(commentPk);
 		if (!result) return;
-
-		setComments((prev) =>
-			prev.map((c) => {
-				if (c.pk !== commentPk) return c;
-				const isCurrentlyLiked = c.kicked;
-				return {
-					...c,
-					kicked: !isCurrentlyLiked,
-					kickCount: c.kickCount + (isCurrentlyLiked ? -1 : 1), // 즉시 +1/-1 반영
-				};
-			}),
-		);
 	};
 
 	const toggleReplyInputOpen = () => {
@@ -99,25 +83,9 @@ function CommentItem({
 
 	const handleDeleteComment = async (commentPk: number, parentCommentPk?: number) => {
 		try {
+			// TODO: 답글 및 댓글 삭제 관련 mutation 생성
 			const response = isNews ? await deleteNewsReply(commentPk) : await deleteBoardReply(commentPk);
 			if (response?.code === 'GET_SUCCESS') {
-				if (isReply && parentCommentPk) {
-					// 답글 삭제
-					setComments((prev) =>
-						prev.map((parentComment) =>
-							parentComment.pk === parentCommentPk
-								? {
-										...parentComment,
-										replies: parentComment.replies?.filter((reply) => reply.pk !== commentPk),
-									}
-								: parentComment,
-						),
-					);
-				} else {
-					// 댓글 삭제
-					setComments((prev) => prev.filter((comment) => comment.pk !== commentPk));
-				}
-
 				// 만약 현재 수정 중이던 댓글을 삭제했다면, 수정 상태도 초기화
 				if (editingCommentId === commentPk) {
 					setEditingCommentId(null);
@@ -136,8 +104,6 @@ function CommentItem({
 		postId,
 		editingCommentId,
 		setEditingCommentId,
-		setComments,
-		setTotalReplies,
 	};
 
 	return (

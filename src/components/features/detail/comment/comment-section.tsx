@@ -9,65 +9,38 @@ import { useSearchParams } from 'next/navigation';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentItemProps, CommentSectionProps } from './type';
-import { getNewsCommentList } from '@/services/apis/news/news-reply.api';
-import { getBoardCommentList } from '@/services/apis/board/board-reply.api';
+import { useCommentListQuery } from '@/lib/hooks/queries/useReplyQuery';
 
-function CommentSection({
-	postType,
-	postId,
-	isCommentAllowed,
-	totalreplies = 0,
-	setTotalReplies,
-}: CommentSectionProps) {
+function CommentSection({ postType, postId, isCommentAllowed, totalreplies = 0 }: CommentSectionProps) {
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
-	const isNews = postType === 'news';
 	const baseUrl = `/${postType}/${postId}`;
 
 	const pageParam = searchParams.get('page');
 	const [currentPage, setCurrentPage] = useState(pageParam ? Number(pageParam) : 1);
-	const [isLastPageLoaded, setIsLastPageLoaded] = useState(false); // 모바일에서 더보기 버튼 나올지 말지
 
 	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
-	// 댓글 리스트 조회
-	const [comments, setComments] = useState([]);
-	const [hasError, setHasError] = useState(false);
-	const [totalPages, setTotalPages] = useState(1);
 	const commentsPerPage = 10;
-
-	const fetchComments = async () => {
-		if (!postId || postId < 1) return;
-
-		const query = {
-			id: postId,
-			page: currentPage,
-			size: commentsPerPage,
-			...(isMobile && comments.length > 0 ? { infinite: true, lastReply: comments.at(-1).pk } : {}),
-		};
-
-		try {
-			const response = isNews ? await getNewsCommentList(query) : await getBoardCommentList(query);
-
-			console.log('댓글 리스트', response);
-			if (isMobile) {
-				setComments((prev) => [...prev, ...response?.data]);
-			} else {
-				setComments(response?.data || []);
-			}
-			setTotalPages(response.meta?.totalPages || 1);
-			setHasError(false);
-			return response;
-		} catch {
-			setHasError(true);
-			return null;
-		}
+	const query = {
+		id: postId,
+		page: currentPage,
+		size: commentsPerPage,
+		...(isMobile ? { infinite: true } : {}),
 	};
 
-	// 초기 접속 또는 페이지 변경 시 댓글 불러오기
-	useEffect(() => {
-		fetchComments();
-	}, [currentPage, postId]);
+	// 댓글 리스트 조회
+	const {
+		data: commentListData,
+		fetchNextPage,
+		isFetchingNextPage,
+		hasNextPage,
+		isError,
+	} = useCommentListQuery(postType, query);
+	const currentPageComments = commentListData?.pages[Number(pageParam ?? 0)]?.data ?? [];
+	const allPageComments = commentListData?.pages.flatMap((page) => page.data) ?? [];
+	const comments = isMobile ? allPageComments : currentPageComments;
+	const totalPages = commentListData?.pages[0]?.meta.totalPages;
 
 	// searchParams가 바뀌었을 때 currentPage를 갱신
 	useEffect(() => {
@@ -76,34 +49,10 @@ function CommentSection({
 		}
 	}, [pageParam, isMobile]);
 
-	// // 로컬스토리지에서 좋아요 상태 복원
-	// useEffect(() => {
-	// 	const storedLikes = localStorage.getItem('likedComments');
-	// 	if (storedLikes) {
-	// 		setLikedComments(JSON.parse(storedLikes));
-	// 	}
-	// }, []);
-
 	// 모바일에서 '더 보기' 클릭 시 댓글 추가 로드
 	const handleLoadMoreComment = async () => {
-		const nextPage = currentPage + 1;
-		const query = {
-			id: postId,
-			page: nextPage,
-			size: commentsPerPage,
-			infinite: true,
-			lastReply: comments.at(-1).pk,
-		};
-		const response = isNews ? await getNewsCommentList(query) : await getBoardCommentList(query);
-
-		const newComments = response?.data || [];
-
-		setComments((prev) => [...prev, ...newComments]);
-		setCurrentPage(nextPage);
-
-		if (nextPage >= (response.meta?.totalPages || 1)) {
-			setIsLastPageLoaded(true);
-		}
+		if (isFetchingNextPage) return;
+		await fetchNextPage();
 	};
 
 	const commentItemProps: Omit<CommentItemProps, 'comment'> = {
@@ -112,12 +61,9 @@ function CommentSection({
 		isCommentAllowed,
 		editingCommentId,
 		setEditingCommentId,
-		setComments,
-		setTotalReplies,
 	};
 
-	// 에러 발생 시 에러 카드 표시
-	if (hasError) {
+	if (isError) {
 		return <FetchingFailedCard height="300px" marginTop="50px" onClick={() => window.location.reload()} />;
 	}
 
@@ -142,7 +88,7 @@ function CommentSection({
 			{totalPages > 1 && (
 				<>
 					{isMobile ? (
-						!isLastPageLoaded && (
+						hasNextPage && (
 							<div className="flex gap-2 justify-center my-4 cursor-pointer" onClick={handleLoadMoreComment}>
 								<div className="button5-regular">더 보기</div>
 								<Image src="/chevron/down.svg" alt="댓글 더 보기" width={16} height={16} />
