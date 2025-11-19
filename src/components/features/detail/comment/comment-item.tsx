@@ -13,7 +13,7 @@ import { createNewsCommentKick, deleteNewsReply } from '@/services/apis/news/new
 import { createBoardCommentKick, deleteBoardReply } from '@/services/apis/board/board-reply.api';
 import AlertModal from '../alert-modal';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
-import { useDeleteCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
+import { useCreateCommentKickMutation, useDeleteCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
 
 function CommentItem({
 	postType,
@@ -52,15 +52,14 @@ function CommentItem({
 	};
 
 	// 좋아요 토글 -> kicked가 서버한테 잘 오는지 판단하고 다시!! kickCount 이건 잘 돼!
-	const toggleCommentLike = async (commentPk: number) => {
+	const createCommentKickMutation = useCreateCommentKickMutation(postType);
+	const toggleCommentLike = async () => {
 		if (!currentUserInfo) {
 			openLoginModal();
 			return;
 		}
 
-		// TODO: 킥 관련 mutation 생성
-		const result = isNews ? await createNewsCommentKick(commentPk) : await createBoardCommentKick(commentPk);
-		if (!result) return;
+		await createCommentKickMutation.mutateAsync(comment.pk);
 	};
 
 	const toggleReplyInputOpen = () => {
@@ -177,7 +176,7 @@ function CommentItem({
 
 						{/* 킥 버튼 (하단 우측) */}
 						{!isEditing && (
-							<button onClick={() => toggleCommentLike(comment.pk)} className="ml-auto flex items-center gap-2">
+							<button onClick={() => void toggleCommentLike()} className="ml-auto flex items-center gap-2">
 								<Image src={comment.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
 								<span className={comment.kicked ? 'text-black-900' : 'text-gray-500'}>{comment.kickCount}</span>
 							</button>

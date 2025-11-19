@@ -1,4 +1,5 @@
 import {
+	createBoardCommentKick,
 	createBoardReply,
 	deleteBoardReply,
 	getBoardCommentList,
@@ -8,6 +9,7 @@ import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type'
 import { getBoardDetail } from '@/services/apis/board/board.api';
 import { CommonPatchReplyRequest } from '@/services/apis/common/types';
 import {
+	createNewsCommentKick,
 	createNewsReply,
 	deleteNewsReply,
 	getNewsCommentList,
@@ -80,6 +82,17 @@ export const useEditCommentMutation = (type: PostType) => {
 export const useDeleteCommentMutation = (type: PostType) => {
 	const queryClient = useQueryClient();
 	const mutationFn = type === 'news' ? deleteNewsReply : deleteBoardReply;
+
+	return useMutation<SuccessResponse<unknown>, unknown, number>({
+		mutationFn,
+		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: commentKeys.all }),
+	});
+};
+
+// 댓글 킥
+export const useCreateCommentKickMutation = (type: PostType) => {
+	const queryClient = useQueryClient();
+	const mutationFn = type === 'news' ? createNewsCommentKick : createBoardCommentKick;
 
 	return useMutation<SuccessResponse<unknown>, unknown, number>({
 		mutationFn,
