@@ -8,6 +8,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
 import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
 import { useCreateCommentMutation, useEditCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const CommentInput = ({
 	postType,
@@ -21,8 +22,10 @@ const CommentInput = ({
 }: CommentInputProps) => {
 	const isMobile = useIsMobile();
 	const isReply = type === 'reply' && replyTo;
-	const currentUserInfo = useCurrentUserInfoStore();
+
 	const inputRef = useRef<HTMLDivElement>(null);
+	const currentUserInfo = useCurrentUserInfoStore();
+
 	const [inputHeight, setInputHeight] = useState(0);
 	const [content, setContent] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
@@ -125,6 +128,32 @@ const CommentInput = ({
 			setContent(defaultContent);
 		}
 	}, [type, defaultContent]);
+
+	// 페이지 이동
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (isMobile || !createCommentMutation.isSuccess) return;
+		const currentPage = Number(searchParams.get('page') ?? 1);
+		const lastPage = createCommentMutation.data.meta.totalPages;
+
+		if (currentPage && lastPage && lastPage !== currentPage) {
+			const baseUrl = window.location.origin + window.location.pathname;
+			router.replace(`${baseUrl}?page=${lastPage}`, { scroll: false });
+		}
+	}, [createCommentMutation.isSuccess, isMobile]);
+
+	useEffect(() => {
+		if (isMobile || !editCommentMutation.isSuccess) return;
+		const currentPage = Number(searchParams.get('page') ?? 1);
+		const lastPage = editCommentMutation.data.meta.totalPages;
+
+		if (currentPage && lastPage && lastPage !== currentPage) {
+			const baseUrl = window.location.origin + window.location.pathname;
+			router.replace(`${baseUrl}?page=${lastPage}`, { scroll: false });
+		}
+	}, [editCommentMutation.isSuccess, isMobile]);
 
 	return (
 		<div
