@@ -9,46 +9,42 @@ import { useSearchParams } from 'next/navigation';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentItemProps, CommentSectionProps } from './type';
-import { useCommentListQuery, useTotalCommentCountQuery } from '@/lib/hooks/queries/useReplyQuery';
+import {
+	useCommentListInfiniteQuery,
+	useCommentListQuery,
+	useTotalCommentCountQuery,
+} from '@/lib/hooks/queries/useReplyQuery';
 
 function CommentSection({ postType, postId, isCommentAllowed }: CommentSectionProps) {
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const baseUrl = `/${postType}/${postId}`;
 
-	const pageParam = searchParams.get('page');
-	const [currentPage, setCurrentPage] = useState(pageParam ? Number(pageParam) : 1);
-
 	const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
+	const currentPage = Number(searchParams.get('page') ?? 1);
 	const commentsPerPage = 10;
 	const query = {
 		id: postId,
 		page: currentPage,
 		size: commentsPerPage,
-		...(isMobile ? { infinite: true } : {}),
 	};
 
 	// 댓글 리스트 조회
 	const {
-		data: commentListData,
+		data: mobileCommentListData,
 		fetchNextPage,
 		isFetchingNextPage,
 		hasNextPage,
 		isError,
-	} = useCommentListQuery(postType, query);
-	const currentPageComments = commentListData?.pages[Number(pageParam ?? 0)]?.data ?? [];
-	const allPageComments = commentListData?.pages.flatMap((page) => page.data) ?? [];
-	const comments = isMobile ? allPageComments : currentPageComments;
-	const totalPages = commentListData?.pages[0]?.meta.totalPages;
-	const { data: totalComments } = useTotalCommentCountQuery(postType, postId);
+	} = useCommentListInfiniteQuery(postType, query, isMobile ?? false);
+	const { data: desktopCommentListData } = useCommentListQuery(postType, query, !isMobile);
+	const mobileComments = mobileCommentListData?.pages.flatMap((page) => page.data) ?? [];
+	const desktopComments = desktopCommentListData?.data ?? [];
 
-	// searchParams가 바뀌었을 때 currentPage를 갱신
-	useEffect(() => {
-		if (!isMobile && pageParam) {
-			setCurrentPage(Number(pageParam));
-		}
-	}, [pageParam, isMobile]);
+	const comments = isMobile ? mobileComments : desktopComments;
+	const totalPages = isMobile ? 2 : desktopCommentListData?.meta.totalPages;
+	const { data: totalComments } = useTotalCommentCountQuery(postType, postId);
 
 	// 모바일에서 '더 보기' 클릭 시 댓글 추가 로드
 	const handleLoadMoreComment = async () => {

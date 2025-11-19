@@ -11,43 +11,41 @@ import {
 } from '@/services/apis/news/news-reply.type';
 import { getNewsDetail } from '@/services/apis/news/news.api';
 import { GetCommentsRequest, PatchNewsDetailRequest } from '@/services/apis/news/news.type';
+import { SuccessResponse } from '@/services/config/dto';
 import { InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 type PostType = 'news' | 'board';
 
 export const commentKeys = {
 	all: ['comment'] as const,
-	list: (type: PostType, postId: number) => [...commentKeys.all, 'list', type, postId] as const,
+	list: (type: PostType, params: GetCommentsRequest) => [...commentKeys.all, 'list', type, params] as const,
 	commentCount: (type: PostType, postId: number) => [...commentKeys.all, 'commentCount', type, postId] as const,
 };
 
-// 댓글 리스트 조회
-export const useCommentListQuery = (type: PostType, params: Omit<GetCommentsRequest, 'page'>) => {
-	const queryClient = useQueryClient();
+// 데스크톱 댓글 리스트 조회
+export const useCommentListQuery = (type: PostType, params: GetCommentsRequest, enabled: boolean) => {
+	return useQuery({
+		queryKey: commentKeys.list(type, params),
+		queryFn: () => (type === 'news' ? getNewsCommentList({ ...params }) : getBoardCommentList({ ...params })),
+		enabled: enabled && Number.isSafeInteger(params.id) && params.id > 0,
+	});
+};
 
-	const getFinalParams = () => {
-		if (params.infinite) {
-			const data = queryClient.getQueryData<InfiniteData<GetNewsCommentsResponse, unknown>>(
-				commentKeys.list(type, params.id),
-			);
-
-			const lastReply = data?.pages.at(-1).data.at(-1)?.pk;
-			if (lastReply) {
-				return { ...params, lastReply };
-			}
-		}
-		return { ...params };
-	};
-
+// 모바일 댓글 리스트 조회
+export const useCommentListInfiniteQuery = (type: PostType, params: GetCommentsRequest, enabled: boolean) => {
 	return useInfiniteQuery({
-		queryKey: commentKeys.list(type, params.id),
+		queryKey: commentKeys.list(type, { ...params, infinite: true }),
 		queryFn: ({ pageParam }) =>
 			type === 'news'
-				? getNewsCommentList({ ...getFinalParams(), page: pageParam })
-				: getBoardCommentList({ ...getFinalParams(), page: pageParam }),
-		initialPageParam: 1,
-		getNextPageParam: (lastPage) => (lastPage.meta.hasNext ? lastPage.meta.currentPage + 1 : undefined),
-		enabled: Number.isSafeInteger(params.id) && params.id > 0,
+				? getNewsCommentList({ ...params, infinite: true, lastReply: pageParam })
+				: getBoardCommentList({ ...params, infinite: true, lastReply: pageParam }),
+		initialPageParam: undefined,
+		getNextPageParam: (lastPage) => {
+			if (!lastPage.meta.hasNext) return undefined;
+			const lastData = lastPage.data;
+			return lastData.at(-1)?.pk ?? undefined;
+		},
+		enabled: enabled && Number.isSafeInteger(params.id) && params.id > 0,
 	});
 };
 
@@ -56,7 +54,7 @@ export const useCreateCommentMutation = (type: PostType) => {
 	const queryClient = useQueryClient();
 	const mutationFn = type === 'news' ? createNewsReply : createBoardReply;
 
-	return useMutation<unknown, unknown, CreateNewsReplyRequest | CreateBoardReplyRequest>({
+	return useMutation<SuccessResponse<unknown>, unknown, CreateNewsReplyRequest | CreateBoardReplyRequest>({
 		mutationFn,
 		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: commentKeys.all }),
 	});
@@ -67,7 +65,7 @@ export const useEditCommentMutation = (type: PostType) => {
 	const queryClient = useQueryClient();
 	const mutationFn = type === 'news' ? patchNewsReply : patchBoardReply;
 
-	return useMutation<unknown, unknown, CommonPatchReplyRequest>({
+	return useMutation<SuccessResponse<unknown>, unknown, CommonPatchReplyRequest>({
 		mutationFn,
 		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: commentKeys.all }),
 	});
