@@ -9,9 +9,9 @@ import { useSearchParams } from 'next/navigation';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import Image from 'next/image';
 import { CommentItemProps, CommentSectionProps } from './type';
-import { useCommentListQuery } from '@/lib/hooks/queries/useReplyQuery';
+import { useCommentListQuery, useTotalCommentCountQuery } from '@/lib/hooks/queries/useReplyQuery';
 
-function CommentSection({ postType, postId, isCommentAllowed, totalreplies = 0 }: CommentSectionProps) {
+function CommentSection({ postType, postId, isCommentAllowed }: CommentSectionProps) {
 	const searchParams = useSearchParams();
 	const isMobile = useIsMobile();
 	const baseUrl = `/${postType}/${postId}`;
@@ -41,6 +41,7 @@ function CommentSection({ postType, postId, isCommentAllowed, totalreplies = 0 }
 	const allPageComments = commentListData?.pages.flatMap((page) => page.data) ?? [];
 	const comments = isMobile ? allPageComments : currentPageComments;
 	const totalPages = commentListData?.pages[0]?.meta.totalPages;
+	const { data: totalComments } = useTotalCommentCountQuery(postType, postId);
 
 	// searchParams가 바뀌었을 때 currentPage를 갱신
 	useEffect(() => {
@@ -72,7 +73,7 @@ function CommentSection({ postType, postId, isCommentAllowed, totalreplies = 0 }
 			{isCommentAllowed && <CommentInput postType={postType} postId={postId} editingCommentId={editingCommentId} />}
 
 			<p className="body5-regular text-black-600 border-t border-b border-black-200 px-4 py-3">
-				댓글 <span className="text-black-900">{totalreplies}</span>개
+				댓글 <span className="text-black-900">{totalComments}</span>개
 			</p>
 
 			{comments.length === 0 ? (

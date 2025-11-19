@@ -16,13 +16,13 @@ import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import usePostViewStatus from '@/lib/hooks/usePostViewStatus';
+import { useTotalCommentCountQuery } from '@/lib/hooks/queries/useReplyQuery';
 
 const DetailPage = () => {
 	const params = useParams();
 	const router = useRouter();
 
 	const [postDetail, setPostDetail] = useState<CommonPostDetailDto | null>(null);
-	const [totalReplies, setTotalReplies] = useState(0);
 
 	const type = params?.type as 'news' | 'board';
 	const id = Number(params?.id);
@@ -52,7 +52,6 @@ const DetailPage = () => {
 			};
 
 			setPostDetail(finalPostDetail.data);
-			setTotalReplies(response.data.replies);
 
 			// 세션 스토리지에 저장 (같은 키로 항상 덮어쓰기)
 			// IDEA: 수정 버튼을 클릭할 때 저장하면 어떨지
@@ -96,12 +95,7 @@ const DetailPage = () => {
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={getPostDetail} />
 				)}
 
-				<CommentSection
-					isCommentAllowed={isCommentAllowed}
-					postType={type}
-					postId={postDetail?.pk || 0}
-					totalreplies={totalReplies}
-				/>
+				<CommentSection isCommentAllowed={isCommentAllowed} postType={type} postId={postDetail?.pk || 0} />
 			</ComponentFrame>
 
 			<RecommendedContent mode={type} teamName={isOurTeam ? postDetail?.team?.nameKr : ''} />
