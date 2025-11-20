@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import OptionItem from '../option-item';
 import clsx from 'clsx';
 import { usePathname, useRouter } from 'next/navigation';
-import { LeagueDto } from '@/services/apis/league/dto';
-import { getLeague } from '@/services/apis/league';
+import { LeagueDto } from '@/services/apis/league/league.type';
+import { getLeague } from '@/services/apis/league/league.api';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Selectbox({

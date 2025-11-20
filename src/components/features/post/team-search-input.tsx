@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import debounce from 'lodash/debounce';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { getTeam } from '@/services/apis/team';
+import { getTeam } from '@/services/apis/team/team.api';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
 interface Team {
@@ -39,14 +39,13 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 		}
 		try {
 			const response = await getTeam(undefined, term);
-			const teamData = response.data.map((team) => ({
+			const teamData = response?.data?.map((team) => ({
 				id: team.pk,
 				name: team.nameKr ?? team.nameEn,
 				logo: team.logoUrl,
 			}));
 			setTeams(teamData);
-		} catch (error) {
-			console.error('팀 리스트 가져오기 실패:', error);
+		} catch {
 			setTeams([]);
 		}
 	}, []);

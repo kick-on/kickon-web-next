@@ -4,61 +4,31 @@ import {
 	GetHalftimeListRequest,
 	GetHalftimeListResponse,
 	GetTodaysHalftimeResponse,
+	HalftimeSortType,
 } from './shorts.type';
+import { appendParams } from '@/lib/server/appendParams';
 
 // 하프타임 리스트 조회
-export const getHalftimeList = async ({ sort, page, size }: GetHalftimeListRequest) => {
-	try {
-		const params = new URLSearchParams();
+export const getHalftimeList = async (req: GetHalftimeListRequest) => {
+	const params = new URLSearchParams();
+	appendParams(params, req);
 
-		params.append('sort', String(sort));
-		params.append('size', String(size));
-		params.append('page', String(page));
-
-		const response = await fetcher<GetHalftimeListResponse>({ method: 'GET', url: `/api/shorts?${params.toString()}` });
-
-		if (!response) {
-			console.error('하프타임 리스트 조회 실패 - 응답 없음');
-			throw new Error('하프타임 리스트 조회 실패');
-		}
-
-		return response;
-	} catch (error) {
-		console.error('하프타임 리스트 조회 실패:', error);
-		throw error;
-	}
+	const response = await fetcher<GetHalftimeListResponse>({ method: 'GET', url: `/api/shorts?${params.toString()}` });
+	return response;
 };
 
 // 하프타임 상세 조회
-export const getHalftimeDetail = async (pk: number) => {
-	try {
-		const response = await fetcher<GetHalftimeDetailResponse>({ method: 'GET', url: `/api/shorts/${pk}` });
+export const getHalftimeDetail = async (pk: number, sort?: HalftimeSortType) => {
+	const response = await fetcher<GetHalftimeDetailResponse>({
+		method: 'GET',
+		url: `/api/shorts/${pk}?sort=${sort || 'CREATED_DESC'}`,
+	});
 
-		if (!response) {
-			console.error('하프타임 상세 조회 실패 - 응답 없음');
-			throw new Error('하프타임 상세 조회 실패');
-		}
-
-		return response;
-	} catch (error) {
-		console.error('하프타임 상세 조회 실패:', error);
-		throw error;
-	}
+	return response;
 };
 
 // 오늘의 하프타임 조회
 export const getTodaysHalftime = async () => {
-	try {
-		const response = await fetcher<GetTodaysHalftimeResponse>({ method: 'GET', url: `/api/shorts/fixed` });
-
-		if (!response) {
-			console.error('오늘의 하프타임 조회 실패 - 응답 없음');
-			throw new Error('오늘의 하프타임 조회 실패');
-		}
-
-		return response;
-	} catch (error) {
-		console.error('오늘의 하프타임 조회 실패:', error);
-		throw error;
-	}
+	const response = await fetcher<GetTodaysHalftimeResponse>({ method: 'GET', url: `/api/shorts/fixed` });
+	return response;
 };

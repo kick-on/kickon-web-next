@@ -1,11 +1,11 @@
 'use client';
 
-import { TeamDto } from '@/services/apis/team/dto';
+import { TeamDto } from '@/services/apis/team/team.type';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { NO_CHEERING_TEAM_PK } from '@/lib/constants';
+import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 
 export default function FavoriteTeamItem({
 	team,

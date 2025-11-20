@@ -6,15 +6,15 @@ import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/apis/user';
 import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
+import { EditorProvider } from '@/lib/contexts/editor/provider';
 
 export default function Page() {
 	const router = useRouter();
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, _hasHydrated } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
@@ -39,11 +39,12 @@ export default function Page() {
 
 	const [title, setTitle] = useState('');
 	const [body, setBody] = useState('');
-	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 	const [isPinned, setIsPinned] = useState(false);
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+
+	const isFormValid = !!(selectedOption.value !== undefined && title.trim() && body.trim());
 
 	const handleDropdownToggle = () => {
 		setIsVisibleDropdown((prev) => !prev);
@@ -78,7 +79,7 @@ export default function Page() {
 	}, [isEditMode, teams]);
 
 	useEffect(() => {
-		if (hasShownAlert.current) return;
+		if (hasShownAlert.current || !_hasHydrated) return;
 		hasShownAlert.current = true;
 
 		if (!currentUserInfo) {
@@ -86,17 +87,7 @@ export default function Page() {
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
 		}
-		const fetchUserInfo = async () => {
-			const user = await getUserInfo();
-			if (typeof user !== 'string' && user?.data) {
-				setCurrentUserInfo(user.data);
-			}
-		};
-
-		if (!currentUserInfo) {
-			fetchUserInfo();
-		}
-	}, [currentUserInfo, setCurrentUserInfo, router]);
+	}, [currentUserInfo, _hasHydrated, router]);
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -230,7 +221,9 @@ export default function Page() {
 				)}
 			</div>
 
-			<PostEditor setTitle={setTitle} setBody={setBody} isNews={false} editedTitle={title} editedBody={body} />
+			<EditorProvider setBody={setBody} isNews={false} editedBody={body}>
+				<PostEditor setTitle={setTitle} editedTitle={title} />
+			</EditorProvider>
 
 			{currentUserInfo?.isInfluencer && <PostPinToggle isPinned={isPinned} onPinChange={setIsPinned} />}
 

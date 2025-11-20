@@ -34,13 +34,9 @@ export default function Navbar() {
 	];
 
 	const filteredNavButtons = navButtons.filter((button) => {
-		// isLeftSideBarVisible이 true일 때 '홈' 버튼은 숨김
-		if (isLeftSideBarVisible && button.href === '/') {
+		// isLeftSideBarVisible이 true일 때 홈/랭킹 버튼 숨김
+		if (isLeftSideBarVisible && (button.href === '/' || button.href === '/ranking')) {
 			return false;
-		}
-		// isLeftSideBarVisible이 false 또는 데스크톱 환경이 아닐 때 '랭킹' 버튼을 제외
-		if (!isLeftSideBarVisible || !isDesktop) {
-			return button.href === '/ranking';
 		}
 		return true;
 	});

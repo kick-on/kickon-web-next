@@ -7,9 +7,9 @@ import Image from 'next/image';
 
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { BannerDto } from '@/services/apis/event-board/dto';
+import { BannerDto } from '@/services/apis/event-board/event-board.type';
 import { useEffect, useState } from 'react';
-import { getBanner } from '@/services/apis/event-board';
+import { getBanner } from '@/services/apis/event-board/event-board.api';
 import clsx from 'clsx';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 

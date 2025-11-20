@@ -1,17 +1,11 @@
 import { SERVER_URL } from '@/services/config/constants';
-import { GetTeamResponse } from './dto';
+import { GetTeamResponse } from './team.type';
+import { appendParams } from '@/lib/server/appendParams';
 
 // 팀 조회
 export const getTeam = async (league?: number, keyword?: string): Promise<GetTeamResponse | null> => {
 	const params = new URLSearchParams();
-
-	if (league !== undefined) {
-		params.append('league', String(league));
-	}
-
-	if (keyword !== undefined) {
-		params.append('keyword', keyword);
-	}
+	appendParams(params, { league, keyword });
 
 	const response = await fetch(`${SERVER_URL}/api/team?${params.toString()}`);
 

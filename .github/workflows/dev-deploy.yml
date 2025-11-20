@@ -28,7 +28,9 @@ jobs:
           yarn build
       - name: 파일 압축
         run: |
-          zip -r build.zip .
+          zip -r build.zip \
+            .next public package.json .env appspec.yml scripts \
+            -x "node_modules/*" "*.log"
 
       - name: S3에 업로드
         run: aws s3 cp build.zip s3://kickon-frontend-bucket/dev/latest-build.zip
@@ -47,3 +49,10 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-northeast-2
+
+      - name: 배포 완료 슬랙 알림
+        run: |
+          yarn notify:deploy
+        env:
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+          SLACK_CHANNEL_ID: ${{ secrets.SLACK_CHANNEL_ID_DEV }}
