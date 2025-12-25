@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { useRef } from 'react';
+import CameraIcon from '@/assets/common/camera.svg';
 
 export default function ProfileImageSection({
 	profileImageUrl,
@@ -39,6 +40,7 @@ export default function ProfileImageSection({
 			setProfileImageUrl(s3Url);
 		}
 	};
+
 	return (
 		<div className="relative mb-7 w-[68px] h-[68px]">
 			<Image
@@ -46,14 +48,14 @@ export default function ProfileImageSection({
 				width={68}
 				height={68}
 				src={profileImageUrl || '/default-profile.svg'}
-				alt="프로필 이미지"
+				alt=""
 			/>
 			<button
 				onClick={handleCameraButtonClick}
 				className="absolute z-10 left-11 top-11
       bg-black-000 border border-black-200 rounded-full p-[0.3125rem]"
 			>
-				<Image width={18} height={18} src="/camera.svg" alt="프로필 사진 변경" />
+				<CameraIcon width={18} height={18} />
 			</button>
 			<input ref={fileInputRef} type="file" onChange={handleFileChange} className="hidden" />
 		</div>

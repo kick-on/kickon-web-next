@@ -10,6 +10,7 @@ import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import AlertModal from '@/components/features/detail/alert-modal';
 import { separateMonthAndDay } from '@/lib/utils';
+import ChevronIcon from '@/assets/common/chevron/down.svg';
 
 export default function Selectbox({
 	category,
@@ -130,11 +131,11 @@ export default function Selectbox({
 							width={18}
 							height={18}
 							src={selectedOption.logoUrl}
-							alt={selectedOption.nameKr}
+							alt=""
 						/>
 					)}
 					{selectedOption ? selectedOption.nameKr : `${isLeagueSelectBox ? '리그를' : '팀을'} 선택해 주세요.`}
-					{isEditable && <Image className="ml-auto" width={16} height={16} src="/chevron/down.svg" alt="" />}
+					{isEditable && <ChevronIcon className="ml-auto" width={16} height={16} />}
 				</button>
 
 				{isDropdownOpen && options.length > 0 && (

@@ -3,8 +3,8 @@
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import clsx from 'clsx';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import HelpCircleIcon from '@/assets/common/help-circle.svg';
 
 export default function FavoriteTeamHeader({
 	isSignup,
@@ -65,7 +65,7 @@ export default function FavoriteTeamHeader({
 
 					<div className="relative flex items-center">
 						<button onClick={handleHelpCircle} onMouseOver={handleHelpCircle} onMouseLeave={handleHelpCircle}>
-							<Image src={'/help-circle.svg'} alt="도움말" width={12} height={12} />
+							<HelpCircleIcon width={12} height={12} />
 						</button>
 
 						{isTooltipVisible && (
