@@ -224,13 +224,6 @@ iframe.responsive-youtube {
 	display: none;
 }
 
-/* placeholder */
-.empty-placeholder:empty:before {
-	content: attr(data-placeholder);
-	color: #999;
-	pointer-events: none;
-}
-
 @keyframes pulse-scale-in {
 	0% {
 		transform: scale(0.5);

@@ -1,32 +1,21 @@
 import { CommonCommentDto } from '@/services/apis/common/types';
+import { Dispatch, SetStateAction } from 'react';
 
 // comment section props
 export interface CommentSectionProps {
-	type: 'news' | 'board';
+	postType: 'news' | 'board';
+	postId: number;
 	isCommentAllowed: boolean;
-	contentsId: number;
 	totalreplies?: number;
-	setTotalReplies?: (count: number) => void;
 }
 
 // comment item props
 export interface CommentItemProps {
-	content: CommonCommentDto;
-	type: 'news' | 'board';
-	handleLikeToggle: (commentId: number) => void;
-	handleReply: (commentId: number) => void;
-	closeReplyInput: (commentId: number) => void;
-	toggleReplyVisibility: (commentId: number) => void;
-	replyingTo: number[];
-	replyVisibilities: Record<number, boolean>;
+	postType: 'news' | 'board';
+	postId: number;
+	comment: CommonCommentDto;
 	isCommentAllowed: boolean;
-	contentsId: number;
-	parentReply?: string;
-	parentReplyId?: number;
-	isReply?: boolean;
-	onCommentSubmit: (isReply: boolean, pk?: number) => void;
-	onEnterEditMode: (commentId: number, isReply?: boolean) => void;
-	onDeleteComment: (commentId: number, parentReplyId?: number) => void;
+	replyTo?: { pk: number; nickname: string };
 	editingCommentId?: number;
 	setEditingCommentId?: (id: number | null) => void;
 }
@@ -34,12 +23,14 @@ export interface CommentItemProps {
 // 코멘트 입력 props
 export interface CommentInputProps {
 	type?: 'comment' | 'reply' | 'edit';
-	mentionNickname?: string;
-	parentReplyId?: number;
+	replyTo?: {
+		pk: number;
+		nickname: string;
+	};
+	postType: 'news' | 'board';
+	postId: number;
 	editingCommentId: number;
-	contentType: 'news' | 'board';
 	defaultContent?: string;
-	contentsId: number;
-	onCommentSubmit?: (isReply: boolean) => void;
+	onCommentSubmit?: () => void;
 	onCommentCancel?: () => void;
 }

@@ -1,8 +1,9 @@
 import { SERVER_URL } from '@/services/config/constants';
 import { EmptySuccessResponse, SuccessResponse } from '@/services/config/dto';
 import { fetcher } from '@/lib/server/fetcher';
-import { createNewsReplyRequest, GetNewsCommentsRequest, GetNewsCommentsResponse } from './news-reply.type';
-import { CommonCommentKickDto, CommonPatchReplyDto } from '../common/types';
+import { CreateEditNewsReplyRespones, CreateNewsReplyRequest, GetNewsCommentsResponse } from './news-reply.type';
+import { CommonCommentKickDto, CommonPatchReplyDto, CommonPatchReplyRequest } from '../common/types';
+import { GetCommentsRequest } from './news.type';
 
 // 뉴스 댓글 목록 조회
 export const getNewsCommentList = async ({
@@ -11,14 +12,14 @@ export const getNewsCommentList = async ({
 	size,
 	infinite,
 	lastReply,
-}: GetNewsCommentsRequest): Promise<GetNewsCommentsResponse | null> => {
+}: GetCommentsRequest): Promise<GetNewsCommentsResponse | null> => {
 	const params = new URLSearchParams({
 		news: String(id),
 		page: String(page),
 		size: String(size),
 	});
 	if (infinite !== undefined) params.append('infinite', String(infinite));
-	if (lastReply !== undefined) params.append('lastReply', String(infinite));
+	if (lastReply !== undefined) params.append('lastReply', String(lastReply));
 
 	const response = await fetch(`${SERVER_URL}/api/news-reply?${params.toString()}`);
 
@@ -50,9 +51,13 @@ export const createNewsCommentKick = async (id: number): Promise<SuccessResponse
 };
 
 // 뉴스 댓글 생성
-export const createNewsReply = async (requestBody: createNewsReplyRequest): Promise<EmptySuccessResponse> => {
+export const createNewsReply = async (requestBody: CreateNewsReplyRequest): Promise<CreateEditNewsReplyRespones> => {
 	try {
-		const response = await fetcher<EmptySuccessResponse>({ method: 'POST', url: '/api/news-reply', body: requestBody });
+		const response = await fetcher<CreateEditNewsReplyRespones>({
+			method: 'POST',
+			url: '/api/news-reply',
+			body: requestBody,
+		});
 
 		return response;
 	} catch (error) {
@@ -74,12 +79,12 @@ export const deleteNewsReply = async (commentPk: number): Promise<EmptySuccessRe
 };
 
 // 뉴스 댓글 수정
-export const patchNewsReply = async (
-	commentPk: number,
-	requestBody: CommonPatchReplyDto,
-): Promise<EmptySuccessResponse> => {
+export const patchNewsReply = async ({
+	commentPk,
+	requestBody,
+}: CommonPatchReplyRequest): Promise<CreateEditNewsReplyRespones> => {
 	try {
-		const response = await fetcher<EmptySuccessResponse>({
+		const response = await fetcher<CreateEditNewsReplyRespones>({
 			method: 'PATCH',
 			url: `/api/news-reply/${commentPk}`,
 			body: requestBody,
