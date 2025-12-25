@@ -9,5 +9,5 @@ source "$NVM_DIR/nvm.sh"
 
 # PM2 재시작
 pm2 delete my-front-app --silent || true
-pm2 start yarn --name "my-front-app" -- start
+pm2 start ecosystem.config.js
 pm2 save
