@@ -1,23 +1,15 @@
+const isProd = process.env.APPLICATION_NAME && process.env.APPLICATION_NAME.includes('prod');
+
 module.exports = {
 	apps: [
-		// Production
 		{
-			name: 'my-front-app-prod',
+			name: process.env.APPLICATION_NAME || 'my-front-app',
 			cwd: '/home/ubuntu/web-nextjs-service',
 			script: 'node_modules/next/dist/bin/next',
-			args: 'start -p 3000',
+			args: 'start',
 			env: {
-				NODE_ENV: 'production',
-			},
-		},
-		// Development
-		{
-			name: 'my-front-app-dev',
-			cwd: '/home/ubuntu/web-nextjs-service',
-			script: 'node_modules/next/dist/bin/next',
-			args: 'start -p 3001',
-			env: {
-				NODE_ENV: 'development',
+				NODE_ENV: isProd ? 'production' : 'development',
+				PORT: isProd ? 3000 : 3001,
 			},
 		},
 	],
