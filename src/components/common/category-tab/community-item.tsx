@@ -81,9 +81,17 @@ export default function CommunityItem({
 
 				<div className="@mobile:inline hidden">|</div>
 
-				<div className="w-[2.6875rem] text-center @mobile:w-fit @mobile:flex @mobile:gap-1 @mobile:items-center">
-					<KickIcon width={16} height={16} className="@mobile:inline hidden w-4 h-4 object-contain text-[#8F8F8F]" />
-					{likes}
+				<div
+					className="w-[2.6875rem] text-center @mobile:w-fit @mobile:flex @mobile:gap-1 @mobile:items-center"
+					aria-label={`킥 ${likes}개`}
+				>
+					<KickIcon
+						aria-hidden={true}
+						width={16}
+						height={16}
+						className="@mobile:inline hidden w-4 h-4 object-contain text-[#8F8F8F]"
+					/>
+					<span aria-hidden={true}>{likes}</span>
 				</div>
 			</div>
 		</Link>

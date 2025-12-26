@@ -13,6 +13,7 @@ import { createBoardKick } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { NewsDetailDto } from '@/services/apis/news/news.type';
 import KickIcon from '@/assets/common/kick/fill-white.svg';
+import CommentIcon from '@/assets/common/comment.svg';
 
 interface DetailContentProps {
 	commonDetailData: CommonPostDetailDto;
@@ -176,13 +177,13 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 				</div>
 
 				<div className="flex gap-3 items-center text-black-600 body5-regular">
-					<div className="flex items-center gap-1.5 @mobile:hidden">
-						<KickIcon className="text-[#8F8F8F]" width={18} height={18} />
-						<span>{likes}</span>
+					<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`킥 ${likes}개`}>
+						<KickIcon aria-hidden={true} className="text-[#8F8F8F]" width={18} height={18} />
+						<span aria-hidden={true}>{likes}</span>
 					</div>
-					<div className="flex items-center gap-1.5 @mobile:hidden">
-						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
-						<span>{commonDetailData.replies}</span>
+					<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`댓글 ${commonDetailData.replies}개`}>
+						<CommentIcon aria-hidden={true} width={18} height={18} />
+						<span aria-hidden={true}>{commonDetailData.replies}</span>
 					</div>
 					<Suspense>
 						<MoreActionsButton type={type} pk={commonDetailData.pk} isMyContent={isMyContents} />

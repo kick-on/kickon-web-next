@@ -5,6 +5,7 @@ import Link from 'next/link';
 import SanitizedContent from '../sanitized-content';
 import clsx from 'clsx';
 import KickIcon from '@/assets/common/kick/fill-white.svg';
+import CommentIcon from '@/assets/common/comment.svg';
 
 export default function NewsItem({
 	pk,
@@ -78,13 +79,13 @@ export default function NewsItem({
 					</div>
 
 					<div className="flex justify-end items-center gap-3">
-						<span className="flex items-center gap-1.5">
-							<KickIcon width={18} height={18} className="text-[#8F8F8F]" />
-							<span>{likes}</span>
+						<span className="flex items-center gap-1.5" aria-label={`킥 ${likes}개`}>
+							<KickIcon aria-hidden={true} width={18} height={18} className="text-[#8F8F8F]" />
+							<span aria-hidden={true}>{likes}</span>
 						</span>
-						<span className="flex items-center gap-1.5">
-							<Image width={18} height={18} src="/comment.svg" alt="댓글" />
-							<span>{replies}</span>
+						<span className="flex items-center gap-1.5" aria-label={`댓글 ${replies}개`}>
+							<CommentIcon aria-hidden={true} width={18} height={18} />
+							<span aria-hidden={true}>{replies}</span>
 						</span>
 					</div>
 				</footer>
