@@ -25,9 +25,7 @@ export default function FetchingFailedCard({
 
 	return (
 		<div className="flex flex-col items-center" style={{ height }}>
-			{isCardVisible && (
-				<Image style={{ marginTop }} width={100} height={100} src={'/x/card.svg'} alt="정보 불러오기 실패" />
-			)}
+			{isCardVisible && <Image style={{ marginTop }} width={100} height={100} src={'/x/card.svg'} alt="" />}
 			<div className="mt-7 mb-6 @mobile:mt-8 @mobile:mb-3 title4-semibold @mobile:text-14">
 				데이터를 불러오지 못했어요.
 			</div>
@@ -37,7 +35,7 @@ export default function FetchingFailedCard({
 					text-black-000 button4-medium shadow-kick-button
 					@mobile:text-10 @mobile:py-2"
 			>
-				<Image width={12} height={12} src={'/rotate.svg'} alt="새로고침 이미지" />
+				<Image width={12} height={12} src={'/rotate.svg'} alt="" />
 				다시 불러오기
 			</button>
 		</div>

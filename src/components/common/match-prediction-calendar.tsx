@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Calendar from 'react-calendar';
 import Image from 'next/image';
 
@@ -155,7 +155,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 				>
 					<Image
 						src="/chevron/calendar-up.svg"
-						alt="toggle"
+						alt=""
 						width={36}
 						height={36}
 						style={{
