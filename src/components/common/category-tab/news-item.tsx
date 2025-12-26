@@ -30,7 +30,7 @@ export default function NewsItem({
 							width={24}
 							height={24}
 							src={team.logoUrl}
-							alt={`${team?.nameKr || team?.nameEn} 로고 이미지`}
+							alt={team?.nameKr || team?.nameEn || ''}
 						/>
 					)}
 					<div className="h-5 px-2.5 py-0.5 rounded-full bg-black-200 text-black-800 caption1-medium">{category}</div>
@@ -54,7 +54,7 @@ export default function NewsItem({
 							fill
 							className={clsx('w-auto h-auto object-cover rounded-lg @mobile:rounded-md')}
 							src={thumbnailUrl}
-							alt="기사 썸네일 사진"
+							alt=""
 						/>
 					</div>
 				</section>
@@ -63,7 +63,7 @@ export default function NewsItem({
 					<div className="flex items-center gap-2">
 						<Image
 							src={user.profileImageUrl || '/default-profile.svg'}
-							alt={`${user.nickname} 프로필 사진`}
+							alt=""
 							width={24}
 							height={24}
 							className="w-6 h-6 rounded-full object-cover"

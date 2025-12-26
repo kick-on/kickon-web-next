@@ -51,7 +51,7 @@ export default function TabBar({ mode, q, type, id }: { mode: 'news' | 'board'; 
 											? currentUserInfo?.favoriteTeams.find((team) => id === String(team.pk))?.logoUrl
 											: currentUserInfo?.favoriteTeams[0].logoUrl
 									}
-									alt="로고 이미지"
+									alt=""
 									width={16}
 									height={16}
 									className="w-4 h-4 ml-0.5 object-contain relative z-20"

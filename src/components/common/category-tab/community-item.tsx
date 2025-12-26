@@ -34,7 +34,7 @@ export default function CommunityItem({
 						width={16}
 						height={16}
 						src={team.logoUrl}
-						alt={team.nameKr || team.nameEn}
+						alt={team.nameKr || team.nameEn || ''}
 						className="object-contain w-4 h-4"
 					/>
 				)}{' '}
@@ -47,7 +47,7 @@ export default function CommunityItem({
 				>
 					{title}
 				</h2>
-				{hasImage && <Image width={14} height={14} src="/image.svg" alt="사진" />}
+				{hasImage && <Image width={14} height={14} src="/image.svg" alt="" />}
 				<div className="body5-regular text-primary-900">{!!replies && `(${replies})`}</div>
 			</div>
 
@@ -61,7 +61,7 @@ export default function CommunityItem({
 						height={18}
 						className="@mobile:hidden rounded-full w-[1.125rem] h-[1.125rem] object-cover"
 						src={user.profileImageUrl || '/default-profile.svg'}
-						alt={`${user.nickname} 프로필 사진`}
+						alt=""
 					/>
 					<div className="flex items-center gap-0.5 w-26 @mobile:w-fit">
 						{user.nickname}
@@ -82,12 +82,7 @@ export default function CommunityItem({
 				<div className="@mobile:inline hidden">|</div>
 
 				<div className="w-[2.6875rem] text-center @mobile:w-fit @mobile:flex @mobile:gap-1 @mobile:items-center">
-					<KickIcon
-						alt="킥"
-						width={16}
-						height={16}
-						className="@mobile:inline hidden w-4 h-4 object-contain text-[#8F8F8F]"
-					/>
+					<KickIcon width={16} height={16} className="@mobile:inline hidden w-4 h-4 object-contain text-[#8F8F8F]" />
 					{likes}
 				</div>
 			</div>
