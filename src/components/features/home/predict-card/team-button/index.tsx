@@ -212,7 +212,7 @@ export default function TeamButton({
 									className="relative z-20 w-full h-full object-contain"
 									fill
 									src={sides[side].teamLogoUrl}
-									alt={`${sides[side].teamName} 로고 이미지`}
+									alt={`${sides[side].teamName}`}
 								/>
 							</div>
 						) : (
