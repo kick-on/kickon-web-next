@@ -89,7 +89,7 @@ export default function Profile() {
 										width={60}
 										height={60}
 										src={currentUserInfo?.profileImageUrl || '/default-profile.svg'}
-										alt="프로필 사진"
+										alt=""
 									/>
 								</div>
 								<div className="flex flex-col gap-[0.3125rem] mt-[0.4688rem]">
@@ -107,7 +107,7 @@ export default function Profile() {
 													? currentUserInfo?.favoriteTeams[0].logoUrl
 													: '/ban.svg'
 											}
-											alt="팀 로고 이미지"
+											alt=""
 											width={16}
 											height={16}
 										/>
@@ -118,7 +118,7 @@ export default function Profile() {
 										className="flex gap-0.5 button6-regular text-black-700 underline"
 									>
 										프로필 설정
-										<Image width={10} height={10} src="/chevron/right-gray.svg" alt="바로가기" />
+										<Image width={10} height={10} src="/chevron/right-gray.svg" alt="" />
 									</Link>
 								</div>
 							</div>
@@ -141,11 +141,12 @@ export default function Profile() {
 									<div className="flex gap-1 items-center caption2-regular h-4">
 										지금까지 모은 포인트
 										<button
+											aria-label={'포인트 설명으로 이동'}
 											onClick={() =>
 												window.open('https://www.notion.so/devbob/1d0e7fdb8ed18034a779ee0f30e87a35', '_blank')
 											}
 										>
-											<Image width={12} height={12} src="/help-circle.svg" alt="도움말" />
+											<Image aria-hidden={true} width={12} height={12} src="/help-circle.svg" alt="" />
 										</button>
 									</div>
 									<div className="body4-semibold">{extraUserInfo?.totalPoints || '-'} P</div>
@@ -155,13 +156,13 @@ export default function Profile() {
 					</div>
 				) : (
 					<div className="mx-auto h-[8.8125rem] flex flex-col items-center justify-center gap-4">
-						<Image width={40} height={32} src="/logo/icon-black.svg" alt="킥온" />
+						<Image width={40} height={32} src="/logo/icon-black.svg" alt="" />
 						<button
 							onClick={handleLoginButtonClick}
 							className="flex gap-2.5 items-center w-fit px-[1.125rem] py-1.5 bg-primary-900 rounded-3xl shadow-login-button"
 						>
 							<div className="text-black-000 button1-medium">간편 로그인 하기</div>
-							<Image width={18} height={18} src="/chevron/right-white.svg" alt="바로가기" />
+							<Image width={18} height={18} src="/chevron/right-white.svg" alt="" />
 						</button>
 					</div>
 				)}

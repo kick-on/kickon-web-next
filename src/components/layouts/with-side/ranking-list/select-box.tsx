@@ -58,9 +58,9 @@ export default function SelectBox({
 
 	return (
 		<div ref={dropboxRef} className="relative w-fit">
-			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
+			<button aria-label={'리그 선택'} onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
 				<div>{content}</div>
-				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
+				<Image aria-hidden={true} width={16} height={16} src="/chevron/down.svg" alt="" />
 			</button>
 			{isVisibleOptions && (
 				<div className="absolute w-[12.5rem] top-6 shadow-select-options border border-black-200 rounded-[0.625rem]">

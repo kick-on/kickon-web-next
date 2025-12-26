@@ -22,7 +22,6 @@ export default function SideNavbar({
 								onClick={() => setTimeout(onClickButton, 200)}
 								key={button.content}
 								href={button.href}
-								aria-label={`${button.content}로 이동`}
 								className={clsx('w-[calc(100%+32px)] -ml-4 py-2.5 px-5.5 active:bg-black-200 transition-colors', {
 									'text-primary-900 button2-semibold': button.isActive,
 								})}
