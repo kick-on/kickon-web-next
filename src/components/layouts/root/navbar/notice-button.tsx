@@ -22,7 +22,7 @@ export default function NoticeButton() {
 		}
 	};
 
-	const iconSrc = pathname === '/' ? '/notice/black.svg' : '/notice/white.svg';
+	const iconSrc = pathname === '/' ? '/notice/fill-white.svg' : '/notice/white.svg';
 
 	const unreadCount = useNotificationStore((s) => s.unreadCount);
 

@@ -59,7 +59,7 @@ export default function Navbar() {
 						height={48}
 						onClick={handleLogoClick}
 						className="px-6 py-3 ml-[1rem] mr-[4.125rem] tablet:px-2.5 tablet:mx-0 box-content cursor-pointer"
-						src={isHome ? '/logo/kick-on-black.svg' : '/logo/kick-on-white.svg'}
+						src={isHome ? '/logo/kick-on-fill-white.svg' : '/logo/kick-on-white.svg'}
 						alt="킥온"
 					/>
 

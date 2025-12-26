@@ -37,7 +37,7 @@ export default function NoticeItem({
 
 	const typeMap: Record<NormalizedType, { icon: string; label: string }> = {
 		result: {
-			icon: teamLogo ?? '/kick/default.svg',
+			icon: teamLogo ?? '/kick/black.svg',
 			label: '승부 예측',
 		},
 		comment: {
@@ -49,7 +49,7 @@ export default function NoticeItem({
 			label: '경기 일정',
 		},
 		default: {
-			icon: '/kick/default.svg',
+			icon: '/kick/black.svg',
 			label: '알림',
 		},
 	};

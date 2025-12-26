@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SanitizedContent from '../sanitized-content';
 import clsx from 'clsx';
+import KickIcon from '@/assets/common/kick/fill-white.svg';
 
 export default function NewsItem({
 	pk,
@@ -71,14 +72,14 @@ export default function NewsItem({
 							{user.nickname}
 							{user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 						</span>
-						<span className={'@mobileml-0.5 ml-2'}>{getRelativeTime(createdAt)}</span>
+						<span className={'@mobile:ml-0.5 ml-2'}>{getRelativeTime(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>
 					</div>
 
 					<div className="flex justify-end items-center gap-3">
 						<span className="flex items-center gap-1.5">
-							<Image width={18} height={18} src="/kick/gray.svg" alt="킥" />
+							<KickIcon width={18} height={18} className="text-[#8F8F8F]" />
 							<span>{likes}</span>
 						</span>
 						<span className="flex items-center gap-1.5">

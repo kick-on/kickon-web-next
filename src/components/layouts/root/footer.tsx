@@ -12,7 +12,7 @@ export default function Footer() {
 		const isHome = pathname === '/';
 		const bgColor = isHome ? 'bg-black-000' : 'bg-black-800';
 		const textColor = isHome ? 'text-black-700' : 'text-black-200';
-		const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
+		const src = isHome ? '/logo/without-icon-fill-white.svg' : '/logo/without-icon-white.svg';
 
 		return (
 			<div className={`${bgColor} h-[13.125rem] flex items-center`}>

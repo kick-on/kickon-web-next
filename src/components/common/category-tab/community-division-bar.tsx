@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import KickIcon from '@/assets/common/kick/fill-white.svg';
 
 export default function CommunityDivisionBar() {
 	return (
@@ -12,7 +12,7 @@ export default function CommunityDivisionBar() {
 				<div className="w-[4.0625rem]">날짜</div>
 				<div className="w-[2.625rem]">조회</div>
 				<div className="w-[2.6875rem] flex gap-1">
-					<Image width={16} height={16} src="/kick/black.svg" alt="킥" />킥
+					<KickIcon className="text-black" width={16} height={16} />킥
 				</div>
 			</div>
 		</div>

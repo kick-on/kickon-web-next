@@ -12,6 +12,7 @@ import useIsMobile from '@/lib/hooks/useIsMobile';
 import AlertModal from '../alert-modal';
 import { useIsLoginModalOpenStore } from '@/lib/store/useIsLoginModalOpenStore';
 import { useCreateCommentKickMutation, useDeleteCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
+import KickIcon from '@/assets/common/kick/fill-white.svg';
 
 function CommentItem({
 	postType,
@@ -175,7 +176,7 @@ function CommentItem({
 						{/* 킥 버튼 (하단 우측) */}
 						{!isEditing && (
 							<button onClick={() => void toggleCommentLike()} className="ml-auto flex items-center gap-2">
-								<Image src={comment.kicked ? '/kick/red.svg' : '/kick/gray.svg'} alt="kick" width={16} height={16} />
+								<KickIcon className={comment.kicked ? 'text-[#C00C0B]' : 'text-[#8F8F8F]'} width={16} height={16} />
 								<span className={comment.kicked ? 'text-black-900' : 'text-gray-500'}>{comment.kickCount}</span>
 							</button>
 						)}

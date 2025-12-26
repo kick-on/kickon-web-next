@@ -12,6 +12,7 @@ import { createNewsKick } from '@/services/apis/news/news.api';
 import { createBoardKick } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { NewsDetailDto } from '@/services/apis/news/news.type';
+import KickIcon from '@/assets/common/kick/fill-white.svg';
 
 interface DetailContentProps {
 	commonDetailData: CommonPostDetailDto;
@@ -176,7 +177,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 
 				<div className="flex gap-3 items-center text-black-600 body5-regular">
 					<div className="flex items-center gap-1.5 @mobile:hidden">
-						<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
+						<KickIcon className="text-[#8F8F8F]" width={18} height={18} />
 						<span>{likes}</span>
 					</div>
 					<div className="flex items-center gap-1.5 @mobile:hidden">
@@ -201,7 +202,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 	${isLiked ? 'bg-[#D91920] text-white' : 'bg-black-100 text-black-900'} transition
 	hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]`}
 			>
-				<Image src={'/kick/black.svg'} alt="축구공" width={18} height={18} />
+				<KickIcon className="text-black" width={18} height={18} />
 				<span className="mr-0.5">킥</span>
 				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
 			</button>
