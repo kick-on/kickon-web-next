@@ -126,7 +126,7 @@ export function NavigationLabel({
 							className="flex gap-[4px] items-center justify-between cursor-pointer"
 						>
 							<div className="button1-medium @mobile:text-12">{selectedYear}년</div>
-							<Image width={16} height={16} src="/chevron/up-and-down.svg" alt="옵션 선택" />
+							<Image width={16} height={16} src="/chevron/up-and-down.svg" alt="" />
 						</div>
 						{isVisibleDropdown && (
 							<div className="px-[30px] py-[10px] @mobile:py-4 z-50 absolute top-8 bg-black-000 border border-gray-200 rounded-[10px] shadow-[0_4px_16px_0_rgba(0,0,0,0.20)]">
