@@ -1,8 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import TopButtons from './player-action/top-buttons';
+import RotateIcon from '@/assets/common/rotate.svg';
 
 export default function VideoFetchFailed() {
 	const router = useRouter();
@@ -17,8 +17,12 @@ export default function VideoFetchFailed() {
 
 			<div className="text-title-03 mb-[1.125rem]">동영상을 불러오지 못했어요.</div>
 			<div className="text-body-05 mb-8">다시 시도해 주세요.</div>
-			<button onClick={handleButtonClick} className="p-[1.125rem] bg-black-000/20 rounded-full">
-				<Image src={'/rotate.svg'} alt="" width={36} height={36} />
+			<button
+				aria-label={'다시 시도'}
+				onClick={handleButtonClick}
+				className="p-[1.125rem] bg-black-000/20 rounded-full"
+			>
+				<RotateIcon aria-hidden={true} width={36} height={36} />
 			</button>
 		</div>
 	);

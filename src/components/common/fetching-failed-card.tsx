@@ -1,6 +1,7 @@
 'use client';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import RotateIcon from '@/assets/common/rotate.svg';
 
 export default function FetchingFailedCard({
 	height,
@@ -35,7 +36,7 @@ export default function FetchingFailedCard({
 					text-black-000 button4-medium shadow-kick-button
 					@mobile:text-10 @mobile:py-2"
 			>
-				<Image width={12} height={12} src={'/rotate.svg'} alt="" />
+				<RotateIcon aria-hidden={true} width={12} height={12} />
 				다시 불러오기
 			</button>
 		</div>
