@@ -37,14 +37,15 @@ export default function ProfileModal({ onClickButton }: { onClickButton: () => v
 				width={20}
 				height={10}
 				src={'/navbar-modal-arrow.svg'}
-				alt="화살표"
+				alt=""
 			/>
-			<button className="ml-auto w-6 h-6">
+			<button aria-label={'프로필 닫기'} className="ml-auto w-6 h-6">
 				<Image
+					aria-hidden={true}
 					onClick={onClickButton}
 					className="brightness-0"
 					src={'/x/white.svg'}
-					alt="닫기"
+					alt=""
 					width={24}
 					height={24}
 				/>

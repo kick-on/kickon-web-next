@@ -53,8 +53,8 @@ export default function Sidebar({
 					!isMenuOpen ? (side === 'left' ? '-translate-x-full' : 'translate-x-full') : '',
 				)}
 			>
-				<button onClick={handleToggleMenu} className="ml-auto mb-8 w-fit brightness-0">
-					<Image src={'/x/white.svg'} alt="닫기" width={24} height={24} />
+				<button aria-label={'사이드바 닫기'} onClick={handleToggleMenu} className="ml-auto mb-8 w-fit brightness-0">
+					<Image aria-hidden={true} src={'/x/white.svg'} alt={''} width={24} height={24} />
 				</button>
 				{children}
 			</div>

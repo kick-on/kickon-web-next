@@ -36,12 +36,12 @@ export default function Banner() {
 		{
 			src: '/chevron/banner-left.svg',
 			className: 'left-[4.8125rem] @mobile:left-[1.625rem] desktop:left-[5.5625rem] swiper-button-prev',
-			alt: '왼쪽',
+			label: '왼쪽',
 		},
 		{
 			src: '/chevron/banner-right.svg',
 			className: 'right-[4.8125rem] @mobile:right-[1.625rem] desktop:right-[5.5625rem] swiper-button-next',
-			alt: '오른쪽',
+			label: '오른쪽',
 		},
 	];
 
@@ -65,13 +65,13 @@ export default function Banner() {
 			>
 				{navigationButtons.map((button) => (
 					<Image
-						key={button.alt}
+						key={button.label}
 						className={`absolute z-20 top-1/2 -translate-y-1/2 cursor-pointer
 							opacity-30 hover:opacity-100 transition-opacity ${button.className}`}
 						width={isMobile ? 14 : 27}
 						height={isMobile ? 26 : 51}
 						src={button.src}
-						alt={button.alt}
+						alt={''}
 					/>
 				))}
 
@@ -85,7 +85,7 @@ export default function Banner() {
 							width={1920}
 							height={560}
 							src={banner.thumbnailUrl}
-							alt="배너 이미지"
+							alt=""
 						/>
 					</SwiperSlide>
 				))}

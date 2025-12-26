@@ -20,7 +20,7 @@ export default function Footer() {
 					className={`${textColor} flex items-start max-w-[85rem]
 						gap-[3.625rem] mx-auto @mobile:flex-col @mobile:gap-6 @mobile:pl-6 @mobile:ml-0`}
 				>
-					<Image width={140} height={22} src={src} alt="킥온" />
+					<Image width={140} height={22} src={src} alt="" />
 
 					<div className="flex flex-col gap-4">
 						<div className="flex gap-4 button4-medium">
