@@ -47,7 +47,7 @@ export default function CategoryDropdown({ selectedOption, setSelectedOption }: 
 				>
 					{selectedOption.label}
 				</div>
-				<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
+				<Image width={16} height={16} src="/chevron/down.svg" alt="" />
 			</button>
 
 			{isVisibleDropdown && (
