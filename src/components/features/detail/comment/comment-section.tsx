@@ -88,7 +88,7 @@ function CommentSection({ postType, postId, isCommentAllowed }: CommentSectionPr
 						hasNextPage && (
 							<div className="flex gap-2 justify-center my-4 cursor-pointer" onClick={handleLoadMoreComment}>
 								<div className="button5-regular">더 보기</div>
-								<Image src="/chevron/down.svg" alt="댓글 더 보기" width={16} height={16} />
+								<Image src="/chevron/down.svg" alt="" width={16} height={16} />
 							</div>
 						)
 					) : (

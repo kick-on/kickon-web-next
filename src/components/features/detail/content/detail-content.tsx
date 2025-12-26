@@ -75,7 +75,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 				return (
 					<Image
 						src={src}
-						alt={alt || '본문 이미지'}
+						alt={alt || ''}
 						width={width ? parseInt(width) : 640}
 						height={height ? parseInt(height) : 480}
 						sizes="100vw"
@@ -122,7 +122,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 				>
 					<Image
 						src={newsDetailData.thumbnailUrl}
-						alt="대표 이미지"
+						alt=""
 						width={636}
 						height={322}
 						className={`
@@ -140,7 +140,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 						<Image
 							className="w-6 h-6 object-contain"
 							src={commonDetailData.team.logoUrl}
-							alt="팀 로고"
+							alt={commonDetailData.team.nameKr || commonDetailData.team.nameEn || ''}
 							width={24}
 							height={24}
 						/>
@@ -159,7 +159,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 					<div className="w-6 h-6 overflow-hidden">
 						<Image
 							src={commonDetailData.user.profileImageUrl || '/default-profile.svg'}
-							alt="작성자 프로필"
+							alt=""
 							width={24}
 							height={24}
 							className="w-full h-full rounded-full object-cover"
