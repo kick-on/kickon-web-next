@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -90,7 +90,7 @@ export default function Page() {
 		if (!currentUserInfo) {
 			alert('로그인 후 작성 가능합니다.');
 			const previousPage = sessionStorage.getItem('previousPage');
-			router.replace(previousPage);
+			// router.replace(previousPage);
 		}
 	}, [currentUserInfo, _hasHydrated, router]);
 

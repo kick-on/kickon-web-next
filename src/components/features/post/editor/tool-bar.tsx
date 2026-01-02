@@ -1,20 +1,14 @@
 'use client';
 
-import clsx from 'clsx';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { headingOptions } from '@/lib/constants/options';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import MobileToolBar from './mobile-tool-bar';
 import HeadingDropdown from './heading-drop-down';
 import MediaButtons from './media-buttons';
-import BoldIcon from '@/assets/editor/bold.svg';
-import UnderlineIcon from '@/assets/editor/underline.svg';
-import EllipsisIcon from '@/assets/editor/ellipsis.svg';
-import ItalicIcon from '@/assets/editor/italic.svg';
-import SortNumericIcon from '@/assets/editor/sort-numeric.svg';
-import QuoteIcon from '@/assets/editor/quote.svg';
-import lineIcon from '@/assets/editor/line.svg';
+import TextFormatButtons from '@/components/features/post/editor/text-format-buttons';
+import BlockFormatButtons from '@/components/features/post/editor/block-format-buttons';
 
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-[7.5px]" />;
 
@@ -23,7 +17,6 @@ export default function Toolbar() {
 		editor,
 		isLinkInputOpen,
 		setIsLinkInputOpen,
-		handleTextFormatToggle,
 		handleHeadingChange,
 		isYoutubeInputOpen,
 		setIsYoutubeInputOpen,
@@ -42,29 +35,6 @@ export default function Toolbar() {
 	const linkInputRef = useRef<HTMLDivElement>(null);
 	const youtubeInputRef = useRef<HTMLDivElement>(null);
 	const mediaButtonRef = isLinkInputOpen ? linkInputRef : isYoutubeInputOpen ? youtubeInputRef : null;
-
-	const textFormatButtons = [
-		{ key: 'bold', Icon: BoldIcon },
-		{ key: 'underline', Icon: UnderlineIcon },
-		{ key: 'italic', Icon: ItalicIcon },
-		{ key: 'bulletList', Icon: EllipsisIcon },
-		{ key: 'orderedList', Icon: SortNumericIcon },
-	];
-
-	const quoteAndRuleButtons = [
-		{
-			key: 'blockquote',
-			Icon: QuoteIcon,
-			onClick: () => handleTextFormatToggle('blockquote'),
-		},
-		{
-			key: 'horizontalRule',
-			Icon: lineIcon,
-			onClick: () => {
-				handleTextFormatToggle('horizontalRule');
-			},
-		},
-	];
 
 	useEffect(() => {
 		if (!editor) return;
@@ -122,7 +92,6 @@ export default function Toolbar() {
 			setIsVisibleDropdown={setIsVisibleDropdown}
 			dropdownRef={dropdownRef}
 			mediaButtonRef={mediaButtonRef}
-			quoteAndRuleButtons={quoteAndRuleButtons}
 		/>
 	) : (
 		<div className="flex flex-wrap items-center gap-2 pb-4">
@@ -135,44 +104,14 @@ export default function Toolbar() {
 				handleHeadingChange={handleHeadingChange}
 				dropdownRef={dropdownRef}
 			/>
-
 			<ToolBarDivider />
 
-			{/*텍스트 포맷 형식*/}
-			<div className="flex items-center justify-center h-8.5 gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2">
-				{textFormatButtons.map(({ key, Icon }) => {
-					const isActive = editor?.isActive(key);
-
-					return (
-						<button
-							key={key}
-							className={clsx('flex items-center justify-center w-6 h-6 rounded-xs', isActive && 'bg-primary-50')}
-							onClick={() => handleTextFormatToggle(key)}
-						>
-							<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600'} />
-						</button>
-					);
-				})}
-			</div>
+			{/* 텍스트 포맷 버튼 */}
+			<TextFormatButtons />
 			<ToolBarDivider />
 
-			{/* 인용구 & 구분선 버튼 */}
-			<div className="flex gap-2 h-8.5">
-				{quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
-					const isActive = key !== 'horizontalRule' && editor?.isActive(key);
-
-					return (
-						<button key={key} onClick={onClick} className="px-[5px] border border-black-300 rounded-sm">
-							<div
-								className={`flex items-center justify-center w-6 h-6 rounded-xs ${isActive ? 'bg-primary-50' : 'active:bg-primary-50'}`}
-							>
-								<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600 active:stroke-primary-900'} />
-							</div>
-						</button>
-					);
-				})}
-			</div>
-
+			{/* 블록 포맷(인용구 & 구분선) 버튼 */}
+			<BlockFormatButtons />
 			<ToolBarDivider />
 
 			{/* 미디어 버튼 */}
