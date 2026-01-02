@@ -13,14 +13,7 @@ import BlockFormatButtons from '@/components/features/post/editor/block-format-b
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-[7.5px]" />;
 
 export default function Toolbar() {
-	const {
-		editor,
-		isLinkInputOpen,
-		setIsLinkInputOpen,
-		handleHeadingChange,
-		isYoutubeInputOpen,
-		setIsYoutubeInputOpen,
-	} = useEditorContext();
+	const { editor, setIsLinkInputOpen, handleHeadingChange, setIsYoutubeInputOpen } = useEditorContext();
 	const isMobile = useIsMobile();
 	const [hasMounted, setHasMounted] = useState(false);
 
@@ -32,9 +25,7 @@ export default function Toolbar() {
 	const [selectedOption, setSelectedOption] = useState(headingOptions[0]);
 
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const linkInputRef = useRef<HTMLDivElement>(null);
-	const youtubeInputRef = useRef<HTMLDivElement>(null);
-	const mediaButtonRef = isLinkInputOpen ? linkInputRef : isYoutubeInputOpen ? youtubeInputRef : null;
+	const mediaButtonRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (!editor) return;
@@ -51,11 +42,10 @@ export default function Toolbar() {
 			}
 		};
 
-		editor.on('selectionUpdate', updateHeadingOption);
-
 		// 초기 실행
 		updateHeadingOption();
 
+		editor.on('selectionUpdate', updateHeadingOption);
 		return () => {
 			editor.off('selectionUpdate', updateHeadingOption);
 		};
@@ -69,15 +59,13 @@ export default function Toolbar() {
 			if (dropdownRef.current && !dropdownRef.current.contains(target)) {
 				setIsVisibleDropdown(false);
 			}
-			// Link Input
-			if (linkInputRef.current && !linkInputRef.current.contains(target)) {
+			// 미디어 Input
+			if (mediaButtonRef.current && !mediaButtonRef.current.contains(target)) {
 				setIsLinkInputOpen(false);
-			}
-			// Youtube Input
-			if (youtubeInputRef.current && !youtubeInputRef.current.contains(target)) {
 				setIsYoutubeInputOpen(false);
 			}
 		};
+
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
 	}, [setIsLinkInputOpen, setIsYoutubeInputOpen]);
