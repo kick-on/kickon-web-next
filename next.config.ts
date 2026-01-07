@@ -54,6 +54,7 @@ const nextConfig: NextConfig = {
 			},
 		],
 		dangerouslyAllowSVG: true, // SVG 허용 (보안 주의)
+		contentDispositionType: 'attachment',
 		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // svg script 공격을 방지하기 위함
 	},
 	webpack(config) {
