@@ -72,6 +72,7 @@ export default function Banner() {
 						height={isMobile ? 26 : 51}
 						src={button.src}
 						alt={button.alt}
+						unoptimized={true}
 					/>
 				))}
 
@@ -86,7 +87,6 @@ export default function Banner() {
 							height={560}
 							src={banner.thumbnailUrl}
 							alt="배너 이미지"
-							unoptimized={true}
 						/>
 					</SwiperSlide>
 				))}
