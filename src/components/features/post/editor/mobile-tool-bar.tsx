@@ -10,6 +10,7 @@ import TextFormatIcon from '@/assets/editor/textformatter.svg';
 import ParagraphIcon from '@/assets/editor/paragraph.svg';
 import TextFormatButtons from '@/components/features/post/editor/text-format-buttons';
 import BlockFormatButtons from '@/components/features/post/editor/block-format-buttons';
+import InteractionButtons from '@/components/features/post/editor/interaction-buttons';
 
 const MobileToolBar = ({
 	selectedOption,
@@ -33,7 +34,7 @@ const MobileToolBar = ({
 	return (
 		<>
 			<div className="w-full bg-black-100 border border-b-0 border-black-300 p-1.5 h-11.5 rounded-tl-lg rounded-tr-lg">
-				<div className="flex items-center">
+				<div className="flex items-center overflow-x-scroll no-scrollbar">
 					<HeadingDropdown
 						selectedOption={selectedOption}
 						setSelectedOption={setSelectedOption}
@@ -71,6 +72,9 @@ const MobileToolBar = ({
 					<ToolBarDivider />
 
 					<MediaButtons mediaButtonRef={mediaButtonRef} />
+					<ToolBarDivider />
+
+					<InteractionButtons />
 				</div>
 			</div>
 
