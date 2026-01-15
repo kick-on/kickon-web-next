@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { getPresignedUrl, uploadToS3 } from '@/services/apis/image-upload';
 import { EditorContext } from './context';
 import { Video } from '@/lib/extensions/video';
+import PollExtension from '@/components/features/post/editor/poll-extension';
 
 type EditorProviderProps = {
 	children: React.ReactNode;
@@ -52,6 +53,7 @@ export const EditorProvider = ({ children, setBody, isNews, editedBody }: Editor
 					class: 'responsive-youtube iframe',
 				},
 			}),
+			PollExtension,
 		],
 		content: editedBody || '',
 		editorProps: {

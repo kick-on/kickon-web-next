@@ -3,17 +3,23 @@ import clsx from 'clsx';
 import VoteIcon from '@/assets/editor/vote.svg';
 
 const InteractionButtons = () => {
-	const { editor, handleTextFormatToggle } = useEditorContext();
+	const { editor } = useEditorContext();
 
-	const textFormatButtons = [{ key: 'vote', Icon: VoteIcon }];
+	const interfactionButtons = [
+		{
+			key: 'vote',
+			Icon: VoteIcon,
+			onClick: () => editor.chain().focus().setPoll().run(),
+		},
+	];
 
 	return (
 		<div className="flex items-center justify-center gap-2">
-			{textFormatButtons.map(({ key, Icon }) => (
+			{interfactionButtons.map(({ key, Icon, onClick }) => (
 				<button
 					key={key}
 					className={clsx('flex items-center justify-center rounded-sm border border-black-300 bg-white h-8.5 w-8.5')}
-					onClick={() => handleTextFormatToggle(key)}
+					onClick={onClick}
 				>
 					<Icon className="w-5 aspect-square text-black-600" />
 				</button>
