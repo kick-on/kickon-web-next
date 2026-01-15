@@ -7,10 +7,17 @@ import { useEditorContext } from '@/lib/contexts/editor/context';
 import clsx from 'clsx';
 import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
 import { formatDate } from '@/lib/utils';
+import PollBottomButton from '@/components/common/poll/poll-bottom-button';
 
-type PollMode = 'create' | 'view';
-type PollStatus = 'active' | 'closed';
-type VoteStatus = 'idle' | 'voted' | 'revote';
+export type PollMode = 'create' | 'view';
+export type PollStatus = 'active' | 'closed';
+export type VoteStatus = 'idle' | 'voted' | 'revote';
+
+interface PollContent {
+	pk: number;
+	content: string;
+	voteCount: number;
+}
 
 interface PollComponentProps extends NodeViewProps {
 	pollData?: {
@@ -18,7 +25,7 @@ interface PollComponentProps extends NodeViewProps {
 		title: string;
 		isMultipleChoice: boolean;
 		isClosed: boolean;
-		contents: string[];
+		contents: PollContent[];
 		endAt: string;
 		totalVoteCount: number;
 		isVoted: boolean;
@@ -122,12 +129,7 @@ export default function PollComponent({ node, updateAttributes, deleteNode, poll
 				))}
 			</div>
 
-			<button
-				onClick={() => {}}
-				className="mx-4 text-button-03 py-2.5 bg-black-200 hover:bg-black-300 rounded transition-colors text-black-700"
-			>
-				+ 항목 추가
-			</button>
+			<PollBottomButton pollMode={pollMode} pollStatus={pollStatus} voteStatus={voteStatus} />
 		</NodeViewWrapper>
 	);
 }
