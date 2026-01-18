@@ -44,7 +44,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 		() => ({
 			pk: 1,
 			title: '축구 goat는 누구?',
-			isMultipleChoice: false,
+			isMultipleChoice: true,
 			isClosed: false,
 			options: [
 				{ pk: 1, option: '펠레', voteCount: 10 },
@@ -60,10 +60,12 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	);
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
-	const isEditable = node?.attrs?.isEditable ?? false;
-
-	const pollMode: PollMode = editor?.isEditable ? 'create' : 'view';
-	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
+	// const isEditable = node?.attrs?.isEditable ?? false;
+	const isEditable = false;
+	// const pollMode: PollMode = editor?.isEditable ? 'create' : 'view';
+	// const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
+	const pollMode = 'view';
+	const pollStatus = 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 
 	useEffect(() => {
@@ -94,6 +96,15 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 		}
 	}, [pollData]);
 
+	const [checkedOptionPks, setCheckedOptionPks] = useState<number[]>([]);
+	const toggleCheckedOptionPks = (pk: number) => {
+		if (checkedOptionPks.includes(pk)) {
+			setCheckedOptionPks(checkedOptionPks.filter((cpk) => cpk !== pk));
+		} else {
+			setCheckedOptionPks([...checkedOptionPks, pk]);
+		}
+	};
+
 	return (
 		<NodeViewWrapper
 			className={clsx(
@@ -101,8 +112,8 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 				pollMode === 'create' && !isEditable && 'bg-black-100 pointer-events-none',
 			)}
 		>
-			<div className="grid grid-cols-[1fr_auto] gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
-				<span className="w-full text-header-01 max-w-full truncate">
+			<div className="grid grid-cols-[1fr_auto] @mobile:grid-rows-2 @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
+				<div className="w-full text-header-01 max-w-full truncate">
 					{pollMode === 'create' ? (
 						<input
 							type="text"
@@ -113,29 +124,31 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 						/>
 					) : (
 						<div className="w-full py-1 flex gap-2 items-center">
-							<VoteViewIcon />
+							<VoteViewIcon className="@mobile:hidden" />
 							{pollData?.title ?? '투표 제목을 불러올 수 없습니다.'}
 						</div>
 					)}
-				</span>
+				</div>
 
 				<div className="flex gap-4 text-black-700">
-					<div className="flex gap-2 items-center text-caption-01 font-medium">
+					<div className="flex gap-2 items-center text-caption-01 @mobile:text-caption-02 font-medium">
 						<span className={clsx('flex items-center', isEditable ? 'gap-0.5' : 'gap-1')}>
-							투표 마감일
+							투표 마감
 							<label
 								className={isEditable ? 'cursor-pointer' : 'cursor-default'}
 								tabIndex={0}
 								role="button"
 								onClick={() => datetimeRef?.current?.showPicker()}
 							>
-								<input
-									ref={datetimeRef}
-									type="datetime-local"
-									value={toDateTimeLocal(endAt)}
-									onChange={(e) => setEndAt(e.target.value)}
-									className="w-4 outline-0"
-								/>
+								{isEditable && (
+									<input
+										ref={datetimeRef}
+										type="datetime-local"
+										value={toDateTimeLocal(endAt)}
+										onChange={(e) => setEndAt(e.target.value)}
+										className="w-4 outline-0"
+									/>
+								)}
 								{`${endDate} ${endTime}`}
 							</label>
 						</span>
@@ -144,15 +157,17 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 								<div className="h-3 w-px bg-black-700" />
 								<span className="flex items-center gap-1">
 									복수 선택
-									<input
-										type="checkbox"
-										checked={isMultipleChoice ?? false}
-										onChange={(e) => setIsMultipleChoice(e.target.checked)}
-										className="cursor-pointer appearance-none relative bg-black-200 border border-black-700 w-3 h-3
+									{isEditable && (
+										<input
+											type="checkbox"
+											checked={isMultipleChoice ?? false}
+											onChange={(e) => setIsMultipleChoice(e.target.checked)}
+											className="cursor-pointer appearance-none relative bg-black-200 border border-black-700 w-3 h-3
 											rounded-xs outline-0 checked:border-0 checked:bg-primary-900 before:absolute
 											before:inset-x-0.5 before:inset-y-px before:mb-px text-white
 											before:bg-[url('/check.svg')] before:bg-contain before:bg-no-repeat before:bg-center"
-									/>
+										/>
+									)}
 								</span>
 							</>
 						)}
@@ -184,19 +199,17 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 							/>
 						))
 					: pollData &&
-						pollData.options.map((content, i) => (
+						pollData.options.map((option, i) => (
 							<PollOptionItem
-								key={content.pk}
+								key={option.pk}
 								pollStatus={pollStatus}
 								voteStatus={voteStatus}
 								index={i + 1}
-								pollOption={content}
+								pollOption={option}
 								totalVoteCount={pollData.totalVoteCount}
-								isVoted={false}
-								checked={false}
-								toggleCheck={(pk) => {
-									return true;
-								}}
+								isVoted={pollData.votedOptionPks.includes(option.pk)}
+								checked={checkedOptionPks.includes(option.pk)}
+								handleChange={() => toggleCheckedOptionPks(option.pk)}
 							/>
 						))}
 			</div>

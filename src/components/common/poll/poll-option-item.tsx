@@ -13,7 +13,7 @@ interface PollOptionItemProps {
 	totalVoteCount: number;
 	isVoted: boolean;
 	checked: boolean;
-	toggleCheck: (pk: number) => boolean;
+	handleChange: () => void;
 }
 
 export default function PollOptionItem({
@@ -24,17 +24,13 @@ export default function PollOptionItem({
 	totalVoteCount,
 	isVoted,
 	checked,
-	toggleCheck,
+	handleChange,
 }: PollOptionItemProps) {
 	const voteRate = Math.floor((pollOption.voteCount / totalVoteCount) * 100);
 
-	const handleChange = () => {
-		toggleCheck(pollOption.pk);
-	};
-
 	return (
 		<div className="flex flex-col gap-1">
-			<div className="flex items-center gap-2.5 pl-3 text-body-06 font-medium">
+			<label className="w-full flex items-center gap-2.5 pl-3 text-body-06 font-medium">
 				{voteStatus === 'voting' || voteStatus === 'revoting' ? (
 					<input
 						type="checkbox"
@@ -53,10 +49,10 @@ export default function PollOptionItem({
 						<CheckIcon className="w-2.5 h-2.5 text-primary-900 stroke-[1.5] mb-px" />
 					)}
 				</div>
-			</div>
+			</label>
 
 			{(pollStatus === 'closed' || voteStatus === 'voted' || voteStatus === 'revoting') && (
-				<div className="flex gap-3 w-full px-3 items-center">
+				<div className="flex gap-3 w-full pl-3 items-center">
 					<div className="relative h-1 w-full max-w-sm rounded-full bg-black-200">
 						<div
 							style={{ width: `${voteRate}%` }}

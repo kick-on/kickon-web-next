@@ -12,14 +12,14 @@ interface PollBottomButtonProps {
 }
 
 const baseButtonClassName =
-	'flex-1 text-button-03 py-2.5 bg-black-200 hover:bg-black-300 rounded transition-colors text-black-700';
+	'flex-1 text-button-03 py-2.5 bg-black-200 hover:bg-black-300 rounded transition-colors text-black-700 @mobile:text-button-04';
 
 export default function PollBottomButton({ pollMode, pollStatus, voteStatus, setVoteStatus }: PollBottomButtonProps) {
 	const { options, setOptions } = usePollStore();
 
 	if (pollMode === 'create') {
 		return (
-			<button onClick={() => setOptions([...options, ''])} className={`${baseButtonClassName} mx-4`}>
+			<button onClick={() => setOptions([...options, ''])} className={`${baseButtonClassName} mx-4 @mobile:mx-3`}>
 				+ 항목 추가
 			</button>
 		);
@@ -31,7 +31,7 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus, set
 
 	if (voteStatus === 'idle') {
 		return (
-			<button onClick={() => setVoteStatus('voting')} className={`${baseButtonClassName} mx-4`}>
+			<button onClick={() => setVoteStatus('voting')} className={`${baseButtonClassName} mx-4 @mobile:mx-3`}>
 				투표하기
 			</button>
 		);
@@ -40,7 +40,7 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus, set
 	if (voteStatus === 'voted') {
 		const isMyVote = true;
 		return (
-			<div className="flex gap-4 mx-4">
+			<div className="flex gap-4 mx-4 @mobile:gap-2 @mobile:mx-3">
 				<button onClick={() => setVoteStatus('revoting')} className={baseButtonClassName}>
 					다시 투표하기
 				</button>
@@ -55,7 +55,7 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus, set
 
 	if (voteStatus === 'voting') {
 		return (
-			<div className="flex gap-4 mx-4">
+			<div className="flex gap-4 mx-4 @mobile:gap-2 @mobile:mx-3">
 				<button onClick={() => setVoteStatus('idle')} className={baseButtonClassName}>
 					취소
 				</button>
