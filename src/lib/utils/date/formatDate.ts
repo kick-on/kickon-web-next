@@ -1,14 +1,11 @@
 export const formatDate = (createdAt: string, year?: 'numeric' | '2-digit') => {
 	const date = createdAt ? new Date(createdAt) : new Date();
-	if (createdAt) {
-		date.setHours(date.getHours() + 9);
-	}
 
 	// numeric: YYYY.MM.DD
 	// 2-digit: YY.MM.DD
 	// undefined: MM.DD
 	const formattedDate = new Intl.DateTimeFormat('ko-KR', {
-		year: year ?? 'numeric',
+		year: year,
 		month: '2-digit',
 		day: '2-digit',
 	})
