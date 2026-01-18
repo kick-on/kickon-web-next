@@ -15,7 +15,7 @@ const baseButtonClassName =
 export default function PollBottomButton({ pollMode, pollStatus, voteStatus }: PollBottomButtonProps) {
 	if (pollMode === 'create') {
 		return (
-			<button onClick={() => {}} className={baseButtonClassName + 'mx-4'}>
+			<button onClick={() => {}} className={`${baseButtonClassName} mx-4`}>
 				+ 항목 추가
 			</button>
 		);
@@ -27,7 +27,7 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus }: P
 
 	if (voteStatus === 'idle') {
 		return (
-			<button onClick={() => {}} className={baseButtonClassName + 'mx-4'}>
+			<button onClick={() => {}} className={`${baseButtonClassName} mx-4`}>
 				투표하기
 			</button>
 		);
