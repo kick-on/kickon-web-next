@@ -44,8 +44,8 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 		() => ({
 			pk: 1,
 			title: '축구 goat는 누구?',
-			isMultipleChoice: true,
-			isClosed: false,
+			isMultipleChoice: false,
+			isClosed: true,
 			options: [
 				{ pk: 1, option: '펠레', voteCount: 10 },
 				{ pk: 2, option: '메시', voteCount: 50 },
@@ -98,21 +98,28 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 
 	const [checkedOptionPks, setCheckedOptionPks] = useState<number[]>([]);
 	const toggleCheckedOptionPks = (pk: number) => {
-		if (checkedOptionPks.includes(pk)) {
-			setCheckedOptionPks(checkedOptionPks.filter((cpk) => cpk !== pk));
-		} else {
-			setCheckedOptionPks([...checkedOptionPks, pk]);
+		// 기존에 이미 체크되어 있던 값인지 검사
+		const isChecked = checkedOptionPks.includes(pk);
+
+		if (pollData.isMultipleChoice) {
+			const updated = isChecked ? checkedOptionPks.filter((cpk) => cpk !== pk) : [...checkedOptionPks, pk];
+			setCheckedOptionPks(updated);
+			return;
 		}
+
+		const updated = isChecked ? [] : [pk];
+		setCheckedOptionPks(updated);
+		return;
 	};
 
 	return (
 		<NodeViewWrapper
 			className={clsx(
-				'flex flex-col gap-4 pb-3 border border-black-300 rounded-lg',
+				'flex flex-col gap-4 @mobile:gap-3 pb-3 border border-black-300 rounded-lg',
 				pollMode === 'create' && !isEditable && 'bg-black-100 pointer-events-none',
 			)}
 		>
-			<div className="grid grid-cols-[1fr_auto] @mobile:grid-rows-2 @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
+			<div className="grid grid-cols-[1fr_auto] @mobile:grid-rows-[auto_auto] @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
 				<div className="w-full text-header-01 max-w-full truncate">
 					{pollMode === 'create' ? (
 						<input
@@ -131,7 +138,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 				</div>
 
 				<div className="flex gap-4 text-black-700">
-					<div className="flex gap-2 items-center text-caption-01 @mobile:text-caption-02 font-medium">
+					<div className="flex gap-2 items-center text-caption-01 @mobile:text-caption-02 @mobile:py-1 font-medium">
 						<span className={clsx('flex items-center', isEditable ? 'gap-0.5' : 'gap-1')}>
 							투표 마감
 							<label
