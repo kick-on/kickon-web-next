@@ -7,12 +7,13 @@ interface PollBottomButtonProps {
 	pollMode: PollMode;
 	pollStatus: PollStatus;
 	voteStatus: VoteStatus;
+	setVoteStatus: (value: VoteStatus) => void;
 }
 
 const baseButtonClassName =
 	'flex-1 text-button-03 py-2.5 bg-black-200 hover:bg-black-300 rounded transition-colors text-black-700';
 
-export default function PollBottomButton({ pollMode, pollStatus, voteStatus }: PollBottomButtonProps) {
+export default function PollBottomButton({ pollMode, pollStatus, voteStatus, setVoteStatus }: PollBottomButtonProps) {
 	if (pollMode === 'create') {
 		return (
 			<button onClick={() => {}} className={`${baseButtonClassName} mx-4`}>
@@ -27,7 +28,7 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus }: P
 
 	if (voteStatus === 'idle') {
 		return (
-			<button onClick={() => {}} className={`${baseButtonClassName} mx-4`}>
+			<button onClick={() => setVoteStatus('voting')} className={`${baseButtonClassName} mx-4`}>
 				투표하기
 			</button>
 		);
@@ -37,7 +38,7 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus }: P
 		const isMyVote = true;
 		return (
 			<div className="flex gap-4 mx-4">
-				<button onClick={() => {}} className={baseButtonClassName}>
+				<button onClick={() => setVoteStatus('revoting')} className={baseButtonClassName}>
 					다시 투표하기
 				</button>
 				{isMyVote && (
@@ -49,13 +50,26 @@ export default function PollBottomButton({ pollMode, pollStatus, voteStatus }: P
 		);
 	}
 
-	if (voteStatus === 'revote') {
+	if (voteStatus === 'voting') {
 		return (
 			<div className="flex gap-4 mx-4">
-				<button onClick={() => {}} className={baseButtonClassName}>
+				<button onClick={() => setVoteStatus('idle')} className={baseButtonClassName}>
 					취소
 				</button>
-				<button onClick={() => {}} className={baseButtonClassName}>
+				<button onClick={() => setVoteStatus('voted')} className={baseButtonClassName}>
+					확인
+				</button>
+			</div>
+		);
+	}
+
+	if (voteStatus === 'revoting') {
+		return (
+			<div className="flex gap-4 mx-4">
+				<button onClick={() => setVoteStatus('voted')} className={baseButtonClassName}>
+					취소
+				</button>
+				<button onClick={() => setVoteStatus('voted')} className={baseButtonClassName}>
 					확인
 				</button>
 			</div>

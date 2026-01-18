@@ -14,11 +14,11 @@ import VoteViewIcon from '@/assets/editor/vote-view.svg';
 
 export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
-export type VoteStatus = 'idle' | 'voted' | 'revote';
+export type VoteStatus = 'idle' | 'voting' | 'voted' | 'revoting';
 
-export interface PollContent {
+export interface PollOption {
 	pk: number;
-	content: string;
+	option: string;
 	voteCount: number;
 }
 
@@ -27,7 +27,7 @@ export interface PollDto {
 	title: string;
 	isMultipleChoice: boolean;
 	isClosed: boolean;
-	contents: PollContent[];
+	options: PollOption[];
 	endAt: string;
 	totalVoteCount: number;
 	isVoted: boolean;
@@ -43,10 +43,19 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 		title: '축구 goat는 누구?',
 		isMultipleChoice: false,
 		isClosed: false,
-		contents: [
-			{ pk: 1, content: '펠레', voteCount: 10 },
-			{ pk: 2, content: '메시', voteCount: 50 },
-			{ pk: 3, content: '마라도나', voteCount: 40 },
+		options: [
+			{ pk: 1, option: '펠레', voteCount: 10 },
+			{ pk: 2, option: '메시', voteCount: 50 },
+			{ pk: 3, option: '마라도나', voteCount: 40 },
+			{ pk: 4, option: '펠레', voteCount: 10 },
+			{ pk: 5, option: '메시', voteCount: 50 },
+			{ pk: 6, option: '마라도나', voteCount: 40 },
+			{ pk: 7, option: '펠레', voteCount: 10 },
+			{ pk: 8, option: '메시', voteCount: 50 },
+			{ pk: 9, option: '마라도나', voteCount: 40 },
+			{ pk: 10, option: '펠레', voteCount: 10 },
+			{ pk: 11, option: '메시', voteCount: 50 },
+			{ pk: 12, option: '마라도나', voteCount: 40 },
 		],
 		endAt: '2026-01-17T14:22:13.172Z',
 		totalVoteCount: 100,
@@ -60,7 +69,7 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 
 	const pollMode: PollMode = 'view';
 	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
-	const voteStatus: VoteStatus = 'idle';
+	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 
 	const [options, setOptions] = useState<string[]>(['', '']);
 	const { formattedDate: endDate, formattedTime: endTime } = formatDate(pollData?.endAt);
@@ -140,16 +149,16 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 							<PollOptionInputItem key={i} index={i + 1} option={option} onChange={() => {}} />
 						))
 					: pollData &&
-						pollData.contents.map((content, i) => (
+						pollData.options.map((content, i) => (
 							<PollOptionItem
 								key={content.pk}
 								pollStatus={pollStatus}
 								voteStatus={voteStatus}
 								index={i + 1}
-								pollContent={content}
+								pollOption={content}
 								totalVoteCount={pollData.totalVoteCount}
-								isVoted={pollData.contents.some((c) => c.pk === content.pk)}
-								checked={pollData.contents.some((c) => c.pk === content.pk)}
+								isVoted={pollData.options.some((c) => c.pk === content.pk)}
+								checked={i % 3 === 0}
 								toggleCheck={(pk) => {
 									return true;
 								}}
@@ -157,7 +166,12 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 						))}
 			</div>
 
-			<PollBottomButton pollMode={pollMode} pollStatus={pollStatus} voteStatus={voteStatus} />
+			<PollBottomButton
+				pollMode={pollMode}
+				pollStatus={pollStatus}
+				voteStatus={voteStatus}
+				setVoteStatus={setVoteStatus}
+			/>
 		</NodeViewWrapper>
 	);
 }
