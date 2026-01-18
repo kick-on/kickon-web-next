@@ -16,10 +16,10 @@ interface PollStoreDto {
 }
 
 export const usePollStore = create<PollStoreDto>((set) => ({
-	title: null,
+	title: '',
 	options: ['', ''],
 	isMultipleChoice: false,
-	endAt: null,
+	endAt: '',
 
 	setTitle: (title) => set({ title }),
 	setOptions: (options) => set({ options }),
@@ -30,5 +30,5 @@ export const usePollStore = create<PollStoreDto>((set) => ({
 	setIsMultipleChoice: (isMultipleChoice) => set({ isMultipleChoice }),
 	setEndAt: (endAt: string) => set({ endAt }),
 
-	clearPollStore: () => set({ title: null, options: ['', ''], isMultipleChoice: false, endAt: null }),
+	clearPollStore: () => set({ title: '', options: ['', ''], isMultipleChoice: false, endAt: '' }),
 }));

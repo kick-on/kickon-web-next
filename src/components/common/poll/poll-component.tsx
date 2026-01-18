@@ -60,12 +60,9 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	);
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
-	// const isEditable = node?.attrs?.isEditable ?? false;
-	const isEditable = false;
-	// const pollMode: PollMode = editor?.isEditable ? 'create' : 'view';
-	// const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
-	const pollMode = 'view';
-	const pollStatus = 'active';
+	const isEditable = node?.attrs?.isEditable ?? false;
+	const pollMode: PollMode = editor?.isEditable ? 'create' : 'view';
+	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 
 	useEffect(() => {
@@ -147,7 +144,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 								role="button"
 								onClick={() => datetimeRef?.current?.showPicker()}
 							>
-								{isEditable && (
+								{pollMode === 'create' && (
 									<input
 										ref={datetimeRef}
 										type="datetime-local"
@@ -159,12 +156,12 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 								{`${endDate} ${endTime}`}
 							</label>
 						</span>
-						{(isEditable || isMultipleChoice) && (
+						{(pollMode === 'create' || isMultipleChoice) && (
 							<>
 								<div className="h-3 w-px bg-black-700" />
 								<span className="flex items-center gap-1">
 									복수 선택
-									{isEditable && (
+									{pollMode === 'create' && (
 										<input
 											type="checkbox"
 											checked={isMultipleChoice ?? false}
