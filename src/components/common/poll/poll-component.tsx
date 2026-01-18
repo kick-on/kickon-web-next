@@ -116,7 +116,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 				pollMode === 'create' && !isEditable && 'bg-black-100 pointer-events-none',
 			)}
 		>
-			<div className="grid grid-cols-[1fr_auto] @mobile:grid-rows-[auto_auto] @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
+			<div className="relative grid grid-cols-[1fr_auto] @mobile:grid-rows-[auto_auto] @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
 				<div className="w-full text-header-01 max-w-full truncate">
 					{pollMode === 'create' ? (
 						<input
@@ -185,7 +185,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 							className=""
 							aria-label="삭제"
 						>
-							<XIcon className="w-4 h-4 text-black-700" />
+							<XIcon className="w-4 h-4 text-black-700 @mobile:absolute @mobile:top-2.5 @mobile:right-2.5" />
 						</button>
 					)}
 				</div>
