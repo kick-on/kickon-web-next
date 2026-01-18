@@ -39,6 +39,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const { editor } = useEditorContext();
 	const datetimeRef = useRef<HTMLInputElement>(null);
 
+	// const pollData = null;
 	const pollData: PollDto = useMemo(
 		() => ({
 			pk: 1,
@@ -66,12 +67,22 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 
 	useEffect(() => {
-		const initialVoteStatus = pollData.isVoted ? 'voted' : 'idle';
+		const initialVoteStatus = pollData?.isVoted ? 'voted' : 'idle';
 		setVoteStatus(initialVoteStatus);
 	}, [pollData]);
 
-	const { title, options, endAt, isMultipleChoice, setTitle, setOptions, setEndAt, setIsMultipleChoice } =
-		usePollStore();
+	const {
+		title,
+		options,
+		endAt,
+		isMultipleChoice,
+		setTitle,
+		setOptions,
+		setIthOption,
+		setEndAt,
+		setIsMultipleChoice,
+		clearPollStore,
+	} = usePollStore();
 	const { formattedDate: endDate, formattedTime: endTime } = formatDate(endAt, 'numeric');
 
 	useEffect(() => {
@@ -147,7 +158,14 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 						)}
 					</div>
 					{isEditable && (
-						<button onClick={deleteNode} className="" aria-label="삭제">
+						<button
+							onClick={() => {
+								clearPollStore();
+								deleteNode?.();
+							}}
+							className=""
+							aria-label="삭제"
+						>
 							<XIcon className="w-4 h-4 text-black-700" />
 						</button>
 					)}
@@ -158,7 +176,12 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 			<div className="space-y-4 pl-2 pr-4">
 				{pollMode === 'create'
 					? options.map((option, i) => (
-							<PollOptionInputItem key={i} index={i + 1} option={option} onChange={() => {}} />
+							<PollOptionInputItem
+								key={i}
+								index={i + 1}
+								option={option}
+								onChange={(e) => setIthOption(e.target.value, i)}
+							/>
 						))
 					: pollData &&
 						pollData.options.map((content, i) => (

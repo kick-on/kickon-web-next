@@ -2,6 +2,7 @@
 
 import type { PollMode, PollStatus, VoteStatus } from '@/components/common/poll/poll-component';
 import React from 'react';
+import { usePollStore } from '@/lib/store/usePollStore';
 
 interface PollBottomButtonProps {
 	pollMode: PollMode;
@@ -14,9 +15,11 @@ const baseButtonClassName =
 	'flex-1 text-button-03 py-2.5 bg-black-200 hover:bg-black-300 rounded transition-colors text-black-700';
 
 export default function PollBottomButton({ pollMode, pollStatus, voteStatus, setVoteStatus }: PollBottomButtonProps) {
+	const { options, setOptions } = usePollStore();
+
 	if (pollMode === 'create') {
 		return (
-			<button onClick={() => {}} className={`${baseButtonClassName} mx-4`}>
+			<button onClick={() => setOptions([...options, ''])} className={`${baseButtonClassName} mx-4`}>
 				+ 항목 추가
 			</button>
 		);

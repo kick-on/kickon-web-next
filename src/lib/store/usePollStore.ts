@@ -8,6 +8,7 @@ interface PollStoreDto {
 
 	setTitle: (title: string) => void;
 	setOptions: (options: string[]) => void;
+	setIthOption: (option: string, index: number) => void;
 	setIsMultipleChoice: (isMultipleChoice: boolean) => void;
 	setEndAt: (endAt: string) => void;
 
@@ -22,6 +23,10 @@ export const usePollStore = create<PollStoreDto>((set) => ({
 
 	setTitle: (title) => set({ title }),
 	setOptions: (options) => set({ options }),
+	setIthOption: (option, index) =>
+		set((state) => ({
+			options: state.options.map((item, i) => (i === index ? option : item)),
+		})),
 	setIsMultipleChoice: (isMultipleChoice) => set({ isMultipleChoice }),
 	setEndAt: (endAt: string) => set({ endAt }),
 
