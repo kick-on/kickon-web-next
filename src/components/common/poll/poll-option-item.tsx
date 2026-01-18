@@ -40,7 +40,9 @@ export default function PollOptionItem({
 						type="checkbox"
 						checked={checked}
 						onChange={handleChange}
-						className="relative appearance-none h-3 w-3 rounded-full border border-black-500 checked:border-0 checked:bg-primary-900 before:absolute before:inset-x-0.5 before:inset-y-0 before:bg-[url('/check.svg')] before:bg-contain before:bg-no-repeat before:bg-center text-white"
+						className="relative appearance-none h-3 w-3 rounded-full border border-black-500
+							checked:border-0 checked:bg-primary-900 before:absolute before:inset-x-0.5 before:inset-y-0
+							before:bg-[url('/check.svg')] before:bg-contain before:bg-no-repeat before:bg-center text-white"
 					/>
 				) : (
 					<div className="h-4 w-5 border-r border-black-300 leading-4">{index}</div>

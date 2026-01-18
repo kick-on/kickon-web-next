@@ -1,0 +1,29 @@
+import { create } from 'zustand';
+
+interface PollStoreDto {
+	title: string;
+	options: string[];
+	isMultipleChoice: boolean;
+	endAt: string;
+
+	setTitle: (title: string) => void;
+	setOptions: (options: string[]) => void;
+	setIsMultipleChoice: (isMultipleChoice: boolean) => void;
+	setEndAt: (endAt: string) => void;
+
+	clearPollStore: () => void;
+}
+
+export const usePollStore = create<PollStoreDto>((set) => ({
+	title: null,
+	options: ['', ''],
+	isMultipleChoice: false,
+	endAt: null,
+
+	setTitle: (title) => set({ title }),
+	setOptions: (options) => set({ options }),
+	setIsMultipleChoice: (isMultipleChoice) => set({ isMultipleChoice }),
+	setEndAt: (endAt: string) => set({ endAt }),
+
+	clearPollStore: () => set({ title: null, options: ['', ''], isMultipleChoice: false, endAt: null }),
+}));

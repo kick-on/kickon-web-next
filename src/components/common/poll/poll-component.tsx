@@ -1,16 +1,17 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { NodeViewProps, NodeViewWrapper } from '@tiptap/react';
 import XIcon from '@/assets/x.svg';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import clsx from 'clsx';
-import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
 import { formatDate } from '@/lib/utils';
 import PollBottomButton from '@/components/common/poll/poll-bottom-button';
 import PollOptionInputItem from '@/components/common/poll/poll-option-input-item';
 import PollOptionItem from '@/components/common/poll/poll-option-item';
 import VoteViewIcon from '@/assets/editor/vote-view.svg';
+import { usePollStore } from '@/lib/store/usePollStore';
+import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
 
 export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
@@ -34,45 +35,53 @@ export interface PollDto {
 	votedOptionPks: number[];
 }
 
-export default function PollComponent({ node, updateAttributes, deleteNode }: NodeViewProps) {
+export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const { editor } = useEditorContext();
 	const datetimeRef = useRef<HTMLInputElement>(null);
 
-	const pollData: PollDto = {
-		pk: 1,
-		title: '축구 goat는 누구?',
-		isMultipleChoice: false,
-		isClosed: false,
-		options: [
-			{ pk: 1, option: '펠레', voteCount: 10 },
-			{ pk: 2, option: '메시', voteCount: 50 },
-			{ pk: 3, option: '마라도나', voteCount: 40 },
-			{ pk: 4, option: '펠레', voteCount: 10 },
-			{ pk: 5, option: '메시', voteCount: 50 },
-			{ pk: 6, option: '마라도나', voteCount: 40 },
-			{ pk: 7, option: '펠레', voteCount: 10 },
-			{ pk: 8, option: '메시', voteCount: 50 },
-			{ pk: 9, option: '마라도나', voteCount: 40 },
-			{ pk: 10, option: '펠레', voteCount: 10 },
-			{ pk: 11, option: '메시', voteCount: 50 },
-			{ pk: 12, option: '마라도나', voteCount: 40 },
-		],
-		endAt: '2026-01-17T14:22:13.172Z',
-		totalVoteCount: 100,
-		isVoted: false,
-		votedOptionPks: [2],
-	};
+	const pollData: PollDto = useMemo(
+		() => ({
+			pk: 1,
+			title: '축구 goat는 누구?',
+			isMultipleChoice: false,
+			isClosed: false,
+			options: [
+				{ pk: 1, option: '펠레', voteCount: 10 },
+				{ pk: 2, option: '메시', voteCount: 50 },
+				{ pk: 3, option: '마라도나', voteCount: 40 },
+			],
+			endAt: '2026-01-17T14:22:13.172Z',
+			totalVoteCount: 100,
+			isVoted: false,
+			votedOptionPks: [2],
+		}),
+		[],
+	);
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
-	const isEditable = false;
-	const [isRevoting, setIsRevoting] = useState(false);
+	const isEditable = node?.attrs?.isEditable ?? false;
 
-	const pollMode: PollMode = 'view';
+	const pollMode: PollMode = editor?.isEditable ? 'create' : 'view';
 	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 
-	const [options, setOptions] = useState<string[]>(['', '']);
-	const { formattedDate: endDate, formattedTime: endTime } = formatDate(pollData?.endAt);
+	useEffect(() => {
+		const initialVoteStatus = pollData.isVoted ? 'voted' : 'idle';
+		setVoteStatus(initialVoteStatus);
+	}, [pollData]);
+
+	const { title, options, endAt, isMultipleChoice, setTitle, setOptions, setEndAt, setIsMultipleChoice } =
+		usePollStore();
+	const { formattedDate: endDate, formattedTime: endTime } = formatDate(endAt, 'numeric');
+
+	useEffect(() => {
+		if (pollData) {
+			setTitle(pollData.title);
+			setOptions(pollData.options.map((o) => o.option));
+			setEndAt(pollData.endAt);
+			setIsMultipleChoice(pollData.isMultipleChoice);
+		}
+	}, [pollData]);
 
 	return (
 		<NodeViewWrapper
@@ -88,12 +97,12 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 							type="text"
 							placeholder="투표 제목을 입력하세요."
 							className="w-full placeholder:text-black-700 outline-0 py-1"
-							value={pollData?.title ?? ''}
-							onChange={(e) => updateAttributes({ question: e.target.value })}
+							value={title}
+							onChange={(e) => setTitle(e.target.value)}
 						/>
 					) : (
 						<div className="w-full py-1 flex gap-2 items-center">
-							{pollMode === 'view' && <VoteViewIcon />}
+							<VoteViewIcon />
 							{pollData?.title ?? '투표 제목을 불러올 수 없습니다.'}
 						</div>
 					)}
@@ -112,23 +121,26 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 								<input
 									ref={datetimeRef}
 									type="datetime-local"
-									value={toDateTimeLocal(pollData?.endAt)}
-									disabled={!isEditable}
-									hidden={!isEditable}
+									value={toDateTimeLocal(endAt)}
+									onChange={(e) => setEndAt(e.target.value)}
 									className="w-4 outline-0"
 								/>
 								{`${endDate} ${endTime}`}
 							</label>
 						</span>
-						{(isEditable || pollData?.isMultipleChoice) && (
+						{(isEditable || isMultipleChoice) && (
 							<>
 								<div className="h-3 w-px bg-black-700" />
 								<span className="flex items-center gap-1">
 									복수 선택
 									<input
 										type="checkbox"
-										checked={pollData?.isMultipleChoice ?? false}
-										className="cursor-pointer appearance-none bg-black-200 border border-black-700 w-3 h-3 rounded-xs outline-0"
+										checked={isMultipleChoice ?? false}
+										onChange={(e) => setIsMultipleChoice(e.target.checked)}
+										className="cursor-pointer appearance-none relative bg-black-200 border border-black-700 w-3 h-3
+											rounded-xs outline-0 checked:border-0 checked:bg-primary-900 before:absolute
+											before:inset-x-0.5 before:inset-y-px before:mb-px text-white
+											before:bg-[url('/check.svg')] before:bg-contain before:bg-no-repeat before:bg-center"
 									/>
 								</span>
 							</>
@@ -157,8 +169,8 @@ export default function PollComponent({ node, updateAttributes, deleteNode }: No
 								index={i + 1}
 								pollOption={content}
 								totalVoteCount={pollData.totalVoteCount}
-								isVoted={pollData.options.some((c) => c.pk === content.pk)}
-								checked={i % 3 === 0}
+								isVoted={false}
+								checked={false}
 								toggleCheck={(pk) => {
 									return true;
 								}}
