@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NodeViewProps, NodeViewWrapper } from '@tiptap/react';
 import XIcon from '@/assets/x.svg';
-import { useEditorContext } from '@/lib/contexts/editor/context';
 import clsx from 'clsx';
 import { formatDate } from '@/lib/utils';
 import PollBottomButton from '@/components/common/poll/poll-bottom-button';
@@ -36,8 +35,7 @@ const getBoardPk = (pathname) => {
 	return null;
 };
 
-export default function PollComponent({ node, deleteNode }: NodeViewProps) {
-	const { editor } = useEditorContext();
+export default function PollComponent({ node, deleteNode }: Partial<NodeViewProps>) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
 	const pathname = usePathname();
 	const boardPk = getBoardPk(pathname);
@@ -47,7 +45,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
 	const isEditable = node?.attrs?.isEditable ?? false;
-	const pollMode: PollMode = editor?.isEditable ? 'create' : 'view';
+	const pollMode: PollMode = pathname.includes('post') ? 'create' : 'view';
 	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 

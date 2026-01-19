@@ -12,6 +12,8 @@ import { createNewsKick } from '@/services/apis/news/news.api';
 import { createBoardKick } from '@/services/apis/board/board.api';
 import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { NewsDetailDto } from '@/services/apis/news/news.type';
+import { createPortal } from 'react-dom';
+import PollComponent from '@/components/common/poll/poll-component';
 
 interface DetailContentProps {
 	commonDetailData: CommonPostDetailDto;
@@ -59,12 +61,21 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
+
 		const sanitized = DOMPurify.sanitize(commonDetailData.content, {
 			ADD_TAGS: ['iframe', 'br', 'p'],
 			ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target'],
 		});
 		setSanitizedContent(sanitized);
 	}, [commonDetailData.content]);
+
+	// 투표 컴포넌트 포탈 설정
+	const [pollContainer, setPollContainer] = useState<HTMLElement | null>(null);
+
+	useEffect(() => {
+		const targetElement = document.getElementById('poll-wrapper');
+		setPollContainer(targetElement);
+	}, [sanitizedContent]);
 
 	const parsedContent = parse(sanitizedContent, {
 		replace: (domNode) => {
@@ -109,104 +120,108 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 	const isMyContents = commonDetailData?.user?.id === currentUserInfo?.id;
 
 	return (
-		<div className="px-4">
-			{/* 대표 이미지 */}
-			{isNews && isImageLoaded && (
-				<div
-					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
+		<>
+			<div className="px-4">
+				{/* 대표 이미지 */}
+				{isNews && isImageLoaded && (
+					<div
+						className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
 					w-full max-w-[636px] aspect-[636/322]
 					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
 				`}
-				>
-					<Image
-						src={newsDetailData.thumbnailUrl}
-						alt="대표 이미지"
-						width={636}
-						height={322}
-						className={`
+					>
+						<Image
+							src={newsDetailData.thumbnailUrl}
+							alt="대표 이미지"
+							width={636}
+							height={322}
+							className={`
 						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
 					`}
-						priority={true}
-					/>
-				</div>
-			)}
-
-			{/* 헤더 */}
-			{isNews && (
-				<div className="flex gap-2 mb-2.5 items-center">
-					{!isCommentAllowed && (
-						<Image
-							className="w-6 h-6 object-contain"
-							src={commonDetailData.team.logoUrl}
-							alt="팀 로고"
-							width={24}
-							height={24}
-						/>
-					)}
-					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
-						{categoryLabel}
-					</span>
-				</div>
-			)}
-
-			<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{commonDetailData.title}</h1>
-
-			{/* 작성자 & 액션 카운터 */}
-			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
-				<div className="flex items-center gap-2">
-					<div className="w-6 h-6 overflow-hidden">
-						<Image
-							src={commonDetailData.user.profileImageUrl || '/default-profile.svg'}
-							alt="작성자 프로필"
-							width={24}
-							height={24}
-							className="w-full h-full rounded-full object-cover"
+							priority={true}
 						/>
 					</div>
-					<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
-						{commonDetailData.user.nickname}
-						{commonDetailData.user.isReporter && (
-							<Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />
+				)}
+
+				{/* 헤더 */}
+				{isNews && (
+					<div className="flex gap-2 mb-2.5 items-center">
+						{!isCommentAllowed && (
+							<Image
+								className="w-6 h-6 object-contain"
+								src={commonDetailData.team.logoUrl}
+								alt="팀 로고"
+								width={24}
+								height={24}
+							/>
 						)}
-					</span>
-					<span className="ml-2">{getRelativeTime(commonDetailData.createdAt)}</span>
-					<span>|</span>
-					<span>읽음 {commonDetailData.views}</span>
+						<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
+							{categoryLabel}
+						</span>
+					</div>
+				)}
+
+				<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{commonDetailData.title}</h1>
+
+				{/* 작성자 & 액션 카운터 */}
+				<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
+					<div className="flex items-center gap-2">
+						<div className="w-6 h-6 overflow-hidden">
+							<Image
+								src={commonDetailData.user.profileImageUrl || '/default-profile.svg'}
+								alt="작성자 프로필"
+								width={24}
+								height={24}
+								className="w-full h-full rounded-full object-cover"
+							/>
+						</div>
+						<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
+							{commonDetailData.user.nickname}
+							{commonDetailData.user.isReporter && (
+								<Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />
+							)}
+						</span>
+						<span className="ml-2">{getRelativeTime(commonDetailData.createdAt)}</span>
+						<span>|</span>
+						<span>읽음 {commonDetailData.views}</span>
+					</div>
+
+					<div className="flex gap-3 items-center text-black-600 body5-regular">
+						<div className="flex items-center gap-1.5 @mobile:hidden">
+							<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
+							<span>{likes}</span>
+						</div>
+						<div className="flex items-center gap-1.5 @mobile:hidden">
+							<Image src="/comment.svg" alt="댓글" width={18} height={18} />
+							<span>{commonDetailData.replies}</span>
+						</div>
+						<Suspense>
+							<MoreActionsButton type={type} pk={commonDetailData.pk} isMyContent={isMyContents} />
+						</Suspense>
+					</div>
 				</div>
 
-				<div className="flex gap-3 items-center text-black-600 body5-regular">
-					<div className="flex items-center gap-1.5 @mobile:hidden">
-						<Image src="/kick/gray.svg" alt="좋아요" width={18} height={18} />
-						<span>{likes}</span>
-					</div>
-					<div className="flex items-center gap-1.5 @mobile:hidden">
-						<Image src="/comment.svg" alt="댓글" width={18} height={18} />
-						<span>{commonDetailData.replies}</span>
-					</div>
-					<Suspense>
-						<MoreActionsButton type={type} pk={commonDetailData.pk} isMyContent={isMyContents} />
-					</Suspense>
-				</div>
-			</div>
+				{/* 본문 */}
+				<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
+				<div className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap">{parsedContent}</div>
 
-			{/* 본문 */}
-			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap">{parsedContent}</div>
-
-			{/* 좋아요 버튼 */}
-			<button
-				onClick={handleLikeButtonClick}
-				className={`button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
+				{/* 좋아요 버튼 */}
+				<button
+					onClick={handleLikeButtonClick}
+					className={`button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
 	rounded-lg shadow-[0rem_0.125rem_0.625rem_0rem_#DCDCDC] 
 	${isLiked ? 'bg-[#D91920] text-white' : 'bg-black-100 text-black-900'} transition
 	hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]`}
-			>
-				<Image src={'/kick/black.svg'} alt="축구공" width={18} height={18} />
-				<span className="mr-0.5">킥</span>
-				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
-			</button>
-			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
-		</div>
+				>
+					<Image src={'/kick/black.svg'} alt="축구공" width={18} height={18} />
+					<span className="mr-0.5">킥</span>
+					<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
+				</button>
+				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
+			</div>
+
+			{pollContainer && createPortal(<PollComponent />, pollContainer)}
+		</>
 	);
 };
 

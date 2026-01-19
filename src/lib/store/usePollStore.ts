@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
 
 interface PollStoreDto {
 	title: string;
@@ -15,11 +16,15 @@ interface PollStoreDto {
 	clearPollStore: () => void;
 }
 
-export const usePollStore = create<PollStoreDto>((set) => ({
+const initialState = {
 	title: '',
 	options: ['', ''],
 	isMultipleChoice: false,
-	endAt: '',
+	endAt: toDateTimeLocal(new Date(new Date().setDate(new Date().getDate() + 1)).toISOString()),
+};
+
+export const usePollStore = create<PollStoreDto>((set) => ({
+	...initialState,
 
 	setTitle: (title) => set({ title }),
 	setOptions: (options) => set({ options }),
@@ -30,5 +35,5 @@ export const usePollStore = create<PollStoreDto>((set) => ({
 	setIsMultipleChoice: (isMultipleChoice) => set({ isMultipleChoice }),
 	setEndAt: (endAt: string) => set({ endAt }),
 
-	clearPollStore: () => set({ title: '', options: ['', ''], isMultipleChoice: false, endAt: '' }),
+	clearPollStore: () => set(initialState),
 }));
