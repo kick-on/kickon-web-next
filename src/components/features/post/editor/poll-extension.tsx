@@ -15,22 +15,11 @@ export default Node.create({
 	group: 'block',
 	atom: true,
 
-	addAttributes() {
-		return {
-			isEditable: {
-				default: true,
-			},
-		};
-	},
-
 	// HTML -> 에디터: 아래 태그를 만나면 PollComponent로 변환
 	parseHTML() {
 		return [
 			{
 				tag: 'div[data-type="poll-component"]',
-				getAttrs: () => {
-					return { isEditable: false };
-				},
 			},
 		];
 	},

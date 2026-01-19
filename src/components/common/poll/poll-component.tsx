@@ -11,7 +11,7 @@ import PollOptionItem from '@/components/common/poll/poll-option-item';
 import VoteViewIcon from '@/assets/editor/vote-view.svg';
 import { usePollStore } from '@/lib/store/usePollStore';
 import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
-import { usePathname } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { usePollQuery } from '@/lib/hooks/queries/usePollQuery';
 
 export type PollMode = 'create' | 'view';
@@ -35,16 +35,17 @@ const getBoardPk = (pathname) => {
 	return null;
 };
 
-export default function PollComponent({ node, deleteNode }: Partial<NodeViewProps>) {
+export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
 	const pathname = usePathname();
+	const searchParams = useSearchParams();
 	const boardPk = getBoardPk(pathname);
 
 	const { data } = usePollQuery(boardPk);
 	const pollData = data?.data;
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
-	const isEditable = node?.attrs?.isEditable ?? false;
+	const isEditable = pathname.includes('post') && !searchParams.get('edit');
 	const pollMode: PollMode = pathname.includes('post') ? 'create' : 'view';
 	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
