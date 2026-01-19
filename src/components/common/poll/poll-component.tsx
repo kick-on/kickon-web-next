@@ -13,40 +13,27 @@ import { usePollStore } from '@/lib/store/usePollStore';
 import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { usePollQuery } from '@/lib/hooks/queries/usePollQuery';
+import { getBoardPk } from '@/lib/utils/business/poll';
 
 export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
 export type VoteStatus = 'idle' | 'voting' | 'voted' | 'revoting';
 
-const getBoardPk = (pathname) => {
-	const segments = pathname.split('/');
-	const boardPk = segments.find((segment) => /^\d+$/.test(segment));
-
-	if (boardPk) {
-		return Number(boardPk);
-	}
-
-	const detailData = sessionStorage.getItem('detailContent');
-	if (detailData) {
-		const parsedData = JSON.parse(detailData);
-		return parsedData.data.pk;
-	}
-
-	return null;
-};
-
 export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
+
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
-	const boardPk = getBoardPk(pathname);
+	const isPostPage = pathname.includes('post');
+	const isPostEditing = searchParams.get('edit') === 'true';
+	const boardPk = getBoardPk(pathname, isPostPage, isPostEditing);
 
 	const { data } = usePollQuery(boardPk);
 	const pollData = data?.data;
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
-	const isEditable = pathname.includes('post') && !searchParams.get('edit');
-	const pollMode: PollMode = pathname.includes('post') ? 'create' : 'view';
+	const isEditable = isPostPage && !isPostEditing;
+	const pollMode: PollMode = isPostPage ? 'create' : 'view';
 	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 

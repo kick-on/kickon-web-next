@@ -16,6 +16,7 @@ import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import usePostViewStatus from '@/lib/hooks/usePostViewStatus';
+import { usePollStore } from '@/lib/store/usePollStore';
 
 const DetailPage = () => {
 	const params = useParams();
@@ -84,6 +85,13 @@ const DetailPage = () => {
 
 		hasViewApiCalled.current = true;
 	}, [postDetail, id, shouldCallApi, isNews]);
+
+	const { clearPollStore } = usePollStore();
+	useEffect(() => {
+		return () => {
+			clearPollStore();
+		};
+	}, []);
 
 	return (
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
