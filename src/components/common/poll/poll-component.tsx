@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NodeViewProps, NodeViewWrapper } from '@tiptap/react';
 import XIcon from '@/assets/x.svg';
 import { useEditorContext } from '@/lib/contexts/editor/context';
@@ -12,34 +12,38 @@ import PollOptionItem from '@/components/common/poll/poll-option-item';
 import VoteViewIcon from '@/assets/editor/vote-view.svg';
 import { usePollStore } from '@/lib/store/usePollStore';
 import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
-import { PollDto } from '@/services/apis/poll/poll.type';
+import { usePathname } from 'next/navigation';
+import { usePollQuery } from '@/lib/hooks/queries/usePollQuery';
 
 export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
 export type VoteStatus = 'idle' | 'voting' | 'voted' | 'revoting';
 
+const getBoardPk = (pathname) => {
+	const segments = pathname.split('/');
+	const boardPk = segments.find((segment) => /^\d+$/.test(segment));
+
+	if (boardPk) {
+		return Number(boardPk);
+	}
+
+	const detailData = sessionStorage.getItem('detailContent');
+	if (detailData) {
+		const parsedData = JSON.parse(detailData);
+		return parsedData.data.pk;
+	}
+
+	return null;
+};
+
 export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const { editor } = useEditorContext();
 	const datetimeRef = useRef<HTMLInputElement>(null);
+	const pathname = usePathname();
+	const boardPk = getBoardPk(pathname);
 
-	const pollData: PollDto = useMemo(
-		() => ({
-			pk: 1,
-			title: '축구 goat는 누구?',
-			isMultipleChoice: false,
-			isClosed: true,
-			options: [
-				{ pk: 1, content: '펠레', voteCount: 10 },
-				{ pk: 2, content: '메시', voteCount: 50 },
-				{ pk: 3, content: '마라도나', voteCount: 40 },
-			],
-			endAt: '2026-01-17T14:22:13.172Z',
-			totalVoteCount: 100,
-			isVoted: false,
-			votedOptionPks: [2],
-		}),
-		[],
-	);
+	const { data } = usePollQuery(boardPk);
+	const pollData = data?.data;
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
 	const isEditable = node?.attrs?.isEditable ?? false;

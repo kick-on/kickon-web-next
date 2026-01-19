@@ -19,6 +19,9 @@ export interface PollOption {
 	voteCount: number;
 }
 
+// 투표 조회
+export type GetPollResponse = SuccessResponse<PollDto>;
+
 // 투표 생성
 export interface CreatePollRequest {
 	title: string;
