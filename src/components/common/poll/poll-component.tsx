@@ -12,28 +12,11 @@ import PollOptionItem from '@/components/common/poll/poll-option-item';
 import VoteViewIcon from '@/assets/editor/vote-view.svg';
 import { usePollStore } from '@/lib/store/usePollStore';
 import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
+import { PollDto } from '@/services/apis/poll/poll.type';
 
 export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
 export type VoteStatus = 'idle' | 'voting' | 'voted' | 'revoting';
-
-export interface PollOption {
-	pk: number;
-	option: string;
-	voteCount: number;
-}
-
-export interface PollDto {
-	pk: number;
-	title: string;
-	isMultipleChoice: boolean;
-	isClosed: boolean;
-	options: PollOption[];
-	endAt: string;
-	totalVoteCount: number;
-	isVoted: boolean;
-	votedOptionPks: number[];
-}
 
 export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const { editor } = useEditorContext();
@@ -46,9 +29,9 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 			isMultipleChoice: false,
 			isClosed: true,
 			options: [
-				{ pk: 1, option: '펠레', voteCount: 10 },
-				{ pk: 2, option: '메시', voteCount: 50 },
-				{ pk: 3, option: '마라도나', voteCount: 40 },
+				{ pk: 1, content: '펠레', voteCount: 10 },
+				{ pk: 2, content: '메시', voteCount: 50 },
+				{ pk: 3, content: '마라도나', voteCount: 40 },
 			],
 			endAt: '2026-01-17T14:22:13.172Z',
 			totalVoteCount: 100,
@@ -89,7 +72,7 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 		setIsMultipleChoice(pollData.isMultipleChoice);
 
 		if (pollData.options.length > 0) {
-			setOptions(pollData.options.map((o) => o.option));
+			setOptions(pollData.options.map((o) => o.content));
 		}
 	}, [pollData]);
 

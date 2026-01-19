@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
-import type { PollOption, PollStatus, VoteStatus } from '@/components/common/poll/poll-component';
+import type { PollStatus, VoteStatus } from '@/components/common/poll/poll-component';
 import clsx from 'clsx';
 import CheckIcon from '@/assets/check.svg';
+import { PollOption } from '@/services/apis/poll/poll.type';
 
 interface PollOptionItemProps {
 	pollStatus: PollStatus;
@@ -44,7 +45,7 @@ export default function PollOptionItem({
 					<div className="h-4 w-5 border-r border-black-300 leading-4">{index}</div>
 				)}
 				<div className="flex gap-1.5 items-center">
-					<span>{pollOption.option}</span>
+					<span>{pollOption.content}</span>
 					{voteStatus === 'voted' && isVoted && (
 						<CheckIcon className="w-2.5 h-2.5 text-primary-900 stroke-[1.5] mb-px" />
 					)}
