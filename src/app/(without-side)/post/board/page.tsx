@@ -92,23 +92,25 @@ export default function Page() {
 		}
 	}, [currentUserInfo, _hasHydrated, router]);
 
+	const { title: pollTitle, options, endAt, isMultipleChoice, clearPollStore } = usePollStore();
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setIsVisibleDropdown(false);
 			}
 		};
+
 		document.addEventListener('click', handleClickOutside);
 		return () => {
 			document.removeEventListener('click', handleClickOutside);
+			clearPollStore();
 		};
 	}, []);
 
 	// 중복 호출 방지
 	const isLoading = useRef(false);
 	const hasImage = /<img\s+[^>]*src=["'][^"']+["'][^>]*>/i.test(body);
-
-	const { title: pollTitle, options, endAt, isMultipleChoice } = usePollStore();
 
 	const postCommunityContents = async () => {
 		if (!currentUserInfo || !isFormValid || isLoading.current) return;
