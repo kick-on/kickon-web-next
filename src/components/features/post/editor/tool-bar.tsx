@@ -10,12 +10,14 @@ import MediaButtons from './media-buttons';
 import TextFormatButtons from '@/components/features/post/editor/text-format-buttons';
 import BlockFormatButtons from '@/components/features/post/editor/block-format-buttons';
 import InteractionButtons from '@/components/features/post/editor/interaction-buttons';
+import { usePathname } from 'next/navigation';
 
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-[7.5px]" />;
 
 export default function Toolbar() {
 	const { editor, setIsLinkInputOpen, handleHeadingChange, setIsYoutubeInputOpen } = useEditorContext();
 	const isMobile = useIsMobile();
+	const pathname = usePathname();
 	const [hasMounted, setHasMounted] = useState(false);
 
 	useEffect(() => {
@@ -105,10 +107,14 @@ export default function Toolbar() {
 
 			{/* 미디어 버튼 */}
 			<MediaButtons mediaButtonRef={mediaButtonRef} />
-			<ToolBarDivider />
 
 			{/*	인터랙션 버튼 */}
-			<InteractionButtons />
+			{pathname.includes('board') && (
+				<>
+					<ToolBarDivider />
+					<InteractionButtons />
+				</>
+			)}
 		</div>
 	);
 }
