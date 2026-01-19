@@ -1,5 +1,6 @@
 import { SuccessResponse } from '@/services/config/dto';
 import { CommonCreatePostRequest, CommonPostDetailDto, CommonPostListDto } from '../common/types';
+import { PollDto } from '@/services/apis/poll/poll.type';
 
 // Common
 export interface BoardListDto extends CommonPostListDto {
@@ -28,6 +29,8 @@ export type GetBoardListResponse = SuccessResponse<BoardListDto[]>;
 // 게시글 상세 조회
 export interface GetBoardDetailDto extends BoardDetailDto {
 	isInfluencer: boolean;
+	hasPoll: boolean;
+	poll?: PollDto;
 }
 export type GetBoardDetailResponse = SuccessResponse<GetBoardDetailDto>;
 
