@@ -197,6 +197,9 @@ export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
 				pollStatus={pollStatus}
 				voteStatus={voteStatus}
 				setVoteStatus={setVoteStatus}
+				checkedOptionPks={checkedOptionPks}
+				pollPk={pollData?.pk}
+				isMyPoll={false}
 			/>
 		</NodeViewWrapper>
 	);
