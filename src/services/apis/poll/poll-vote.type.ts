@@ -8,3 +8,8 @@ export interface CreateVoteRequest {
 export interface EditVoteRequest {
 	pollOptions: number[];
 }
+
+export interface EditVoteParams {
+	pollPk: number;
+	body: EditVoteRequest;
+}

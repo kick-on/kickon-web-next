@@ -39,7 +39,6 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const { editor } = useEditorContext();
 	const datetimeRef = useRef<HTMLInputElement>(null);
 
-	// const pollData = null;
 	const pollData: PollDto = useMemo(
 		() => ({
 			pk: 1,
@@ -65,11 +64,6 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const pollStatus: PollStatus = pollData?.isClosed ? 'closed' : 'active';
 	const [voteStatus, setVoteStatus] = useState<VoteStatus>('idle');
 
-	useEffect(() => {
-		const initialVoteStatus = pollData?.isVoted ? 'voted' : 'idle';
-		setVoteStatus(initialVoteStatus);
-	}, [pollData]);
-
 	const {
 		title,
 		options,
@@ -85,14 +79,21 @@ export default function PollComponent({ node, deleteNode }: NodeViewProps) {
 	const { formattedDate: endDate, formattedTime: endTime } = formatDate(endAt, 'numeric');
 
 	useEffect(() => {
-		if (pollData) {
-			setTitle(pollData.title);
+		if (!pollData) return;
+
+		const initialVoteStatus = pollData.isVoted ? 'voted' : 'idle';
+		setVoteStatus(initialVoteStatus);
+
+		setTitle(pollData.title);
+		setEndAt(pollData.endAt);
+		setIsMultipleChoice(pollData.isMultipleChoice);
+
+		if (pollData.options.length > 0) {
 			setOptions(pollData.options.map((o) => o.option));
-			setEndAt(pollData.endAt);
-			setIsMultipleChoice(pollData.isMultipleChoice);
 		}
 	}, [pollData]);
 
+	// view mode : 옵션 선택 로직
 	const [checkedOptionPks, setCheckedOptionPks] = useState<number[]>([]);
 	const toggleCheckedOptionPks = (pk: number) => {
 		// 기존에 이미 체크되어 있던 값인지 검사
