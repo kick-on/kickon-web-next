@@ -5,11 +5,29 @@ import VoteIcon from '@/assets/editor/vote.svg';
 const InteractionButtons = () => {
 	const { editor } = useEditorContext();
 
+	const handlePollButtonClick = () => {
+		if (!editor) return;
+
+		let hasPoll = false;
+		editor.state.doc.descendants((node) => {
+			if (node.type.name === 'pollComponent') {
+				hasPoll = true;
+				return false; // 순회 종료
+			}
+		});
+
+		if (hasPoll) {
+			alert('투표는 게시글당 하나만 생성할 수 있습니다.');
+			return;
+		}
+		editor.chain().focus().setPoll().run();
+	};
+
 	const interfactionButtons = [
 		{
-			key: 'vote',
+			key: 'poll',
 			Icon: VoteIcon,
-			onClick: () => editor.chain().focus().setPoll().run(),
+			onClick: handlePollButtonClick,
 		},
 	];
 
