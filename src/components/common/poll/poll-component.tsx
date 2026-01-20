@@ -88,18 +88,33 @@ export default function PollComponent({
 		return;
 	};
 
+	// 에디터 입력 방지
+	const titleRef = useRef(null);
+	const handleContainerClick = (e) => {
+		e.stopPropagation();
+
+		// 배경 등 input 외 영역 클릭 시
+		if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+			// title input에 강제 포커싱 -> 포커싱이 에디터로 옮겨가지 않도록 함
+			titleRef.current?.focus();
+		}
+	};
+
 	return (
 		<NodeViewWrapper
+			contentEditable={false}
+			onClick={handleContainerClick}
 			className={clsx(
 				'flex flex-col gap-4 @mobile:gap-3 pb-3 border border-black-300 rounded-lg',
 				pollMode === 'create' && !isEditable && 'bg-black-100 pointer-events-none',
 			)}
 		>
-			<div className="relative grid grid-cols-[1fr_auto] @mobile:grid-rows-[auto_auto] @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
-				<div className="w-full min-w-0 flex gap-px items-center">
-					<div className="text-header-01 min-w-0">
+			<div className="relative flex @mobile:flex-col gap-1 @mobile:gap-0 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
+				<div className="flex-1 @mobile:flex-auto @mobile:w-full min-w-0 flex gap-px items-center">
+					<div className={clsx('text-header-01 min-w-0', pollMode === 'create' && 'w-full')}>
 						{pollMode === 'create' ? (
 							<input
+								ref={titleRef}
 								type="text"
 								placeholder="투표 제목을 입력하세요."
 								className="w-full placeholder:text-black-700 outline-0 py-1"
@@ -116,7 +131,7 @@ export default function PollComponent({
 					{pollMode === 'view' && <div className="text-subtitle-02">({pollData?.totalVoteCount ?? 0})</div>}
 				</div>
 
-				<div className="flex gap-4 text-black-700">
+				<div className="flex gap-4 text-black-700 mr-1 @mobile:mr-auto">
 					<div className="flex gap-2 items-center text-caption-01 @mobile:text-caption-02 @mobile:py-1 font-medium">
 						<span className={clsx('flex items-center', isEditable ? 'gap-0.5' : 'gap-1')}>
 							투표 마감
@@ -167,7 +182,7 @@ export default function PollComponent({
 							className=""
 							aria-label="삭제"
 						>
-							<XIcon className="w-4 h-4 text-black-700 @mobile:absolute @mobile:top-2.5 @mobile:right-2.5" />
+							<XIcon className="w-4 h-4 text-black-700 absolute top-2.5 right-2.5" />
 						</button>
 					)}
 				</div>
