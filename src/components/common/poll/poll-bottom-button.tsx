@@ -4,6 +4,7 @@ import type { PollMode, PollStatus, VoteStatus } from '@/components/common/poll/
 import React from 'react';
 import { usePollStore } from '@/lib/store/usePollStore';
 import { useClosePollMutation, useCreateVoteMutation, useEditVoteMutation } from '@/lib/hooks/queries/usePollQuery';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 interface PollBottomButtonProps {
 	pollMode: PollMode;
@@ -53,6 +54,16 @@ export default function PollBottomButton({
 	const handlePollClose = async () => {
 		await closePollMutation.mutateAsync(pollPk);
 	};
+
+	const { currentUserInfo } = useCurrentUserInfoStore();
+
+	if (!currentUserInfo) {
+		return (
+			<div className="text-caption-01 text-center bg-primary-50 py-1 rounded-b-lg -mb-3">
+				결과를 확인하려면 로그인하고 투표에 참여하세요!
+			</div>
+		);
+	}
 
 	if (pollMode === 'create') {
 		return (
