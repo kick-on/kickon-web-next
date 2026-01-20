@@ -219,7 +219,11 @@ const DetailContent = ({ detailData, type, isCommentAllowed }: DetailContentProp
 				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
 			</div>
 
-			{pollContainer && createPortal(<PollComponent canFetch={hasPoll} isMyPoll={isMyContents} />, pollContainer)}
+			{pollContainer &&
+				createPortal(
+					<PollComponent canFetch={hasPoll} isMyPoll={isMyContents} viewedBoardPk={detailData.pk} />,
+					pollContainer,
+				)}
 		</>
 	);
 };

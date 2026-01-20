@@ -13,7 +13,7 @@ import { usePollStore } from '@/lib/store/usePollStore';
 import { toDateTimeLocal } from '@/lib/utils/date/toDateTimeLocal';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { usePollQuery } from '@/lib/hooks/queries/usePollQuery';
-import { getBoardPk } from '@/lib/utils/business/poll';
+import { getEditingBoardPk } from '@/lib/utils/business/poll';
 
 export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
@@ -23,14 +23,15 @@ export default function PollComponent({
 	deleteNode,
 	canFetch,
 	isMyPoll,
-}: Partial<NodeViewProps> & { canFetch?: boolean; isMyPoll?: boolean }) {
+	viewedBoardPk,
+}: Partial<NodeViewProps> & { canFetch?: boolean; isMyPoll?: boolean; viewedBoardPk?: number }) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
 
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const isPostPage = pathname.includes('post');
 	const isPostEditing = searchParams.get('edit') === 'true';
-	const boardPk = getBoardPk(pathname, isPostPage, isPostEditing);
+	const boardPk = isPostEditing ? getEditingBoardPk() : viewedBoardPk;
 
 	const queryEnabled = isPostPage ? isPostEditing : canFetch;
 	const { data } = usePollQuery(boardPk, queryEnabled);
