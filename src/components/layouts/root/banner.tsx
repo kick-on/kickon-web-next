@@ -72,6 +72,7 @@ export default function Banner() {
 						height={isMobile ? 26 : 51}
 						src={button.src}
 						alt={button.alt}
+						unoptimized={true}
 					/>
 				))}
 
