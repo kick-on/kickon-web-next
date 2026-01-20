@@ -19,7 +19,11 @@ export type PollMode = 'create' | 'view';
 export type PollStatus = 'active' | 'closed';
 export type VoteStatus = 'idle' | 'voting' | 'voted' | 'revoting';
 
-export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
+export default function PollComponent({
+	deleteNode,
+	canFetch,
+	isMyPoll,
+}: Partial<NodeViewProps> & { canFetch?: boolean; isMyPoll?: boolean }) {
 	const datetimeRef = useRef<HTMLInputElement>(null);
 
 	const pathname = usePathname();
@@ -28,7 +32,8 @@ export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
 	const isPostEditing = searchParams.get('edit') === 'true';
 	const boardPk = getBoardPk(pathname, isPostPage, isPostEditing);
 
-	const { data } = usePollQuery(boardPk);
+	const queryEnabled = isPostPage ? isPostEditing : canFetch;
+	const { data } = usePollQuery(boardPk, queryEnabled);
 	const pollData = data?.data;
 
 	// 처음 게시글 작성 시에만 true (게시글 수정 시 false)
@@ -202,7 +207,7 @@ export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
 				setVoteStatus={setVoteStatus}
 				checkedOptionPks={checkedOptionPks}
 				pollPk={pollData?.pk}
-				isMyPoll={false}
+				isMyPoll={isMyPoll}
 			/>
 		</NodeViewWrapper>
 	);

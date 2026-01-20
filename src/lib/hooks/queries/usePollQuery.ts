@@ -10,11 +10,11 @@ export const pollKeys = {
 };
 
 // 투표 조회
-export const usePollQuery = (boardPk: number) => {
+export const usePollQuery = (boardPk: number, enabled: boolean) => {
 	return useQuery({
 		queryKey: pollKeys.detail(boardPk),
 		queryFn: () => getPoll(boardPk),
-		enabled: Number.isInteger(boardPk),
+		enabled: Number.isInteger(boardPk) && enabled,
 		retry: 1,
 	});
 };

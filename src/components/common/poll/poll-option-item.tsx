@@ -31,7 +31,7 @@ export default function PollOptionItem({
 
 	return (
 		<div className="flex flex-col gap-1">
-			<label className="w-full flex items-center gap-2.5 pl-3 text-body-06 font-medium">
+			<label className="w-full flex items-center gap-2.5 pl-3 text-body-06 font-medium pointer-events-auto">
 				{voteStatus === 'voting' || voteStatus === 'revoting' ? (
 					<input
 						type="checkbox"

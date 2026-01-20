@@ -12,17 +12,18 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { getNewsDetail } from '@/services/apis/news/news.api';
 import { getBoardDetail } from '@/services/apis/board/board.api';
-import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { createNewsView } from '@/services/apis/news/news-view-history.api';
 import { createBoardView } from '@/services/apis/board/board-view-history.api';
 import usePostViewStatus from '@/lib/hooks/usePostViewStatus';
 import { usePollStore } from '@/lib/store/usePollStore';
+import { NewsDetailDto } from '@/services/apis/news/news.type';
+import { BoardDetailDto } from '@/services/apis/board/board.type';
 
 const DetailPage = () => {
 	const params = useParams();
 	const router = useRouter();
 
-	const [postDetail, setPostDetail] = useState<CommonPostDetailDto | null>(null);
+	const [postDetail, setPostDetail] = useState<NewsDetailDto | BoardDetailDto | null>(null);
 
 	const type = params?.type as 'news' | 'board';
 	const id = Number(params?.id);
@@ -97,7 +98,7 @@ const DetailPage = () => {
 		<div className="flex flex-col gap-4 @mobile:mb-[80px]">
 			<ComponentFrame isMain={true} className="overflow-hidden">
 				{postDetail ? (
-					<DetailContent commonDetailData={postDetail} type={type} isCommentAllowed={isCommentAllowed} />
+					<DetailContent detailData={postDetail} type={type} isCommentAllowed={isCommentAllowed} />
 				) : (
 					<FetchingFailedCard height="800px" marginTop="200px" onClick={getPostDetail} />
 				)}
