@@ -91,21 +91,24 @@ export default function PollComponent({ deleteNode }: Partial<NodeViewProps>) {
 			)}
 		>
 			<div className="relative grid grid-cols-[1fr_auto] @mobile:grid-rows-[auto_auto] @mobile:grid-cols-none @mobile:gap-0 gap-10 justify-between items-center px-3 py-1.5 bg-black-200 rounded-t-lg">
-				<div className="w-full text-header-01 max-w-full truncate">
-					{pollMode === 'create' ? (
-						<input
-							type="text"
-							placeholder="투표 제목을 입력하세요."
-							className="w-full placeholder:text-black-700 outline-0 py-1"
-							value={title}
-							onChange={(e) => setTitle(e.target.value)}
-						/>
-					) : (
-						<div className="w-full py-1 flex gap-2 items-center">
-							<VoteViewIcon className="@mobile:hidden" />
-							{pollData?.title ?? '투표 제목을 불러올 수 없습니다.'}
-						</div>
-					)}
+				<div className="w-full min-w-0 flex gap-px items-center">
+					<div className="text-header-01 min-w-0">
+						{pollMode === 'create' ? (
+							<input
+								type="text"
+								placeholder="투표 제목을 입력하세요."
+								className="w-full placeholder:text-black-700 outline-0 py-1"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+							/>
+						) : (
+							<div className="w-full py-1 flex gap-2 items-center">
+								<VoteViewIcon className="@mobile:hidden shrink-0" />
+								<div className="truncate">{pollData?.title ?? '투표 제목을 불러올 수 없습니다.'}</div>
+							</div>
+						)}
+					</div>
+					{pollMode === 'view' && <div className="text-subtitle-02">({pollData?.totalVoteCount ?? 0})</div>}
 				</div>
 
 				<div className="flex gap-4 text-black-700">
