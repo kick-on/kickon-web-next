@@ -66,11 +66,23 @@ const nextConfig: NextConfig = {
 	// },
 
 	webpack(config) {
-		config.module.rules.push({
-			test: /\.svg$/,
-			issuer: /\.[jt]sx?$/,
-			use: ['@svgr/webpack'],
-		});
+		const fileLoaderRule = config.module.rules.find((rule) => rule.test?.test?.('.svg'));
+
+		config.module.rules.push(
+			{
+				...fileLoaderRule,
+				test: /\.svg$/i,
+				resourceQuery: /url/,
+			},
+			{
+				test: /\.svg$/i,
+				issuer: fileLoaderRule.issuer,
+				resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // ?url이 없을 때 SVGR 사용
+				use: ['@svgr/webpack'],
+			},
+		);
+
+		fileLoaderRule.exclude = /\.svg$/i;
 		return config;
 	},
 };
