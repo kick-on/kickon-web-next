@@ -56,11 +56,11 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 		<>
 			<header className="fixed w-full top-0 z-40 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
-					<button onClick={handleToggleMenu} className={`w-fit ${isHome ? '' : 'invert'}`}>
-						<Image src={'/hamburger.svg'} alt="메뉴 아이콘" width={24} height={24} />
+					<button aria-label={'메뉴'} onClick={handleToggleMenu} className={`w-fit ${isHome ? '' : 'invert'}`}>
+						<Image aria-hidden={true} src={'/hamburger.svg'} alt="" width={24} height={24} />
 					</button>
-					<Link href="/" className="w-auto h-full flex justify-center">
-						<Image src={'/logo/icon-red.svg'} alt="킥온 로고 이미지" width={45} height={36} />
+					<Link href="/" aria-label={'홈으로 이동'} className="w-auto h-full flex justify-center">
+						<Image aria-hidden={true} src={'/logo/icon-red.svg'} alt="" width={45} height={36} />
 					</Link>
 					<RightButtons isMobile={true} onClickProfile={handleToggleProfile} />
 				</div>

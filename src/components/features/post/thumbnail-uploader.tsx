@@ -77,16 +77,17 @@ export default function ThumbnailUploader({ selectedImage, onChange }: Thumbnail
 				<div className="relative w-full h-80.5 @mobile:h-47.5 mb-4 bg-black-200 rounded-[10px] overflow-hidden flex items-center justify-center">
 					<Image
 						src={selectedImage}
-						alt="업로드된 대표 이미지"
+						alt=""
 						layout="fill"
 						objectFit={isPortrait ? 'contain' : 'cover'}
 						className="rounded-[10px]"
 					/>
 					<button
+						aria-label={'썸네일 삭제'}
 						onClick={handleRemoveImage}
 						className={clsx('absolute top-2 right-2 p-1 rounded-full', isPortrait ? 'bg-black-300' : 'bg-black-200')}
 					>
-						<Image src="/x/white.svg" alt="삭제 버튼" width={18} height={18} />
+						<Image aria-hidden={true} src="/x/white.svg" alt="" width={18} height={18} />
 					</button>
 				</div>
 			) : (

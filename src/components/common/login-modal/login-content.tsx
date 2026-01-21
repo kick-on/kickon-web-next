@@ -54,7 +54,7 @@ export default function LoginContent({ onClose }) {
 
 				<div className="flex flex-col items-center @mobile:my-auto">
 					<div className="relative w-70 h-[3.875rem] @mobile:w-54 @mobile:h-12">
-						<Image fill src="/logo/kick-on-red.svg" alt="킥온 로고" />
+						<Image fill src="/logo/kick-on-red.svg" alt="" />
 					</div>
 
 					<div className="mt-[1.875rem]">로그인하고 킥온과 함께</div>

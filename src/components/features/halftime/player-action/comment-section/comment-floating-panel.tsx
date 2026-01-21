@@ -17,7 +17,7 @@ export default function CommentFloatingPanel({ onClose }: { onClose: () => void 
 					width={30}
 					height={15}
 					src={'/panel-arrow.svg'}
-					alt="화살표"
+					alt=""
 					style={{
 						filter: 'drop-shadow(-3px 0 4px rgba(0, 0, 0, 0.16))',
 					}}

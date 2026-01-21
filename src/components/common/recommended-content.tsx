@@ -81,13 +81,7 @@ const RecommendedContent = ({ mode, teamName = '' }) => {
 					className="@mobile:text-[12px] flex gap-2 items-center text-black-700 body5-regular"
 				>
 					<span>더 보기</span>
-					<Image
-						src="/chevron/right-gray.svg"
-						width={18}
-						height={18}
-						className="@mobile:w-4 @mobile:h-4"
-						alt="오른쪽 화살표"
-					/>
+					<Image src="/chevron/right-gray.svg" width={18} height={18} className="@mobile:w-4 @mobile:h-4" alt="" />
 				</Link>
 			</header>
 

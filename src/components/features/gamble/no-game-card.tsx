@@ -11,7 +11,7 @@ export default function NoGameCard({ type, onClick }: { type: 'match' | 'predict
       py-[3.3125rem] @mobile:py-[3.125rem]"
 		>
 			<div className="relative w-24 @mobile:w-[4.375rem] h-auto aspect-7/10 mb-8">
-				<Image className="w-auto h-auto" src="/no-game.svg" alt="경기 없음 이미지" fill />
+				<Image className="w-auto h-auto" src="/no-game.svg" alt="" fill />
 			</div>
 
 			<span className="title3-semibold @mobile:text-16 mb-4">
@@ -24,13 +24,7 @@ export default function NoGameCard({ type, onClick }: { type: 'match' | 'predict
 				className="flex gap-1.5 text-black-000 py-2.5 px-5 bg-black-900 rounded-full button4-medium"
 			>
 				가능한 경기 보기
-				<Image
-					className="brightness-0 invert"
-					src={'/chevron/right-gray.svg'}
-					alt="오른쪽 화살표"
-					width={16}
-					height={16}
-				/>
+				<Image className="brightness-0 invert" src={'/chevron/right-gray.svg'} alt="" width={16} height={16} />
 			</button>
 		</div>
 	);

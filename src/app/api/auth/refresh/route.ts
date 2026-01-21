@@ -1,4 +1,4 @@
-import { SERVER_URL } from '@/services/config/constants';
+import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
@@ -47,12 +47,13 @@ export async function POST(request: NextRequest) {
 			headers: { 'Content-Type': 'application/json' },
 		});
 
-		if (typeof refreshToken === 'string') {
+		const isLocal = DOMAIN_URL === 'http://localhost:3000';
+		if (refreshToken) {
 			response.cookies.set({
 				name: 'refreshToken',
 				value: refreshToken,
 				httpOnly: true,
-				secure: false,
+				secure: !isLocal,
 				path: '/',
 				maxAge: 60 * 60 * 24 * 30, // 30일
 			});

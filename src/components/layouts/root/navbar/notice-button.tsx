@@ -22,14 +22,14 @@ export default function NoticeButton() {
 		}
 	};
 
-	const iconSrc = pathname === '/' ? '/notice/black.svg' : '/notice/white.svg';
+	const iconSrc = pathname === '/' ? '/notice/fill-white.svg' : '/notice/white.svg';
 
 	const unreadCount = useNotificationStore((s) => s.unreadCount);
 
 	return (
 		<div className="relative w-fit h-full items-center flex">
-			<button onClick={handleNoticeIconClick} className="relative w-6 h-6 @mobile:w-5 @mobile:h-5">
-				<Image src={iconSrc} alt="알림 아이콘" width={24} height={24} />
+			<button aria-label={'알림'} onClick={handleNoticeIconClick} className="relative w-6 h-6 @mobile:w-5 @mobile:h-5">
+				<Image aria-hidden={true} src={iconSrc} alt="" width={24} height={24} />
 
 				{unreadCount > 0 && (
 					<span className="absolute -top-[7px] left-[9px] flex w-fit min-w-4 h-4 px-[2px] py-[3px] items-center justify-center bg-negative text-black-000 button6-semibold rounded-full">

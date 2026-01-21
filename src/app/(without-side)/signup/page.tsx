@@ -15,7 +15,7 @@ export default function Page() {
 	const searchParams = useSearchParams();
 	const provider = searchParams.get('provider');
 	const socialLogoUrl = provider === 'naver' ? '/sns/naver-small.svg' : '/sns/kakao-small.svg';
-	const socialLogoAlt = provider === 'naver' ? '네이버 로고 이미지' : '카카오 로고 이미지';
+	const socialLogoAlt = provider === 'naver' ? '네이버' : '카카오';
 
 	const [isDuplicated, setIsDuplicated] = useState(false);
 	const [nickname, setNickname] = useState<string | null>(null);

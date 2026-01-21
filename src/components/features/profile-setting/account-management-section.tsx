@@ -18,7 +18,7 @@ export default function AccountManagementSection() {
 				className="flex gap-2.5 items-center px-4 py-3 w-full @mobile:text-body-05
 					border border-black-300 rounded-lg bg-black-100 text-body-03"
 			>
-				<Image width={18} height={18} src={socialLogoUrl} alt={`${currentUserInfo?.providerType} 로고`} />
+				<Image width={18} height={18} src={socialLogoUrl} alt="" />
 				{currentUserInfo?.email}
 			</div>
 

@@ -45,7 +45,7 @@ export default function Score({
 						width={16}
 						height={16}
 						src={'/chevron/score-up.svg'}
-						alt={'증가'}
+						alt={''}
 						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
 					/>
 				</button>
@@ -59,7 +59,7 @@ export default function Score({
 						width={16}
 						height={16}
 						src={'/chevron/score-down.svg'}
-						alt={'감소'}
+						alt={''}
 						className="hover:filter hover:brightness-0 hover:invert group-disabled:opacity-[23%]"
 					/>
 				</button>
