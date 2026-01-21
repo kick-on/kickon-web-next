@@ -43,6 +43,7 @@ export default function PredictCardList({ teamPk }: { teamPk: undefined | number
 		getGamesByStatus('proceeding');
 		getGamesByStatus('finished');
 	}, [currentUserInfo, getGamesByStatus]);
+
 	return (
 		<div className="flex flex-col gap-8">
 			{/* 예측 진행 중 경기 */}

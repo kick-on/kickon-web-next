@@ -1,6 +1,5 @@
 export const formatDate = (createdAt: string, year?: 'numeric' | '2-digit') => {
-	const date = new Date(createdAt);
-	date.setHours(date.getHours() + 9);
+	const date = createdAt ? new Date(createdAt) : new Date();
 
 	// numeric: YYYY.MM.DD
 	// 2-digit: YY.MM.DD

@@ -11,6 +11,9 @@ import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
 import { EditorProvider } from '@/lib/contexts/editor/provider';
+import { CreatePollRequest } from '@/services/apis/poll/poll.type';
+import { createPoll } from '@/services/apis/poll/poll.api';
+import { usePollStore } from '@/lib/store/usePollStore';
 
 export default function Page() {
 	const router = useRouter();
@@ -89,15 +92,19 @@ export default function Page() {
 		}
 	}, [currentUserInfo, _hasHydrated, router]);
 
+	const { title: pollTitle, options, endAt, isMultipleChoice, clearPollStore } = usePollStore();
+
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
 			if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
 				setIsVisibleDropdown(false);
 			}
 		};
+
 		document.addEventListener('click', handleClickOutside);
 		return () => {
 			document.removeEventListener('click', handleClickOutside);
+			clearPollStore();
 		};
 	}, []);
 
@@ -151,6 +158,19 @@ export default function Page() {
 
 				const response = await createBoard(postBody);
 				console.log('작성 성공', response);
+
+				// 투표가 있는 경우 투표 생성
+				if (pollTitle) {
+					const pollBody: CreatePollRequest = {
+						endAt,
+						isMultipleChoice,
+						title: pollTitle,
+						contents: options,
+						board: response.data.pk,
+					};
+					await createPoll(pollBody);
+				}
+
 				router.replace(`/board/${response.data.pk}`);
 			}
 		} catch (error) {

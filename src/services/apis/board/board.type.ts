@@ -28,6 +28,7 @@ export type GetBoardListResponse = SuccessResponse<BoardListDto[]>;
 // 게시글 상세 조회
 export interface GetBoardDetailDto extends BoardDetailDto {
 	isInfluencer: boolean;
+	hasPoll: boolean;
 }
 export type GetBoardDetailResponse = SuccessResponse<GetBoardDetailDto>;
 

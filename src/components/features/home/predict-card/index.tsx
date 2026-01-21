@@ -65,8 +65,9 @@ export default function PredictCard({
 				? 'draw'
 				: 'away';
 
+	// TODO: league가 games 밖으로 빠진 구조로 변경 필요
 	const headerProps: HeaderProps = {
-		leagueName: league.nameKr || league.nameEn,
+		leagueName: league?.nameKr || league?.nameEn,
 		isGambleInProgress,
 		isGameInProgress,
 		isGameCanceled,

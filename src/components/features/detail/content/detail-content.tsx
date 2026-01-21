@@ -10,27 +10,29 @@ import { categories } from '@/lib/constants/options';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { createNewsKick } from '@/services/apis/news/news.api';
 import { createBoardKick } from '@/services/apis/board/board.api';
-import { CommonPostDetailDto } from '@/services/apis/common/types';
 import { NewsDetailDto } from '@/services/apis/news/news.type';
+import { BoardDetailDto } from '@/services/apis/board/board.type';
+import { createPortal } from 'react-dom';
+import PollComponent from '@/components/common/poll/poll-component';
 import KickIcon from '@/assets/common/kick/fill-white.svg';
 import CommentIcon from '@/assets/common/comment.svg';
 
 interface DetailContentProps {
-	commonDetailData: CommonPostDetailDto;
+	detailData: NewsDetailDto | BoardDetailDto;
 	type: 'news' | 'board';
 	isCommentAllowed: boolean;
 }
-const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailContentProps) => {
+const DetailContent = ({ detailData, type, isCommentAllowed }: DetailContentProps) => {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
 	// TODO: common detail data를 받고 news detail data를 새로 선언하는 방식
 	// -> common detail data(-> postDetail)에서 타입 가드 사용해서 내려받은 props를 상황에 맞게 사용
 	const isNews = type === 'news';
-	const newsDetailData = isNews ? (commonDetailData as NewsDetailDto) : undefined;
+	const newsDetailData = isNews ? (detailData as NewsDetailDto) : undefined;
 	const titleMargin = isNews ? 'mt-0' : 'mt-7.5 @mobile:mt-4';
 
-	const [isLiked, setIsLiked] = useState(commonDetailData.isKicked);
-	const [likes, setLikes] = useState(commonDetailData.likes);
+	const [isLiked, setIsLiked] = useState(detailData.isKicked);
+	const [likes, setLikes] = useState(detailData.likes);
 
 	const [sanitizedContent, setSanitizedContent] = useState('');
 
@@ -61,12 +63,21 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 
 	useEffect(() => {
 		if (typeof window === 'undefined') return;
-		const sanitized = DOMPurify.sanitize(commonDetailData.content, {
+
+		const sanitized = DOMPurify.sanitize(detailData.content, {
 			ADD_TAGS: ['iframe', 'br', 'p'],
 			ADD_ATTR: ['allow', 'allowfullscreen', 'frameborder', 'scrolling', 'target'],
 		});
 		setSanitizedContent(sanitized);
-	}, [commonDetailData.content]);
+	}, [detailData.content]);
+
+	// 투표 컴포넌트 포탈 설정
+	const [pollContainer, setPollContainer] = useState<HTMLElement | null>(null);
+
+	useEffect(() => {
+		const targetElement = document.getElementById('poll-wrapper');
+		setPollContainer(targetElement);
+	}, [sanitizedContent]);
 
 	const parsedContent = parse(sanitizedContent, {
 		replace: (domNode) => {
@@ -94,7 +105,7 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 		}
 
 		try {
-			const success = isNews ? await createNewsKick(commonDetailData.pk) : await createBoardKick(commonDetailData.pk);
+			const success = isNews ? await createNewsKick(detailData.pk) : await createBoardKick(detailData.pk);
 			if (success) {
 				// API 응답이 성공하면 UI 업데이트
 				setIsLiked((prev) => !prev);
@@ -108,107 +119,131 @@ const DetailContent = ({ commonDetailData, type, isCommentAllowed }: DetailConte
 		}
 	};
 
-	const isMyContents = commonDetailData?.user?.id === currentUserInfo?.id;
+	const isMyContents = detailData?.user?.id === currentUserInfo?.id;
+	const hasPoll = Boolean(detailData && 'hasPoll' in detailData && detailData.hasPoll);
 
 	return (
-		<div className="px-4">
-			{/* 대표 이미지 */}
-			{isNews && isImageLoaded && (
-				<div
-					className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
+		<>
+			<div className="px-4">
+				{/* 대표 이미지 */}
+				{isNews && isImageLoaded && (
+					<div
+						className={`mt-6 mb-12 @mobile:mt-4 @mobile:mb-6 rounded-[0.625rem] overflow-hidden 
 					w-full max-w-[636px] aspect-[636/322]
 					${isVerticalImage ? 'bg-black-200 flex justify-center items-center' : ''}
 				`}
-				>
-					<Image
-						src={newsDetailData.thumbnailUrl}
-						alt=""
-						width={636}
-						height={322}
-						className={`
+					>
+						<Image
+							src={newsDetailData.thumbnailUrl}
+							alt=""
+							width={636}
+							height={322}
+							className={`
 						${isVerticalImage ? 'object-contain h-full max-h-[322px]' : 'object-cover w-full h-full'}
 					`}
-						priority={true}
-					/>
-				</div>
-			)}
-
-			{/* 헤더 */}
-			{isNews && (
-				<div className="flex gap-2 mb-2.5 items-center">
-					{!isCommentAllowed && (
-						<Image
-							className="w-6 h-6 object-contain"
-							src={commonDetailData.team.logoUrl}
-							alt={commonDetailData.team.nameKr || commonDetailData.team.nameEn || ''}
-							width={24}
-							height={24}
-						/>
-					)}
-					<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
-						{categoryLabel}
-					</span>
-				</div>
-			)}
-
-			<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{commonDetailData.title}</h1>
-
-			{/* 작성자 & 액션 카운터 */}
-			<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
-				<div className="flex items-center gap-2">
-					<div className="w-6 h-6 overflow-hidden">
-						<Image
-							src={commonDetailData.user.profileImageUrl || '/default-profile.svg'}
-							alt=""
-							width={24}
-							height={24}
-							className="w-full h-full rounded-full object-cover"
+							priority={true}
 						/>
 					</div>
-					<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
-						{commonDetailData.user.nickname}
-						{commonDetailData.user.isReporter && (
-							<Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />
+				)}
+
+				{/* 헤더 */}
+				{isNews && (
+					<div className="flex gap-2 mb-2.5 items-center">
+						{!isCommentAllowed && (
+							<Image
+								className="w-6 h-6 object-contain"
+								src={detailData.team.logoUrl}
+								alt={detailData.team.nameKr || detailData.team.nameEn || ''}
+								width={24}
+								height={24}
+							/>
 						)}
-					</span>
-					<span className="ml-2">{getRelativeTime(commonDetailData.createdAt)}</span>
-					<span>|</span>
-					<span>읽음 {commonDetailData.views}</span>
+						<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
+							{categoryLabel}
+						</span>
+					</div>
+				)}
+				{/* 헤더 */}
+				{isNews && (
+					<div className="flex gap-2 mb-2.5 items-center">
+						{!isCommentAllowed && (
+							<Image
+								className="w-6 h-6 object-contain"
+								src={detailData.team.logoUrl}
+								alt="팀 로고"
+								width={24}
+								height={24}
+							/>
+						)}
+						<span className="px-2.5 py-1 bg-black-900 text-black-000 caption1-medium rounded-[1.25rem]">
+							{categoryLabel}
+						</span>
+					</div>
+				)}
+
+				<h1 className={`title1-bold @mobile:text-title2-semibold ${titleMargin}`}>{detailData.title}</h1>
+
+				{/* 작성자 & 액션 카운터 */}
+				<div className="flex justify-between items-center mt-6 text-[#8C8C8C] body6-regular @mobile:text-12 @mobile:mt-4">
+					<div className="flex items-center gap-2">
+						<div className="w-6 h-6 overflow-hidden">
+							<Image
+								src={detailData.user.profileImageUrl || '/default-profile.svg'}
+								alt=""
+								width={24}
+								height={24}
+								className="w-full h-full rounded-full object-cover"
+							/>
+						</div>
+						<span className="flex items-center gap-0.5 text-black-900 @mobile:text-13">
+							{detailData.user.nickname}
+							{detailData.user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
+						</span>
+						<span className="ml-2">{getRelativeTime(detailData.createdAt)}</span>
+						<span>|</span>
+						<span>읽음 {detailData.views}</span>
+					</div>
+
+					<div className="flex gap-3 items-center text-black-600 body5-regular">
+						<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`킥 ${likes}개`}>
+							<KickIcon aria-hidden={true} className="text-[#8F8F8F]" width={18} height={18} />
+							<span aria-hidden={true}>{likes}</span>
+						</div>
+						<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`댓글 ${detailData.replies}개`}>
+							<CommentIcon aria-hidden={true} width={18} height={18} />
+							<span aria-hidden={true}>{detailData.replies}</span>
+						</div>
+						<Suspense>
+							<MoreActionsButton type={type} pk={detailData.pk} isMyContent={isMyContents} />
+						</Suspense>
+					</div>
 				</div>
 
-				<div className="flex gap-3 items-center text-black-600 body5-regular">
-					<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`킥 ${likes}개`}>
-						<KickIcon aria-hidden={true} className="text-[#8F8F8F]" width={18} height={18} />
-						<span aria-hidden={true}>{likes}</span>
-					</div>
-					<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`댓글 ${commonDetailData.replies}개`}>
-						<CommentIcon aria-hidden={true} width={18} height={18} />
-						<span aria-hidden={true}>{commonDetailData.replies}</span>
-					</div>
-					<Suspense>
-						<MoreActionsButton type={type} pk={commonDetailData.pk} isMyContent={isMyContents} />
-					</Suspense>
-				</div>
-			</div>
+				{/* 본문 */}
+				<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
+				<div className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap">{parsedContent}</div>
 
-			{/* 본문 */}
-			<hr className="mt-6 mb-7.5 -mx-4 text-black-300" />
-			<div className="mb-40 body3-regular @mobile:mb-30 responsive-youtube tiptap">{parsedContent}</div>
-
-			{/* 좋아요 버튼 */}
-			<button
-				onClick={handleLikeButtonClick}
-				className={`button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
+				{/* 좋아요 버튼 */}
+				<button
+					onClick={handleLikeButtonClick}
+					className={`button4-medium group flex mx-auto gap-2 w-fit h-9.5 items-center px-3 mb-12 
 	rounded-lg shadow-[0rem_0.125rem_0.625rem_0rem_#DCDCDC] 
 	${isLiked ? 'bg-[#D91920] text-white' : 'bg-black-100 text-black-900'} transition
 	hover:shadow-[0rem_0.125rem_0.625rem_0rem_rgba(217,25,32,0.2)]`}
-			>
-				<KickIcon className="text-black" width={18} height={18} />
-				<span className="mr-0.5">킥</span>
-				<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
-			</button>
-			{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
-		</div>
+				>
+					<KickIcon className="text-black" width={18} height={18} />
+					<span className="mr-0.5">킥</span>
+					<span className={`${isLiked ? 'text-white' : 'group-hover:text-[#D91920]'}`}>{likes}</span>
+				</button>
+				{isLoginModalOpen && <LoginModal onClose={() => setIsLoginModalOpen(false)} />}
+			</div>
+
+			{pollContainer &&
+				createPortal(
+					<PollComponent canFetch={hasPoll} isMyPoll={isMyContents} viewedBoardPk={detailData.pk} />,
+					pollContainer,
+				)}
+		</>
 	);
 };
 
