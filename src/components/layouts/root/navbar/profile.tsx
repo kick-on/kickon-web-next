@@ -64,7 +64,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 						<Image
 							className="@mobile:w-9 @mobile:h-9 @mobile:mr-2 mr-3 w-12 h-12 object-cover rounded-full"
 							src={currentUserInfo.profileImageUrl || '/default-profile.svg'}
-							alt="프로필 이미지"
+							alt=""
 							width={36}
 							height={36}
 						/>
@@ -75,7 +75,7 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 						<Image
 							className="w-4 h-4 object-contain"
 							src={currentUserInfo.favoriteTeams.length > 0 ? currentUserInfo.favoriteTeams[0].logoUrl : '/ban.svg'}
-							alt="팀 로고 이미지"
+							alt=""
 							width={16}
 							height={16}
 						/>
@@ -99,14 +99,16 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 						<span className="flex gap-1 items-center body5-regular @mobile:text-12">
 							지금까지 모은 포인트
 							<button
+								aria-label={'포인트 설명으로 이동'}
 								onClick={() => window.open('https://www.notion.so/devbob/1d0e7fdb8ed18034a779ee0f30e87a35', '_blank')}
 							>
 								<Image
+									aria-hidden={true}
 									className="@mobile:w-3 @mobile:h-3 w-4 h-4"
 									width={12}
 									height={12}
 									src="/help-circle.svg"
-									alt="도움말"
+									alt={''}
 								/>
 							</button>
 						</span>
@@ -134,11 +136,14 @@ export default function Profile({ onClickButton }: { onClickButton: () => void }
 
 				<span className="body6-medium">팔로우하고 소식을 받아보세요!</span>
 				<div className="flex gap-8">
-					<button onClick={() => window.open('https://www.instagram.com/kickonfc/', '_blank')}>
-						<Instagram className="w-6 h-6 object-contain" src={'/sns/instagram.svg'} alt="인스타그램 아이콘" />
+					<button
+						aria-label={'인스타그램으로 이동'}
+						onClick={() => window.open('https://www.instagram.com/kickonfc/', '_blank')}
+					>
+						<Instagram className="w-6 h-6 object-contain" src={'/sns/instagram.svg'} alt="" />
 					</button>
-					<button onClick={() => window.open('https://x.com/kickonfc', '_blank')}>
-						<X className="w-6 h-6 object-contain" src={'/sns/x.svg'} alt="트위터 아이콘" />
+					<button aria-label={'X로 이동'} onClick={() => window.open('https://x.com/kickonfc', '_blank')}>
+						<X className="w-6 h-6 object-contain" src={'/sns/x.svg'} alt="" />
 					</button>
 				</div>
 			</div>

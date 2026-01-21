@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
@@ -188,7 +188,7 @@ export default function Page() {
 							{selectedOption.label}
 						</div>
 					</div>
-					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
+					<Image width={16} height={16} src="/chevron/down.svg" alt="" />
 				</button>
 
 				{isVisibleDropdown && (
@@ -203,13 +203,7 @@ export default function Page() {
 							>
 								<div className="flex items-center gap-2">
 									{'logo' in option && (
-										<Image
-											className="w-4 h-4 object-contain"
-											src={option.logo}
-											alt={option.label}
-											width={16}
-											height={16}
-										/>
+										<Image className="w-4 h-4 object-contain" src={option.logo} alt="" width={16} height={16} />
 									)}
 									<span className="truncate block" title={option.label}>
 										{option.label}

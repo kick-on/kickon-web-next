@@ -86,7 +86,12 @@ export default function PredictLeagueTab() {
 										: 'group-hover:w-7 group-hover:h-7 w-6 h-6 @mobile:w-7 @mobile:h-7',
 								)}
 							>
-								<Image src={team.logoUrl} alt="로고 이미지" fill className="w-auto h-auto object-contain" />
+								<Image
+									src={team.logoUrl}
+									alt={team.nameKr || team.nameEn || ''}
+									fill
+									className="w-auto h-auto object-contain"
+								/>
 							</div>
 						)}
 					</button>

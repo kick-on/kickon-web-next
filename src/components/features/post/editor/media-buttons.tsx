@@ -34,7 +34,7 @@ const MediaButtons = ({ mediaButtonRef }) => {
 		},
 		{
 			key: 'image',
-			icon: <Image src="/image.svg" alt="사진 붙여넣기" width={20} height={20} />,
+			icon: <Image src="/image.svg" alt="" width={20} height={20} />,
 			onClick: () => {
 				if (isLinkInputOpen) setIsLinkInputOpen(false);
 				if (isYoutubeInputOpen) setIsYoutubeInputOpen(false);

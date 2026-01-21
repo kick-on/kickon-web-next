@@ -15,7 +15,7 @@ export default function NotFound() {
 		<div className="fixed top-0 left-0 z-1000 w-full h-full bg-black-100">
 			<div className="flex flex-col items-center mt-[10dvh]">
 				<div className="relative w-114 h-[20.4375rem] @mobile:w-70 @mobile:h-[12.5625rem] mb-[50px]">
-					<Image src={'/not-found.svg'} alt="404 페이지 아이콘" fill className="w-auto h-auto object-contain" />
+					<Image src={'/not-found.svg'} alt="" fill className="w-auto h-auto object-contain" />
 				</div>
 				<h1 className="text-5xl @mobile:text-[32px] font-bold leading-[42px] mb-5 @mobile:mb-4">Page not found</h1>
 				<span className="text-2xl @mobile:text-[13px] leading-[42px] mb-28 @mobile:mb-20">

@@ -32,8 +32,11 @@ export default function SideNavbar({
 				)}
 			</nav>
 
-			<div className="absolute z-10 -bottom-[3.625rem] right-31 @mobile:right-9 w-[23rem] @mobile:w-[15.9375rem] aspect-[31/25] opacity-[0.08]">
-				<Image className="w-auto h-auto object-contain" src={'/logo/icon-red.svg'} alt="킥온 로고" fill />
+			<div
+				aria-hidden={true}
+				className="absolute z-10 -bottom-[3.625rem] right-31 @mobile:right-9 w-[23rem] @mobile:w-[15.9375rem] aspect-[31/25] opacity-[0.08]"
+			>
+				<Image className="w-auto h-auto object-contain" src={'/logo/icon-red.svg'} alt="" fill />
 			</div>
 		</div>
 	);

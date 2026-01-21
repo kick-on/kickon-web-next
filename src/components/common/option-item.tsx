@@ -31,14 +31,7 @@ export default function OptionItem({
 				isPost ? 'h-9' : `${isDesktop ? 'h-9' : 'h-[2.875rem]'}`,
 			)}
 		>
-			<Image
-				className="w-4 h-4 object-contain"
-				unoptimized
-				width={16}
-				height={16}
-				src={logoUrl}
-				alt={`${nameKr} 로고`}
-			/>
+			<Image className="w-4 h-4 object-contain" unoptimized width={16} height={16} src={logoUrl} alt="" />
 			{nameKr}
 		</button>
 	);

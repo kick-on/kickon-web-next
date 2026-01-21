@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
+import DeleteIcon from '@/assets/common/x/small.svg';
+import DragIcon from '@/assets/common/draggable.svg';
 
 export default function FavoriteTeamItem({
 	team,
@@ -84,7 +86,7 @@ export default function FavoriteTeamItem({
 							isActive ? 'top-[3px] right-[3px]' : 'top-1 right-1',
 						)}
 					>
-						<Image className="m-auto" src="/x/small.svg" alt="삭제" width={12} height={12} />
+						<DeleteIcon className="m-auto" width={12} height={12} />
 					</button>
 				)}
 
@@ -96,11 +98,16 @@ export default function FavoriteTeamItem({
 								'my-3': isDisabled,
 							})}
 						>
-							<Image className="w-auto h-auto object-contain" src={team.logoUrl} alt="로고" fill />
+							<Image
+								className="w-auto h-auto object-contain"
+								src={team.logoUrl}
+								alt={team.nameKr || team.nameEn || ''}
+								fill
+							/>
 						</div>
 						{!isDisabled && (
 							<div className={clsx('flex gap-0.5', { 'brightness-0': isDragging })}>
-								<Image src="/draggable.svg" alt="드래그 아이콘" width={18} height={18} />
+								<DragIcon width={18} height={18} />
 							</div>
 						)}
 					</>

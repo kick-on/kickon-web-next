@@ -25,7 +25,7 @@ export const ArrowButton = ({ direction, onClick, isVisible }: ArrowButtonProps)
 		>
 			<Image
 				src={`/chevron/calendar-${isPrev ? 'left' : 'right'}.svg`}
-				alt={isPrev ? '왼쪽 화살표' : '오른쪽 화살표'}
+				alt=""
 				width={24}
 				height={24}
 				className="w-6 h-6 @mobile:w-[18px] @mobile:h-[18px]"

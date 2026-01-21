@@ -10,7 +10,7 @@ export default function AlertSection() {
 					className="flex gap-1.5 items-center text-black-000 body7-regular @mobile:font-12
         @max-[374px]:whitespace-normal @max-[374px]:break-words whitespace-break-spaces break-keep"
 				>
-					<Image src={'/alert-circle.svg'} alt="주의 아이콘" width={18} height={18} />
+					<Image src={'/alert-circle.svg'} alt="" width={18} height={18} />
 					{alert}
 				</div>
 			))}

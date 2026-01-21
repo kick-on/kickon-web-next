@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, FC } from 'react';
+import { FC, useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import ReportModal from './report-modal';
@@ -104,23 +104,23 @@ const MoreActionsButton: FC<MoreActionsButtonProps> = ({ type = 'news', pk, isMy
 						{isMyContent ? (
 							<div className="flex flex-col w-full">
 								<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={handleEditClick}>
-									<EditIcon alt="수정하기 버튼" width={18} height={18} className="w-[18px] h-[18px] stroke-black-600" />
+									<EditIcon alt="" width={18} height={18} className="w-[18px] h-[18px] stroke-black-600" />
 									수정하기
 								</button>
 								<button className={`${buttonCommonClass}`} onClick={handleDeleteClick}>
-									<Image src="/trash.svg" alt="삭제하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
+									<Image src="/trash.svg" alt="" width={18} height={18} className="w-4.5 h-4.5" />
 									삭제하기
 								</button>
 							</div>
 						) : (
 							<button className={clsx(`${buttonCommonClass}`, 'rounded-t-[7px]')} onClick={handleReportButtonClick}>
-								<Image src="/report.svg" alt="신고하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
+								<Image src="/report.svg" alt="" width={18} height={18} className="w-4.5 h-4.5" />
 								신고하기
 							</button>
 						)}
 						{isMyContent && <p className="w-[99px] h-[1px] border border-black-200 -mr-1" />}
 						<button className={clsx(`${buttonCommonClass}`, 'rounded-b-[7px]')} onClick={handleShareButtonClick}>
-							<Image src="/share.svg" alt="공유하기 버튼" width={18} height={18} className="w-4.5 h-4.5" />
+							<Image src="/share.svg" alt="" width={18} height={18} className="w-4.5 h-4.5" />
 							공유하기
 						</button>
 					</div>

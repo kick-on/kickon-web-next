@@ -37,7 +37,7 @@ export default function NoticeItem({
 
 	const typeMap: Record<NormalizedType, { icon: string; label: string }> = {
 		result: {
-			icon: teamLogo ?? '/kick/default.svg',
+			icon: teamLogo ?? '/kick/black.svg',
 			label: '승부 예측',
 		},
 		comment: {
@@ -49,7 +49,7 @@ export default function NoticeItem({
 			label: '경기 일정',
 		},
 		default: {
-			icon: '/kick/default.svg',
+			icon: '/kick/black.svg',
 			label: '알림',
 		},
 	};
@@ -78,7 +78,7 @@ export default function NoticeItem({
 			)}
 		>
 			<div className="flex items-center justify-center w-8 h-8 rounded-full bg-black-200 flex-shrink-0">
-				<Image src={typeMap[normalizeType(type)].icon} alt="알림 출처" width={18} height={18} />
+				<Image src={typeMap[normalizeType(type)].icon} alt="" width={18} height={18} />
 			</div>
 
 			<div className="flex flex-col gap-[5px] flex-1 min-w-0">

@@ -2,21 +2,25 @@
 
 import { Dispatch, SetStateAction } from 'react';
 import FavoriteTeamItem from './favorite-team-item';
-import Image from 'next/image';
 import {
-	DndContext,
 	closestCenter,
+	DndContext,
+	DragEndEvent,
+	DragStartEvent,
 	KeyboardSensor,
 	PointerSensor,
 	useSensor,
 	useSensors,
-	DragEndEvent,
-	DragStartEvent,
 } from '@dnd-kit/core';
-import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { arrayMove } from '@dnd-kit/sortable';
+import {
+	arrayMove,
+	SortableContext,
+	sortableKeyboardCoordinates,
+	verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { NO_CHEERING_TEAM_PK } from '@/lib/constants/noCheeringTeam';
 import { TeamDto } from '@/services/apis/team/team.type';
+import PlusIcon from '@/assets/common/plus.svg';
 
 export default function FavoriteTeamList({
 	isEditable,
@@ -138,11 +142,11 @@ export default function FavoriteTeamList({
 						favoriteTeams.length < 3 && (
 							<button
 								onClick={handleAddButtonClick}
-								className="w-full h-auto aspect-[5/4] flex flex-col gap-1 justify-center items-center 
+								className="w-full h-auto aspect-[5/4] flex flex-col gap-1 justify-center items-center
 								rounded-lg bg-black-000 p-[5px] border border-black-300"
 							>
 								<div className="relative w-12 h-12 @mobile:w-[2.1875rem] @mobile:h-[2.1875rem]">
-									<Image src={'/plus.svg'} alt="팀 추가 버튼" fill className="w-auto h-auto" />
+									<PlusIcon className="w-auto h-auto" />
 								</div>
 							</button>
 						)

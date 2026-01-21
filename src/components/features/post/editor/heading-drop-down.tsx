@@ -29,7 +29,7 @@ export default function HeadingDropdown({
 				}
 			>
 				<div className="text-black-600 body5-medium @mobile:text-13">{selectedOption.label}</div>
-				<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
+				<Image width={16} height={16} src="/chevron/down.svg" alt="" />
 			</button>
 			{isVisibleDropdown && (
 				<div className={'w-[67px] z-50 absolute top-10 bg-black-000 border border-gray-300 rounded-sm shadow-sm'}>
