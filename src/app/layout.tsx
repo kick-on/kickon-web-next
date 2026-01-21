@@ -10,10 +10,38 @@ import Navbar from '@/components/layouts/root/navbar';
 import PaddingWrapper from '@/components/layouts/root/padding-wrapper';
 import NotificationInitializer from '@/components/layouts/root/navbar/notification-initializer';
 import ReactQueryProvider from '@/lib/provider/react-query-provider';
+import { DOMAIN_URL } from '@/services/config/constants';
 
 export const metadata: Metadata = {
-	title: '킥온',
-	description: '',
+	metadataBase: new URL(DOMAIN_URL),
+	title: {
+		template: '%s | 킥온',
+		default: '킥온 - 내 손안의 스타디움',
+	},
+	description:
+		'K리그 및 유럽 5대 리그의 경기 일정과 최신 뉴스를 제공하는 통합 축구 커뮤니티. 승부 예측 게임과 함께 쾌적한 커뮤니티 환경을 즐겨보세요.',
+	openGraph: {
+		title: '킥온',
+		description: '내 손안의 스타디움',
+		url: DOMAIN_URL,
+		siteName: '킥온',
+		images: [
+			{
+				url: '/logo/opengraph.png',
+				width: 1200,
+				height: 630,
+				alt: '',
+			},
+		],
+		locale: 'ko_KR',
+		type: 'website',
+	},
+	twitter: {
+		card: 'summary_large_image',
+		title: '킥온',
+		description: '내 손안의 스타디움',
+		images: ['/logo/opengraph.png'],
+	},
 	icons: {
 		icon: '/favicon.svg',
 	},
