@@ -29,7 +29,8 @@ jobs:
       - name: 파일 압축
         run: |
           zip -r build.zip \
-            .next public package.json .env next.config.ts appspec.yml ecosystem.config.cjs scripts \
+            package.json yarn.lock next.config.ts .next public .env \
+            appspec.yml ecosystem.config.cjs scripts \
             -x "node_modules/*" "*.log"
 
       - name: S3에 업로드
