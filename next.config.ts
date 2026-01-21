@@ -37,14 +37,6 @@ const nextConfig: NextConfig = {
 				hostname: 'i.ytimg.com',
 			},
 			{
-				protocol: 'http',
-				hostname: 'img1.kakaocdn.net',
-			},
-			{
-				protocol: 'https',
-				hostname: 'img1.kakaocdn.net',
-			},
-			{
 				protocol: 'https',
 				hostname: 'ssl.pstatic.net',
 			},
@@ -58,20 +50,20 @@ const nextConfig: NextConfig = {
 		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // svg script 공격을 방지하기 위함
 	},
 
-	async headers() {
-		return [
-			{
-				// public 폴더 내의 모든 .svg 파일에 content type 헤더 추가
-				source: '/:path*.svg',
-				headers: [
-					{
-						key: 'Content-Type',
-						value: 'image/svg+xml',
-					},
-				],
-			},
-		];
-	},
+	// async headers() {
+	// 	return [
+	// 		{
+	// 			// public 폴더 내의 모든 .svg 파일에 content type 헤더 추가
+	// 			source: '/:path*.svg',
+	// 			headers: [
+	// 				{
+	// 					key: 'Content-Type',
+	// 					value: 'image/svg+xml',
+	// 				},
+	// 			],
+	// 		},
+	// 	];
+	// },
 
 	webpack(config) {
 		config.module.rules.push({
