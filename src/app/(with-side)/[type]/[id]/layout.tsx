@@ -12,26 +12,24 @@ export async function generateMetadata({
 
 	try {
 		let title = '';
-		let category = '';
+		// let category = '';
 
 		if (type === 'news') {
 			const response = await getNewsDetail(idNum);
 			if (response && response.data) {
 				title = response.data.title;
-				category = '뉴스';
+				// category = '뉴스';
 			}
 		} else if (type === 'board') {
 			const response = await getBoardDetail(idNum);
 			if (response && response.data) {
 				title = response.data.title;
-				category = '클럽 커뮤니티';
+				// category = '클럽 커뮤니티';
 			}
 		}
 
 		if (title) {
-			return {
-				title: `${title} | ${category}`,
-			};
+			return { title };
 		}
 	} catch (error) {
 		console.error('Metadata fetch failed:', error);
