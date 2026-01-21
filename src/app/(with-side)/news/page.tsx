@@ -1,7 +1,12 @@
+import { Metadata } from 'next';
 import CategoryTab from '@/components/common/category-tab/category-tab';
 import EmptyState from '@/components/common/category-tab/empty-state';
 import ComponentFrame from '@/components/common/component-frame';
 import { Suspense } from 'react';
+
+export const metadata: Metadata = {
+	title: '뉴스',
+};
 
 export default async function Page({
 	searchParams,
