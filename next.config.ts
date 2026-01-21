@@ -6,11 +6,11 @@ const nextConfig: NextConfig = {
 		remotePatterns: [
 			{
 				protocol: 'http',
-				hostname: 'k.kakaocdn.net',
+				hostname: '**.kakaocdn.net',
 			},
 			{
 				protocol: 'https',
-				hostname: 'k.kakaocdn.net',
+				hostname: '**.kakaocdn.net',
 			},
 			{
 				protocol: 'https',
@@ -57,6 +57,22 @@ const nextConfig: NextConfig = {
 		contentDispositionType: 'attachment',
 		contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;", // svg script 공격을 방지하기 위함
 	},
+
+	async headers() {
+		return [
+			{
+				// public 폴더 내의 모든 .svg 파일에 content type 헤더 추가
+				source: '/:path*.svg',
+				headers: [
+					{
+						key: 'Content-Type',
+						value: 'image/svg+xml',
+					},
+				],
+			},
+		];
+	},
+
 	webpack(config) {
 		config.module.rules.push({
 			test: /\.svg$/,
