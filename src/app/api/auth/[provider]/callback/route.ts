@@ -4,9 +4,11 @@ import { DOMAIN_URL, SERVER_URL } from '@/services/config/constants';
 export async function GET(req: NextRequest, { params }: { params: Promise<{ provider: string }> }) {
 	const searchParams = req.nextUrl.searchParams;
 	const errorCode = searchParams.get('errorCode');
-	const accessToken = searchParams.get('accessToken');
-	const refreshToken = searchParams.get('refreshToken');
 	const { provider } = await params;
+
+	// 쿠키 or 경로에서 토큰 가져오기
+	const accessToken = req.cookies.get('accessToken')?.value || searchParams.get('accessToken');
+	const refreshToken = req.cookies.get('refreshToken')?.value || searchParams.get('refreshToken');
 
 	const redirectUrl = new URL(DOMAIN_URL);
 	const finalizePath = '/auth/finalize';
@@ -68,29 +70,6 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 
 	const response = NextResponse.redirect(redirectUrl);
 
-	// 정상적으로 로그인 or 회원가입 한 경우 쿠키 설정
-	if (typeof accessToken === 'string') {
-		response.cookies.set({
-			name: 'accessToken',
-			value: accessToken,
-			httpOnly: false,
-			secure: true,
-			path: '/',
-			maxAge: 60 * 60, // 1시간
-		});
-	}
-
-	if (typeof refreshToken === 'string') {
-		response.cookies.set({
-			name: 'refreshToken',
-			value: refreshToken,
-			httpOnly: true,
-			secure: false, // http에서도 요청에 쿠키가 포함되도록 설정
-			path: '/',
-			maxAge: 60 * 60 * 24 * 30, // 30일
-		});
-	}
-
 	if (redirectUrl.pathname === '/signup') {
 		response.cookies.set({
 			name: 'fromLogin',
@@ -98,6 +77,32 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ prov
 			path: '/',
 			maxAge: 60,
 		});
+	}
+
+	// 로컬에서는 별도로 쿠키 설정
+	const isLocal = DOMAIN_URL === 'http://localhost:3000';
+	if (isLocal) {
+		if (accessToken) {
+			response.cookies.set({
+				name: 'accessToken',
+				value: accessToken,
+				httpOnly: false,
+				secure: !isLocal,
+				path: '/',
+				maxAge: 60 * 60, // 1시간
+			});
+		}
+
+		if (refreshToken) {
+			response.cookies.set({
+				name: 'refreshToken',
+				value: refreshToken,
+				httpOnly: true,
+				secure: !isLocal,
+				path: '/',
+				maxAge: 60 * 60 * 24 * 30, // 30일
+			});
+		}
 	}
 
 	return response;
