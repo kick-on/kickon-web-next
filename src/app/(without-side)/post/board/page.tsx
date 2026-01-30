@@ -1,21 +1,23 @@
 'use client';
 
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 import PostEditor from '@/components/features/post/post-editor.tsx';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { getUserInfo } from '@/services/apis/user';
 import { extractEmbeddedLinks, extractMediaFilenamesFromContent } from '@/lib/utils';
 import { PostPinToggle } from '@/components/features/post/post-pin-toggle';
 import { CreateBoardRequest, PatchBoardDetailRequest } from '@/services/apis/board/board.type';
 import { createBoard, patchBoardDetail } from '@/services/apis/board/board.api';
 import { EditorProvider } from '@/lib/contexts/editor/provider';
+import { CreatePollRequest } from '@/services/apis/poll/poll.type';
+import { createPoll } from '@/services/apis/poll/poll.api';
+import { usePollStore } from '@/lib/store/usePollStore';
 
 export default function Page() {
 	const router = useRouter();
-	const { currentUserInfo, setCurrentUserInfo } = useCurrentUserInfoStore();
+	const { currentUserInfo, _hasHydrated } = useCurrentUserInfoStore();
 	const searchParams = useSearchParams();
 	const isEditMode = searchParams.get('edit') === 'true';
 
@@ -80,7 +82,7 @@ export default function Page() {
 	}, [isEditMode, teams]);
 
 	useEffect(() => {
-		if (hasShownAlert.current) return;
+		if (hasShownAlert.current || !_hasHydrated) return;
 		hasShownAlert.current = true;
 
 		if (!currentUserInfo) {
@@ -88,17 +90,9 @@ export default function Page() {
 			const previousPage = sessionStorage.getItem('previousPage');
 			router.replace(previousPage);
 		}
-		const fetchUserInfo = async () => {
-			const user = await getUserInfo();
-			if (typeof user !== 'string' && user?.data) {
-				setCurrentUserInfo(user.data);
-			}
-		};
+	}, [currentUserInfo, _hasHydrated, router]);
 
-		if (!currentUserInfo) {
-			fetchUserInfo();
-		}
-	}, [currentUserInfo, setCurrentUserInfo, router]);
+	const { title: pollTitle, options, endAt, isMultipleChoice, clearPollStore } = usePollStore();
 
 	useEffect(() => {
 		const handleClickOutside = (event: MouseEvent) => {
@@ -106,9 +100,11 @@ export default function Page() {
 				setIsVisibleDropdown(false);
 			}
 		};
+
 		document.addEventListener('click', handleClickOutside);
 		return () => {
 			document.removeEventListener('click', handleClickOutside);
+			clearPollStore();
 		};
 	}, []);
 
@@ -162,6 +158,19 @@ export default function Page() {
 
 				const response = await createBoard(postBody);
 				console.log('작성 성공', response);
+
+				// 투표가 있는 경우 투표 생성
+				if (pollTitle) {
+					const pollBody: CreatePollRequest = {
+						endAt,
+						isMultipleChoice,
+						title: pollTitle,
+						contents: options,
+						board: response.data.pk,
+					};
+					await createPoll(pollBody);
+				}
+
 				router.replace(`/board/${response.data.pk}`);
 			}
 		} catch (error) {
@@ -199,7 +208,7 @@ export default function Page() {
 							{selectedOption.label}
 						</div>
 					</div>
-					<Image width={16} height={16} src="/chevron/down.svg" alt="옵션 선택" />
+					<Image width={16} height={16} src="/chevron/down.svg" alt="" />
 				</button>
 
 				{isVisibleDropdown && (
@@ -214,13 +223,7 @@ export default function Page() {
 							>
 								<div className="flex items-center gap-2">
 									{'logo' in option && (
-										<Image
-											className="w-4 h-4 object-contain"
-											src={option.logo}
-											alt={option.label}
-											width={16}
-											height={16}
-										/>
+										<Image className="w-4 h-4 object-contain" src={option.logo} alt="" width={16} height={16} />
 									)}
 									<span className="truncate block" title={option.label}>
 										{option.label}

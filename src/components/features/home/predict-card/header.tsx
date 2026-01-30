@@ -1,4 +1,4 @@
-import { MyGambleResultDto } from '@/services/apis/user-game-gamble/dto';
+import { MyGambleResultDto } from '@/services/apis/user-game-gamble/user-game-gamble.type';
 import clsx from 'clsx';
 
 export interface HeaderProps {

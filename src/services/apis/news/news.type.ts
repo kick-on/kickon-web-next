@@ -16,6 +16,15 @@ export interface NewsDetailDto extends CommonPostDetailDto {
 	category: Category;
 }
 
+// 댓글 조회 요청
+export interface GetCommentsRequest {
+	id: number;
+	page: number;
+	size: number;
+	infinite?: boolean;
+	lastReply?: number;
+}
+
 // 뉴스 리스트 조회
 export interface GetNewsListRequest {
 	team?: number;

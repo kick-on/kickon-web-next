@@ -1,4 +1,4 @@
-import { ActualRankingDto } from '@/services/apis/ranking/dto';
+import { ActualRankingDto } from '@/services/apis/ranking/ranking.type';
 import Image from 'next/image';
 
 export default function RankingItem({
@@ -20,7 +20,7 @@ export default function RankingItem({
 					width={18}
 					height={18}
 					src={teamLogoUrl}
-					alt={`${teamName} 로고`}
+					alt=""
 				/>
 				<div>{teamName || '팀 이름'}</div>
 			</div>

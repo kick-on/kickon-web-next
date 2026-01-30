@@ -1,15 +1,19 @@
 'use client';
 
 import clsx from 'clsx';
-import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/dto';
+import { PatchGameGambleRequest, PostGameGambleRequest } from '@/services/apis/user-game-gamble/user-game-gamble.type';
 import GameInfoBox, { GameInfoBoxProps } from './game-info-box';
 import TeamButton from './team-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
-import { deleteGameGamble, patchGameGamble, postGameGamble } from '@/services/apis/user-game-gamble';
+import {
+	deleteGameGamble,
+	patchGameGamble,
+	postGameGamble,
+} from '@/services/apis/user-game-gamble/user-game-gamble.api';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { GameDto } from '@/services/apis/game/dto';
+import { GameDto } from '@/services/apis/game/game.type';
 import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
 
 export default function PredictCard({
@@ -61,8 +65,9 @@ export default function PredictCard({
 				? 'draw'
 				: 'away';
 
+	// TODO: league가 games 밖으로 빠진 구조로 변경 필요
 	const headerProps: HeaderProps = {
-		leagueName: league.nameKr || league.nameEn,
+		leagueName: league?.nameKr || league?.nameEn,
 		isGambleInProgress,
 		isGameInProgress,
 		isGameCanceled,

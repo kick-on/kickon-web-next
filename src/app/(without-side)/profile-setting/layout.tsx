@@ -1,11 +1,9 @@
-import RedirectWrapper from '@/components/common/redirect-wrapper';
-import { cookies } from 'next/headers';
+import { Metadata } from 'next';
 
-export default async function Layout({ children }: { children: React.ReactNode }) {
-	const cookieStore = await cookies();
-	const refreshToken = cookieStore.get('refreshToken');
+export const metadata: Metadata = {
+	title: '프로필 설정',
+};
 
-	const shouldRedirect = !refreshToken;
-
-	return <RedirectWrapper shouldRedirect={shouldRedirect}>{children}</RedirectWrapper>;
+export default function Layout({ children }: { children: React.ReactNode }) {
+	return <>{children}</>;
 }

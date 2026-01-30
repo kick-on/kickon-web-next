@@ -18,9 +18,8 @@ export const getEndOfWeek = (startDate: Date): Date => {
 interface TileClassNameProps {
 	dateOfTile: Date; //캘린더 기준 현재 날짜
 	firstDayOfCurrentMonth: Date;
-	today: Date; // 오늘 날짜
 	selectedDate: Date | null; // 사용자가 선택한 날짜
-	isCollapsed: boolean;
+	isWeekCalendar: boolean;
 	isMatch: boolean;
 	predictionRange: { start: Date; end: Date } | null;
 	markedDatesMap: Record<string, number>;
@@ -28,16 +27,20 @@ interface TileClassNameProps {
 export const getTileClassName = ({
 	dateOfTile,
 	firstDayOfCurrentMonth,
-	today,
 	selectedDate,
-	isCollapsed,
+	isWeekCalendar,
 	isMatch,
 	predictionRange,
 	markedDatesMap,
 }: TileClassNameProps) => {
-	const d = stripTime(dateOfTile);
-	const isCurrentMonth = dateOfTile.getMonth() === firstDayOfCurrentMonth.getMonth();
-	if (!isCurrentMonth) return 'hidden-other-month-tile';
+	const tileDate = stripTime(dateOfTile);
+
+	if (!isWeekCalendar && firstDayOfCurrentMonth && dateOfTile.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
+		return 'hidden-other-month-tile';
+	}
+
+	// collapsed 모드일 때는 !isCollapsed 조건이 false -> month 체크 안 함 -> 모든 타일 보임
+	// collapsed가 false일 때만 month 체크 -> 이번 달 아닌 타일 숨김
 
 	// selectedDate로 이번 주 범위 계산
 	let startOfWeek: Date | null = null;
@@ -47,13 +50,16 @@ export const getTileClassName = ({
 		endOfWeek = getEndOfWeek(startOfWeek);
 	}
 
-	if (isCollapsed && selectedDate && (d < startOfWeek! || d > endOfWeek!)) {
+	if (isWeekCalendar && selectedDate && (tileDate < startOfWeek! || tileDate > endOfWeek!)) {
 		return 'hidden-tile';
 	}
-	const dStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+	// marked date 여부
+	const dStr = `${tileDate.getFullYear()}-${String(tileDate.getMonth() + 1).padStart(2, '0')}-${String(tileDate.getDate()).padStart(2, '0')}`;
 	const hasMatch = markedDatesMap[dStr] > 0;
 
-	if (predictionRange && d > predictionRange.end) {
+	// predictionRange 처리
+	if (isMatch && predictionRange && tileDate > predictionRange.end) {
 		const classes = ['disabled-after'];
 		const dayOfWeek = dateOfTile.getDay();
 
@@ -71,15 +77,25 @@ export const getTileClassName = ({
 		return classes.join(' ');
 	}
 
-	const isFocused = selectedDate && isSameDate(d, selectedDate);
-	const isToday = isSameDate(d, today);
+	// 오늘 / 선택 상태
+	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
+	const isToday = isSameDate(tileDate, stripTime(new Date()));
 
-	let baseClass = '';
-	if (isFocused && isToday) baseClass = 'focused-today-tile';
-	else if (isFocused) baseClass = 'focused-tile';
-	else if (isToday) baseClass = 'not-focused-today-tile';
-	else if (d < today) baseClass = isMatch ? 'past-tile pointer-events-none' : 'future-tile';
-	else baseClass = isMatch ? 'future-tile' : 'past-tile pointer-events-none';
+	if (isToday) {
+		if (isFocused) return 'focused-today-tile';
+		return 'not-focused-today-tile';
+	}
 
-	return `${baseClass} ${hasMatch ? 'has-match' : ''}`.trim();
+	// 활성화 / 비활성화 구분
+	if (isMatch) {
+		// 오늘 기준 과거 -> disabled
+		if (tileDate < stripTime(new Date())) return 'disabled-tile pointer-events-none';
+		// 오늘 포함 미래 -> active
+		return isFocused ? 'focused-tile' : 'active-tile';
+	} else {
+		// hasMatch 없으면 disabled
+		if (!hasMatch) return 'disabled-tile pointer-events-none';
+		// hasMatch 있으면 active
+		return isFocused ? 'focused-tile' : 'active-tile';
+	}
 };

@@ -1,5 +1,5 @@
 import { SuccessResponse } from '@/services/config/dto';
-import { UserDto } from '../user/dto';
+import { UserDto } from '../user/user.type';
 
 // enum
 export type HalftimeSortType = 'CREATED_DESC' | 'POPULAR' | 'CREATED_ASC';
@@ -29,6 +29,7 @@ export interface GetHalftimeDetailDto extends BaseHalftimeDto {
 	replyCount: number;
 	user: UserDto;
 	isKicked: boolean;
+	nextPk: number | undefined;
 }
 export type GetHalftimeDetailResponse = SuccessResponse<GetHalftimeDetailDto>;
 

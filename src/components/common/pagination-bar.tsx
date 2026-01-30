@@ -41,7 +41,7 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 				<Image
 					className="group-disabled:opacity-[45%]"
 					src="/chevron/pagenation-left.svg"
-					alt="이전 버튼"
+					alt=""
 					width={16}
 					height={16}
 				/>
@@ -73,7 +73,7 @@ export default function PaginationBar({ totalPages, baseUrl }: { totalPages: num
 				<Image
 					className="group-disabled:opacity-[45%]"
 					src="/chevron/pagenation-right.svg"
-					alt="다음 버튼"
+					alt=""
 					width={16}
 					height={16}
 				/>

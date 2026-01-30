@@ -1,10 +1,10 @@
 'use client';
 
 import { formatNumberByUnit } from '@/lib/utils';
-import { BaseHalftimeDto } from '@/services/apis/shorts/shorts.type';
-import Image from 'next/image';
+import { BaseHalftimeDto, HalftimeSortType } from '@/services/apis/shorts/shorts.type';
 import Link from 'next/link';
 import Preview from './preview';
+import KickIcon from '@/assets/common/kick/fill-white.svg';
 
 export default function PreviewWithTitle({
 	pk,
@@ -14,12 +14,14 @@ export default function PreviewWithTitle({
 	kickCount,
 	hasKick,
 	ref,
+	sort,
 }: Pick<BaseHalftimeDto, 'pk' | 'videoUrl' | 'title' | 'viewCount' | 'kickCount'> & {
 	hasKick?: boolean;
 	ref?: React.RefObject<any>;
+	sort?: HalftimeSortType;
 }) {
 	return (
-		<Link ref={ref} key={pk} href={`/halftime/${pk}`}>
+		<Link ref={ref} key={pk} href={`/halftime/${pk}${sort ? `?sort=${sort}` : ''}`}>
 			<div className="w-full h-auto aspect-[13/20] rounded-lg overflow-hidden">
 				<Preview src={videoUrl} />
 			</div>
@@ -31,7 +33,7 @@ export default function PreviewWithTitle({
 					<>
 						<div className="h-3 w-px bg-black-600" />
 						<span className="flex gap-1.5 items-center">
-							<Image src={'/kick/gray.svg'} alt="" width={16} height={16} />킥 {formatNumberByUnit(kickCount)}
+							<KickIcon className="text-[#8F8F8F]" width={16} height={16} />킥 {formatNumberByUnit(kickCount)}
 						</span>
 					</>
 				)}

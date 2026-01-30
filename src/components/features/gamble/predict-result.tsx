@@ -2,12 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import PredictCard from '../home/predict-card';
-import { GameDto, GetMyPredictionsRequest } from '@/services/apis/game/dto';
-import { getMyPredictions } from '@/services/apis/game';
+import { GameDto, GetMyPredictionsRequest } from '@/services/apis/game/game.type';
+import { getMyPredictions } from '@/services/apis/game/game.api';
 import { formatFromTo } from '@/lib/utils';
 import NoGameCard from './no-game-card';
 import Stat from './stat';
-import MatchPredictionCalendar from '@/components/common/calendar';
+import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
 import { useRouter } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
@@ -29,12 +29,9 @@ export default function PredictResult() {
 
 			try {
 				const response = await getMyPredictions(request);
-
-				if (response) {
-					setGames(response.data.games);
-				}
+				setGames(response.data.games);
 			} catch (error) {
-				console.error(error);
+				alert(error.message);
 			}
 		};
 

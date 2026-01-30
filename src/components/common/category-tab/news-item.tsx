@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import SanitizedContent from '../sanitized-content';
 import clsx from 'clsx';
+import KickIcon from '@/assets/common/kick/fill-white.svg';
+import CommentIcon from '@/assets/common/comment.svg';
 
 export default function NewsItem({
 	pk,
@@ -29,7 +31,7 @@ export default function NewsItem({
 							width={24}
 							height={24}
 							src={team.logoUrl}
-							alt={`${team?.nameKr || team?.nameEn} 로고 이미지`}
+							alt={team?.nameKr || team?.nameEn || ''}
 						/>
 					)}
 					<div className="h-5 px-2.5 py-0.5 rounded-full bg-black-200 text-black-800 caption1-medium">{category}</div>
@@ -53,7 +55,7 @@ export default function NewsItem({
 							fill
 							className={clsx('w-auto h-auto object-cover rounded-lg @mobile:rounded-md')}
 							src={thumbnailUrl}
-							alt="기사 썸네일 사진"
+							alt=""
 						/>
 					</div>
 				</section>
@@ -62,7 +64,7 @@ export default function NewsItem({
 					<div className="flex items-center gap-2">
 						<Image
 							src={user.profileImageUrl || '/default-profile.svg'}
-							alt={`${user.nickname} 프로필 사진`}
+							alt=""
 							width={24}
 							height={24}
 							className="w-6 h-6 rounded-full object-cover"
@@ -71,19 +73,19 @@ export default function NewsItem({
 							{user.nickname}
 							{user.isReporter && <Image width={12} height={12} src="/reporter-mark.svg" alt="구단 기자" />}
 						</span>
-						<span className={'@mobileml-0.5 ml-2'}>{getRelativeTime(createdAt)}</span>
+						<span className={'@mobile:ml-0.5 ml-2'}>{getRelativeTime(createdAt)}</span>
 						<div>|</div>
 						<span>읽음 {views}</span>
 					</div>
 
 					<div className="flex justify-end items-center gap-3">
-						<span className="flex items-center gap-1.5">
-							<Image width={18} height={18} src="/kick/gray.svg" alt="킥" />
-							<span>{likes}</span>
+						<span className="flex items-center gap-1.5" aria-label={`킥 ${likes}개`}>
+							<KickIcon aria-hidden={true} width={18} height={18} className="text-[#8F8F8F]" />
+							<span aria-hidden={true}>{likes}</span>
 						</span>
-						<span className="flex items-center gap-1.5">
-							<Image width={18} height={18} src="/comment.svg" alt="댓글" />
-							<span>{replies}</span>
+						<span className="flex items-center gap-1.5" aria-label={`댓글 ${replies}개`}>
+							<CommentIcon aria-hidden={true} width={18} height={18} />
+							<span aria-hidden={true}>{replies}</span>
 						</span>
 					</div>
 				</footer>

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Score from './score';
 import { Dispatch, SetStateAction } from 'react';
 import MobileUpdownButton from './mobile-updown-button';
-import { GameDto } from '@/services/apis/game/dto';
+import { GameDto } from '@/services/apis/game/game.type';
 
 interface TeamButtonInfoDto {
 	teamName: string;
@@ -212,7 +212,7 @@ export default function TeamButton({
 									className="relative z-20 w-full h-full object-contain"
 									fill
 									src={sides[side].teamLogoUrl}
-									alt={`${sides[side].teamName} 로고 이미지`}
+									alt={`${sides[side].teamName}`}
 								/>
 							</div>
 						) : (

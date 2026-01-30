@@ -40,7 +40,7 @@ export default function NoticeModal({ onCloseModal }: { onCloseModal: () => void
 				width={20}
 				height={10}
 				src={'/navbar-modal-arrow.svg'}
-				alt="화살표"
+				alt=""
 			/>
 			<NoticeHeader isModal={true} onClose={onCloseModal} />
 			{notifications.length ? (

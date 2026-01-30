@@ -5,8 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import OptionItem from '../option-item';
 import clsx from 'clsx';
 import { usePathname, useRouter } from 'next/navigation';
-import { LeagueDto } from '@/services/apis/league/dto';
-import { getLeague } from '@/services/apis/league';
+import { LeagueDto } from '@/services/apis/league/league.type';
+import { getLeague } from '@/services/apis/league/league.api';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
 export default function Selectbox({
@@ -102,14 +102,20 @@ export default function Selectbox({
 			>
 				{isMobile ? (
 					league ? (
-						<Image className="w-7 h-7 object-contain" src={league.logoUrl} alt="로고" width={28} height={28} />
+						<Image
+							className="w-7 h-7 object-contain"
+							src={league.logoUrl}
+							alt={league.nameKr || league.nameEn || ''}
+							width={28}
+							height={28}
+						/>
 					) : (
 						<div>리그 선택</div>
 					)
 				) : (
 					<div>{!league ? '리그 선택' : league.nameKr || league.nameEn}</div>
 				)}
-				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
+				<Image width={16} height={16} src="/chevron/down.svg" alt="" />
 			</button>
 			{isVisibleOptions && (
 				<div

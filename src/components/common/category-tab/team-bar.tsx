@@ -35,13 +35,7 @@ export default function TeamBar() {
 							href={`${pathname}?q=MY 팀&type=team&id=${team.pk}`}
 							className="px-3 py-1.5 grid grid-cols-[auto_1fr] gap-0.5 items-center w-full"
 						>
-							<Image
-								src={team.logoUrl}
-								alt={`${team.nameKr} 로고`}
-								width={20}
-								height={20}
-								className="w-5 h-5 object-contain"
-							/>
+							<Image src={team.logoUrl} alt="" width={20} height={20} className="w-5 h-5 object-contain" />
 							<span className="w-full truncate">{team.nameKr || team.nameEn}</span>
 						</Link>
 						{i < teams.length - 1 && <div className="h-3 w-[1px] mx-1.5 rounded-full bg-black-600" />}

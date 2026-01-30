@@ -25,7 +25,7 @@ export default function NoticeHeader({ isModal = false, onClose }: NoticeHeaderP
 					className="absolute left-4 top-1/2 -translate-y-1/2"
 					aria-label="뒤로가기"
 				>
-					<Image src="/chevron/calendar-left.svg" alt="뒤로가기 아이콘" width={24} height={24} />
+					<Image src="/chevron/calendar-left.svg" alt="" width={24} height={24} />
 				</button>
 			)}
 
@@ -33,7 +33,7 @@ export default function NoticeHeader({ isModal = false, onClose }: NoticeHeaderP
 
 			{isModal && onClose && (
 				<button onClick={onClose} className="absolute right-4 top-1/2 -translate-y-1/2" aria-label="닫기">
-					<Image src="/x/black.svg" alt="취소 아이콘" width={24} height={24} />
+					<Image src="/x/black.svg" alt="" width={24} height={24} />
 				</button>
 			)}
 		</div>

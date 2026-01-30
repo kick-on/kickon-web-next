@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import OptionItem from '../../../common/option-item';
 import clsx from 'clsx';
-import { LeagueDto } from '@/services/apis/league/dto';
-import { getLeague } from '@/services/apis/league';
+import { LeagueDto } from '@/services/apis/league/league.type';
+import { getLeague } from '@/services/apis/league/league.api';
 
 export default function SelectBox({
 	content,
@@ -58,9 +58,9 @@ export default function SelectBox({
 
 	return (
 		<div ref={dropboxRef} className="relative w-fit">
-			<button onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
+			<button aria-label={'리그 선택'} onClick={handleSelectBoxClick} className="flex gap-2 items-center ml-2">
 				<div>{content}</div>
-				<Image width={16} height={16} src="/chevron/down.svg" alt="리그 선택" />
+				<Image aria-hidden={true} width={16} height={16} src="/chevron/down.svg" alt="" />
 			</button>
 			{isVisibleOptions && (
 				<div className="absolute w-[12.5rem] top-6 shadow-select-options border border-black-200 rounded-[0.625rem]">

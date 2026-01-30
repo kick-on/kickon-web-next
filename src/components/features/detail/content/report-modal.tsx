@@ -63,7 +63,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 				<div className="flex justify-between items-center mb-10.5">
 					<h2 className="title3-semibold text-black-900 text-center flex-grow">게시글 신고</h2>
 					<button onClick={onClose} className="ml-auto">
-						<Image src="/x/white.svg" alt="닫기 버튼" width={24} height={24} />
+						<Image src="/x/white.svg" alt="닫기" width={24} height={24} />
 					</button>
 				</div>
 				<div className="flex flex-col gap-4">
@@ -77,7 +77,7 @@ export default function ReportModal({ onClose, type, pk }: ReportModalProps) {
 								className={`w-5 h-5 border border-black-300 rounded flex items-center justify-center 
 									${selectedReason === reason ? 'bg-black-900 border-black-900' : 'bg-black-000'}`}
 							>
-								{selectedReason === reason && <Image src="/check.svg" alt="선택됨" width={12} height={12} />}
+								{selectedReason === reason && <Image src="/check.svg" alt="" width={12} height={12} />}
 							</div>
 							{reason}
 						</div>

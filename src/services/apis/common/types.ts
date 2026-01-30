@@ -1,5 +1,5 @@
-import { TeamDto } from '../team/dto';
-import { UserDto } from '../user/dto';
+import { TeamDto } from '../team/team.type';
+import { UserDto } from '../user/user.type';
 
 // 뉴스 게시글 목록
 export interface CommonPostListDto {
@@ -37,7 +37,7 @@ export interface CommonCommentDto {
 	user: UserDto;
 	createdAt: string;
 	kickCount: number;
-	replies: string[];
+	replies: CommonCommentDto[];
 	kicked: boolean;
 }
 
@@ -48,6 +48,11 @@ export interface CommonCreateNewReplyDto {
 }
 
 // 댓글 수정 요청
+export interface CommonPatchReplyRequest {
+	commentPk: number;
+	requestBody: CommonPatchReplyDto;
+}
+
 export interface CommonPatchReplyDto {
 	contents: string;
 	usedImageKeys?: string[];

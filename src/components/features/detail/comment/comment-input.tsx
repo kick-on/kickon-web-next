@@ -5,29 +5,31 @@ import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import { CommentInputProps } from './type';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { createNewsReply, patchNewsReply } from '@/services/apis/news/news-reply.api';
-import { createBoardReply, patchBoardReply } from '@/services/apis/board/board-reply.api';
+import { CreateNewsReplyRequest } from '@/services/apis/news/news-reply.type';
+import { CreateBoardReplyRequest } from '@/services/apis/board/board-reply.type';
+import { useCreateCommentMutation, useEditCommentMutation } from '@/lib/hooks/queries/useReplyQuery';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const CommentInput = ({
+	postType,
+	postId,
 	type = 'comment',
-	mentionNickname,
-	contentsId,
-	parentReplyId,
+	replyTo,
 	editingCommentId,
-	contentType,
 	defaultContent,
 	onCommentSubmit,
 	onCommentCancel,
 }: CommentInputProps) => {
 	const isMobile = useIsMobile();
-	const currentUserInfo = useCurrentUserInfoStore();
+	const isReply = type === 'reply' && replyTo;
+
 	const inputRef = useRef<HTMLDivElement>(null);
+	const currentUserInfo = useCurrentUserInfoStore();
+
 	const [inputHeight, setInputHeight] = useState(0);
 	const [content, setContent] = useState('');
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-	const [hasMention, setHasMention] = useState(false);
-	const [hasNewLine, setHasNewLine] = useState(false);
 
 	useEffect(() => {
 		if (type === 'comment') {
@@ -37,67 +39,10 @@ const CommentInput = ({
 		}
 	}, [isMobile, type]);
 
-	// 멘션 추가 처리
-	const insertMentionIfNeeded = () => {
-		if (type === 'reply' && mentionNickname && mentionNickname !== 'undefined' && inputRef.current) {
-			const mention = `<span contenteditable="false" style="color: #890f0e" class="mention">@${mentionNickname}</span>&nbsp;`;
-			inputRef.current.innerHTML = mention;
-			setHasMention(true);
-
-			// 커서를 멘션 뒤로 이동
-			const range = document.createRange();
-			const sel = window.getSelection();
-			if (inputRef.current.lastChild) {
-				range.setStartAfter(inputRef.current.lastChild);
-				range.collapse(true);
-				sel?.removeAllRanges();
-				sel?.addRange(range);
-			}
-		}
-	};
-
-	// 키 이벤트 처리 (엔터, 백스페이스 등)
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-		if (!hasMention) return;
-
-		const mentionEl = inputRef.current?.querySelector('.mention');
-		if (!mentionEl) return;
-
-		const selection = window.getSelection();
-		if (!selection || selection.rangeCount === 0) return;
-
-		const range = selection.getRangeAt(0);
-
-		if (e.key === 'Enter') {
-			setHasNewLine(true);
-			return;
-		}
-
-		if (e.key === 'Backspace') {
-			const mentionRect = mentionEl.getBoundingClientRect();
-			const cursorRect = range.getBoundingClientRect();
-
-			if (hasNewLine) {
-				if (cursorRect.left <= mentionRect.right + 5 && Math.abs(cursorRect.top - mentionRect.top) < 5) {
-					e.preventDefault(); // 멘션 바로 뒤면 삭제 막음
-					return;
-				}
-				return; // 그 외는 허용
-			}
-
-			// 줄바꿈 없을 때 멘션 보호
-			if (cursorRect.left <= mentionRect.right + 5) {
-				e.preventDefault();
-			}
-		}
-	};
-
 	// 입력 이벤트 처리
 	const handleInput = () => {
 		if (!inputRef.current) return;
 
-		const html = inputRef.current.innerHTML;
-		setHasNewLine(/<br>|<div>/i.test(html));
 		const el = inputRef.current;
 		const newScrollHeight = el.scrollHeight;
 
@@ -115,98 +60,49 @@ const CommentInput = ({
 			setInputHeight(clampedHeight);
 		}
 
-		if (hasMention) {
-			const mentionEl = inputRef.current.querySelector('.mention');
-			if (!mentionEl && mentionNickname) {
-				// 멘션 복구
-				const mention = document.createElement('span');
-				mention.contentEditable = 'false';
-				mention.style.color = '#890f0e';
-				mention.className = 'mention';
-				mention.textContent = `@${mentionNickname}`;
-
-				const currentHTML = inputRef.current.innerHTML;
-				inputRef.current.innerHTML = '';
-				inputRef.current.appendChild(mention);
-				inputRef.current.insertAdjacentHTML('beforeend', '&nbsp;');
-
-				const tempDiv = document.createElement('div');
-				tempDiv.innerHTML = currentHTML;
-				let cleanHTML = tempDiv.innerHTML;
-				cleanHTML = cleanHTML.replace(new RegExp(`<span[^>]*>@${mentionNickname}</span>&nbsp;`, 'i'), '');
-				if (cleanHTML.trim()) {
-					inputRef.current.insertAdjacentHTML('beforeend', cleanHTML);
-				}
-
-				// 커서 이동
-				const range = document.createRange();
-				const sel = window.getSelection();
-				range.setStartAfter(inputRef.current.lastChild!);
-				range.collapse(true);
-				sel?.removeAllRanges();
-				sel?.addRange(range);
-			}
-
-			const inputText = inputRef.current.innerText;
-			const textWithoutMention = inputText.replace(`@${mentionNickname}`, '').trim();
-			setContent(textWithoutMention);
-		} else {
-			const inputText = inputRef.current.innerText.trim();
-			setContent(inputText);
-		}
+		const inputText = inputRef.current.innerText.trim();
+		setContent(inputText);
 	};
 
 	// 댓글 등록
+	const editCommentMutation = useEditCommentMutation(postType);
+	const createCommentMutation = useCreateCommentMutation(postType);
 	const handleSubmit = async () => {
 		if (!currentUserInfo) {
 			setIsLoginModalOpen(true);
 			return;
 		}
-		if (!content.trim()) return alert('내용을 입력해주세요!');
-		if (isSubmitting) return;
-
-		setIsSubmitting(true);
-		const isReply = type === 'reply';
-		setTimeout(() => onCommentSubmit?.(isReply), 300);
-
-		let sanitizedContent = content;
-		if (hasMention && mentionNickname) {
-			const mentionPattern = new RegExp(`^@${mentionNickname}&nbsp;`);
-			sanitizedContent = sanitizedContent.replace(mentionPattern, '');
+		if (!content.trim()) {
+			alert('내용을 입력해주세요!');
+			return;
 		}
-
-		const editedRequestBody = {
-			contents: sanitizedContent,
-		};
+		if (isSubmitting) return;
+		setIsSubmitting(true);
 
 		try {
-			let response;
+			const isNews = postType === 'news';
+			const sanitizedContent = content.replace(/\u200B/g, '');
 
 			if (type === 'edit') {
-				response =
-					contentType === 'news'
-						? await patchNewsReply(editingCommentId, editedRequestBody)
-						: await patchBoardReply(editingCommentId, editedRequestBody);
-				console.log('댓글 수정 완료:', response);
+				const requestBody = {
+					contents: sanitizedContent,
+				};
+
+				await editCommentMutation.mutateAsync({ commentPk: editingCommentId, requestBody });
 			} else {
-				if (contentType === 'news') {
-					await createNewsReply({
-						contents: sanitizedContent,
-						...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
-						news: contentsId,
-					});
-				} else {
-					await createBoardReply({
-						contents: sanitizedContent,
-						...(isReply && parentReplyId ? { parentReply: parentReplyId } : {}),
-						board: contentsId,
-					});
-				}
+				const isReply = type === 'reply' && replyTo;
+				const body: CreateNewsReplyRequest | CreateBoardReplyRequest = {
+					contents: sanitizedContent,
+					...(isReply ? { parentReply: replyTo.pk } : {}),
+					...(isNews ? { news: postId } : { board: postId }),
+				};
+
+				await createCommentMutation.mutateAsync(body);
 			}
 
-			setContent('');
 			if (inputRef.current) inputRef.current.innerHTML = '';
-			setHasNewLine(false);
+			setContent('');
+			onCommentSubmit?.();
 		} catch (error) {
 			console.error('댓글 처리 중 오류', error);
 			alert('댓글 처리 중 오류가 발생했습니다.');
@@ -215,19 +111,57 @@ const CommentInput = ({
 		}
 	};
 
-	useEffect(insertMentionIfNeeded, [mentionNickname, type]);
+	// 멘션 뒤로 커서 이동
+	const handleFocus = () => {
+		if (!inputRef.current || !isReply) return;
+		inputRef.current.innerHTML = '\u200B'; // zero-width space 추가
+	};
+
 	useEffect(() => {
-		if (type === 'edit' && defaultContent && inputRef.current) {
+		if (!inputRef.current) return;
+
+		if (type === 'reply') {
+			inputRef.current.focus(); // 자동 포커싱
+		}
+		if (type === 'edit' && defaultContent) {
 			inputRef.current.innerText = defaultContent;
 			setContent(defaultContent);
 		}
 	}, [type, defaultContent]);
 
+	// 페이지 이동
+	const searchParams = useSearchParams();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (isMobile || !createCommentMutation.isSuccess) return;
+		const currentPage = Number(searchParams.get('page') ?? 1);
+		const lastPage = createCommentMutation.data.meta.totalPages;
+
+		if (currentPage && lastPage && lastPage !== currentPage) {
+			const baseUrl = window.location.origin + window.location.pathname;
+			router.replace(`${baseUrl}?page=${lastPage}`, { scroll: false });
+		}
+	}, [createCommentMutation.isSuccess, isMobile]);
+
+	useEffect(() => {
+		if (isMobile || !editCommentMutation.isSuccess) return;
+		const currentPage = Number(searchParams.get('page') ?? 1);
+		const lastPage = editCommentMutation.data.meta.totalPages;
+
+		if (currentPage && lastPage && lastPage !== currentPage) {
+			const baseUrl = window.location.origin + window.location.pathname;
+			router.replace(`${baseUrl}?page=${lastPage}`, { scroll: false });
+		}
+	}, [editCommentMutation.isSuccess, isMobile]);
+
 	return (
 		<div
-			className={
-				type === 'comment' ? 'bg-black-200 rounded-[0.625rem] p-4 mb-10 flex flex-col gap-4 @mobile:h-53.5' : 'mt-5'
-			}
+			className={clsx({
+				'bg-black-200 rounded-[0.625rem] mx-4 p-4 mb-19 @mobile:mb-11 flex flex-col gap-4 @mobile:h-53.5':
+					type === 'comment',
+				'mt-3.5': type === 'reply',
+			})}
 		>
 			{type === 'comment' && <h3 className="subtitle1-medium">댓글 쓰기</h3>}
 			<div className="flex @mobile:flex-col h-full">
@@ -241,14 +175,17 @@ const CommentInput = ({
 					<div
 						ref={inputRef}
 						contentEditable
+						onFocus={handleFocus}
 						onInput={handleInput}
-						onKeyDown={handleKeyDown}
 						className={clsx(
-							'p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar',
+							'relative p-4 pb-3 w-full h-full focus:outline-none body6-regular text-left overflow-y-scroll custom-scrollbar before:pointer-events-none before:select-none',
 							{
-								'empty-placeholder': content.trim().length === 0,
+								'before:content-[attr(data-mention)] before:text-primary-900 before:pr-1': isReply,
+								'before:absolute before:top-4 before:left-4 before:content-[attr(data-placeholder)] before:text-black-600':
+									!isReply && content.trim().length === 0,
 							},
 						)}
+						data-mention={isReply ? `@${replyTo.nickname}` : undefined}
 						data-placeholder="욕설 및 유해한 내용의 댓글은 통보없이 삭제될 수 있습니다."
 						suppressContentEditableWarning
 					/>

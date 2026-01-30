@@ -1,34 +1,23 @@
 'use client';
 
-import clsx from 'clsx';
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { headingOptions } from '@/lib/constants/options';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import { useEditorContext } from '@/lib/contexts/editor/context';
 import MobileToolBar from './mobile-tool-bar';
 import HeadingDropdown from './heading-drop-down';
 import MediaButtons from './media-buttons';
-import BoldIcon from '@/assets/editor/bold.svg';
-import UnderlineIcon from '@/assets/editor/underline.svg';
-import EllipsisIcon from '@/assets/editor/ellipsis.svg';
-import ItalicIcon from '@/assets/editor/italic.svg';
-import SortNumericIcon from '@/assets/editor/sort-numeric.svg';
-import QuoteIcon from '@/assets/editor/quote.svg';
-import lineIcon from '@/assets/editor/line.svg';
+import TextFormatButtons from '@/components/features/post/editor/text-format-buttons';
+import BlockFormatButtons from '@/components/features/post/editor/block-format-buttons';
+import InteractionButtons from '@/components/features/post/editor/interaction-buttons';
+import { usePathname } from 'next/navigation';
 
 export const ToolBarDivider = () => <div className="bg-[#E0E0E0] w-px @mobile:w-0.25 h-4.5 mx-[7.5px]" />;
 
 export default function Toolbar() {
-	const {
-		editor,
-		isLinkInputOpen,
-		setIsLinkInputOpen,
-		handleTextFormatToggle,
-		handleHeadingChange,
-		isYoutubeInputOpen,
-		setIsYoutubeInputOpen,
-	} = useEditorContext();
+	const { editor, setIsLinkInputOpen, handleHeadingChange, setIsYoutubeInputOpen } = useEditorContext();
 	const isMobile = useIsMobile();
+	const pathname = usePathname();
 	const [hasMounted, setHasMounted] = useState(false);
 
 	useEffect(() => {
@@ -39,32 +28,7 @@ export default function Toolbar() {
 	const [selectedOption, setSelectedOption] = useState(headingOptions[0]);
 
 	const dropdownRef = useRef<HTMLDivElement>(null);
-	const linkInputRef = useRef<HTMLDivElement>(null);
-	const youtubeInputRef = useRef<HTMLDivElement>(null);
-	const mediaButtonRef = isLinkInputOpen ? linkInputRef : isYoutubeInputOpen ? youtubeInputRef : null;
-
-	const textFormatButtons = [
-		{ key: 'bold', Icon: BoldIcon },
-		{ key: 'underline', Icon: UnderlineIcon },
-		{ key: 'italic', Icon: ItalicIcon },
-		{ key: 'bulletList', Icon: EllipsisIcon },
-		{ key: 'orderedList', Icon: SortNumericIcon },
-	];
-
-	const quoteAndRuleButtons = [
-		{
-			key: 'blockquote',
-			Icon: QuoteIcon,
-			onClick: () => handleTextFormatToggle('blockquote'),
-		},
-		{
-			key: 'horizontalRule',
-			Icon: lineIcon,
-			onClick: () => {
-				handleTextFormatToggle('horizontalRule');
-			},
-		},
-	];
+	const mediaButtonRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
 		if (!editor) return;
@@ -81,11 +45,10 @@ export default function Toolbar() {
 			}
 		};
 
-		editor.on('selectionUpdate', updateHeadingOption);
-
 		// 초기 실행
 		updateHeadingOption();
 
+		editor.on('selectionUpdate', updateHeadingOption);
 		return () => {
 			editor.off('selectionUpdate', updateHeadingOption);
 		};
@@ -99,15 +62,13 @@ export default function Toolbar() {
 			if (dropdownRef.current && !dropdownRef.current.contains(target)) {
 				setIsVisibleDropdown(false);
 			}
-			// Link Input
-			if (linkInputRef.current && !linkInputRef.current.contains(target)) {
+			// 미디어 Input
+			if (mediaButtonRef.current && !mediaButtonRef.current.contains(target)) {
 				setIsLinkInputOpen(false);
-			}
-			// Youtube Input
-			if (youtubeInputRef.current && !youtubeInputRef.current.contains(target)) {
 				setIsYoutubeInputOpen(false);
 			}
 		};
+
 		document.addEventListener('click', handleClickOutside);
 		return () => document.removeEventListener('click', handleClickOutside);
 	}, [setIsLinkInputOpen, setIsYoutubeInputOpen]);
@@ -122,7 +83,6 @@ export default function Toolbar() {
 			setIsVisibleDropdown={setIsVisibleDropdown}
 			dropdownRef={dropdownRef}
 			mediaButtonRef={mediaButtonRef}
-			quoteAndRuleButtons={quoteAndRuleButtons}
 		/>
 	) : (
 		<div className="flex flex-wrap items-center gap-2 pb-4">
@@ -135,48 +95,26 @@ export default function Toolbar() {
 				handleHeadingChange={handleHeadingChange}
 				dropdownRef={dropdownRef}
 			/>
-
 			<ToolBarDivider />
 
-			{/*텍스트 포맷 형식*/}
-			<div className="flex items-center justify-center h-8.5 gap-2 border border-black-300 text-[#8C8C8C] rounded-sm px-2">
-				{textFormatButtons.map(({ key, Icon }) => {
-					const isActive = editor?.isActive(key);
-
-					return (
-						<button
-							key={key}
-							className={clsx('flex items-center justify-center w-6 h-6 rounded-xs', isActive && 'bg-primary-50')}
-							onClick={() => handleTextFormatToggle(key)}
-						>
-							<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600'} />
-						</button>
-					);
-				})}
-			</div>
+			{/* 텍스트 포맷 버튼 */}
+			<TextFormatButtons />
 			<ToolBarDivider />
 
-			{/* 인용구 & 구분선 버튼 */}
-			<div className="flex gap-2 h-8.5">
-				{quoteAndRuleButtons.map(({ key, Icon, onClick }) => {
-					const isActive = key !== 'horizontalRule' && editor?.isActive(key);
-
-					return (
-						<button key={key} onClick={onClick} className="px-[5px] border border-black-300 rounded-sm">
-							<div
-								className={`flex items-center justify-center w-6 h-6 rounded-xs ${isActive ? 'bg-primary-50' : 'active:bg-primary-50'}`}
-							>
-								<Icon className={isActive ? 'stroke-primary-900' : 'stroke-black-600 active:stroke-primary-900'} />
-							</div>
-						</button>
-					);
-				})}
-			</div>
-
+			{/* 블록 포맷(인용구 & 구분선) 버튼 */}
+			<BlockFormatButtons />
 			<ToolBarDivider />
 
 			{/* 미디어 버튼 */}
 			<MediaButtons mediaButtonRef={mediaButtonRef} />
+
+			{/*	인터랙션 버튼 */}
+			{pathname.includes('board') && (
+				<>
+					<ToolBarDivider />
+					<InteractionButtons />
+				</>
+			)}
 		</div>
 	);
 }

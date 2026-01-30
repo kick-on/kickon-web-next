@@ -8,17 +8,16 @@ import { useFetchSize } from '@/lib/hooks/useFetchSize';
 import { useObserver } from '@/lib/hooks/useObserver';
 import { useHalftimeListQuery } from '@/lib/hooks/queries/useHalftimeQuery';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect } from 'react';
-import { useHalftimeQueryKeyStore } from '@/lib/store/useHalftimeStore';
+import { Suspense } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { HalftimeSortType } from '@/services/apis/shorts/shorts.type';
 
 export default function Page() {
 	const searchParams = useSearchParams();
-	const sort = searchParams.get('sort') ?? halftimeSortOptions[0].value;
+	const sort = (searchParams.get('sort') as HalftimeSortType) ?? halftimeSortOptions[0].value;
 	const size = useFetchSize();
 
-	const { setKey } = useHalftimeQueryKeyStore();
 	const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useHalftimeListQuery(sort, size);
 	const halftimes = data?.pages?.flatMap((page) => page.data) ?? [];
 
@@ -27,10 +26,6 @@ export default function Page() {
 			fetchNextPage();
 		}
 	};
-
-	useEffect(() => {
-		setKey(['halftimeList', sort, size]);
-	}, [sort, size, setKey]);
 
 	// 무한 스크롤 커스텀 훅
 	const ref = useObserver(() => getHalftimes());

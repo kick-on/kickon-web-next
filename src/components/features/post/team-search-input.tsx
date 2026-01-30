@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import debounce from 'lodash/debounce';
 import Image from 'next/image';
 import clsx from 'clsx';
-import { getTeam } from '@/services/apis/team';
+import { getTeam } from '@/services/apis/team/team.api';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 
 interface Team {
@@ -39,14 +39,13 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 		}
 		try {
 			const response = await getTeam(undefined, term);
-			const teamData = response.data.map((team) => ({
+			const teamData = response?.data?.map((team) => ({
 				id: team.pk,
 				name: team.nameKr ?? team.nameEn,
 				logo: team.logoUrl,
 			}));
 			setTeams(teamData);
-		} catch (error) {
-			console.error('팀 리스트 가져오기 실패:', error);
+		} catch {
 			setTeams([]);
 		}
 	}, []);
@@ -94,13 +93,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 		<div ref={searchRef} className="relative w-71 @mobile:w-41.5">
 			<div className="relative button4-medium @mobile:text-13 flex items-center border border-black-300 rounded-lg h-9 px-4 py-[0.5625rem]">
 				{selectedTeam && (
-					<Image
-						src={selectedTeam.logo}
-						alt={selectedTeam.name}
-						width={16}
-						height={16}
-						className="mr-2 w-4 h-4 object-contain"
-					/>
+					<Image src={selectedTeam.logo} alt="" width={16} height={16} className="mr-2 w-4 h-4 object-contain" />
 				)}
 
 				<input
@@ -112,16 +105,11 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 				/>
 
 				{searchTerm ? (
-					<Image
-						width={16}
-						height={16}
-						src="/x/white.svg"
-						alt="초기화"
-						onClick={handleClearSearch}
-						className="cursor-pointer"
-					/>
+					<button onClick={handleClearSearch} aria-label={'검색어 초기화'}>
+						<Image aria-hidden={true} width={16} height={16} src="/x/white.svg" alt="" />
+					</button>
 				) : (
-					<Image width={16} height={16} src="/search.svg" alt="검색" />
+					<Image width={16} height={16} src="/search.svg" alt="" />
 				)}
 			</div>
 			{/*max-w 조정 필요*/}
@@ -139,7 +127,7 @@ export default function TeamSearchInput({ selectedTeam, setSelectedTeam }: TeamS
 								)}
 								onClick={() => handleSelectTeam(team)}
 							>
-								<Image className="w-4 h-4 object-contain" src={team.logo} alt={team.name} width={16} height={16} />
+								<Image className="w-4 h-4 object-contain" src={team.logo} alt="" width={16} height={16} />
 								{team.name}
 							</div>
 						))

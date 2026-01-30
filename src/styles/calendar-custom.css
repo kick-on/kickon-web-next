@@ -19,8 +19,8 @@
 	position: relative;
 	overflow: hidden;
 	transition:
-		max-height 1.5s ease,
-		opacity 1.5s ease;
+		max-height 0.8s ease,
+		opacity 0.8s ease;
 	padding: 30px 16px 38px 16px;
 }
 
@@ -29,8 +29,8 @@
 	width: 100%;
 	overflow: hidden;
 	transition:
-		max-height 1.5s ease,
-		opacity 1.5s ease;
+		max-height 0.8s ease,
+		opacity 0.8s ease;
 	padding: 26px 5px 48px 5px;
 }
 
@@ -46,20 +46,6 @@
 .custom-calendar .react-calendar__month-view__days {
 	display: grid !important;
 	grid-template-columns: repeat(7, 1fr);
-}
-
-.custom-calendar .year {
-	display: flex;
-	color: #000;
-	text-align: center;
-	font-size: 18px;
-	font-weight: 500;
-	line-height: 24px;
-}
-
-.custom-calendar-mobile .year {
-	font-size: 12px;
-	line-height: 16px;
 }
 
 .custom-calendar .month-number {
@@ -117,13 +103,13 @@
 	font-weight: 500;
 	margin: 0;
 }
-/* 오늘 이전 날짜 */
-.custom-calendar .past-tile {
+/* 활성화 안 되는 날짜 */
+.custom-calendar .disabled-tile {
 	color: #cccccc;
 }
 
-/* 오늘 이후 날짜 */
-.custom-calendar .future-tile {
+/* 활성화 되는 날짜 */
+.custom-calendar .active-tile {
 	color: #000000;
 }
 
@@ -139,6 +125,7 @@
 	margin: 0;
 	border-radius: 0px;
 }
+
 /*승부 예측 기간이 아닌 날짜 타일의 border-radius*/
 .custom-calendar .react-calendar__month-view__days .disabled-after-week-start {
 	border-radius: 8px 0 0 8px;
@@ -161,19 +148,6 @@
 	color: #c00c0b4d;
 	border: 2px solid #c00c0b4d !important;
 	background-color: #fff;
-}
-
-.custom-calendar .today-text {
-	display: flex;
-	text-align: center;
-	font-size: 15px;
-	font-weight: 600;
-	line-height: 16px;
-}
-
-.custom-calendar-mobile .today-text {
-	font-size: 13px;
-	line-height: 18px;
 }
 
 .has-match {
@@ -234,8 +208,8 @@
 	margin: 0 !important;
 	opacity: 0 !important;
 	transition:
-		height 0.4s ease,
-		opacity 0.4s ease;
+		height 0.5s ease,
+		opacity 0.5s ease;
 }
 
 .hidden-other-month-tile {

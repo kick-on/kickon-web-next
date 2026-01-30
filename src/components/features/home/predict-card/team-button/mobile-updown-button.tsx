@@ -18,7 +18,7 @@ export default function MobileUpdownButton({ score, onClickUpButton, onClickDown
 				disabled={score >= 20}
 				className={clsx('group grow relative rounded-l-md flex justify-center items-center', shadowClass('left'))}
 			>
-				<Image className="group-disabled:opacity-[23%]" src={'/chevron/score-up.svg'} alt="+1" width={18} height={18} />
+				<Image className="group-disabled:opacity-[23%]" src={'/chevron/score-up.svg'} alt="" width={18} height={18} />
 			</button>
 			<div className="my-auto w-[1px] h-9 bg-black-200"></div>
 			<button
@@ -26,13 +26,7 @@ export default function MobileUpdownButton({ score, onClickUpButton, onClickDown
 				disabled={score <= 0}
 				className={clsx('group grow relative rounded-r-md flex justify-center items-center', shadowClass('right'))}
 			>
-				<Image
-					className="group-disabled:opacity-[23%]"
-					src={'/chevron/score-down.svg'}
-					alt="-1"
-					width={18}
-					height={18}
-				/>
+				<Image className="group-disabled:opacity-[23%]" src={'/chevron/score-down.svg'} alt="" width={18} height={18} />
 			</button>
 		</div>
 	);
