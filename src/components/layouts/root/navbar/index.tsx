@@ -1,7 +1,6 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import NavButton from './nav-button';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
 import MobileNavbar from '../mobile-navbar';
@@ -17,7 +16,6 @@ export interface NavButton {
 }
 
 export default function Navbar() {
-	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 
@@ -65,9 +63,9 @@ export default function Navbar() {
 						/>
 					</Link>
 
-					{filteredNavButtons.map((props) => (
-						<NavButton key={props.content} {...props} />
-					))}
+					{/*{filteredNavButtons.map((props) => (*/}
+					{/*	<NavButton key={props.content} {...props} />*/}
+					{/*))}*/}
 				</nav>
 				<RightButtons isTabletWidth={isTabletWidth} />
 			</div>

@@ -6,7 +6,6 @@ import Link from 'next/link';
 import clsx from 'clsx';
 import { useCallback, useState } from 'react';
 import Sidebar from './sidebar';
-import SideNavbar from './sidebar/side-navbar';
 import { default as SideProfile } from '../navbar/profile';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { NavButton } from '../navbar';
@@ -56,9 +55,10 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 		<>
 			<header className="fixed w-full top-0 z-40 transition-colors ease-out">
 				<div className={clsx('relative h-16 px-4 grid grid-cols-3 justify-between items-center', bgColor)}>
-					<button aria-label={'메뉴'} onClick={handleToggleMenu} className={`w-fit ${isHome ? '' : 'invert'}`}>
-						<Image aria-hidden={true} src={'/hamburger.svg'} alt="" width={24} height={24} />
-					</button>
+					{/*<button aria-label={'메뉴'} onClick={handleToggleMenu} className={`w-fit ${isHome ? '' : 'invert'}`}>*/}
+					{/*	<Image aria-hidden={true} src={'/hamburger.svg'} alt="" width={24} height={24} />*/}
+					{/*</button>*/}
+					<div />
 					<Link href="/" aria-label={'홈으로 이동'} className="w-auto h-full flex justify-center">
 						<Image aria-hidden={true} src={'/logo/icon-red.svg'} alt="" width={45} height={36} />
 					</Link>
@@ -66,9 +66,9 @@ export default function MobileNavbar({ navButtons }: { navButtons: NavButton[] }
 				</div>
 			</header>
 
-			<Sidebar side={'left'} isMenuOpen={isMenuOpen} isBgVisible={isMenuBgVisible} handleToggleMenu={handleToggleMenu}>
-				<SideNavbar onClickButton={handleToggleMenu} navButtons={navButtons} />
-			</Sidebar>
+			{/*<Sidebar side={'left'} isMenuOpen={isMenuOpen} isBgVisible={isMenuBgVisible} handleToggleMenu={handleToggleMenu}>*/}
+			{/*	<SideNavbar onClickButton={handleToggleMenu} navButtons={navButtons} />*/}
+			{/*</Sidebar>*/}
 
 			{currentUserInfo && (
 				<Sidebar
