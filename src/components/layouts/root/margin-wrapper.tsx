@@ -14,5 +14,6 @@ export default function MarginWrapper({ children }: { children: React.ReactNode 
 		setHasMargin(isMobileNavbar && !isFullScreen(pathname));
 	}, [pathname, isMobileNavbar]);
 
-	return <div className={hasMargin ? 'mt-16' : ''}>{children}</div>;
+	// return <div className={hasMargin ? 'mt-16' : ''}>{children}</div>;
+	return <div className="mt-16">{children}</div>;
 }
