@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# 공통 환경변수 로드
+source "$(dirname "$0")/env-config.sh"
+
 # 배포 디렉토리 초기화
-sudo rm -rf /home/ubuntu/web-nextjs-service
-sudo mkdir -p /home/ubuntu/web-nextjs-service
+sudo rm -rf "$PROJECT_ROOT"
+sudo mkdir -p "$PROJECT_ROOT"
 
 # 권한 설정
-sudo chown -R ubuntu:ubuntu /home/ubuntu/web-nextjs-service
+sudo chown -R ubuntu:ubuntu "$PROJECT_ROOT"

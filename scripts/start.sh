@@ -1,16 +1,10 @@
 #!/bin/bash
 
-# 프로젝트 디렉토리 분기
-BASE_PATH="/home/ubuntu"
+# 공통 환경변수 로드
+source "$(dirname "$0")/env-config.sh"
 
-if [[ "$APPLICATION_NAME" == *"prod"* ]]; then
-    TARGET_DIR="web-nextjs-prod-service"
-else
-    TARGET_DIR="web-nextjs-dev-service"
-fi
-
-# 프로젝트 디렉토리로 이동
-cd "$BASE_PATH/$TARGET_DIR"
+# 프로젝트 폴더로 이동
+cd "$PROJECT_ROOT"
 
 # nvm 환경 설정
 export NVM_DIR="$HOME/.nvm"
