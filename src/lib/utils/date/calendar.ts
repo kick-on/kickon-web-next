@@ -88,14 +88,18 @@ export const getTileClassName = ({
 
 	// 활성화 / 비활성화 구분
 	if (isMatch) {
+		const baseClass = hasMatch ? 'has-match' : '';
+
 		// 오늘 기준 과거 -> disabled
-		if (tileDate < stripTime(new Date())) return 'disabled-tile pointer-events-none';
+		if (tileDate < stripTime(new Date())) return `${baseClass} disabled-tile pointer-events-none`.trim();
+
 		// 오늘 포함 미래 -> active
-		return isFocused ? 'focused-tile' : 'active-tile';
+		return isFocused ? `${baseClass} focused-tile`.trim() : `${baseClass} active-tile`.trim();
 	} else {
 		// hasMatch 없으면 disabled
 		if (!hasMatch) return 'disabled-tile pointer-events-none';
+
 		// hasMatch 있으면 active
-		return isFocused ? 'focused-tile' : 'active-tile';
+		return isFocused ? 'has-match focused-tile' : 'has-match active-tile';
 	}
 };
