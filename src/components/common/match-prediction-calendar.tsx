@@ -16,8 +16,8 @@ import { RenderTileContent } from '../features/calendar/renderers/render-tile-co
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
-	selectedDate: Date;
-	setSelectedDate: (date: Date) => void; // 선택한 날짜 상위로 올림
+	selectedDate?: Date;
+	setSelectedDate?: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
 export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
@@ -121,7 +121,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					activeStartDate={firstDayOfCurrentMonth}
 					calendarType="gregory"
 					locale="ko-KR"
-					className={`custom-calendar
+					className={`custom-calendar custom-calendar-mobile
 							${isMobile && 'custom-calendar-mobile'} 
 							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
 							relative transition-all duration-[500ms] ease-linear opacity-100`}

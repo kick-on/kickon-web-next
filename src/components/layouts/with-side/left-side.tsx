@@ -1,5 +1,6 @@
 'use client';
 
+import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
 import RankingList from './ranking-list/ranking-list';
 import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -14,6 +15,7 @@ export default function LeftSide() {
 		<aside className="flex flex-col gap-4">
 			<RankingList mode="season" />
 			<RankingList mode="predict" />
+			<MatchPredictionCalendar type="match" />
 		</aside>
 	);
 }
