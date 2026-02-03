@@ -12,7 +12,7 @@ export function middleware(request: NextRequest) {
 	}
 
 	const isProd = process.env.NEXT_PUBLIC_NODE_ENV === 'prod';
-	const isAllowed = ALLOWED_ROUTES.includes(pathname);
+	const isAllowed = ALLOWED_ROUTES.some((route) => route.startsWith(pathname));
 	if (isProd && !isAllowed) {
 		return NextResponse.redirect(new URL('/404', request.url));
 	}
