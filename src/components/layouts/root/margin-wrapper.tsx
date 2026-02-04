@@ -1,19 +1,15 @@
 'use client';
-
-import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import { isFullScreen } from '@/lib/utils';
 import { usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+
+const NO_MARGIN_PAGES = ['/notice'];
 
 export default function MarginWrapper({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname();
-	const isMobileNavbar = !useIsLeftSideVisible();
-	const [hasMargin, setHasMargin] = useState(false);
+	const hasMargin = !NO_MARGIN_PAGES.includes(pathname);
 
-	useEffect(() => {
-		setHasMargin(isMobileNavbar && !isFullScreen(pathname));
-	}, [pathname, isMobileNavbar]);
+	// useEffect(() => {
+	// 	setHasMargin(isMobileNavbar && !isFullScreen(pathname));
+	// }, [pathname, isMobileNavbar]);
 
-	// return <div className={hasMargin ? 'mt-16' : ''}>{children}</div>;
-	return <div className="mt-16">{children}</div>;
+	return <div className={hasMargin ? 'mt-16' : ''}>{children}</div>;
 }
