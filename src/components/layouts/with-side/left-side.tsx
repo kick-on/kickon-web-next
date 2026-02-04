@@ -14,6 +14,7 @@ export default function LeftSide() {
 	return (
 		<aside className="flex flex-col gap-4">
 			<RankingList mode="season" />
+			{/*<RankingList mode="predict" />*/}
 			<RankingList mode="predict" />
 			<MatchPredictionCalendar type="match" />
 		</aside>

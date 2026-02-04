@@ -1,15 +1,11 @@
 'use client';
 
-import RecommendedContent from '@/components/common/recommended-content';
 import PredictLeagueTab from '@/components/features/home/predict-league-tab';
-import TodaysHalftime from '@/components/features/home/todays-halftime';
-import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
-import { Suspense, useEffect } from 'react';
+import { useEffect } from 'react';
 
 export default function Home() {
-	const { currentUserInfo } = useCurrentUserInfoStore();
-	const isDesktop = useIsDesktop();
+	// const { currentUserInfo } = useCurrentUserInfoStore();
+	// const isDesktop = useIsDesktop();
 
 	useEffect(() => {
 		document.body.style.backgroundColor = 'var(--color-black-800)';
@@ -20,22 +16,31 @@ export default function Home() {
 	}, []);
 
 	return (
-		<div className="flex flex-col gap-4">
+		<div className="grid grid-cols-1 min-[120rem]:grid-cols-2 gap-6 pb-90">
 			{/* 승부 예측 */}
 			<div className="bg-black-000 rounded-[0.625rem]">
 				<PredictLeagueTab />
 			</div>
+			<div className="bg-black-000 rounded-[0.625rem]">
+				<PredictLeagueTab />
+			</div>
+			<div className="bg-black-000 rounded-[0.625rem]">
+				<PredictLeagueTab />
+			</div>
+			<div className="bg-black-000 rounded-[0.625rem]">
+				<PredictLeagueTab />
+			</div>
 
-			{!isDesktop && <TodaysHalftime />}
+			{/*{!isDesktop && <TodaysHalftime />}*/}
 
 			{/* 추천 뉴스 및 게시글 */}
-			<Suspense>
-				<RecommendedContent
-					mode={'news'}
-					teamName={currentUserInfo?.favoriteTeams[0]?.nameKr || currentUserInfo?.favoriteTeams[0]?.nameEn || undefined}
-				/>
-				<RecommendedContent mode={'board'} />
-			</Suspense>
+			{/*<Suspense>*/}
+			{/*	<RecommendedContent*/}
+			{/*		mode={'news'}*/}
+			{/*		teamName={currentUserInfo?.favoriteTeams[0]?.nameKr || currentUserInfo?.favoriteTeams[0]?.nameEn || undefined}*/}
+			{/*	/>*/}
+			{/*	<RecommendedContent mode={'board'} />*/}
+			{/*</Suspense>*/}
 		</div>
 	);
 }
