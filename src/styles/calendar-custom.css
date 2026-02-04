@@ -26,7 +26,7 @@
 
 .custom-calendar-mobile {
 	position: relative;
-	width: 320px;
+	width: 100%;
 	overflow: hidden;
 	transition:
 		max-height 0.8s ease,

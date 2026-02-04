@@ -16,7 +16,6 @@ export default function LeftSide() {
 			<MatchPredictionCalendar type="match" />
 			<RankingList mode="season" />
 			{/*<RankingList mode="predict" />*/}
-			<RankingList mode="predict" />
 		</aside>
 	);
 }
