@@ -13,6 +13,7 @@ import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
 import { NavigationLabel } from '../features/calendar/navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
+import useIsDesktop from '@/lib/hooks/useIsDesktop';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
@@ -22,6 +23,7 @@ interface MatchPredictionCalendarProps {
 
 export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
 	const isMobile = useIsMobile();
+	const isDesktop = useIsDesktop();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isMatch = type === 'match';
@@ -148,22 +150,23 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					}
 					tileContent={({ date }) => <RenderTileContent date={date} {...calendarData} />}
 				/>
-
-				<button
-					onClick={() => setIsWeekCalendar((prev) => !prev)}
-					className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
-				>
-					<Image
-						src="/chevron/calendar-up.svg"
-						alt=""
-						width={36}
-						height={36}
-						style={{
-							transform: isWeekCalendar ? 'rotate(180deg)' : 'rotate(0deg)',
-							transition: 'transform 0.3s ease',
-						}}
-					/>
-				</button>
+				{!isDesktop && (
+					<button
+						onClick={() => setIsWeekCalendar((prev) => !prev)}
+						className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
+					>
+						<Image
+							src="/chevron/calendar-up.svg"
+							alt=""
+							width={36}
+							height={36}
+							style={{
+								transform: isWeekCalendar ? 'rotate(180deg)' : 'rotate(0deg)',
+								transition: 'transform 0.3s ease',
+							}}
+						/>
+					</button>
+				)}
 			</div>
 		</div>
 	);
