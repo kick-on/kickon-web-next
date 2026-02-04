@@ -1,14 +1,14 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
-import NavButton from './nav-button';
-import Image from 'next/image';
-import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
-import MobileNavbar from '../mobile-navbar';
-import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
-import useIsDesktop from '@/lib/hooks/useIsDesktop';
-import RightButtons from './right-buttons';
 import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import MobileNavbar from '../mobile-navbar';
+import useIsDesktop from '@/lib/hooks/useIsDesktop';
+import useIsLeftSideVisible from '@/lib/hooks/useIsLeftSideVisible';
+import useIsTabletWidth from '@/lib/hooks/useIsTabletWidth';
+import RightButtons from '@/components/layouts/root/navbar/right-buttons';
+import NavButton from '@/components/layouts/root/navbar/nav-button';
 
 export interface NavButton {
 	href: string;
@@ -17,7 +17,6 @@ export interface NavButton {
 }
 
 export default function Navbar() {
-	const router = useRouter();
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 
@@ -42,7 +41,7 @@ export default function Navbar() {
 		return true;
 	});
 
-	if (!isDesktop === null) return null;
+	if (isDesktop === null) return null;
 
 	// 모바일, 태블릿, 데스크톱에서 width가 충분히 작은 경우 MobileNavbar
 	return !isDesktop || !isLeftSideBarVisible ? (

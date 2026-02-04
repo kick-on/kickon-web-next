@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import PredictCardList from './predict-card-list';
+import ComponentFrame from '@/components/common/component-frame';
 
 export default function PredictLeagueTab() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
@@ -48,7 +49,7 @@ export default function PredictLeagueTab() {
 	}, [currentUserInfo, favoriteTeamLength]);
 
 	return (
-		<div>
+		<ComponentFrame isMain={true}>
 			{/* 탭 바 */}
 			<div
 				className="relative w-full flex rounded-t-[0.625rem] bg-black-200 header-medium
@@ -102,6 +103,6 @@ export default function PredictLeagueTab() {
 			<div className="pt-7 bg-black-000 rounded-b-[0.625rem]">
 				<PredictCardList teamPk={selectedTeamPk} />
 			</div>
-		</div>
+		</ComponentFrame>
 	);
 }

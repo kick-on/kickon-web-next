@@ -2,15 +2,13 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/styles/globals.css';
 import Footer from '@/components/layouts/root/footer';
-import Banner from '@/components/layouts/root/banner';
 import MinWidth from '@/components/layouts/root/min-width';
 import LoginPortal from '@/components/layouts/root/navbar/login-portal';
 import MarginWrapper from '@/components/layouts/root/margin-wrapper';
-import Navbar from '@/components/layouts/root/navbar';
-import PaddingWrapper from '@/components/layouts/root/padding-wrapper';
 import NotificationInitializer from '@/components/layouts/root/navbar/notification-initializer';
 import ReactQueryProvider from '@/lib/provider/react-query-provider';
 import { DOMAIN_URL } from '@/services/config/constants';
+import MobileNavbar from '@/components/layouts/root/mobile-navbar';
 
 export const metadata: Metadata = {
 	metadataBase: new URL(DOMAIN_URL),
@@ -60,13 +58,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
 				<NotificationInitializer />
-				<div className="@container">
+				<div className="@container relative">
 					<ReactQueryProvider>
-						<Navbar />
+						<MobileNavbar />
 						<LoginPortal />
 						<MarginWrapper>
-							<Banner />
-							<PaddingWrapper>{children}</PaddingWrapper>
+							{/*<Banner />*/}
+							{/*<PaddingWrapper>{children}</PaddingWrapper>*/}
+							{children}
 							<Footer />
 							<MinWidth />
 						</MarginWrapper>
