@@ -7,11 +7,7 @@ import TeamButton from './team-button';
 import CompleteButton from './complete-button';
 import Header, { HeaderProps } from './header';
 import { useState } from 'react';
-import {
-	deleteGameGamble,
-	patchGameGamble,
-	postGameGamble,
-} from '@/services/apis/user-game-gamble/user-game-gamble.api';
+import { deleteGameGamble, patchGameGamble, postGameGamble, } from '@/services/apis/user-game-gamble/user-game-gamble.api';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { GameDto } from '@/services/apis/game/game.type';
 import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
@@ -175,8 +171,14 @@ export default function PredictCard({
 
 	return (
 		<div
-			className={`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem] max-w-[41.75rem]
-				bg-black-000 rounded-lg overflow-hidden ${isFinished && !isGameInProgress ? 'text-black-700' : ''}`}
+			className={clsx(
+				`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem] max-w-[41.75rem]
+				bg-black-000 rounded-lg overflow-hidden border border-black-300`,
+				{
+					'text-black-700': isFinished && !isGameInProgress,
+					'w-[41.75rem]': !isMobile,
+				},
+			)}
 		>
 			<Header {...headerProps} />
 
