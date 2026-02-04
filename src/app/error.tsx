@@ -2,7 +2,7 @@
 
 export default function Error() {
 	return (
-		<div className="w-full py-40 flex flex-col gap-10 display-semibold text-center">
+		<div className="w-full pt-40 flex flex-col gap-10 display-semibold text-center">
 			<div>
 				서버 오류가 발생했습니다.
 				<br />
