@@ -35,7 +35,7 @@ export default function Home() {
 	return (
 		<div className="grid grid-cols-1 min-[120rem]:grid-cols-2 gap-6 pb-90">
 			{!isDesktop && (
-				<div className={clsx('mx-auto bg-black-000 rounded-[0.625rem]', isTablet && 'max-w-[39.75rem] w-full')}>
+				<div className={clsx('bg-black-000 rounded-[0.625rem]', isTablet && 'max-w-[39.75rem] w-full mx-auto')}>
 					<MatchPredictionCalendar type="match" selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
 				</div>
 			)}
