@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import Image from 'next/image';
 
 interface ArrowButtonProps {
@@ -7,14 +8,12 @@ interface ArrowButtonProps {
 }
 
 export const ArrowButton = ({ direction, onClick, isVisible }: ArrowButtonProps) => {
-	if (!isVisible) return null;
-
 	const isPrev = direction === 'prev';
+
 	return (
 		<div
 			role="button"
 			tabIndex={0}
-			className={`absolute ${isPrev ? 'mr-25' : 'ml-25'} cursor-pointer`}
 			onClick={() => onClick(direction)}
 			onKeyDown={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
@@ -22,6 +21,11 @@ export const ArrowButton = ({ direction, onClick, isVisible }: ArrowButtonProps)
 					onClick(direction);
 				}
 			}}
+			className={clsx(
+				'absolute cursor-pointer transition-opacity duration-200 ease-out',
+				isPrev ? 'mr-25' : 'ml-25',
+				isVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none',
+			)}
 		>
 			<Image
 				src={`/chevron/calendar-${isPrev ? 'left' : 'right'}.svg`}
