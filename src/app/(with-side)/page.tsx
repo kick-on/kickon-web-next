@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import PredictCard from '@/components/features/home/predict-card';
 import { GameDto } from '@/services/apis/game/game.type';
 import useIsMobile from '@/lib/hooks/useIsMobile';
+import AiAnalytics from '@/components/features/home/ai-analytics';
+import clsx from 'clsx';
 
 export default function Home() {
 	const isMobile = useIsMobile();
@@ -135,7 +137,15 @@ export default function Home() {
 		<div className="grid grid-cols-1 min-[120rem]:grid-cols-2 gap-6 pb-90">
 			{/* 승부 예측 */}
 			{games.map((game) => (
-				<PredictCard key={game.pk} type={game.homeScore !== null ? 'finished' : 'proceeding'} game={game} />
+				<div
+					key={game.pk}
+					className={clsx('py-4 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300', {
+						'w-[41.75rem]': !isMobile,
+					})}
+				>
+					<PredictCard key={game.pk} type={game.homeScore !== null ? 'finished' : 'proceeding'} game={game} />
+					{game.homeScore !== null && <AiAnalytics pk={game.pk} />}
+				</div>
 			))}
 		</div>
 	);
