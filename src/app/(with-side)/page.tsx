@@ -6,6 +6,7 @@ import { GameDto } from '@/services/apis/game/game.type';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import AiAnalytics from '@/components/features/home/ai-analytics';
 import clsx from 'clsx';
+import GameComment from '@/components/features/home/game-comment';
 
 export default function Home() {
 	const isMobile = useIsMobile();
@@ -145,6 +146,7 @@ export default function Home() {
 				>
 					<PredictCard key={game.pk} type={game.homeScore !== null ? 'finished' : 'proceeding'} game={game} />
 					{game.homeScore !== null && <AiAnalytics pk={game.pk} />}
+					<GameComment pk={game.pk} />
 				</div>
 			))}
 		</div>
