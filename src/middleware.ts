@@ -12,7 +12,8 @@ export function middleware(request: NextRequest) {
 	}
 
 	const isProd = process.env.NEXT_PUBLIC_NODE_ENV === 'prod';
-	const isAllowed = ALLOWED_ROUTES.some((route) => route.startsWith(pathname));
+	const isAllowed = ALLOWED_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
 	if (isProd && !isAllowed) {
 		return NextResponse.redirect(new URL('/404', request.url));
 	}

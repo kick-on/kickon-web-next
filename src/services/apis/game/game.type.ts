@@ -5,7 +5,7 @@ import { TeamDto } from '../team/team.type';
 
 // 매치 리스트 조회
 export interface GetGamesRequest {
-	league: number;
+	league?: number;
 	status: 'proceeding' | 'finished';
 	team?: number;
 	from?: string; // YYYY-MM-DD
