@@ -190,8 +190,6 @@ iframe.responsive-youtube {
 }
 
 .team-scrollbar::-webkit-scrollbar-thumb {
-  width: 10px;
-  border: 5px solid var(--color-black-200);
   background: var(--color-black-500);
   border-radius: 10px;
 }
@@ -222,7 +220,7 @@ iframe.responsive-youtube {
 }
 
 .game-comment-scrollbar {
-  overflow-y: auto;
+  overflow-y: scroll;
 }
 
 .game-comment-scrollbar::-webkit-scrollbar {
@@ -232,8 +230,6 @@ iframe.responsive-youtube {
 .game-comment-scrollbar::-webkit-scrollbar-thumb {
   background: var(--color-black-300);
   border-radius: 10px;
-  background-clip: padding-box;
-  border: 2px solid var(--color-black-000);
 }
 
 .game-comment-scrollbar::-webkit-scrollbar-track {

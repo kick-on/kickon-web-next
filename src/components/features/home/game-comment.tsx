@@ -4,8 +4,8 @@ export default function GameComment({ pk }: { pk: number }) {
 	return (
 		<div className="flex flex-col gap-3 text-caption-01 mx-4">
 			<div className="space-y-2">
-				<div className="flex flex-col gap-1.5 min-h-0 max-h-27 overflow-y-auto game-comment-scrollbar">
-					{[1, 2, 3, 4, 5, 6, 7].map((kickCount) => (
+				<div className="flex flex-col gap-1.5 min-h-0 max-h-26 game-comment-scrollbar -mr-3 pr-1">
+					{[1, 2, 3, 4, 5, 6, 7, 8].map((kickCount) => (
 						<div key={kickCount} className="flex justify-between items-center">
 							<div className="flex gap-1 items-center">
 								<div className="w-4 h-4 rounded-full bg-black-200" />
