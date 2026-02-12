@@ -81,25 +81,28 @@ export const getTileClassName = ({
 	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
 	const isToday = isSameDate(tileDate, stripTime(new Date()));
 
-	if (isToday) {
-		if (isFocused) return 'focused-today-tile';
-		return 'not-focused-today-tile';
-	}
+	let resultClass = '';
 
 	// 활성화 / 비활성화 구분
 	if (isMatch) {
 		const baseClass = hasMatch ? 'has-match' : '';
 
-		// 오늘 기준 과거 -> disabled
-		if (tileDate < stripTime(new Date())) return `${baseClass} disabled-tile pointer-events-none`.trim();
-
-		// 오늘 포함 미래 -> active
-		return isFocused ? `${baseClass} focused-tile`.trim() : `${baseClass} active-tile`.trim();
+		if (tileDate < stripTime(new Date())) {
+			resultClass = `${baseClass} disabled-tile pointer-events-none`.trim();
+		} else {
+			resultClass = isFocused ? `${baseClass} focused-tile`.trim() : `${baseClass} active-tile`.trim();
+		}
 	} else {
-		// hasMatch 없으면 disabled
-		if (!hasMatch) return 'disabled-tile pointer-events-none';
-
-		// hasMatch 있으면 active
-		return isFocused ? 'has-match focused-tile' : 'has-match active-tile';
+		if (!hasMatch) {
+			resultClass = 'disabled-tile pointer-events-none';
+		} else {
+			resultClass = isFocused ? 'has-match focused-tile' : 'has-match active-tile';
+		}
 	}
+
+	if (isToday) {
+		resultClass = isFocused ? `${resultClass} focused-today-tile` : `${resultClass} not-focused-today-tile`;
+	}
+
+	return resultClass;
 };
