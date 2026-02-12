@@ -9,6 +9,7 @@ import clsx from 'clsx';
 import GameComment from '@/components/features/home/game-comment';
 import { getGames } from '@/services/apis/game/game.api';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 export default function Home() {
 	const isMobile = useIsMobile();
@@ -44,7 +45,21 @@ export default function Home() {
 		fetchGames();
 	}, [currentUserInfo]);
 
-	// TODO: 경기가 없는 경우, 에러난 경우 처리 필요
+	if (isError) {
+		return (
+			<div
+				className={clsx(
+					'text-center text-subtitle-02 py-10 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300',
+					{
+						'w-[41.75rem]': !isMobile,
+					},
+				)}
+			>
+				<FetchingFailedCard height="" marginTop="" />
+			</div>
+		);
+	}
+
 	return (
 		<div className="grid grid-cols-1 min-[120rem]:grid-cols-2 gap-6 pb-90">
 			{/* 승부 예측 */}
