@@ -80,7 +80,7 @@ export default function NewsItem({
 
 					<div className="flex justify-end items-center gap-3">
 						<span className="flex items-center gap-1.5" aria-label={`킥 ${likes}개`}>
-							<KickIcon aria-hidden={true} width={18} height={18} className="text-[#8F8F8F]" />
+							<KickIcon aria-hidden={true} width={18} height={18} className="text-black-600" />
 							<span aria-hidden={true}>{likes}</span>
 						</span>
 						<span className="flex items-center gap-1.5" aria-label={`댓글 ${replies}개`}>

@@ -16,7 +16,7 @@ export default function GameComment({ pk }: { pk: number }) {
 							<div className="flex gap-1 items-center text-black-600">
 								{kickCount}
 								<button>
-									<KickIcon className={`w-4 h-4 ${kickCount % 3 === 0 ? 'text-primary-900' : 'text-[#8F8F8F]'}`} />
+									<KickIcon className={`w-4 h-4 ${kickCount % 3 === 0 ? 'text-primary-900' : 'text-black-600'}`} />
 								</button>
 							</div>
 						</div>
@@ -36,7 +36,7 @@ export default function GameComment({ pk }: { pk: number }) {
 					<div className="flex gap-1 items-center text-black-600">
 						33
 						<button>
-							<KickIcon className={`w-4 h-4 text-[#8F8F8F]`} />
+							<KickIcon className={`w-4 h-4 text-black-600`} />
 						</button>
 					</div>
 				</div>
