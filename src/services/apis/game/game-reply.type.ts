@@ -6,8 +6,8 @@ export interface GetGameCommentListRequest {
 	game: number;
 	size: number;
 	page: number;
-	infinite: boolean;
-	lastReply: number;
+	infinite?: boolean;
+	lastReply?: number;
 }
 
 export type GetGameCommentListResponse = SuccessResponse<GameCommentDto[]>;

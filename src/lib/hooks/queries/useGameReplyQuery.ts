@@ -8,7 +8,6 @@ import {
 	CreateGameCommentRequest,
 	CreateGameCommentResponse,
 	GetGameCommentListRequest,
-	GetGameCommentListResponse,
 	GetTopGameCommentResponse,
 } from '@/services/apis/game/game-reply.type';
 import { SuccessResponse } from '@/services/config/dto';
@@ -16,14 +15,15 @@ import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tansta
 
 export const gameCommentKeys = {
 	all: ['game-comment'] as const,
-	list: (params: GetGameCommentListRequest) => [...gameCommentKeys.all, 'list', params] as const,
+	list: (gamePk: number) => [...gameCommentKeys.all, 'list', gamePk] as const,
 	top: (gamePk: number) => [...gameCommentKeys.all, 'top', gamePk] as const,
 };
 
 // 경기 댓글 무한 스크롤 조회
 export const useGameCommentListInfiniteQuery = (params: GetGameCommentListRequest, enabled = true) => {
-	return useInfiniteQuery<GetGameCommentListResponse, Error, GetGameCommentListResponse, any, number | undefined>({
-		queryKey: gameCommentKeys.list({ ...params, infinite: true }),
+	return useInfiniteQuery({
+		// eslint-disable-next-line @tanstack/query/exhaustive-deps
+		queryKey: gameCommentKeys.list(params.game),
 		queryFn: ({ pageParam }) => getGameCommentList({ ...params, infinite: true, lastReply: pageParam }),
 		initialPageParam: undefined,
 		getNextPageParam: (lastPage) => {
@@ -44,21 +44,26 @@ export const useTopGameCommentQuery = (gamePk: number, enabled = true) => {
 };
 
 // 경기 댓글 생성
-export const useCreateGameCommentMutation = () => {
+export const useCreateGameCommentMutation = (gamePk: number) => {
 	const queryClient = useQueryClient();
 
 	return useMutation<CreateGameCommentResponse, unknown, CreateGameCommentRequest>({
 		mutationFn: createGameComment,
-		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: gameCommentKeys.all }),
+		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: gameCommentKeys.list(gamePk) }),
 	});
 };
 
 // 경기 댓글 킥
-export const useToggleGameCommentKickMutation = () => {
+export const useToggleGameCommentKickMutation = (gamePk: number) => {
 	const queryClient = useQueryClient();
 
 	return useMutation<SuccessResponse<null>, unknown, number>({
 		mutationFn: toggleGameCommentKick,
-		onSuccess: async () => await queryClient.invalidateQueries({ queryKey: gameCommentKeys.all }),
+		onSuccess: async () => {
+			await Promise.all([
+				queryClient.invalidateQueries({ queryKey: gameCommentKeys.list(gamePk) }),
+				queryClient.invalidateQueries({ queryKey: gameCommentKeys.top(gamePk) }),
+			]);
+		},
 	});
 };
