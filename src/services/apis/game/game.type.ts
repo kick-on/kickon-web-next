@@ -5,9 +5,9 @@ import { TeamDto } from '../team/team.type';
 
 // 매치 리스트 조회
 export interface GetGamesRequest {
-	league?: number;
+	league?: number; // 응원팀이 없거나 비회원인 경우에 사용
 	status: 'proceeding' | 'finished';
-	team?: number;
+	team?: number; // 응원팀이 있는 경우에 사용, 그때 undefined이면 전체 팀 경기
 	from?: string; // YYYY-MM-DD
 	to?: string; // YYYY-MM-DD
 }
