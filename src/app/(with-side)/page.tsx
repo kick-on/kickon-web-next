@@ -48,18 +48,31 @@ export default function Home() {
 	return (
 		<div className="grid grid-cols-1 min-[120rem]:grid-cols-2 gap-6 pb-90">
 			{/* 승부 예측 */}
-			{games.map((game) => (
+			{games.length === 0 ? (
 				<div
-					key={game.pk}
-					className={clsx('py-4 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300', {
-						'w-[41.75rem]': !isMobile,
-					})}
+					className={clsx(
+						'text-center text-subtitle-02 py-10 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300',
+						{
+							'w-[41.75rem]': !isMobile,
+						},
+					)}
 				>
-					<PredictCard key={game.pk} type={game.homeScore !== null ? 'finished' : 'proceeding'} game={game} />
-					{game.homeScore !== null && <AiAnalytics pk={game.pk} />}
-					<GameComment pk={game.pk} />
+					지금은 진행 중인 경기가 없어요.
 				</div>
-			))}
+			) : (
+				games.map((game) => (
+					<div
+						key={game.pk}
+						className={clsx('py-4 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300', {
+							'w-[41.75rem]': !isMobile,
+						})}
+					>
+						<PredictCard key={game.pk} type={game.homeScore !== null ? 'finished' : 'proceeding'} game={game} />
+						{game.homeScore !== null && <AiAnalytics pk={game.pk} />}
+						<GameComment pk={game.pk} />
+					</div>
+				))
+			)}
 		</div>
 	);
 }

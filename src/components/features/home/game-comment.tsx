@@ -36,9 +36,11 @@ export default function GameComment({ pk }: { pk: number }) {
 		<div className="flex flex-col gap-3 text-caption-01 mx-4">
 			<div className="space-y-2">
 				<div className="flex flex-col gap-1.5 min-h-0 max-h-32 game-comment-scrollbar -mr-3 pr-1">
-					{comments.map((comment) => (
-						<GameCommentItem key={comment.pk} {...comment} gamePk={pk} />
-					))}
+					{comments.length === 0 ? (
+						<div className="text-center pt-1 pb-5">지금 경기에 대한 이야기를 시작해 보세요!</div>
+					) : (
+						comments.map((comment) => <GameCommentItem key={comment.pk} {...comment} gamePk={pk} />)
+					)}
 				</div>
 
 				{topComment && <GameCommentItem isBest {...topComment} gamePk={pk} />}
