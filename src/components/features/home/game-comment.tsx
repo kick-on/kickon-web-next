@@ -7,9 +7,13 @@ import {
 	useGameCommentListInfiniteQuery,
 	useTopGameCommentQuery,
 } from '@/lib/hooks/queries/useGameReplyQuery';
+import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function GameComment({ pk }: { pk: number }) {
 	const [content, setContent] = useState('');
+
+	const { currentUserInfo } = useCurrentUserInfoStore();
+	const isLoggedIn = !!currentUserInfo;
 
 	const { data: commentListData } = useGameCommentListInfiniteQuery({
 		game: pk,
@@ -50,7 +54,8 @@ export default function GameComment({ pk }: { pk: number }) {
 				<input
 					type="text"
 					className="px-4 py-1.5 outline-0 bg-transparent"
-					placeholder="댓글을 입력하세요..."
+					disabled={!isLoggedIn}
+					placeholder={isLoggedIn ? '댓글을 입력하세요...' : '로그인하고 대화에 참여하세요.'}
 					value={content}
 					onChange={(e) => setContent(e.target.value)}
 					onKeyDown={(e) => {
@@ -59,13 +64,15 @@ export default function GameComment({ pk }: { pk: number }) {
 						}
 					}}
 				/>
-				<button
-					className="px-3 text-black-700 disabled:opacity-50"
-					onClick={handleCreateComment}
-					disabled={createCommentMutation.isPending}
-				>
-					등록
-				</button>
+				{isLoggedIn && (
+					<button
+						className="px-3 text-black-700 disabled:opacity-50"
+						onClick={handleCreateComment}
+						disabled={createCommentMutation.isPending}
+					>
+						등록
+					</button>
+				)}
 			</div>
 		</div>
 	);
