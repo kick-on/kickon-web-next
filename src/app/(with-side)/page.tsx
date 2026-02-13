@@ -84,7 +84,6 @@ export default function Home() {
 							})}
 						>
 							<PredictCard
-								key={game.pk}
 								type={game.homeScore !== null ? 'finished' : 'proceeding'}
 								league={league}
 								game={game}
