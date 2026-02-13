@@ -81,28 +81,28 @@ export const getTileClassName = ({
 	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
 	const isToday = isSameDate(tileDate, stripTime(new Date()));
 
-	let resultClass = '';
+	const classes = [];
 
-	// 활성화 / 비활성화 구분
-	if (isMatch) {
-		const baseClass = hasMatch ? 'has-match' : '';
-
-		if (tileDate < stripTime(new Date())) {
-			resultClass = `${baseClass} disabled-tile pointer-events-none`.trim();
-		} else {
-			resultClass = isFocused ? `${baseClass} focused-tile`.trim() : `${baseClass} active-tile`.trim();
-		}
-	} else {
-		if (!hasMatch) {
-			resultClass = 'disabled-tile pointer-events-none';
-		} else {
-			resultClass = isFocused ? 'has-match focused-tile' : 'has-match active-tile';
-		}
-	}
-
+	// 오늘 타일 스타일링
 	if (isToday) {
-		resultClass = isFocused ? `${resultClass} focused-today-tile` : `${resultClass} not-focused-today-tile`;
+		classes.push(isFocused ? 'focused-today-tile' : 'not-focused-today-tile');
 	}
 
-	return resultClass;
+	// 경기가 있는 타일 스타일링
+	if (hasMatch) {
+		classes.push('has-match');
+	}
+
+	// 활성/비활성 타일 스타일링
+	const matchOnActiveTile = isMatch && tileDate >= stripTime(new Date());
+	const predictResultActiveTile = !isMatch && hasMatch;
+	const isActiveTile = matchOnActiveTile || predictResultActiveTile;
+
+	if (isActiveTile) {
+		classes.push(isFocused ? 'focused-tile' : 'active-tile');
+	} else {
+		classes.push('disabled-tile pointer-events-none');
+	}
+
+	return classes.join(' ');
 };
