@@ -8,20 +8,21 @@ import Image from 'next/image';
 import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
 import { getMonthlyMatchList, getMyPredictionDates, getPredictionOpenPeriod } from '@/services/apis/calendar';
-import useIsMobile from '@/lib/hooks/useIsMobile';
 import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
 import { NavigationLabel } from '../features/calendar/navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
+import useIsTablet from '@/lib/hooks/useIsTablet';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
-	selectedDate: Date;
-	setSelectedDate: (date: Date) => void; // 선택한 날짜 상위로 올림
+	selectedDate?: Date;
+	setSelectedDate?: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
 export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
-	const isMobile = useIsMobile();
+	const isTablet = useIsTablet();
+	// const isDesktop = useIsDesktop();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isMatch = type === 'match';
@@ -122,7 +123,7 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					calendarType="gregory"
 					locale="ko-KR"
 					className={`custom-calendar
-							${isMobile && 'custom-calendar-mobile'} 
+							${!isTablet && 'custom-calendar-mobile'} 
 							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
 							relative transition-all duration-[500ms] ease-linear opacity-100`}
 					onClickDay={(value) => {

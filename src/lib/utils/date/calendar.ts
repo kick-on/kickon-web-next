@@ -81,21 +81,28 @@ export const getTileClassName = ({
 	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
 	const isToday = isSameDate(tileDate, stripTime(new Date()));
 
+	const classes = [];
+
+	// 오늘 타일 스타일링
 	if (isToday) {
-		if (isFocused) return 'focused-today-tile';
-		return 'not-focused-today-tile';
+		classes.push(isFocused ? 'focused-today-tile' : 'not-focused-today-tile');
 	}
 
-	// 활성화 / 비활성화 구분
-	if (isMatch) {
-		// 오늘 기준 과거 -> disabled
-		if (tileDate < stripTime(new Date())) return 'disabled-tile pointer-events-none';
-		// 오늘 포함 미래 -> active
-		return isFocused ? 'focused-tile' : 'active-tile';
-	} else {
-		// hasMatch 없으면 disabled
-		if (!hasMatch) return 'disabled-tile pointer-events-none';
-		// hasMatch 있으면 active
-		return isFocused ? 'focused-tile' : 'active-tile';
+	// 경기가 있는 타일 스타일링
+	if (hasMatch) {
+		classes.push('has-match');
 	}
+
+	// 활성/비활성 타일 스타일링
+	const matchOnActiveTile = isMatch && tileDate >= stripTime(new Date());
+	const predictResultActiveTile = !isMatch && hasMatch;
+	const isActiveTile = matchOnActiveTile || predictResultActiveTile;
+
+	if (isActiveTile) {
+		classes.push(isFocused ? 'focused-tile' : 'active-tile');
+	} else {
+		classes.push('disabled-tile pointer-events-none');
+	}
+
+	return classes.join(' ');
 };
