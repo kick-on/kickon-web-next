@@ -175,8 +175,14 @@ export default function PredictCard({
 
 	return (
 		<div
-			className={`flex flex-col justify-center px-4 py-[1.375rem] min-h-[10.625rem] max-w-[41.75rem]
-				bg-black-000 rounded-lg overflow-hidden ${isFinished && !isGameInProgress ? 'text-black-700' : ''}`}
+			className={clsx(
+				`flex flex-col justify-center px-4 max-w-[41.75rem]
+				overflow-hidden`,
+				{
+					'text-black-700': isFinished && !isGameInProgress,
+					'w-[41.75rem]': !isMobile,
+				},
+			)}
 		>
 			<Header {...headerProps} />
 
