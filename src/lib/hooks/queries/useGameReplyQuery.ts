@@ -31,6 +31,7 @@ export const useGameCommentListInfiniteQuery = (params: GetGameCommentListReques
 			return lastPage.data.at(-1)?.pk ?? undefined;
 		},
 		enabled: enabled && Number.isSafeInteger(params.game) && params.game > 0,
+		refetchInterval: 5000,
 	});
 };
 
@@ -40,6 +41,7 @@ export const useTopGameCommentQuery = (gamePk: number, enabled = true) => {
 		queryKey: gameCommentKeys.top(gamePk),
 		queryFn: () => getTopGameComment(gamePk),
 		enabled: enabled && Number.isSafeInteger(gamePk) && gamePk > 0,
+		refetchInterval: 5000,
 	});
 };
 
