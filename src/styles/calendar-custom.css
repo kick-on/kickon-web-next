@@ -150,8 +150,8 @@
 	background-color: #fff;
 }
 
-.has-match {
-	padding-bottom: 12px !important;
+.custom-calendar-mobile .react-calendar__month-view__days .react-calendar__tile.has-match {
+	padding: 12px 8px;
 }
 
 .react-calendar__tile--active {
