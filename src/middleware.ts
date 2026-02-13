@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const ALLOWED_ROUTES = ['/', '/login', '/signup', '/auth', '/leave', '/profile-setting', '/ranking', '/notice', '/404'];
+const ALLOWED_ROUTES = ['/', '/login', '/signup', '/auth', '/withdrawal', '/profile-setting', '/ranking', '/notice', '/404'];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
