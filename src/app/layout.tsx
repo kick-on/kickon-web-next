@@ -58,7 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 		<html lang="ko" className={`antialiased ${pretendard.className}`}>
 			<body>
 				<NotificationInitializer />
-				<div className="@container relative">
+				<div className="@container relative h-dvh overflow-y-scroll flex flex-col">
 					<ReactQueryProvider>
 						<MobileNavbar />
 						<LoginPortal />
@@ -66,10 +66,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 							{/*<Banner />*/}
 							{/*<PaddingWrapper>{children}</PaddingWrapper>*/}
 							{children}
-							<Footer />
 							<MinWidth />
 						</MarginWrapper>
 					</ReactQueryProvider>
+					<Footer />
 				</div>
 			</body>
 		</html>
