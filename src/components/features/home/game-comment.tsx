@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import GameCommentItem from '@/components/features/home/game-comment-item';
 import {
 	useCreateGameCommentMutation,
@@ -11,6 +11,7 @@ import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 
 export default function GameComment({ pk }: { pk: number }) {
 	const [content, setContent] = useState('');
+	const scrollRef = useRef<HTMLDivElement>(null);
 
 	const { currentUserInfo } = useCurrentUserInfoStore();
 	const isLoggedIn = !!currentUserInfo;
@@ -23,8 +24,8 @@ export default function GameComment({ pk }: { pk: number }) {
 	const { data: topCommentData } = useTopGameCommentQuery(pk);
 	const createCommentMutation = useCreateGameCommentMutation(pk);
 
-	const comments = commentListData?.pages.flatMap((page) => page.data) ?? [];
-	const topComment = topCommentData?.data;
+	const comments = useMemo(() => commentListData?.pages.flatMap((page) => page.data) ?? [], [commentListData]);
+	const topComment = useMemo(() => topCommentData?.data, [topCommentData]);
 
 	const handleCreateComment = () => {
 		if (!content.trim()) return;
@@ -36,10 +37,16 @@ export default function GameComment({ pk }: { pk: number }) {
 		);
 	};
 
+	useEffect(() => {
+		if (scrollRef.current) {
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+		}
+	}, [comments]);
+
 	return (
 		<div className="flex flex-col gap-3 text-caption-01 mx-4">
 			<div className="space-y-2">
-				<div className="flex flex-col gap-1.5 min-h-0 max-h-32 game-comment-scrollbar -mr-3 pr-1">
+				<div ref={scrollRef} className="flex flex-col gap-1.5 min-h-0 max-h-32 game-comment-scrollbar -mr-3 pr-1">
 					{comments.length === 0 ? (
 						<div className="text-center pt-1 pb-5">지금 경기에 대한 이야기를 시작해 보세요!</div>
 					) : (
