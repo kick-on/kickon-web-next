@@ -155,7 +155,7 @@ export default function Home() {
 				))}
 			</div>
 
-			{isCalendarModalOpen && <CalendarPopover onClose={() => setIsCalendarModlaOpen(false)} />}
+			<CalendarPopover isCalendarOpen={isCalendarModalOpen} onClose={() => setIsCalendarModlaOpen(false)} />
 
 			<FloatingCalendarButton onClick={() => setIsCalendarModlaOpen((prev) => !prev)} />
 		</>
