@@ -29,8 +29,8 @@ export default function Home() {
 		const fetchGames = async () => {
 			try {
 				const [proceedingRes, finishedRes] = await Promise.all([
-					getGames({ league: 2, status: 'proceeding', team: undefined }),
-					getGames({ league: 2, status: 'finished', team: undefined }),
+					getGames({ league: 1, status: 'proceeding', team: undefined }),
+					getGames({ league: 1, status: 'finished', team: undefined }),
 				]);
 
 				const proceedingGames = proceedingRes?.data ?? [];
