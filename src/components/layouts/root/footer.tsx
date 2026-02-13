@@ -15,7 +15,7 @@ export default function Footer() {
 		const src = isHome ? '/logo/without-icon-black.svg' : '/logo/without-icon-white.svg';
 
 		return (
-			<div className={`${bgColor} h-[13.125rem] flex items-center absolute bottom-0 left-0 right-0`}>
+			<div className={`${bgColor} h-[13.125rem] flex items-center mt-auto shrink-0`}>
 				<div
 					className={`${textColor} flex items-start max-w-[85rem]
 						gap-[3.625rem] mx-auto @mobile:flex-col @mobile:gap-6 @mobile:pl-6 @mobile:ml-0`}

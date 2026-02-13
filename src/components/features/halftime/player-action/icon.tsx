@@ -5,7 +5,7 @@ import Share from '@/assets/halftime/share.svg';
 import Paper from '@/assets/halftime/paper.svg';
 
 export function KickIcon({ isKicked }: { isKicked: boolean }) {
-	return isKicked ? <KickRed className="w-6 h-6 " /> : <Kick />;
+	return isKicked ? <KickRed className="w-6 h-6 " /> : <Kick className="text-[#8F8F8F]" />;
 }
 
 export function CommentIcon() {
