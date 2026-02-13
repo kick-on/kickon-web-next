@@ -12,7 +12,7 @@ export interface GetGamesRequest {
 	to?: string; // YYYY-MM-DD
 }
 
-export type GetGamesResponse = SuccessResponse<GameTaggedLeagueDto>;
+export type GetGamesResponse = SuccessResponse<GameTaggedLeagueDto[]>;
 
 // 참여한 예측 리스트 조회
 export interface GetMyPredictionsRequest {
@@ -20,7 +20,7 @@ export interface GetMyPredictionsRequest {
 	to: string; // YYYY-MM-DD
 }
 
-export type GetMyPredictionsResponse = SuccessResponse<GameTaggedLeagueDto>;
+export type GetMyPredictionsResponse = SuccessResponse<GameTaggedLeagueDto[]>;
 
 // 예측 통계 조회
 export type GetMyStatsResponse = SuccessResponse<MyStatsDto>;

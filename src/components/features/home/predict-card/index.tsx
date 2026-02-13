@@ -15,17 +15,20 @@ import {
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
 import { GameDto } from '@/services/apis/game/game.type';
 import { addCommas, formatDate, getRelativeTime, getServerDeviceType } from '@/lib/utils';
+import { LeagueDto } from '@/services/apis/league/league.type';
 
 export default function PredictCard({
 	game,
+	league,
 	type,
 	refetchGames,
 }: {
 	game: GameDto;
+	league: LeagueDto;
 	type: 'proceeding' | 'finished';
 	refetchGames?: () => void;
 }) {
-	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt, league } = game;
+	const { pk, gambleResult, myGambleResult, homeScore, awayScore, gameStatus, startAt } = game;
 
 	const { isMobile, isTablet } = getServerDeviceType();
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import PredictCard from '@/components/features/home/predict-card';
-import { GameDto } from '@/services/apis/game/game.type';
+import { GameTaggedLeagueDto } from '@/services/apis/game/game.type';
 import useIsMobile from '@/lib/hooks/useIsMobile';
 import AiAnalytics from '@/components/features/home/ai-analytics';
 import clsx from 'clsx';
@@ -13,7 +13,7 @@ import FetchingFailedCard from '@/components/common/fetching-failed-card';
 
 export default function Home() {
 	const isMobile = useIsMobile();
-	const [games, setGames] = useState<GameDto[]>([]);
+	const [games, setGames] = useState<GameTaggedLeagueDto[]>([]);
 	const [isError, setIsError] = useState(false);
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
@@ -33,8 +33,8 @@ export default function Home() {
 					getGames({ league: 2, status: 'finished', team: undefined }),
 				]);
 
-				const proceedingGames = proceedingRes?.data.games ?? [];
-				const finishedGames = finishedRes?.data.games ?? [];
+				const proceedingGames = proceedingRes?.data ?? [];
+				const finishedGames = finishedRes?.data ?? [];
 
 				setGames([...proceedingGames, ...finishedGames]);
 			} catch (error) {
@@ -75,18 +75,25 @@ export default function Home() {
 					지금은 진행 중인 경기가 없어요.
 				</div>
 			) : (
-				games.map((game) => (
-					<div
-						key={game.pk}
-						className={clsx('py-4 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300', {
-							'w-[41.75rem]': !isMobile,
-						})}
-					>
-						<PredictCard key={game.pk} type={game.homeScore !== null ? 'finished' : 'proceeding'} game={game} />
-						{game.homeScore !== null && <AiAnalytics pk={game.pk} />}
-						<GameComment pk={game.pk} />
-					</div>
-				))
+				games.flatMap(({ league, games }) =>
+					games.map((game) => (
+						<div
+							key={game.pk}
+							className={clsx('py-4 space-y-3 max-w-[41.75rem] bg-white rounded-lg border border-black-300', {
+								'w-[41.75rem]': !isMobile,
+							})}
+						>
+							<PredictCard
+								key={game.pk}
+								type={game.homeScore !== null ? 'finished' : 'proceeding'}
+								league={league}
+								game={game}
+							/>
+							{game.homeScore !== null && <AiAnalytics pk={game.pk} />}
+							<GameComment pk={game.pk} />
+						</div>
+					)),
+				)
 			)}
 		</div>
 	);
