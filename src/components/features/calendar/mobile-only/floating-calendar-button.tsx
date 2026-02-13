@@ -3,7 +3,7 @@ import Image from 'next/image';
 const FloatingCalendarButton = () => {
 	return (
 		<div
-			className="lg:hidden w-fit h-fit z-30 flex items-center sticky
+			className="min-[1094px]:hidden w-fit h-fit z-30 flex items-center sticky
 				bottom-15 ml-auto -mr-[5.125rem] max-[848px]:mr-4"
 		>
 			<button
