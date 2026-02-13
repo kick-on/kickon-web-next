@@ -16,11 +16,17 @@ import useIsTablet from '@/lib/hooks/useIsTablet';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
+	isPopover?: boolean;
 	selectedDate?: Date;
 	setSelectedDate?: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
-export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
+export default function MatchPredictionCalendar({
+	type,
+	isPopover,
+	selectedDate,
+	setSelectedDate,
+}: MatchPredictionCalendarProps) {
 	const isTablet = useIsTablet();
 	// const isDesktop = useIsDesktop();
 	const router = useRouter();
@@ -150,21 +156,23 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					tileContent={({ date }) => <RenderTileContent date={date} {...calendarData} />}
 				/>
 
-				<button
-					onClick={() => setIsWeekCalendar((prev) => !prev)}
-					className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
-				>
-					<Image
-						src="/chevron/calendar-up.svg"
-						alt=""
-						width={36}
-						height={36}
-						style={{
-							transform: isWeekCalendar ? 'rotate(180deg)' : 'rotate(0deg)',
-							transition: 'transform 0.3s ease',
-						}}
-					/>
-				</button>
+				{!isPopover && (
+					<button
+						onClick={() => setIsWeekCalendar((prev) => !prev)}
+						className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
+					>
+						<Image
+							src="/chevron/calendar-up.svg"
+							alt=""
+							width={36}
+							height={36}
+							style={{
+								transform: isWeekCalendar ? 'rotate(180deg)' : 'rotate(0deg)',
+								transition: 'transform 0.3s ease',
+							}}
+						/>
+					</button>
+				)}
 			</div>
 		</div>
 	);

@@ -1,13 +1,17 @@
 import Image from 'next/image';
 
-const FloatingCalendarButton = () => {
+interface FloatingCalendarButtonProps {
+	onClick: () => void;
+}
+
+const FloatingCalendarButton = ({ onClick }: FloatingCalendarButtonProps) => {
 	return (
 		<div
 			className="min-[1094px]:hidden w-fit h-fit z-30 flex items-center sticky
-				bottom-15 ml-auto -mr-[5.125rem] max-[848px]:mr-4"
+				bottom-15 ml-auto -mr-[5.125rem] max-[848px]:mr-1"
 		>
 			<button
-				onClick={() => {}}
+				onClick={onClick}
 				className="w-[3.625rem] h-[3.625rem] bg-white rounded-full @mobile:mr-[1px]
 				transition-transform duration-200 ease-out
 				shadow-[0_2px_5px_rgba(0,0,0,0.12),0_2px_5px_rgba(0,0,0,0.24)]

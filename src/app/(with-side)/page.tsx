@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PredictCard from '@/components/features/home/predict-card';
 import { GameDto } from '@/services/apis/game/game.type';
 import useIsMobile from '@/lib/hooks/useIsMobile';
@@ -8,9 +8,11 @@ import AiAnalytics from '@/components/features/home/ai-analytics';
 import clsx from 'clsx';
 import GameComment from '@/components/features/home/game-comment';
 import FloatingCalendarButton from '@/components/features/calendar/mobile-only/floating-calendar-button';
+import CalendarPopover from '@/components/features/calendar/mobile-only/calendar-popover';
 
 export default function Home() {
 	const isMobile = useIsMobile();
+	const [isCalendarModalOpen, setIsCalendarModlaOpen] = useState(false);
 
 	useEffect(() => {
 		document.body.style.backgroundColor = 'var(--color-black-800)';
@@ -152,7 +154,10 @@ export default function Home() {
 					</div>
 				))}
 			</div>
-			<FloatingCalendarButton />
+
+			{isCalendarModalOpen && <CalendarPopover onClose={() => setIsCalendarModlaOpen(false)} />}
+
+			<FloatingCalendarButton onClick={() => setIsCalendarModlaOpen((prev) => !prev)} />
 		</>
 	);
 }
