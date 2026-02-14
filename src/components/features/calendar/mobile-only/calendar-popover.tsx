@@ -42,6 +42,7 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 	return (
 		<div
 			ref={popoverRef}
+			aria-hidden={!isCalendarOpen}
 			className={`
                 absolute bottom-full right-0 mb-3 w-[22rem]
                 transition-all duration-200 ease-out
