@@ -23,7 +23,12 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 		if (!popoverRef.current) return;
 
 		const handleOutsideClick = (e: PointerEvent) => {
-			if (!popoverRef.current?.contains(e.target as Node)) {
+			const target = e.target as HTMLElement;
+			const isDateTile = target.closest('.react-calendar__tile');
+			const isInsidePopover = popoverRef.current.contains(target);
+
+			// 날짜 타일 클릭, 팝오버 외부 클릭 시 close, 그 외 클릭은 무시
+			if (isDateTile || !isInsidePopover) {
 				onClose();
 			}
 		};
@@ -49,7 +54,6 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 				selectedDate={selectedDate}
 				setSelectedDate={(date) => {
 					setSelectedDate(date);
-					onClose();
 				}}
 			/>
 			<div className="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45 border-r border-b border-black-200" />
