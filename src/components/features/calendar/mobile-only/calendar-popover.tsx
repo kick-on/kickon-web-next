@@ -43,7 +43,7 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 		<div
 			ref={popoverRef}
 			className={`
-                fixed bottom-33 right-3 w-[22rem] z-50
+                absolute bottom-full right-0 mb-3 w-[22rem]
                 transition-all duration-200 ease-out
                 ${isCalendarOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-3 scale-95'}
             `}
