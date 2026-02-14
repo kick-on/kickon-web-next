@@ -94,9 +94,8 @@ export const getTileClassName = ({
 	}
 
 	// 활성/비활성 타일 스타일링
-	const matchOnActiveTile = isMatch && tileDate >= stripTime(new Date());
 	const predictResultActiveTile = !isMatch && hasMatch;
-	const isActiveTile = matchOnActiveTile || predictResultActiveTile;
+	const isActiveTile = isMatch || predictResultActiveTile;
 
 	if (isActiveTile) {
 		classes.push(isFocused ? 'focused-tile' : 'active-tile');
