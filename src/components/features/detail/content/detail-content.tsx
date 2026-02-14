@@ -206,7 +206,7 @@ const DetailContent = ({ detailData, type, isCommentAllowed }: DetailContentProp
 
 					<div className="flex gap-3 items-center text-black-600 body5-regular">
 						<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`킥 ${likes}개`}>
-							<KickIcon aria-hidden={true} className="text-[#8F8F8F]" width={18} height={18} />
+							<KickIcon aria-hidden={true} className="text-black-600" width={18} height={18} />
 							<span aria-hidden={true}>{likes}</span>
 						</div>
 						<div className="flex items-center gap-1.5 @mobile:hidden" aria-label={`댓글 ${detailData.replies}개`}>

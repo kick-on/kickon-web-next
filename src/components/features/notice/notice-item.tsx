@@ -63,7 +63,7 @@ export default function NoticeItem({
 				console.error('알림 읽음 API 실패', e);
 			}
 		}
-		router.push(redirectUrl);
+		// router.push(redirectUrl);
 		if (isModal && onCloseModal) {
 			onCloseModal();
 		}

@@ -33,7 +33,7 @@ export default function PreviewWithTitle({
 					<>
 						<div className="h-3 w-px bg-black-600" />
 						<span className="flex gap-1.5 items-center">
-							<KickIcon className="text-[#8F8F8F]" width={16} height={16} />킥 {formatNumberByUnit(kickCount)}
+							<KickIcon className="text-black-600" width={16} height={16} />킥 {formatNumberByUnit(kickCount)}
 						</span>
 					</>
 				)}
