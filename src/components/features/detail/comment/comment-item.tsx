@@ -176,7 +176,7 @@ function CommentItem({
 						{/* 킥 버튼 (하단 우측) */}
 						{!isEditing && (
 							<button onClick={() => void toggleCommentLike()} className="ml-auto flex items-center gap-2">
-								<KickIcon className={comment.kicked ? 'text-[#C00C0B]' : 'text-[#8F8F8F]'} width={16} height={16} />
+								<KickIcon className={comment.kicked ? 'text-primary-900' : 'text-black-600'} width={16} height={16} />
 								<span className={comment.kicked ? 'text-black-900' : 'text-gray-500'}>{comment.kickCount}</span>
 							</button>
 						)}

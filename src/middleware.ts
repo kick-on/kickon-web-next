@@ -1,7 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-const ALLOWED_ROUTES = ['/', '/login', '/signup', '/auth', '/leave', '/profile-setting', '/ranking', '/notice', '/404'];
+const ALLOWED_ROUTES = ['/', '/login', '/signup', '/auth', '/withdrawal', '/profile-setting', '/ranking', '/notice', '/404'];
 
 export function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
@@ -12,7 +12,8 @@ export function middleware(request: NextRequest) {
 	}
 
 	const isProd = process.env.NEXT_PUBLIC_NODE_ENV === 'prod';
-	const isAllowed = ALLOWED_ROUTES.some((route) => route.startsWith(pathname));
+	const isAllowed = ALLOWED_ROUTES.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
 	if (isProd && !isAllowed) {
 		return NextResponse.redirect(new URL('/404', request.url));
 	}

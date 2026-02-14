@@ -89,7 +89,7 @@ export default function CommunityItem({
 						aria-hidden={true}
 						width={16}
 						height={16}
-						className="@mobile:inline hidden w-4 h-4 object-contain text-[#8F8F8F]"
+						className="@mobile:inline hidden w-4 h-4 object-contain text-black-600"
 					/>
 					<span aria-hidden={true}>{likes}</span>
 				</div>
