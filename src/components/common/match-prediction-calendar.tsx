@@ -12,7 +12,7 @@ import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
 import { NavigationLabel } from '../features/calendar/navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
-import useIsTablet from '@/lib/hooks/useIsTablet';
+import useIsDesktop from '@/lib/hooks/useIsDesktop';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
@@ -27,8 +27,7 @@ export default function MatchPredictionCalendar({
 	selectedDate,
 	setSelectedDate,
 }: MatchPredictionCalendarProps) {
-	const isTablet = useIsTablet();
-	// const isDesktop = useIsDesktop();
+	const isDesktop = useIsDesktop();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isMatch = type === 'match';
@@ -128,10 +127,13 @@ export default function MatchPredictionCalendar({
 					activeStartDate={firstDayOfCurrentMonth}
 					calendarType="gregory"
 					locale="ko-KR"
-					className={`custom-calendar
-							${!isTablet && 'custom-calendar-mobile'} 
-							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
-							relative transition-all duration-[500ms] ease-linear opacity-100`}
+					className={`
+						custom-calendar custom-calendar-mobile
+						${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
+						px-[5px] pt-[26px]
+						${!isDesktop && isPopover ? 'pb-[20px]' : 'pb-[48px]'}
+						relative transition-all duration-[500ms] ease-linear opacity-100
+					`}
 					onClickDay={(value) => {
 						const clickedDate = stripTime(value);
 						setSelectedDate(clickedDate);

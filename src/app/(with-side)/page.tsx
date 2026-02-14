@@ -95,7 +95,7 @@ export default function Home() {
 					)
 				)}
 			</div>
-			<div className="fixed bottom-13 right-3 z-50">
+			<div className="fixed bottom-15 right-3 z-50">
 				<div className="relative ml-auto">
 					<CalendarPopover isCalendarOpen={isCalendarModalOpen} onClose={() => setIsCalendarModlaOpen(false)} />
 
