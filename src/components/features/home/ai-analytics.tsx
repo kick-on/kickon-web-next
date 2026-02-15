@@ -1,28 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { MatchAiAnalyticsDto } from '@/services/apis/match-ai/match-ai.type';
-import { getMatchAiAnalytics } from '@/services/apis/match-ai/match-ai.api';
+import { useMatchAiAnalyticsQuery } from '@/lib/hooks/queries/useMatchAiQuery';
 
 export default function AiAnalytics({ pk }: { pk: number }) {
-	const [analytics, setAnalytics] = useState<MatchAiAnalyticsDto | null>(null);
-	const [isError, setIsError] = useState(true);
+	const { data: response, isError, isLoading } = useMatchAiAnalyticsQuery(pk);
+	const analytics = response?.data;
 
-	useEffect(() => {
-		const apiCaller = async () => {
-			try {
-				const response = await getMatchAiAnalytics(pk);
-				setAnalytics(response.data);
-				setIsError(false);
-			} catch {
-				setIsError(true);
-			}
-		};
+	if (isLoading) {
+		return (
+			<div className="bg-black-200 text-black rounded px-4 pt-3 pb-4 mx-4">
+				<h3 className="text-subtitle-02 font-semibold">킥온 AI 분석</h3>
+				<span className="text-subtitle-02">데이터를 불러오는 중입니다...</span>
+			</div>
+		);
+	}
 
-		apiCaller();
-	}, [pk]);
-
-	if (isError) {
+	if (isError || !analytics) {
 		return (
 			<div className="bg-black-200 text-black rounded px-4 pt-3 pb-4 mx-4">
 				<h3 className="text-subtitle-02 font-semibold">킥온 AI 분석</h3>
