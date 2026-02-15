@@ -18,7 +18,7 @@ export default function Home() {
 	const [games, setGames] = useState<GameTaggedLeagueDto[]>([]);
 	const [isError, setIsError] = useState(false);
 	const { currentUserInfo } = useCurrentUserInfoStore();
-	const [isCalendarModalOpen, setIsCalendarModlaOpen] = useState(false);
+	const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
 	useEffect(() => {
 		document.body.style.backgroundColor = 'var(--color-black-800)';
@@ -97,9 +97,9 @@ export default function Home() {
 			</div>
 			<div className="fixed bottom-15 right-3 z-50">
 				<div className="relative ml-auto">
-					<CalendarPopover isCalendarOpen={isCalendarModalOpen} onClose={() => setIsCalendarModlaOpen(false)} />
+					<CalendarPopover isCalendarOpen={isCalendarModalOpen} onClose={() => setIsCalendarModalOpen(false)} />
 
-					<FloatingCalendarButton onClick={() => setIsCalendarModlaOpen((prev) => !prev)} />
+					<FloatingCalendarButton onClick={() => setIsCalendarModalOpen((prev) => !prev)} />
 				</div>
 			</div>
 		</>
