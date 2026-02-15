@@ -7,32 +7,34 @@ import Image from 'next/image';
 
 import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
-import { getMonthlyMatchList, getMyPredictionDates, getPredictionOpenPeriod } from '@/services/apis/calendar';
+import { getMonthlyMatchList, getMyPredictionDates } from '@/services/apis/calendar';
 import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
 import { NavigationLabel } from '../features/calendar/navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
-import useIsTablet from '@/lib/hooks/useIsTablet';
+import useIsDesktop from '@/lib/hooks/useIsDesktop';
+import clsx from 'clsx';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
+	isPopover?: boolean;
 	selectedDate?: Date;
 	setSelectedDate?: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
-export default function MatchPredictionCalendar({ selectedDate, setSelectedDate, type }: MatchPredictionCalendarProps) {
-	const isTablet = useIsTablet();
-	// const isDesktop = useIsDesktop();
+export default function MatchPredictionCalendar({
+	type,
+	isPopover,
+	selectedDate,
+	setSelectedDate,
+}: MatchPredictionCalendarProps) {
+	const isDesktop = useIsDesktop();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isMatch = type === 'match';
 
 	const [isWeekCalendar, setIsWeekCalendar] = useState(isMatch ? false : true); // 주 단위 캘린더인가 (접힌 상태인가)
 	const [markedDatesMap, setMarkedDatesMap] = useState<Record<string, number>>({}); // 경기가 있는 날짜들
-	const [predictionRange, setPredictionRange] = useState<{
-		start: Date;
-		end: Date;
-	} | null>(null);
 
 	const getYearMonthFromUrl = () => {
 		const year = searchParams.get('year');
@@ -80,33 +82,11 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 		fetchMarkedDates();
 	}, [searchParams, type]);
 
-	// 승부 예측 가능 기간 조회
-	useEffect(() => {
-		async function fetchPredictionDates() {
-			try {
-				const response = await getPredictionOpenPeriod();
-				console.log(response);
-				if (response?.data) {
-					const { startDate, endDate } = response.data;
-					setPredictionRange({
-						start: new Date(startDate),
-						end: new Date(endDate),
-					});
-				}
-			} catch (e) {
-				console.error('승부예측 가능 날짜 범위 불러오기 실패:', e);
-			}
-		}
-
-		fetchPredictionDates();
-	}, []);
-
 	const calendarData = {
 		firstDayOfCurrentMonth,
 		selectedDate,
 		setSelectedDate,
 		isWeekCalendar,
-		predictionRange,
 		isMatch,
 		markedDatesMap,
 		updateUrlWithDate,
@@ -122,10 +102,11 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					activeStartDate={firstDayOfCurrentMonth}
 					calendarType="gregory"
 					locale="ko-KR"
-					className={`custom-calendar
-							${!isTablet && 'custom-calendar-mobile'} 
-							${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
-							relative transition-all duration-[500ms] ease-linear opacity-100`}
+					className={clsx(
+						'custom-calendar custom-calendar-mobile px-[5px] pt-[26px] relative transition-all duration-[500ms] ease-linear opacity-100',
+						isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]',
+						!isDesktop && isPopover ? 'pb-[20px]' : 'pb-[48px]',
+					)}
 					onClickDay={(value) => {
 						const clickedDate = stripTime(value);
 						setSelectedDate(clickedDate);
@@ -150,21 +131,23 @@ export default function MatchPredictionCalendar({ selectedDate, setSelectedDate,
 					tileContent={({ date }) => <RenderTileContent date={date} {...calendarData} />}
 				/>
 
-				<button
-					onClick={() => setIsWeekCalendar((prev) => !prev)}
-					className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
-				>
-					<Image
-						src="/chevron/calendar-up.svg"
-						alt=""
-						width={36}
-						height={36}
-						style={{
-							transform: isWeekCalendar ? 'rotate(180deg)' : 'rotate(0deg)',
-							transition: 'transform 0.3s ease',
-						}}
-					/>
-				</button>
+				{!isPopover && (
+					<button
+						onClick={() => setIsWeekCalendar((prev) => !prev)}
+						className="flex w-full justify-center absolute bottom-2 left-1/2 -translate-x-1/2 z-10 bg-transparent border-none cursor-pointer"
+					>
+						<Image
+							src="/chevron/calendar-up.svg"
+							alt=""
+							width={36}
+							height={36}
+							style={{
+								transform: isWeekCalendar ? 'rotate(180deg)' : 'rotate(0deg)',
+								transition: 'transform 0.3s ease',
+							}}
+						/>
+					</button>
+				)}
 			</div>
 		</div>
 	);

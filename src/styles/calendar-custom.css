@@ -21,7 +21,6 @@
 	transition:
 		max-height 0.8s ease,
 		opacity 0.8s ease;
-	padding: 30px 16px 38px 16px;
 }
 
 .custom-calendar-mobile {
@@ -31,7 +30,6 @@
 	transition:
 		max-height 0.8s ease,
 		opacity 0.8s ease;
-	padding: 26px 5px 48px 5px;
 }
 
 /* 오늘 날짜는 abbr 숨기기 */

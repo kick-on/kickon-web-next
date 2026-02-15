@@ -21,7 +21,6 @@ interface TileClassNameProps {
 	selectedDate: Date | null; // 사용자가 선택한 날짜
 	isWeekCalendar: boolean;
 	isMatch: boolean;
-	predictionRange: { start: Date; end: Date } | null;
 	markedDatesMap: Record<string, number>;
 }
 export const getTileClassName = ({
@@ -30,7 +29,6 @@ export const getTileClassName = ({
 	selectedDate,
 	isWeekCalendar,
 	isMatch,
-	predictionRange,
 	markedDatesMap,
 }: TileClassNameProps) => {
 	const tileDate = stripTime(dateOfTile);
@@ -58,25 +56,6 @@ export const getTileClassName = ({
 	const dStr = `${tileDate.getFullYear()}-${String(tileDate.getMonth() + 1).padStart(2, '0')}-${String(tileDate.getDate()).padStart(2, '0')}`;
 	const hasMatch = markedDatesMap[dStr] > 0;
 
-	// predictionRange 처리
-	if (isMatch && predictionRange && tileDate > predictionRange.end) {
-		const classes = ['disabled-after'];
-		const dayOfWeek = dateOfTile.getDay();
-
-		const prevDate = new Date(dateOfTile);
-		prevDate.setDate(prevDate.getDate() - 1);
-		const nextDate = new Date(dateOfTile);
-		nextDate.setDate(nextDate.getDate() + 1);
-
-		const isPrevDisabled = stripTime(prevDate) > predictionRange.end;
-		const isNextDisabled = stripTime(nextDate) > predictionRange.end;
-
-		if (dayOfWeek === 0 || !isPrevDisabled) classes.push('disabled-after-week-start');
-		if (dayOfWeek === 6 || !isNextDisabled) classes.push('disabled-after-week-end');
-
-		return classes.join(' ');
-	}
-
 	// 오늘 / 선택 상태
 	const isFocused = selectedDate && isSameDate(tileDate, selectedDate);
 	const isToday = isSameDate(tileDate, stripTime(new Date()));
@@ -94,9 +73,8 @@ export const getTileClassName = ({
 	}
 
 	// 활성/비활성 타일 스타일링
-	const matchOnActiveTile = isMatch && tileDate >= stripTime(new Date());
 	const predictResultActiveTile = !isMatch && hasMatch;
-	const isActiveTile = matchOnActiveTile || predictResultActiveTile;
+	const isActiveTile = isMatch || predictResultActiveTile;
 
 	if (isActiveTile) {
 		classes.push(isFocused ? 'focused-tile' : 'active-tile');
