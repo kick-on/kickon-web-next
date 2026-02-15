@@ -265,7 +265,7 @@ export default function TeamButton({
 								'pl-1': isMobile && (isFinished || isCompleted) && side === 'away',
 							})}
 						>
-							<div className="relative z-20 max-w-full min-w-0 max-h-8 whitespace-pre-line line-clamp-2 truncate">
+							<div className="relative z-20 max-w-full min-w-0 max-h-8 whitespace-pre-line line-clamp-1 truncate">
 								{sides[side].teamName || '팀 이름'}
 							</div>
 							{(isClicked || isFinished) && (
