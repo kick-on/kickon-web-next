@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import 'react-calendar/dist/Calendar.css';
 import '@/styles/calendar-custom.css';
-import { getMonthlyMatchList, getMyPredictionDates, getPredictionOpenPeriod } from '@/services/apis/calendar';
+import { getMonthlyMatchList, getMyPredictionDates } from '@/services/apis/calendar';
 import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 
 import { NavigationLabel } from '../features/calendar/navigation-label';
@@ -34,10 +34,6 @@ export default function MatchPredictionCalendar({
 
 	const [isWeekCalendar, setIsWeekCalendar] = useState(isMatch ? false : true); // 주 단위 캘린더인가 (접힌 상태인가)
 	const [markedDatesMap, setMarkedDatesMap] = useState<Record<string, number>>({}); // 경기가 있는 날짜들
-	const [predictionRange, setPredictionRange] = useState<{
-		start: Date;
-		end: Date;
-	} | null>(null);
 
 	const getYearMonthFromUrl = () => {
 		const year = searchParams.get('year');
@@ -85,33 +81,11 @@ export default function MatchPredictionCalendar({
 		fetchMarkedDates();
 	}, [searchParams, type]);
 
-	// 승부 예측 가능 기간 조회
-	useEffect(() => {
-		async function fetchPredictionDates() {
-			try {
-				const response = await getPredictionOpenPeriod();
-				console.log(response);
-				if (response?.data) {
-					const { startDate, endDate } = response.data;
-					setPredictionRange({
-						start: new Date(startDate),
-						end: new Date(endDate),
-					});
-				}
-			} catch (e) {
-				console.error('승부예측 가능 날짜 범위 불러오기 실패:', e);
-			}
-		}
-
-		fetchPredictionDates();
-	}, []);
-
 	const calendarData = {
 		firstDayOfCurrentMonth,
 		selectedDate,
 		setSelectedDate,
 		isWeekCalendar,
-		predictionRange,
 		isMatch,
 		markedDatesMap,
 		updateUrlWithDate,

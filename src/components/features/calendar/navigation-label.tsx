@@ -11,7 +11,6 @@ interface NavigationLabelProps {
 	selectedDate: Date | null;
 	setSelectedDate: (date: Date) => void;
 	firstDayOfCurrentMonth: Date;
-	predictionRange: { start: Date; end: Date } | null;
 	isWeekCalendar: boolean;
 	updateUrlWithDate: (date: Date) => void;
 }
@@ -21,7 +20,6 @@ export function NavigationLabel({
 	selectedDate,
 	setSelectedDate,
 	firstDayOfCurrentMonth,
-	predictionRange,
 	isWeekCalendar,
 	updateUrlWithDate,
 }: NavigationLabelProps) {
@@ -71,16 +69,7 @@ export function NavigationLabel({
 	};
 
 	const isPrevArrowVisible = () => {
-		if (isMatch) {
-			if (isWeekCalendar) {
-				// 선택한 날짜가 포함된 주의 첫째 날 = 오늘이 포함된 주의 시작일과 같으면 -> 이전 주로 이동 불가
-				return getStartOfWeek(today).getTime() !== currentWeekStart.getTime();
-			}
-			return predictionRange
-				? firstDayOfCurrentMonth.getTime() >
-						new Date(predictionRange.start.getFullYear(), predictionRange.start.getMonth(), 1).getTime()
-				: true;
-		}
+		if (isMatch) return true;
 
 		const minYear = Math.min(...options.map((o) => o.value));
 		const firstDayOfMinYear = new Date(minYear, 0, 1);
@@ -88,19 +77,13 @@ export function NavigationLabel({
 		if (isWeekCalendar) {
 			return currentWeekStart.getTime() > firstDayOfMinYear.getTime();
 		}
+
 		return firstDayOfCurrentMonth.getTime() > firstDayOfMinYear.getTime();
 	};
 
 	const isNextArrowVisible = () => {
-		if (isMatch) {
-			if (isWeekCalendar) {
-				return predictionRange ? currentWeekEnd.getTime() < stripTime(new Date(predictionRange.end)).getTime() : true;
-			}
-			return predictionRange
-				? firstDayOfCurrentMonth.getTime() <
-						new Date(predictionRange.end.getFullYear(), predictionRange.end.getMonth(), 1).getTime()
-				: true;
-		}
+		if (isMatch) return true;
+
 		const maxYear = Math.max(...options.map((o) => o.value));
 
 		if (isWeekCalendar) {
