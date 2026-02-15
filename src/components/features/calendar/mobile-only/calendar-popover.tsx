@@ -53,9 +53,7 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 				type="match"
 				isPopover={true}
 				selectedDate={selectedDate}
-				setSelectedDate={(date) => {
-					setSelectedDate(date);
-				}}
+				setSelectedDate={(date) => setSelectedDate(date)}
 			/>
 			<div className="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45 border-r border-b border-black-200" />
 		</div>
