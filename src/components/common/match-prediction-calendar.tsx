@@ -13,6 +13,7 @@ import { formatFromTo, getTileClassName, stripTime } from '@/lib/utils';
 import { NavigationLabel } from '../features/calendar/navigation-label';
 import { RenderTileContent } from '../features/calendar/renderers/render-tile-content';
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
+import clsx from 'clsx';
 
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
@@ -101,13 +102,13 @@ export default function MatchPredictionCalendar({
 					activeStartDate={firstDayOfCurrentMonth}
 					calendarType="gregory"
 					locale="ko-KR"
-					className={`
-						custom-calendar custom-calendar-mobile
-						${isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]'}
-						px-[5px] pt-[26px]
-						${!isDesktop && isPopover ? 'pb-[20px]' : 'pb-[48px]'}
-						relative transition-all duration-[500ms] ease-linear opacity-100
-					`}
+					className={clsx(
+						'custom-calendar custom-calendar-mobile',
+						'px-[5px] pt-[26px]',
+						'relative transition-all duration-[500ms] ease-linear opacity-100',
+						isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]',
+						!isDesktop && isPopover ? 'pb-[20px]' : 'pb-[48px]',
+					)}
 					onClickDay={(value) => {
 						const clickedDate = stripTime(value);
 						setSelectedDate(clickedDate);
