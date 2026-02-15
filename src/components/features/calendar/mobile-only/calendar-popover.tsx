@@ -33,9 +33,9 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 			}
 		};
 
-		document.addEventListener('pointerdown', handleOutsideClick);
+		document.addEventListener('click', handleOutsideClick);
 		return () => {
-			document.removeEventListener('pointerdown', handleOutsideClick);
+			document.removeEventListener('click', handleOutsideClick);
 		};
 	}, [onClose]);
 
