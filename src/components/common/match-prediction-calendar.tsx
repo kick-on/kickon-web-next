@@ -103,9 +103,7 @@ export default function MatchPredictionCalendar({
 					calendarType="gregory"
 					locale="ko-KR"
 					className={clsx(
-						'custom-calendar custom-calendar-mobile',
-						'px-[5px] pt-[26px]',
-						'relative transition-all duration-[500ms] ease-linear opacity-100',
+						'custom-calendar custom-calendar-mobile px-[5px] pt-[26px] relative transition-all duration-[500ms] ease-linear opacity-100',
 						isWeekCalendar ? 'max-h-[250px]' : 'max-h-[1000px]',
 						!isDesktop && isPopover ? 'pb-[20px]' : 'pb-[48px]',
 					)}
