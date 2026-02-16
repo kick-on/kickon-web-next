@@ -33,21 +33,6 @@ export default function MatchPredictionCalendar({ type, isPopover }: MatchPredic
 	const [isWeekCalendar, setIsWeekCalendar] = useState(isMatch ? false : true); // 주 단위 캘린더인가 (접힌 상태인가)
 	const [markedDatesMap, setMarkedDatesMap] = useState<Record<string, number>>({}); // 경기가 있는 날짜들
 
-	const getYearMonthFromUrl = () => {
-		const year = searchParams.get('year');
-		const month = searchParams.get('month');
-
-		if (year && month) {
-			return new Date(parseInt(year), parseInt(month) - 1, 1);
-		}
-
-		// 파라미터가 없으면 현재 월
-		const today = new Date();
-		return new Date(today.getFullYear(), today.getMonth(), 1);
-	};
-
-	const firstDayOfCurrentMonth = getYearMonthFromUrl(); // 현재 월의 첫째 날
-
 	const updateUrlWithDate = (date: Date) => {
 		const year = date.getFullYear();
 		const month = date.getMonth() + 1;
@@ -57,11 +42,30 @@ export default function MatchPredictionCalendar({ type, isPopover }: MatchPredic
 		router.replace(`?${params.toString()}`, { scroll: false });
 	};
 
+	// URL 파라미터와 전역 selectedDate 동기화
+	useEffect(() => {
+		const yearParam = searchParams.get('year');
+		const monthParam = searchParams.get('month');
+		const today = stripTime(new Date());
+
+		if (yearParam && monthParam) {
+			const year = parseInt(yearParam);
+			const month = parseInt(monthParam);
+
+			// 현재 selectedDate와 URL의 연/월이 다를 때만 업데이트 (루프 방지)
+			if (selectedDate.getFullYear() !== year || selectedDate.getMonth() + 1 !== month) {
+				const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
+				const newDate = isCurrentMonth ? today : new Date(year, month - 1, 1);
+				setSelectedDate(newDate);
+			}
+		}
+	}, [searchParams]);
+
 	useEffect(() => {
 		// 점찍기 페치 (type에 따라 분기)
 		async function fetchMarkedDates() {
 			try {
-				const formattedDate = formatFromTo(firstDayOfCurrentMonth);
+				const formattedDate = formatFromTo(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1));
 				const response = type === 'match' ? await getMonthlyMatchList(formattedDate) : await getMyPredictionDates();
 
 				if (response?.data?.dates) {
@@ -77,10 +81,9 @@ export default function MatchPredictionCalendar({ type, isPopover }: MatchPredic
 		}
 
 		fetchMarkedDates();
-	}, [searchParams, type]);
+	}, [selectedDate.getFullYear(), selectedDate.getMonth(), type]);
 
 	const calendarData = {
-		firstDayOfCurrentMonth,
 		selectedDate,
 		setSelectedDate,
 		isWeekCalendar,
@@ -93,10 +96,10 @@ export default function MatchPredictionCalendar({ type, isPopover }: MatchPredic
 		<div className="w-full">
 			<div className="relative">
 				<Calendar
-					key={`${firstDayOfCurrentMonth.toISOString()}`}
+					key={`${selectedDate.getFullYear()}-${selectedDate.getMonth()}`}
 					view="month"
 					formatDay={(locale, date) => `${date.getDate()}`}
-					activeStartDate={firstDayOfCurrentMonth}
+					activeStartDate={new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1)}
 					calendarType="gregory"
 					locale="ko-KR"
 					className={clsx(
@@ -108,8 +111,8 @@ export default function MatchPredictionCalendar({ type, isPopover }: MatchPredic
 						const clickedDate = stripTime(value);
 						setSelectedDate(clickedDate);
 
-						// 만약 선택된 날짜의 달이 현재 파라미터의 달과 다르다면 -> 파라미터 변경 -> 자동으로 firstDayOfCurrentMonth도 변경
-						if (clickedDate.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
+						// 만약 선택된 날짜의 달이 현재 파라미터의 달과 다르다면 -> 파라미터 변경
+						if (clickedDate.getMonth() !== selectedDate.getMonth()) {
 							updateUrlWithDate(clickedDate);
 						}
 					}}

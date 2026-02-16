@@ -17,15 +17,13 @@ export const getEndOfWeek = (startDate: Date): Date => {
 
 interface TileClassNameProps {
 	dateOfTile: Date; //캘린더 기준 현재 날짜
-	firstDayOfCurrentMonth: Date;
-	selectedDate: Date | null; // 사용자가 선택한 날짜
+	selectedDate: Date; // 사용자가 선택한 날짜
 	isWeekCalendar: boolean;
 	isMatch: boolean;
 	markedDatesMap: Record<string, number>;
 }
 export const getTileClassName = ({
 	dateOfTile,
-	firstDayOfCurrentMonth,
 	selectedDate,
 	isWeekCalendar,
 	isMatch,
@@ -33,7 +31,7 @@ export const getTileClassName = ({
 }: TileClassNameProps) => {
 	const tileDate = stripTime(dateOfTile);
 
-	if (!isWeekCalendar && firstDayOfCurrentMonth && dateOfTile.getMonth() !== firstDayOfCurrentMonth.getMonth()) {
+	if (!isWeekCalendar && selectedDate && dateOfTile.getMonth() !== selectedDate.getMonth()) {
 		return 'hidden-other-month-tile';
 	}
 
