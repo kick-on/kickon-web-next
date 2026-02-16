@@ -8,7 +8,7 @@ export default defineConfig({
 		icon: '',
 	},
 	web: {
-		host: '172.30.1.60',
+		host: 'localhost',
 		port: 3000,
 		commands: {
 			dev: 'next dev',
