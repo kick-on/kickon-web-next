@@ -5,11 +5,10 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { getEndOfWeek, getStartOfWeek, stripTime } from '@/lib/utils';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
 
 interface NavigationLabelProps {
 	isMatch: boolean;
-	selectedDate: Date | null;
-	setSelectedDate: (date: Date) => void;
 	firstDayOfCurrentMonth: Date;
 	isWeekCalendar: boolean;
 	updateUrlWithDate: (date: Date) => void;
@@ -17,13 +16,12 @@ interface NavigationLabelProps {
 
 export function NavigationLabel({
 	isMatch,
-	selectedDate,
-	setSelectedDate,
 	firstDayOfCurrentMonth,
 	isWeekCalendar,
 	updateUrlWithDate,
 }: NavigationLabelProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { selectedDate, setSelectedDate } = useCalendarStore();
 	const calendarMode = isWeekCalendar ? 'week' : 'month';
 
 	const year = firstDayOfCurrentMonth.getFullYear();

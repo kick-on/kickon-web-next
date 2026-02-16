@@ -10,11 +10,12 @@ import Stat from './stat';
 import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
 import { useRouter } from 'next/navigation';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
 
 export default function PredictResult() {
 	const { currentUserInfo } = useCurrentUserInfoStore();
 
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const { selectedDate } = useCalendarStore();
 	const [games, setGames] = useState<GameDto[]>([]);
 	const router = useRouter();
 
@@ -50,7 +51,7 @@ export default function PredictResult() {
 			</div>
 
 			<div className="px-4">
-				<MatchPredictionCalendar type="predict" selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+				<MatchPredictionCalendar type="predict" />
 			</div>
 
 			{games.length === 0 ? (

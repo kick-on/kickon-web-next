@@ -15,23 +15,20 @@ import { RenderTileContent } from '../features/calendar/renderers/render-tile-co
 import useIsDesktop from '@/lib/hooks/useIsDesktop';
 import clsx from 'clsx';
 
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
+
 interface MatchPredictionCalendarProps {
 	type: 'match' | 'predict';
 	isPopover?: boolean;
-	selectedDate?: Date;
-	setSelectedDate?: (date: Date) => void; // 선택한 날짜 상위로 올림
 }
 
-export default function MatchPredictionCalendar({
-	type,
-	isPopover,
-	selectedDate,
-	setSelectedDate,
-}: MatchPredictionCalendarProps) {
+export default function MatchPredictionCalendar({ type, isPopover }: MatchPredictionCalendarProps) {
 	const isDesktop = useIsDesktop();
 	const router = useRouter();
 	const searchParams = useSearchParams();
 	const isMatch = type === 'match';
+
+	const { selectedDate, setSelectedDate } = useCalendarStore();
 
 	const [isWeekCalendar, setIsWeekCalendar] = useState(isMatch ? false : true); // 주 단위 캘린더인가 (접힌 상태인가)
 	const [markedDatesMap, setMarkedDatesMap] = useState<Record<string, number>>({}); // 경기가 있는 날짜들

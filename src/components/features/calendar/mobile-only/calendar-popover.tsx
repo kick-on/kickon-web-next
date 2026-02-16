@@ -1,13 +1,14 @@
 import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
 import { useNextMatchDateQuery } from '@/lib/hooks/queries/useNextMatchDateQuery';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
 
 interface CalendarPopoverProps {
 	isCalendarOpen: boolean;
 	onClose: () => void;
 }
 export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPopoverProps) {
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const { setSelectedDate } = useCalendarStore();
 	const { data: nextDate } = useNextMatchDateQuery();
 
 	useEffect(() => {
@@ -15,7 +16,7 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
 
 		const [year, month, date] = nextDate.split('-').map(Number);
 		setSelectedDate(new Date(year, month - 1, date));
-	}, [nextDate]);
+	}, [nextDate, setSelectedDate]);
 
 	const popoverRef = useRef<HTMLDivElement | null>(null);
 
@@ -49,12 +50,7 @@ export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPop
                 ${isCalendarOpen ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-3 scale-95'}
             `}
 		>
-			<MatchPredictionCalendar
-				type="match"
-				isPopover={true}
-				selectedDate={selectedDate}
-				setSelectedDate={(date) => setSelectedDate(date)}
-			/>
+			<MatchPredictionCalendar type="match" isPopover={true} />
 			<div className="absolute -bottom-2 right-6 w-4 h-4 bg-white rotate-45 border-r border-b border-black-200" />
 		</div>
 	);
