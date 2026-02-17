@@ -52,14 +52,14 @@ export default function MatchPredictionCalendar({ type, isPopover }: MatchPredic
 			const year = parseInt(yearParam);
 			const month = parseInt(monthParam);
 
-			// 현재 selectedDate와 URL의 연/월이 다를 때만 업데이트 (루프 방지)
+			// 현재 selectedDate와 URL의 연/월이 다를 때만 업데이트
 			if (selectedDate.getFullYear() !== year || selectedDate.getMonth() + 1 !== month) {
 				const isCurrentMonth = year === today.getFullYear() && month === today.getMonth() + 1;
 				const newDate = isCurrentMonth ? today : new Date(year, month - 1, 1);
 				setSelectedDate(newDate);
 			}
 		}
-	}, [searchParams]);
+	}, [searchParams, selectedDate, setSelectedDate]);
 
 	useEffect(() => {
 		// 점찍기 페치 (type에 따라 분기)
