@@ -9,15 +9,18 @@ import clsx from 'clsx';
 import GameComment from '@/components/features/home/game-comment';
 import { getGames } from '@/services/apis/game/game.api';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
 import FetchingFailedCard from '@/components/common/fetching-failed-card';
 import FloatingCalendarButton from '@/components/features/calendar/mobile-only/floating-calendar-button';
 import CalendarPopover from '@/components/features/calendar/mobile-only/calendar-popover';
+import { formatFromTo } from '@/lib/utils';
 
 export default function Home() {
 	const isMobile = useIsMobile();
 	const [games, setGames] = useState<GameTaggedLeagueDto[]>([]);
 	const [isError, setIsError] = useState(false);
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { selectedDate } = useCalendarStore();
 	const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
 
 	useEffect(() => {
@@ -31,9 +34,27 @@ export default function Home() {
 	useEffect(() => {
 		const fetchGames = async () => {
 			try {
+				const fromDate = new Date(selectedDate);
+				fromDate.setDate(selectedDate.getDate() - 7);
+
+				const toDate = new Date(selectedDate);
+				toDate.setDate(selectedDate.getDate() + 7);
+
 				const [proceedingRes, finishedRes] = await Promise.all([
-					getGames({ league: 1, status: 'proceeding', team: undefined }),
-					getGames({ league: 1, status: 'finished', team: undefined }),
+					getGames({
+						league: 1,
+						status: 'proceeding',
+						team: undefined,
+						from: formatFromTo(fromDate),
+						to: formatFromTo(toDate),
+					}),
+					getGames({
+						league: 1,
+						status: 'finished',
+						team: undefined,
+						from: formatFromTo(fromDate),
+						to: formatFromTo(toDate),
+					}),
 				]);
 
 				const proceedingGames = proceedingRes?.data ?? [];
@@ -46,7 +67,7 @@ export default function Home() {
 		};
 
 		fetchGames();
-	}, [currentUserInfo]);
+	}, [currentUserInfo, selectedDate]);
 
 	if (isError) {
 		return (
