@@ -8,9 +8,10 @@ import { formatFromTo } from '@/lib/utils';
 import NoGameCard from './no-game-card';
 import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
 import { getNextMatchDate } from '@/services/apis/calendar';
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
 
 export default function MatchOn() {
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const { selectedDate, setSelectedDate } = useCalendarStore();
 	const [games, setGames] = useState<GameDto[]>([]);
 	const [trigger, setTrigger] = useState(0);
 
@@ -33,7 +34,7 @@ export default function MatchOn() {
 			}
 		}
 		fetchNextMatchDate();
-	}, [trigger]);
+	}, [trigger, setSelectedDate]);
 
 	// 날짜별 경기 리스트 조회
 	useEffect(() => {
@@ -59,7 +60,7 @@ export default function MatchOn() {
 	return (
 		<div className="pt-6 space-y-9">
 			<div className="px-4">
-				<MatchPredictionCalendar type="match" selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
+				<MatchPredictionCalendar type="match" />
 			</div>
 
 			<div>

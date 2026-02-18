@@ -5,29 +5,21 @@ import Image from 'next/image';
 import clsx from 'clsx';
 import { getEndOfWeek, getStartOfWeek, stripTime } from '@/lib/utils';
 import { useCurrentUserInfoStore } from '@/lib/store/useCurrentUserInfoStore';
+import { useCalendarStore } from '@/lib/store/useCalendarStore';
 
 interface NavigationLabelProps {
 	isMatch: boolean;
-	selectedDate: Date | null;
-	setSelectedDate: (date: Date) => void;
-	firstDayOfCurrentMonth: Date;
 	isWeekCalendar: boolean;
 	updateUrlWithDate: (date: Date) => void;
 }
 
-export function NavigationLabel({
-	isMatch,
-	selectedDate,
-	setSelectedDate,
-	firstDayOfCurrentMonth,
-	isWeekCalendar,
-	updateUrlWithDate,
-}: NavigationLabelProps) {
+export function NavigationLabel({ isMatch, isWeekCalendar, updateUrlWithDate }: NavigationLabelProps) {
 	const { currentUserInfo } = useCurrentUserInfoStore();
+	const { selectedDate, setSelectedDate } = useCalendarStore();
 	const calendarMode = isWeekCalendar ? 'week' : 'month';
 
-	const year = firstDayOfCurrentMonth.getFullYear();
-	const month = firstDayOfCurrentMonth.toLocaleString('ko-KR', { month: 'long' });
+	const year = selectedDate.getFullYear();
+	const month = selectedDate.toLocaleString('ko-KR', { month: 'long' });
 	const today = stripTime(new Date());
 
 	const [isVisibleDropdown, setIsVisibleDropdown] = useState(false);
@@ -44,15 +36,15 @@ export function NavigationLabel({
 	}).reverse();
 
 	const handleYearChange = (newYear: number) => {
-		const newDate = new Date(newYear, firstDayOfCurrentMonth.getMonth(), 1);
+		const newDate = new Date(newYear, selectedDate.getMonth(), 1);
 		updateUrlWithDate(newDate);
 	};
 
-	const currentWeekStart = selectedDate ? getStartOfWeek(selectedDate) : getStartOfWeek(today);
+	const currentWeekStart = getStartOfWeek(selectedDate);
 	const currentWeekEnd = getEndOfWeek(currentWeekStart);
 
 	const handleNavigation = (mode: 'month' | 'week', direction: 'prev' | 'next') => {
-		const baseDate = mode === 'month' ? firstDayOfCurrentMonth : currentWeekStart;
+		const baseDate = mode === 'month' ? new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1) : currentWeekStart;
 		const offset = mode === 'month' ? (direction === 'next' ? 1 : -1) : direction === 'next' ? 7 : -1;
 
 		const newDate =
@@ -63,7 +55,7 @@ export function NavigationLabel({
 		setSelectedDate(stripTime(newDate));
 
 		// 월 이동 시에는 항상, 주 이동 시에는 선택한 날짜의 월과 현재 월의 비교 결과에 따라
-		const shouldUpdateUrl = mode === 'month' || newDate.getMonth() !== firstDayOfCurrentMonth.getMonth();
+		const shouldUpdateUrl = mode === 'month' || newDate.getMonth() !== selectedDate.getMonth();
 
 		if (shouldUpdateUrl) updateUrlWithDate(newDate);
 	};
@@ -78,6 +70,7 @@ export function NavigationLabel({
 			return currentWeekStart.getTime() > firstDayOfMinYear.getTime();
 		}
 
+		const firstDayOfCurrentMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 		return firstDayOfCurrentMonth.getTime() > firstDayOfMinYear.getTime();
 	};
 
@@ -91,6 +84,7 @@ export function NavigationLabel({
 			return currentWeekEnd.getTime() < lastDayOfMaxYear.getTime();
 		}
 
+		const firstDayOfCurrentMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
 		const firstDayOfMaxYear = new Date(maxYear, 11, 1);
 		return firstDayOfCurrentMonth.getTime() < firstDayOfMaxYear.getTime();
 	};
