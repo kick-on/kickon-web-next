@@ -1,23 +1,11 @@
 import MatchPredictionCalendar from '@/components/common/match-prediction-calendar';
-import { useNextMatchDateQuery } from '@/lib/hooks/queries/useNextMatchDateQuery';
 import { useEffect, useRef } from 'react';
-import { useCalendarStore } from '@/lib/store/useCalendarStore';
 
 interface CalendarPopoverProps {
 	isCalendarOpen: boolean;
 	onClose: () => void;
 }
 export default function CalendarPopover({ isCalendarOpen, onClose }: CalendarPopoverProps) {
-	const { setSelectedDate } = useCalendarStore();
-	const { data: nextDate } = useNextMatchDateQuery();
-
-	useEffect(() => {
-		if (!nextDate) return;
-
-		const [year, month, date] = nextDate.split('-').map(Number);
-		setSelectedDate(new Date(year, month - 1, date));
-	}, [nextDate, setSelectedDate]);
-
 	const popoverRef = useRef<HTMLDivElement | null>(null);
 
 	useEffect(() => {
